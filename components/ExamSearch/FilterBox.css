@@ -1,0 +1,101 @@
+/* FilterBox Component Styles */
+
+.filter-box-container {
+  max-width: 900px;
+  margin: var(--space-xl) auto;
+  padding: 0 var(--space-lg);
+}
+
+.filter-box {
+  background-color: var(--color-white);
+  border: var(--border-thick);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-primary-lg),
+              8px 8px 16px rgba(0, 206, 209, 0.2);
+  position: relative;
+}
+
+.filter-box-header {
+  background-color: var(--color-primary-light);
+  margin: calc(-1 * var(--space-xl)) calc(-1 * var(--space-xl)) var(--space-lg) calc(-1 * var(--space-xl));
+  padding: 15px var(--space-xl);
+  border-bottom: var(--border-medium);
+  border-radius: 13px 13px 0 0;
+}
+
+.filter-box-header h3 {
+  font-family: var(--font-primary);
+  font-size: var(--text-xl);
+  font-weight: 400;
+  color: var(--color-black);
+  margin: 0;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+.filter-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.filter-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.filter-checkbox.primary {
+  accent-color: var(--color-primary-lighter);
+}
+
+.filter-checkbox.secondary {
+  accent-color: var(--color-secondary);
+}
+
+.filter-option span {
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
+  font-weight: 400;
+  color: var(--color-black);
+}
+
+.filter-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  position: absolute;
+  bottom: var(--space-xl);
+  right: var(--space-xl);
+}
+
+.filter-controls button {
+  text-align: right;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .filter-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .filter-controls {
+    position: static;
+    margin-top: var(--space-lg);
+    align-items: flex-end;
+  }
+}

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { IslandSection } from '@/types/navigation';
 
@@ -16,7 +17,7 @@ export const IslandCard: React.FC<IslandCardProps> = ({
   index, 
   className = '' 
 }) => {
-  const { title, description, route, icon: Icon, position, size, isMainHub } = island;
+  const { title, description, route, icon, position, size, isMainHub } = island;
 
   // Animation variants
   const cardVariants = {
@@ -121,7 +122,13 @@ export const IslandCard: React.FC<IslandCardProps> = ({
               ${sizeClasses[size]}
               mx-auto
             `}>
-              <Icon className="w-full h-full" />
+              <Image 
+                src={icon} 
+                alt={title} 
+                width={120} 
+                height={120} 
+                className="w-full h-full object-contain"
+              />
             </div>
 
             {/* Title */}

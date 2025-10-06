@@ -3,7 +3,7 @@ export interface IslandSection {
   title: string;
   description: string;
   route: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: string;
   position: {
     desktop: { x: number; y: number };
     tablet: { x: number; y: number };

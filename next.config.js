@@ -14,14 +14,10 @@ const nextConfig = {
   // Enable strict mode for better performance and debugging
   reactStrictMode: true,
   
-  // Optimize build output
-  swcMinify: true,
+  // Build optimizations
   
   // Enable compression
   compress: true,
-  
-  // Optimize fonts
-  optimizeFonts: true,
   
   // Bundle analyzer (uncomment to analyze bundle size)
   // webpack: (config, { dev, isServer }) => {

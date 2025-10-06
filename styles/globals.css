@@ -1,0 +1,167 @@
+/* Global Styles and Resets */
+@import './variables.css';
+@import url('https://fonts.googleapis.com/css2?family=Madimi+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap');
+
+/* Font Face Definitions */
+@font-face {
+  font-family: 'Futura PT';
+  src: url('https://fonts.cdnfonts.com/css/futura-pt') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* CSS Reset */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Root Elements */
+html {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-gray-500);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Typography Defaults */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-primary);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+p {
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+
+/* Link Defaults */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+/* Button Reset */
+button {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+  text-transform: none;
+  -webkit-appearance: button;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+button:focus {
+  outline: none;
+}
+
+/* Input Reset */
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+}
+
+/* Image Defaults */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Utility Classes */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Container Utilities */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+/* Flex Utilities */
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Text Utilities */
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* Visibility Utilities */
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: block;
+}
+
+/* Z-index Utilities */
+.z-dropdown {
+  z-index: var(--z-dropdown);
+}
+
+.z-modal {
+  z-index: var(--z-modal);
+}
+
+.z-overlay {
+  z-index: var(--z-overlay);
+}

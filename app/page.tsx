@@ -1,9 +1,6 @@
-import { LandingHub } from '@/components/landing/LandingHub';
+import { NewSwipeableContainer } from '@/components/NewSwipeableContainer';
+import './home.css';
 
 export default function Home() {
-  return (
-    <div className="relative">
-      <LandingHub />
-    </div>
-  );
+  return <NewSwipeableContainer />;
 }

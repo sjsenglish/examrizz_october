@@ -1,11 +1,4 @@
 import { NavigationConfig } from '@/types/navigation';
-import { 
-  ArenaIcon, 
-  PracticeIcon, 
-  LearnIcon, 
-  VideoIcon, 
-  TeacherIcon 
-} from '@/components/icons';
 
 export const navigationConfig: NavigationConfig = {
   islands: [
@@ -14,11 +7,11 @@ export const navigationConfig: NavigationConfig = {
       title: 'PRACTICE',
       description: 'Weekly revision with practice packs',
       route: '/practice',
-      icon: PracticeIcon,
+      icon: '/icons/practice.svg',
       position: {
-        desktop: { x: 50, y: 50 }, // Center - main hub
-        tablet: { x: 50, y: 45 },
-        mobile: { x: 50, y: 40 }
+        desktop: { x: 50, y: 65 }, // Center-bottom - main hub (coffee cup)
+        tablet: { x: 50, y: 60 },
+        mobile: { x: 50, y: 55 }
       },
       size: 'large',
       isMainHub: true
@@ -28,11 +21,11 @@ export const navigationConfig: NavigationConfig = {
       title: 'ARENA',
       description: 'Competition and battles',
       route: '/competition',
-      icon: ArenaIcon,
+      icon: '/icons/arena.svg',
       position: {
-        desktop: { x: 25, y: 30 }, // Top left area
-        tablet: { x: 30, y: 25 },
-        mobile: { x: 25, y: 25 }
+        desktop: { x: 35, y: 35 }, // Top center-left (toaster)
+        tablet: { x: 35, y: 30 },
+        mobile: { x: 35, y: 25 }
       },
       size: 'medium'
     },
@@ -41,10 +34,10 @@ export const navigationConfig: NavigationConfig = {
       title: 'VIDEO',
       description: 'On-demand topic study',
       route: '/video',
-      icon: VideoIcon,
+      icon: '/icons/video.svg',
       position: {
-        desktop: { x: 75, y: 30 }, // Top right area
-        tablet: { x: 70, y: 25 },
+        desktop: { x: 75, y: 35 }, // Top right (retro TV)
+        tablet: { x: 75, y: 30 },
         mobile: { x: 75, y: 25 }
       },
       size: 'medium'
@@ -54,11 +47,11 @@ export const navigationConfig: NavigationConfig = {
       title: 'LEARN',
       description: 'Learning paths and study buddy',
       route: '/learn',
-      icon: LearnIcon,
+      icon: '/icons/learn.svg',
       position: {
-        desktop: { x: 75, y: 70 }, // Bottom right
-        tablet: { x: 70, y: 65 },
-        mobile: { x: 75, y: 65 }
+        desktop: { x: 80, y: 55 }, // Right side (ghost with book)
+        tablet: { x: 75, y: 55 },
+        mobile: { x: 75, y: 50 }
       },
       size: 'medium'
     },
@@ -67,10 +60,10 @@ export const navigationConfig: NavigationConfig = {
       title: 'TEACHER',
       description: 'Dashboard and class management',
       route: '/teacher',
-      icon: TeacherIcon,
+      icon: '/icons/teacher.svg',
       position: {
-        desktop: { x: 25, y: 70 }, // Bottom left
-        tablet: { x: 30, y: 65 },
+        desktop: { x: 20, y: 75 }, // Bottom left (laptop/briefcase)
+        tablet: { x: 25, y: 70 },
         mobile: { x: 25, y: 65 }
       },
       size: 'medium'
@@ -80,38 +73,29 @@ export const navigationConfig: NavigationConfig = {
     {
       id: 'stone-1',
       position: {
-        desktop: { x: 85, y: 45 },
-        tablet: { x: 80, y: 45 },
-        mobile: { x: 85, y: 45 }
+        desktop: { x: 85, y: 75 },
+        tablet: { x: 80, y: 75 },
+        mobile: { x: 85, y: 75 }
       },
       size: 24
     },
     {
       id: 'stone-2',
       position: {
-        desktop: { x: 90, y: 50 },
-        tablet: { x: 85, y: 50 },
-        mobile: { x: 90, y: 50 }
+        desktop: { x: 90, y: 80 },
+        tablet: { x: 85, y: 80 },
+        mobile: { x: 90, y: 80 }
       },
       size: 20
-    },
-    {
-      id: 'stone-3',
-      position: {
-        desktop: { x: 95, y: 45 },
-        tablet: { x: 90, y: 45 },
-        mobile: { x: 95, y: 45 }
-      },
-      size: 18
     }
   ],
   paths: [
     {
       id: 'main-path',
       points: [
-        { x: 50, y: 50 }, // From practice (center)
-        { x: 85, y: 45 }, // To stepping stones
-        { x: 100, y: 45 }
+        { x: 50, y: 65 }, // From practice (center-bottom)
+        { x: 85, y: 75 }, // To stepping stones (bottom right)
+        { x: 100, y: 80 }
       ],
       strokeWidth: 3,
       color: '#00CED1'

@@ -1,0 +1,158 @@
+@import url('https://fonts.googleapis.com/css2?family=Madimi+One&display=swap');
+
+.settings-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  z-index: 999;
+}
+
+.settings-modal {
+  position: fixed;
+  top: 90px;
+  right: 30px;
+  background-color: #F5F5F5;
+  border: 2px solid #000000;
+  border-radius: 12px;
+  padding: 20px;
+  width: 280px;
+  z-index: 1000;
+}
+
+.settings-header {
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.settings-header h2 {
+  font-family: 'Madimi One', cursive;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000000;
+  margin: 0;
+}
+
+.landing-page-section {
+  background-color: #B3F0F2;
+  border: 1px solid #000000;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.toggle-label {
+  font-family: 'Madimi One', cursive;
+  font-size: 14px;
+  font-weight: 400;
+  color: #666666;
+  transition: color 0.3s ease;
+}
+
+.toggle-label.active {
+  color: #000000;
+}
+
+.toggle-switch {
+  position: relative;
+  cursor: pointer;
+}
+
+.toggle-slider {
+  width: 50px;
+  height: 25px;
+  background-color: #CCCCCC;
+  border: 1px solid #000000;
+  border-radius: 15px;
+  position: relative;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-slider.toggled {
+  background-color: #00CED1;
+}
+
+.toggle-circle {
+  width: 18px;
+  height: 18px;
+  background-color: #FFFFFF;
+  border: 1px solid #000000;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s ease;
+}
+
+.toggle-slider.toggled .toggle-circle {
+  transform: translateX(25px);
+}
+
+.site-mode-section {
+  text-align: left;
+}
+
+.site-mode-section h3 {
+  font-family: 'Madimi One', cursive;
+  font-size: 14px;
+  font-weight: 400;
+  color: #000000;
+  margin: 0 0 10px 0;
+}
+
+.mode-buttons {
+  display: flex;
+  gap: 0;
+  border: 1px solid #000000;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 8px 12px;
+  font-family: 'Madimi One', cursive;
+  font-size: 12px;
+  font-weight: 400;
+  background-color: #FFFFFF;
+  border: none;
+  border-right: 1px solid #000000;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #000000;
+}
+
+.mode-btn:last-child {
+  border-right: none;
+}
+
+.mode-btn:hover {
+  background-color: #F0F0F0;
+}
+
+.mode-btn.active {
+  background-color: #00CED1;
+  color: #000000;
+}
+
+@media (max-width: 600px) {
+  .settings-modal {
+    top: 80px;
+    right: 20px;
+    width: 240px;
+    padding: 15px;
+  }
+  
+  .toggle-container {
+    gap: 8px;
+  }
+}

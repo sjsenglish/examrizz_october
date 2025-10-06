@@ -1,0 +1,254 @@
+/* Clean Swipeable Container Styles */
+
+.swipeable-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #FFFFFF;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #F8F8F5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-logo {
+  text-decoration: none;
+}
+
+.navbar-title {
+  font-family: 'Madimi One', cursive;
+  font-size: 24px;
+  font-weight: 400;
+  color: #000000;
+  margin: 0;
+  cursor: pointer;
+}
+
+.navbar-menu {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hamburger-line {
+  width: 20px;
+  height: 2px;
+  background-color: #000000;
+  border-radius: 1px;
+}
+
+/* Page Header */
+.page-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 40px;
+  background-color: #FFFFFF;
+  z-index: 60;
+}
+
+.page-title {
+  font-family: 'Madimi One', cursive;
+  font-size: 32px;
+  font-weight: 400;
+  color: #000000;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* Page Content */
+.page-content {
+  width: 100%;
+  min-height: 100vh;
+  padding-top: 60px;
+  transition: all 0.5s ease-in-out;
+}
+
+.page-content.transitioning {
+  /* Removed popping effect */
+}
+
+/* Island Page */
+.island-page {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.island-content {
+  width: 100%;
+  height: 100%;
+  transform: scale(0.79);
+  transform-origin: center;
+}
+
+.island-ghost {
+  position: absolute;
+  top: 50%;
+  right: 48px;
+  transform: translateY(-50%);
+  z-index: 40;
+}
+
+/* Search Page */
+.search-page {
+  width: 100%;
+  min-height: 100vh;
+  padding-top: 72px;
+  background-color: #FFFFFF;
+  position: relative;
+}
+
+/* Ghost and Speech Bubble */
+.ghost-with-bubble {
+  position: fixed;
+  z-index: 40;
+  pointer-events: auto;
+}
+
+.ghost-with-bubble.island {
+  bottom: 20px;
+  right: 20px;
+  transform: none;
+}
+
+.ghost-with-bubble.search {
+  bottom: 20px;
+  left: 20px;
+  transform: none;
+}
+
+.speech-bubble {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.bubble-image {
+  drop-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+/* Removed hover effect for unobtrusive ghost */
+
+.bubble-text,
+.bubble-text-input {
+  position: absolute;
+  top: 18px;
+  left: 19px;
+  width: 100px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #221468;
+  font-size: 8pt;
+  font-family: 'Figtree', sans-serif;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: pre-line;
+  text-align: center;
+  padding: 2px;
+}
+
+.bubble-text-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  padding: 6px;
+}
+
+.ghost {
+  animation: bounce 2s infinite;
+}
+
+.ghost-image {
+  drop-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+}
+
+/* Removed hover effect for unobtrusive ghost */
+
+/* Navigation Arrows */
+.nav-arrow {
+  position: fixed;
+  bottom: 145px;
+  transform: none;
+  z-index: 40;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  transition: transform 0.2s ease;
+}
+
+.nav-arrow:hover {
+  transform: scale(1.1);
+}
+
+.nav-arrow.left {
+  left: 35px; /* Next to ghost on search page */
+}
+
+.nav-arrow.right {
+  right: 35px; /* Next to ghost on island page */
+}
+
+/* Animations */
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -8px, 0);
+  }
+  70% {
+    transform: translate3d(0, -4px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 24px;
+  }
+  
+  .ghost-with-bubble.island {
+    right: 20px;
+  }
+  
+  .ghost-with-bubble.search {
+    left: 80px;
+  }
+  
+  .nav-arrow.left {
+    left: 20px;
+  }
+  
+  .nav-arrow.right {
+    right: 120px;
+  }
+}
