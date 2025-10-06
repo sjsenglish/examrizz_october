@@ -5,28 +5,36 @@ import Link from 'next/link';
 import Image from 'next/image';
 import '../../styles/globals.css';
 
-export default function AssignQuestionPackPage() {
-  const [assignToEntireClass, setAssignToEntireClass] = useState(true);
-  const [selectedClasses, setSelectedClasses] = useState([0]); // First class selected by default
+export default function AssignQuestionPackStudentsPage() {
+  const [selectedStudents, setSelectedStudents] = useState([0]); // First student selected by default
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedClass, setSelectedClass] = useState('All Classes');
   
-  const classes = [
-    'Year 12 Maths A Level Edexcel Set 1 (28 students)',
-    'Year 12 Maths A Level Edexcel Set 1 (28 students)',
-    'Year 12 Maths A Level Edexcel Set 1 (28 students)',
-    'Year 12 Maths A Level Edexcel Set 1 (28 students)'
+  const students = [
+    { name: 'Jake T.', class: 'Year 12 Set 1' },
+    { name: 'Jake T.', class: 'Year 12 Set 1' },
+    { name: 'Jake T.', class: 'Year 12 Set 1' },
+    { name: 'Jake T.', class: 'Year 12 Set 1' },
+    { name: 'Sarah M.', class: 'Year 12 Set 1' },
+    { name: 'Alex K.', class: 'Year 12 Set 1' },
+    { name: 'Jamie L.', class: 'Year 12 Set 1' }
   ];
 
-  const handleClassToggle = (index: number) => {
-    setSelectedClasses(prev => 
+  const handleStudentToggle = (index: number) => {
+    setSelectedStudents(prev => 
       prev.includes(index) 
         ? prev.filter(i => i !== index)
         : [...prev, index]
     );
   };
 
-  const getTotalStudents = () => {
-    return selectedClasses.length * 28; // 28 students per class
+  const clearSelection = () => {
+    setSelectedStudents([]);
   };
+
+  const filteredStudents = students.filter(student => 
+    student.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div style={{ 
@@ -125,11 +133,11 @@ export default function AssignQuestionPackPage() {
         {/* Header */}
         <h1 style={{
           fontFamily: "'Madimi One', sans-serif",
-          fontSize: '32px',
+          fontSize: '28px',
           fontWeight: '400',
           letterSpacing: '0.04em',
           color: '#000000',
-          margin: '0 0 40px 0',
+          margin: '0 0 30px 0',
           textAlign: 'left'
         }}>
           ASSIGN QUESTION PACK
@@ -151,7 +159,8 @@ export default function AssignQuestionPackPage() {
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
-          gap: '60px'
+          gap: '40px',
+          height: 'calc(100% - 100px)'
         }}>
           
           {/* Left Column - Question Pack Info */}
@@ -222,15 +231,15 @@ export default function AssignQuestionPackPage() {
               </div>
             </div>
 
-            {/* Step 1 */}
+            {/* Step 1 Info */}
             <div style={{ marginBottom: '40px' }}>
               <h3 style={{
                 fontFamily: "'Madimi One', sans-serif",
-                fontSize: '18px',
+                fontSize: '16px',
                 fontWeight: 'bold',
                 color: '#000000',
-                margin: '0 0 20px 0',
-                paddingBottom: '10px',
+                margin: '0 0 15px 0',
+                paddingBottom: '8px',
                 borderBottom: '2px solid #000000'
               }}>
                 STEP 1 <span style={{
@@ -253,8 +262,8 @@ export default function AssignQuestionPackPage() {
                 }}>
                   <input
                     type="checkbox"
-                    checked={assignToEntireClass}
-                    onChange={(e) => setAssignToEntireClass(e.target.checked)}
+                    checked={false}
+                    disabled
                     style={{
                       width: '20px',
                       height: '20px',
@@ -276,8 +285,8 @@ export default function AssignQuestionPackPage() {
                 }}>
                   <input
                     type="checkbox"
-                    checked={!assignToEntireClass}
-                    onChange={(e) => setAssignToEntireClass(!e.target.checked)}
+                    checked={true}
+                    disabled
                     style={{
                       width: '20px',
                       height: '20px',
@@ -290,25 +299,102 @@ export default function AssignQuestionPackPage() {
             </div>
           </div>
 
-          {/* Right Column - Class Selection */}
+          {/* Right Column - Student Selection */}
           <div>
             <h3 style={{
               fontFamily: "'Madimi One', sans-serif",
-              fontSize: '18px',
+              fontSize: '16px',
               fontWeight: 'bold',
               color: '#000000',
-              margin: '0 0 20px 0',
-              paddingBottom: '10px',
+              margin: '0 0 15px 0',
+              paddingBottom: '8px',
               borderBottom: '2px solid #000000'
             }}>
               STEP 2 <span style={{
                 fontFamily: "'Figtree', sans-serif",
                 fontWeight: 'normal',
                 letterSpacing: '0.04em'
-              }}>Who should receive this pack?</span>
+              }}>Select students</span>
             </h3>
 
-            {/* Class List */}
+            {/* Filter and Search */}
+            <div style={{
+              display: 'flex',
+              gap: '15px',
+              marginBottom: '20px',
+              alignItems: 'center'
+            }}>
+              <div>
+                <span style={{
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  color: '#000000',
+                  letterSpacing: '0.04em',
+                  marginRight: '8px'
+                }}>
+                  Filter by class
+                </span>
+                <select 
+                  value={selectedClass}
+                  onChange={(e) => setSelectedClass(e.target.value)}
+                  style={{
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '14px',
+                    padding: '5px 10px',
+                    border: '1px solid #000000',
+                    borderRadius: '0px',
+                    backgroundColor: '#FFFFFF',
+                    letterSpacing: '0.04em'
+                  }}
+                >
+                  <option>All Classes</option>
+                  <option>Year 12 Set 1</option>
+                </select>
+              </div>
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  color: '#000000',
+                  letterSpacing: '0.04em'
+                }}>
+                  Search
+                </span>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type="text"
+                    placeholder="Search by Name"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    style={{
+                      fontFamily: "'Figtree', sans-serif",
+                      fontSize: '14px',
+                      padding: '5px 30px 5px 10px',
+                      border: '1px solid #000000',
+                      borderRadius: '0px',
+                      backgroundColor: '#FFFFFF',
+                      letterSpacing: '0.04em',
+                      width: '150px'
+                    }}
+                  />
+                  <div style={{
+                    position: 'absolute',
+                    right: '8px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    cursor: 'pointer'
+                  }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="11" cy="11" r="8" stroke="#000000" strokeWidth="2"/>
+                      <path d="21 21l-4.35-4.35" stroke="#000000" strokeWidth="2"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Student List */}
             <div style={{
               backgroundColor: '#D3F6F7',
               border: '1px solid #000000',
@@ -319,11 +405,11 @@ export default function AssignQuestionPackPage() {
               marginBottom: '20px',
               boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
             }}>
-              {classes.map((className, index) => (
+              {filteredStudents.map((student, index) => (
                 <label key={index} style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '12px',
+                  justifyContent: 'space-between',
                   cursor: 'pointer',
                   fontFamily: "'Figtree', sans-serif",
                   fontSize: '14px',
@@ -336,17 +422,26 @@ export default function AssignQuestionPackPage() {
                   letterSpacing: '0.04em',
                   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                 }}>
-                  <input
-                    type="checkbox"
-                    checked={selectedClasses.includes(index)}
-                    onChange={() => handleClassToggle(index)}
-                    style={{
-                      width: '18px',
-                      height: '18px',
-                      accentColor: '#89F3FF'
-                    }}
-                  />
-                  {className}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <input
+                      type="checkbox"
+                      checked={selectedStudents.includes(index)}
+                      onChange={() => handleStudentToggle(index)}
+                      style={{
+                        width: '18px',
+                        height: '18px',
+                        accentColor: '#89F3FF'
+                      }}
+                    />
+                    <span>{student.name}</span>
+                  </div>
+                  <span style={{
+                    fontSize: '12px',
+                    color: '#666666',
+                    letterSpacing: '0.04em'
+                  }}>
+                    {student.class}
+                  </span>
                 </label>
               ))}
             </div>
@@ -364,19 +459,20 @@ export default function AssignQuestionPackPage() {
                 color: '#000000',
                 letterSpacing: '0.04em'
               }}>
-                Selected - {selectedClasses.length} class{selectedClasses.length !== 1 ? 'es' : ''}, {getTotalStudents()} students
+                Selected - {selectedStudents.length} student{selectedStudents.length !== 1 ? 's' : ''}
               </span>
-              <button style={{
-                background: 'none',
-                border: 'none',
-                color: '#0066CC',
-                fontFamily: "'Figtree', sans-serif",
-                fontSize: '14px',
-                textDecoration: 'underline',
-                cursor: 'pointer',
-                letterSpacing: '0.04em'
-              }}
-              onClick={() => setSelectedClasses([])}
+              <button 
+                onClick={clearSelection}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#0066CC',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                  letterSpacing: '0.04em'
+                }}
               >
                 clear selection
               </button>
@@ -384,10 +480,7 @@ export default function AssignQuestionPackPage() {
 
             {/* Next Step Button */}
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Link 
-                href={assignToEntireClass ? "/assign-question-pack-step2" : "/assign-question-pack-students"} 
-                style={{ textDecoration: 'none' }}
-              >
+              <Link href="/assign-question-pack-step2" style={{ textDecoration: 'none' }}>
                 <button style={{
                   backgroundColor: '#00CED1',
                   border: 'none',

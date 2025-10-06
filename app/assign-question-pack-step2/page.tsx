@@ -168,7 +168,7 @@ export default function AssignQuestionPackStep2Page() {
             }}>
 
             {/* Due Date */}
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '25px' }}>
               <h4 style={{
                 fontFamily: "'Figtree', sans-serif",
                 fontSize: '14px',
@@ -230,7 +230,7 @@ export default function AssignQuestionPackStep2Page() {
             </div>
 
             {/* Time Limit */}
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '25px' }}>
               <h4 style={{
                 fontFamily: "'Figtree', sans-serif",
                 fontSize: '14px',
@@ -259,7 +259,7 @@ export default function AssignQuestionPackStep2Page() {
                     style={{
                       width: '18px',
                       height: '18px',
-                      accentColor: '#00CED1'
+                      accentColor: '#89F3FF'
                     }}
                   />
                   Set time limit
@@ -270,7 +270,7 @@ export default function AssignQuestionPackStep2Page() {
                     value={timeLimitValue}
                     onChange={(e) => setTimeLimitValue(parseInt(e.target.value))}
                     style={{
-                      border: '2px solid #000000',
+                      border: '1px solid #000000',
                       backgroundColor: '#FFFFFF',
                       width: '40px',
                       height: '30px',
@@ -278,7 +278,8 @@ export default function AssignQuestionPackStep2Page() {
                       fontSize: '14px',
                       letterSpacing: '0.04em',
                       textAlign: 'center',
-                      borderRadius: '0px'
+                      borderRadius: '6px',
+                      boxShadow: '0 2px 0 rgba(0, 0, 0, 0.3)'
                     }}
                   />
                   <span style={{
@@ -294,7 +295,7 @@ export default function AssignQuestionPackStep2Page() {
             </div>
 
             {/* Randomize Questions */}
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '25px' }}>
               <h4 style={{
                 fontFamily: "'Figtree', sans-serif",
                 fontSize: '14px',
@@ -323,7 +324,7 @@ export default function AssignQuestionPackStep2Page() {
                     style={{
                       width: '18px',
                       height: '18px',
-                      accentColor: '#00CED1'
+                      accentColor: '#89F3FF'
                     }}
                   />
                   Yes
@@ -345,7 +346,7 @@ export default function AssignQuestionPackStep2Page() {
                     style={{
                       width: '18px',
                       height: '18px',
-                      accentColor: '#00CED1'
+                      accentColor: '#89F3FF'
                     }}
                   />
                   No
@@ -354,7 +355,7 @@ export default function AssignQuestionPackStep2Page() {
             </div>
 
             {/* Instructions */}
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '25px' }}>
               <h4 style={{
                 fontFamily: "'Figtree', sans-serif",
                 fontSize: '14px',
@@ -371,21 +372,20 @@ export default function AssignQuestionPackStep2Page() {
                 style={{
                   width: '100%',
                   height: '50px',
-                  backgroundColor: '#D3F6F7',
-                  border: '1px solid #000000',
+                  backgroundColor: '#E5FAFA',
+                  border: 'none',
                   borderRadius: '0px',
                   padding: '8px',
                   fontFamily: "'Figtree', sans-serif",
                   fontSize: '14px',
                   letterSpacing: '0.04em',
-                  resize: 'none',
-                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                  resize: 'none'
                 }}
               />
             </div>
 
             {/* Notify Students */}
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '25px' }}>
               <h4 style={{
                 fontFamily: "'Figtree', sans-serif",
                 fontSize: '14px',
@@ -414,7 +414,7 @@ export default function AssignQuestionPackStep2Page() {
                     style={{
                       width: '18px',
                       height: '18px',
-                      accentColor: '#00CED1'
+                      accentColor: '#89F3FF'
                     }}
                   />
                   Send email notification
@@ -436,7 +436,7 @@ export default function AssignQuestionPackStep2Page() {
                     style={{
                       width: '18px',
                       height: '18px',
-                      accentColor: '#00CED1'
+                      accentColor: '#89F3FF'
                     }}
                   />
                   Show in their dashboard
@@ -561,7 +561,7 @@ export default function AssignQuestionPackStep2Page() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
-                  width: '90px',
+                  width: '108px',
                   justifyContent: 'center'
                 }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -585,7 +585,7 @@ export default function AssignQuestionPackStep2Page() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
-                  width: '90px',
+                  width: '108px',
                   justifyContent: 'center'
                 }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
