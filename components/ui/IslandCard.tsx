@@ -33,7 +33,7 @@ export const IslandCard: React.FC<IslandCardProps> = ({
       transition: {
         delay: index * 0.1,
         duration: 0.6,
-        ease: [0.6, -0.05, 0.01, 0.99]
+        ease: [0.6, -0.05, 0.01, 0.99] as any
       }
     },
     hover: {
@@ -41,7 +41,7 @@ export const IslandCard: React.FC<IslandCardProps> = ({
       y: -8,
       transition: {
         duration: 0.3,
-        ease: 'easeOut'
+        ease: 'easeOut' as any
       }
     },
     tap: {
@@ -60,7 +60,7 @@ export const IslandCard: React.FC<IslandCardProps> = ({
       transition: {
         duration: 3,
         repeat: Infinity,
-        ease: 'easeInOut'
+        ease: 'easeInOut' as any
       }
     }
   } : {};
@@ -165,7 +165,7 @@ export const IslandCard: React.FC<IslandCardProps> = ({
                   transition: {
                     duration: 2,
                     repeat: Infinity,
-                    ease: 'easeInOut'
+                    ease: 'easeInOut' as any
                   }
                 }}
               >
@@ -183,7 +183,7 @@ export const IslandCard: React.FC<IslandCardProps> = ({
                     transition: {
                       duration: 4,
                       repeat: Infinity,
-                      ease: 'linear'
+                      ease: 'linear' as any
                     }
                   }}
                 >
@@ -196,7 +196,7 @@ export const IslandCard: React.FC<IslandCardProps> = ({
                     transition: {
                       duration: 3,
                       repeat: Infinity,
-                      ease: 'linear'
+                      ease: 'linear' as any
                     }
                   }}
                 >

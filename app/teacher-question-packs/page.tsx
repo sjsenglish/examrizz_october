@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { CreateQuestionPackModal } from '@/components/CreateQuestionPackModal';
 
 export default function TeacherQuestionPacksPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -493,11 +492,6 @@ export default function TeacherQuestionPacksPage() {
         </div>
       </div>
       
-      {/* Create Question Pack Modal */}
-      <CreateQuestionPackModal 
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
     </div>
   );
 }

@@ -742,6 +742,5 @@ export default function CompetitionPage() {
         </div>
 
       </div>
-    </div>
   );
 }
