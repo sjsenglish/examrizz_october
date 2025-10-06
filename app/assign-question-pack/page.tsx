@@ -36,7 +36,7 @@ export default function AssignQuestionPackPage() {
       alignItems: 'flex-start',
       justifyContent: 'center',
       padding: '20px',
-      paddingTop: '5vh'
+      paddingTop: '10vh'
     }}>
       {/* Navbar */}
       <nav style={{

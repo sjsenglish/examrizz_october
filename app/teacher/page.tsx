@@ -133,7 +133,7 @@ export default function TeacherPage() {
         }}>
           
           {/* Left Column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
             
             {/* Quick Actions */}
             <div style={{
@@ -202,8 +202,7 @@ export default function TeacherPage() {
                       color: '#000000',
                       cursor: 'pointer',
                       textAlign: 'center',
-                      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                      width: '100%'
+                      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                     }}>
                       Assign Existing Pack
                     </button>
