@@ -33,9 +33,10 @@ export default function AssignQuestionPackPage() {
       backgroundColor: 'rgba(0, 0, 0, 0.5)', 
       minHeight: '100vh',
       display: 'flex',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       justifyContent: 'center',
-      padding: '20px'
+      padding: '20px',
+      paddingTop: '5vh'
     }}>
       {/* Navbar */}
       <nav style={{
@@ -104,7 +105,7 @@ export default function AssignQuestionPackPage() {
         padding: '30px',
         maxWidth: '1440px',
         width: '96%',
-        height: '90vh',
+        height: '85vh',
         position: 'relative',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
       }}>
@@ -383,25 +384,27 @@ export default function AssignQuestionPackPage() {
 
             {/* Next Step Button */}
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <button style={{
-                backgroundColor: '#00CED1',
-                border: 'none',
-                borderRadius: '8px',
-                padding: '12px 24px',
-                fontFamily: "'Figtree', sans-serif",
-                fontSize: '16px',
-                fontWeight: 'bold',
-                color: '#FFFFFF',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
-                Next Step
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
+              <Link href="/assign-question-pack-step2" style={{ textDecoration: 'none' }}>
+                <button style={{
+                  backgroundColor: '#00CED1',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '12px 24px',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  color: '#FFFFFF',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}>
+                  Next Step
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </Link>
             </div>
           </div>
         </div>
