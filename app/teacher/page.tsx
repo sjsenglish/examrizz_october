@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { TeacherIcon } from '../../components/icons/TeacherIcon';
 import '../../styles/globals.css';
 
 export default function TeacherPage() {
@@ -105,7 +104,8 @@ export default function TeacherPage() {
         {/* Header */}
         <div style={{
           padding: '20px 60px',
-          marginBottom: '20px'
+          marginBottom: '20px',
+          transform: 'translateX(15%)'
         }}>
           
           <h1 style={{
@@ -129,7 +129,7 @@ export default function TeacherPage() {
           maxWidth: '1400px',
           padding: '0 60px 60px',
           margin: '0 auto',
-          transform: 'translateX(30%)'
+          transform: 'translateX(15%)'
         }}>
           
           {/* Left Column */}
@@ -139,15 +139,18 @@ export default function TeacherPage() {
             <div style={{
               backgroundColor: '#FFFFFF',
               border: '1px solid #000000',
-              borderRadius: '8px',
-              padding: '20px'
+              borderRadius: '4px',
+              padding: '20px',
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
             }}>
               <div style={{
                 backgroundColor: '#B3F0F2',
                 padding: '12px',
                 textAlign: 'center',
                 marginBottom: '20px',
-                borderRadius: '0px'
+                borderRadius: '0px',
+                border: '1px solid #000000',
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
               }}>
                 <h2 style={{
                   fontFamily: "'Madimi One', sans-serif",
@@ -244,7 +247,7 @@ export default function TeacherPage() {
                 {[1, 2, 3].map((i) => (
                   <div key={i} style={{
                     backgroundColor: '#FFFFFF',
-                    border: '2px solid #CCCCCC',
+                    border: '2px solid #000000',
                     borderRadius: '4px',
                     padding: '20px',
                     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
@@ -300,7 +303,7 @@ export default function TeacherPage() {
                 {/* Add Class Card */}
                 <div style={{
                   backgroundColor: '#E5FAFA',
-                  border: '2px solid #CCCCCC',
+                  border: '2px solid #000000',
                   borderRadius: '4px',
                   padding: '20px',
                   display: 'flex',
@@ -329,14 +332,20 @@ export default function TeacherPage() {
               </div>
             </div>
 
-            {/* Teacher Icon in middle */}
+            {/* Teacher Icon close to left edge */}
             <div style={{
               display: 'flex',
-              justifyContent: 'center',
+              justifyContent: 'flex-start',
               alignItems: 'center',
-              margin: '20px 0'
+              margin: '20px 0',
+              paddingLeft: '20px'
             }}>
-              <TeacherIcon size={120} />
+              <Image 
+                src="/icons/teacher.svg" 
+                alt="Teacher" 
+                width={120} 
+                height={120}
+              />
             </div>
 
             {/* Ongoing Packs */}
@@ -352,7 +361,9 @@ export default function TeacherPage() {
                 padding: '12px',
                 textAlign: 'center',
                 marginBottom: '20px',
-                borderRadius: '0px'
+                borderRadius: '0px',
+                border: '1px solid #000000',
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
               }}>
                 <h2 style={{
                   fontFamily: "'Madimi One', sans-serif",
@@ -371,7 +382,7 @@ export default function TeacherPage() {
                 {/* Pack 1 */}
                 <div style={{
                   backgroundColor: '#FFFFFF',
-                  border: '2px solid #CCCCCC',
+                  border: '2px solid #000000',
                   borderRadius: '0px',
                   padding: '20px',
                   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
@@ -409,7 +420,7 @@ export default function TeacherPage() {
                       <p style={{
                         fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
-                        color: '#E74C3C',
+                        color: '#000000',
                         margin: '0',
                         letterSpacing: '0.04em'
                       }}>
@@ -444,7 +455,7 @@ export default function TeacherPage() {
                 {/* Pack 2 */}
                 <div style={{
                   backgroundColor: '#FFFFFF',
-                  border: '2px solid #CCCCCC',
+                  border: '2px solid #000000',
                   borderRadius: '0px',
                   padding: '20px',
                   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
@@ -482,7 +493,7 @@ export default function TeacherPage() {
                       <p style={{
                         fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
-                        color: '#E74C3C',
+                        color: '#000000',
                         margin: '0',
                         letterSpacing: '0.04em'
                       }}>
@@ -493,7 +504,7 @@ export default function TeacherPage() {
                       <span style={{
                         fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
-                        color: '#E74C3C',
+                        color: '#000000',
                         fontWeight: 'bold',
                         letterSpacing: '0.04em'
                       }}>
