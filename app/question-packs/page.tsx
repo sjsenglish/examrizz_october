@@ -3,42 +3,39 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Button } from '@/components/ui/Button';
+import { TabIcon } from '@/components/icons/TabIcon';
 import '../../styles/globals.css';
+import '../../components/ExamSearch/ExamSearch.css';
+import '../practice/practice.css';
 
 export default function QuestionPacksPage() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState('Admissions');
+  const [selectedSubject, setSelectedSubject] = useState('');
+  const [showALevelDropdown, setShowALevelDropdown] = useState(false);
 
+  // Mock question packs data
   const questionPacks = [
-    {
-      name: "A Level Chemistry AQA",
-      questions: 28,
-      marks: 50,
-      timesAssigned: "x times assigned",
-      category: "A Level",
-      subject: "Chemistry"
-    },
-    {
-      name: "A Level Biology AQA", 
-      questions: 35,
-      marks: 65,
-      timesAssigned: "x times assigned",
-      category: "A Level", 
-      subject: "Biology"
-    },
-    {
-      name: "GCSE Mathematics Higher",
-      questions: 42,
-      marks: 80,
-      timesAssigned: "x times assigned",
-      category: "GCSE",
-      subject: "Mathematics"
-    }
+    { id: 1, title: 'Algebra Foundations', subject: 'Maths', completed: true },
+    { id: 2, title: 'Calculus Basics', subject: 'Physics', completed: false },
+    { id: 3, title: 'Organic Chemistry', subject: 'Chemistry', completed: true },
+    { id: 4, title: 'Quadratic Equations', subject: 'Maths', completed: false },
+    { id: 5, title: 'Thermodynamics', subject: 'Physics', completed: true },
+    { id: 6, title: 'Molecular Structure', subject: 'Chemistry', completed: false }
   ];
 
-  const filteredPacks = questionPacks.filter(pack => 
-    pack.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    pack.subject.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const admissionPacks = [
+    { id: 7, title: 'LNAT Critical Thinking', category: 'Law', completed: true },
+    { id: 8, title: 'UCAT Verbal Reasoning', category: 'Medicine', completed: false },
+    { id: 9, title: 'Oxford Interview Prep', category: 'General', completed: true },
+    { id: 10, title: 'Cambridge Mathematics', category: 'Engineering', completed: false }
+  ];
+
+  const savedPacks = [
+    { id: 11, title: 'Physics Mechanics Review', category: 'A Level', completed: true },
+    { id: 12, title: 'Essay Writing Techniques', category: 'General', completed: false },
+    { id: 13, title: 'Statistics Fundamentals', category: 'A Level', completed: true }
+  ];
 
   return (
     <div style={{ backgroundColor: '#FFFFFF', minHeight: '100vh' }}>
@@ -59,11 +56,9 @@ export default function QuestionPacksPage() {
       }}>
         <Link href="/" style={{ textDecoration: 'none' }}>
           <h1 style={{
-            fontFamily: "'Madimi One', sans-serif",
+            fontFamily: "'Madimi One', cursive",
             fontSize: '24px',
             fontWeight: '400',
-            fontStyle: 'normal',
-            letterSpacing: '0.04em',
             color: '#000000',
             margin: '0',
             cursor: 'pointer'
@@ -103,411 +98,585 @@ export default function QuestionPacksPage() {
 
       {/* Content with navbar padding */}
       <div style={{ paddingTop: '60px' }}>
-        
-        {/* Back Button */}
-        <div style={{ 
-          padding: '20px 60px 0',
-          backgroundColor: '#FFFFFF'
-        }}>
-          <Link 
-            href="/teacher" 
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '9px 18px',
-              backgroundColor: '#FFFFFF',
-              borderRadius: '8px',
-              textDecoration: 'none',
-              color: '#333333',
-              fontFamily: "'Madimi One', sans-serif",
-              fontSize: '13px',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-              transition: 'all 0.3s ease',
-              width: 'fit-content',
-              border: '1px solid #000000'
-            }}
-          >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            Back
-          </Link>
-        </div>
-
         {/* Main Content */}
-        <div style={{
-          maxWidth: '1400px',
-          padding: '40px 60px 60px',
-          margin: '0 auto',
-          position: 'relative'
+        <div style={{ 
+          padding: '60px',
+          position: 'relative',
+          paddingBottom: '200px'
         }}>
-          
-          {/* Header and Search */}
+        
+        {/* Your Question Packs Header */}
+        <div style={{
+          textAlign: 'center',
+          marginBottom: '30px'
+        }}>
           <div style={{
-            textAlign: 'center',
-            marginBottom: '40px'
+            display: 'inline-block',
+            textAlign: 'left',
+            position: 'relative'
           }}>
-            <h1 style={{
-              fontFamily: "'Madimi One', sans-serif",
-              fontSize: '36px',
+            <h2 style={{
+              fontFamily: "'Madimi One', cursive",
+              fontSize: '28px',
               fontWeight: '400',
-              fontStyle: 'normal',
-              letterSpacing: '0.04em',
               color: '#000000',
-              margin: '0 0 30px 0'
+              margin: '0 0 20px 0'
             }}>
               Your Question Packs
-            </h1>
+            </h2>
             
-            {/* Search Bar */}
-            <div style={{
-              position: 'relative',
-              maxWidth: '800px',
-              margin: '0 auto'
-            }}>
-              <input
-                type="text"
-                placeholder="Search for question packs by name ..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '15px 50px 15px 20px',
-                  border: '2px solid #000000',
-                  borderRadius: '8px',
-                  backgroundColor: '#FFFFFF',
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '16px',
-                  letterSpacing: '0.04em',
-                  outline: 'none'
-                }}
-              />
-              <div style={{
-                position: 'absolute',
-                right: '15px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                cursor: 'pointer'
-              }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="11" cy="11" r="8" stroke="#000000" strokeWidth="2"/>
-                  <path d="21 21l-4.35-4.35" stroke="#000000" strokeWidth="2"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          {/* Category Tabs */}
-          <div style={{
-            display: 'flex',
-            gap: '20px',
-            justifyContent: 'center',
-            marginBottom: '40px'
-          }}>
-            <div style={{
-              backgroundColor: '#B3F0F2',
-              border: '2px solid #000000',
-              borderRadius: '0px',
-              padding: '15px 30px',
-              fontFamily: "'Madimi One', sans-serif",
-              fontSize: '18px',
-              fontWeight: '400',
-              color: '#000000',
-              letterSpacing: '0.04em',
-              cursor: 'pointer',
-              boxShadow: '4px 4px 0 #000000',
-              transform: 'perspective(500px) rotateX(10deg)'
-            }}>
-              A Level
-            </div>
-            <div style={{
-              backgroundColor: '#B3F0F2',
-              border: '2px solid #000000',
-              borderRadius: '0px',
-              padding: '15px 30px',
-              fontFamily: "'Madimi One', sans-serif",
-              fontSize: '18px',
-              fontWeight: '400',
-              color: '#000000',
-              letterSpacing: '0.04em',
-              cursor: 'pointer',
-              boxShadow: '4px 4px 0 #000000',
-              transform: 'perspective(500px) rotateX(10deg)'
-            }}>
-              Admissions
-            </div>
-            <div style={{
-              backgroundColor: '#B3F0F2',
-              border: '2px solid #000000',
-              borderRadius: '0px',
-              padding: '15px 30px',
-              fontFamily: "'Madimi One', sans-serif",
-              fontSize: '18px',
-              fontWeight: '400',
-              color: '#000000',
-              letterSpacing: '0.04em',
-              cursor: 'pointer',
-              boxShadow: '4px 4px 0 #000000',
-              transform: 'perspective(500px) rotateX(10deg)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px'
-            }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19 14C19 18.4 14 22 12 22C10 22 5 18.4 5 14C5 10 9 6 12 6C15 6 19 10 19 14Z" stroke="#000000" strokeWidth="2"/>
-                <path d="M12 6V2" stroke="#000000" strokeWidth="2"/>
-                <path d="M8 8L6 6" stroke="#000000" strokeWidth="2"/>
-                <path d="M16 8L18 6" stroke="#000000" strokeWidth="2"/>
-              </svg>
-              Saved
-            </div>
-          </div>
-
-          {/* Question Pack Cards */}
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '30px',
-            marginBottom: '60px'
-          }}>
-            {filteredPacks.map((pack, index) => (
-              <div key={index} style={{
-                backgroundColor: '#FFFFFF',
-                border: '2px solid #000000',
-                borderRadius: '0px',
-                padding: '0',
-                boxShadow: '6px 6px 0 #000000',
-                transform: 'perspective(800px) rotateX(5deg)',
-                position: 'relative',
-                overflow: 'hidden'
-              }}>
-                {/* Pack Header with Category Label */}
-                <div style={{
-                  backgroundColor: '#E5FAFA',
-                  padding: '15px 25px',
-                  borderBottom: '2px solid #000000',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}>
-                  <h3 style={{
-                    fontFamily: "'Madimi One', sans-serif",
-                    fontSize: '20px',
-                    fontWeight: '400',
-                    color: '#000000',
-                    margin: '0',
-                    letterSpacing: '0.04em'
-                  }}>
-                    {pack.name}
-                  </h3>
-                  
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '15px'
-                  }}>
-                    <button style={{
-                      backgroundColor: '#D4D0FF',
-                      border: '1px solid #000000',
-                      borderRadius: '4px',
-                      padding: '8px 16px',
-                      fontFamily: "'Figtree', sans-serif",
-                      fontSize: '14px',
-                      fontWeight: 'bold',
-                      color: '#000000',
-                      cursor: 'pointer',
-                      letterSpacing: '0.04em'
-                    }}>
-                      Assign pack
-                    </button>
-                    <Link 
-                      href="#"
-                      style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '14px',
-                        color: '#0066CC',
-                        textDecoration: 'underline',
-                        letterSpacing: '0.04em'
-                      }}
-                    >
-                      view all history →
-                    </Link>
-                    
-                    {/* Share dropdown */}
-                    <div style={{ position: 'relative' }}>
-                      <button style={{
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                        padding: '5px'
-                      }}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M8.59 16.59L13.17 12L8.59 7.41L10 6L16 12L10 18L8.59 16.59Z" fill="#000000"/>
-                        </svg>
+            {/* Tabs */}
+            <div className="tabs-container">
+              {/* A Level Tab with Dropdown */}
+              <div 
+                className="tab-wrapper"
+                onMouseEnter={() => setShowALevelDropdown(true)}
+                onMouseLeave={() => setShowALevelDropdown(false)}
+              >
+                <button 
+                  className={`tab ${activeTab === 'A Level' ? 'tab-active' : ''}`}
+                  onClick={() => setActiveTab('A Level')}
+                  aria-label="A Level tab"
+                >
+                  <TabIcon isActive={activeTab === 'A Level'} />
+                  <span className="tab-text">A Level</span>
+                </button>
+                
+                {/* A Level Dropdown */}
+                {showALevelDropdown && (
+                  <div className="dropdown-menu" style={{ top: 'calc(100% - 20px)' }}>
+                    {['Maths', 'Physics', 'Economics', 'Biology', 'Chemistry'].map((subject) => (
+                      <button
+                        key={subject}
+                        className="dropdown-item"
+                        onClick={() => {
+                          setSelectedSubject(subject);
+                          setActiveTab('A Level');
+                          setShowALevelDropdown(false);
+                        }}
+                      >
+                        {subject}
                       </button>
-                      
-                      {/* Share menu (shown on hover/click) */}
-                      <div style={{
-                        position: 'absolute',
-                        top: '100%',
-                        right: '0',
-                        backgroundColor: '#B3F0F2',
-                        border: '1px solid #000000',
-                        borderRadius: '4px',
-                        padding: '10px',
-                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                        zIndex: 10,
-                        minWidth: '180px',
-                        display: 'none' // Hidden by default, would show on interaction
-                      }}>
-                        <div style={{
-                          fontFamily: "'Figtree', sans-serif",
-                          fontSize: '14px',
-                          color: '#0066CC',
-                          cursor: 'pointer',
-                          padding: '5px 0',
-                          letterSpacing: '0.04em'
-                        }}>
-                          Share question pack
-                        </div>
-                        <div style={{
-                          fontFamily: "'Figtree', sans-serif",
-                          fontSize: '14px',
-                          color: '#0066CC',
-                          cursor: 'pointer',
-                          padding: '5px 0',
-                          letterSpacing: '0.04em'
-                        }}>
-                          Send pack to a friend
-                        </div>
-                      </div>
-                    </div>
+                    ))}
                   </div>
+                )}
+              </div>
+              
+              {/* Admissions Tab */}
+              <button 
+                className={`tab ${activeTab === 'Admissions' ? 'tab-active' : ''}`}
+                onClick={() => setActiveTab('Admissions')}
+                aria-label="Admissions tab"
+              >
+                <TabIcon isActive={activeTab === 'Admissions'} />
+                <span className="tab-text">Admissions</span>
+              </button>
+              
+              {/* Saved Tab */}
+              <button 
+                className={`tab ${activeTab === 'Saved' ? 'tab-active' : ''}`}
+                onClick={() => setActiveTab('Saved')}
+                aria-label="Saved tab"
+              >
+                <TabIcon isActive={activeTab === 'Saved'} />
+                <span className="tab-text">Saved</span>
+              </button>
+          </div>
+          </div>
+        </div>
+
+        {/* Teacher Icon - Bottom Left */}
+        <div style={{
+          position: 'fixed',
+          left: '80px',
+          bottom: '80px',
+          zIndex: 50
+        }}>
+          <Image 
+            src="/icons/teacher.svg"
+            alt="TEACHER"
+            width={92}
+            height={92}
+          />
+        </div>
+
+        {/* New Pack Button - Right Side */}
+        <div style={{
+          position: 'fixed',
+          right: '80px',
+          bottom: '80px',
+          zIndex: 100
+        }}>
+          <button style={{
+            backgroundColor: '#B3F0F2',
+            border: '2px solid #000000',
+            borderRadius: '8px',
+            padding: '12px 20px',
+            cursor: 'pointer',
+            boxShadow: '4px 4px 0 #000000',
+            transition: 'transform 0.2s, box-shadow 0.2s',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            fontSize: '16px',
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: '500',
+            color: '#000000'
+          }}
+          onClick={() => window.location.href = '/create-question-pack'}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translate(-2px, -2px)';
+            e.currentTarget.style.boxShadow = '6px 6px 0 #000000';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translate(0px, 0px)';
+            e.currentTarget.style.boxShadow = '4px 4px 0 #000000';
+          }}>
+            <span style={{ fontSize: '18px', fontWeight: 'bold' }}>+</span>
+            New Pack
+          </button>
+        </div>
+
+        {/* Cloud Decorations */}
+        <div style={{
+          position: 'absolute',
+          left: '5%',
+          top: '10%',
+          zIndex: 10,
+          opacity: 0.7
+        }}>
+          <Image 
+            src="/svg/island-cloud-medium.svg"
+            alt="Cloud"
+            width={120}
+            height={80}
+          />
+        </div>
+        
+        <div style={{
+          position: 'absolute',
+          right: '5%',
+          top: '15%',
+          zIndex: 10,
+          opacity: 0.7
+        }}>
+          <Image 
+            src="/svg/island-cloud-medium.svg"
+            alt="Cloud"
+            width={120}
+            height={80}
+          />
+        </div>
+
+        {/* Main Content Area */}
+        <div style={{
+          maxWidth: '800px',
+          margin: '0 auto',
+          position: 'relative',
+          zIndex: 5
+        }}>
+          
+
+          {/* Dynamic Content Based on Selected Tab and Subject */}
+          {activeTab === 'A Level' && selectedSubject && (
+            <div style={{ marginBottom: '40px' }}>
+              <h3 style={{
+                fontFamily: "'Madimi One', sans-serif",
+                fontSize: '18px',
+                fontWeight: '400',
+                color: '#000000',
+                marginBottom: '15px',
+                letterSpacing: '0.04em'
+              }}>
+                A Level {selectedSubject} AQA
+              </h3>
+            
+            {/* Question Packs List */}
+            {questionPacks.filter(pack => pack.subject === selectedSubject).map((pack) => (
+              <div key={pack.id} style={{
+                position: 'relative',
+                marginBottom: '60px'
+              }}>
+                {/* Share and Send options above each pack */}
+                <div style={{
+                  position: 'absolute',
+                  top: '-40px',
+                  right: '15px',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  gap: '10px',
+                  alignItems: 'center',
+                  zIndex: 10
+                }}>
+                  <Image 
+                    src="/icons/share-question-pack.svg"
+                    alt="Share question pack"
+                    width={20}
+                    height={20}
+                    style={{
+                      cursor: 'pointer',
+                      transition: 'transform 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  />
+                  <Image 
+                    src="/icons/send-pack-to-friend.svg"
+                    alt="Send pack to a friend"
+                    width={20}
+                    height={20}
+                    style={{
+                      cursor: 'pointer',
+                      transition: 'transform 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  />
                 </div>
 
-                {/* Pack Content */}
+                {/* Question Pack Rectangle */}
                 <div style={{
-                  padding: '25px',
-                  display: 'grid',
-                  gridTemplateColumns: '1fr auto',
-                  gap: '20px',
-                  alignItems: 'center'
+                  position: 'relative',
+                  height: '207px',
+                  maxWidth: '852px',
+                  margin: '0 auto'
                 }}>
-                  <div>
-                    <div style={{
-                      display: 'flex',
-                      gap: '30px',
-                      marginBottom: '15px'
-                    }}>
-                      <span style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '16px',
-                        color: '#000000',
-                        letterSpacing: '0.04em'
-                      }}>
-                        {pack.questions} questions
-                      </span>
-                      <span style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '16px',
-                        color: '#000000',
-                        letterSpacing: '0.04em'
-                      }}>
-                        {pack.marks} marks
-                      </span>
-                    </div>
-                    <div style={{
-                      fontFamily: "'Figtree', sans-serif",
-                      fontSize: '14px',
-                      color: '#666666',
-                      letterSpacing: '0.04em'
-                    }}>
-                      {pack.timesAssigned}
-                    </div>
-                  </div>
-                  
-                  {/* Subject icon area - empty for now */}
+                  <svg width="852" height="207" viewBox="0 0 852 207" xmlns="http://www.w3.org/2000/svg" style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'}}>
+                    {/* Fill shapes without strokes */}
+                    <polygon points="3,13 829,13 829,194 3,194" fill="#FFFFFF"/>
+                    <polygon points="3,13 15,3 841,3 829,13" fill="#FFFFFF"/>
+                    <polygon points="829,13 841,3 841,182 829,194" fill="#FFFFFF"/>
+                    
+                    {/* Clean outline strokes */}
+                    {/* Outer perimeter */}
+                    <path d="M 3,194 L 3,13 L 15,3 L 841,3 L 841,182 L 829,194 Z" 
+                          fill="none" stroke="#000000" strokeWidth="2"/>
+                    {/* Internal division lines */}
+                    <line x1="3" y1="13" x2="829" y2="13" stroke="#000000" strokeWidth="2"/>
+                    <line x1="829" y1="13" x2="829" y2="194" stroke="#000000" strokeWidth="2"/>
+                    <line x1="829" y1="13" x2="841" y2="3" stroke="#000000" strokeWidth="2"/>
+                  </svg>
                   <div style={{
-                    width: '80px',
-                    height: '80px',
-                    backgroundColor: '#F0F0F0',
-                    border: '1px solid #CCCCCC',
-                    borderRadius: '4px'
+                    position: 'relative',
+                    zIndex: 2,
+                    height: '100%',
+                    padding: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start'
                   }}>
-                    {/* Subject-specific icon would go here */}
+                    <div style={{
+                      fontFamily: "'Madimi One', sans-serif",
+                      fontSize: '16px',
+                      color: '#000000'
+                    }}>
+                      {pack.title}
+                      {pack.completed && (
+                        <div style={{
+                          display: 'inline-block',
+                          marginLeft: '10px',
+                          backgroundColor: '#00CED1',
+                          color: '#FFFFFF',
+                          padding: '4px 8px',
+                          borderRadius: '4px',
+                          fontSize: '12px'
+                        }}>
+                          Completed
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             ))}
           </div>
+          )}
 
-          {/* New Pack Button */}
-          <div style={{
-            position: 'fixed',
-            bottom: '30px',
-            right: '30px'
-          }}>
-            <button style={{
-              backgroundColor: '#B3F0F2',
-              border: '2px solid #000000',
-              borderRadius: '8px',
-              padding: '15px 25px',
-              fontFamily: "'Madimi One', sans-serif",
-              fontSize: '16px',
-              fontWeight: '400',
-              color: '#000000',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              letterSpacing: '0.04em',
-              boxShadow: '4px 4px 0 #000000'
+          {/* Admissions Content */}
+          {activeTab === 'Admissions' && (
+            <div style={{ marginBottom: '40px' }}>
+              <h3 style={{
+                fontFamily: "'Madimi One', sans-serif",
+                fontSize: '18px',
+                fontWeight: '400',
+                color: '#000000',
+                marginBottom: '15px',
+                letterSpacing: '0.04em'
+              }}>
+                Admissions Question Packs
+              </h3>
+            
+            {/* Admission Packs List */}
+            {admissionPacks.map((pack) => (
+              <div key={pack.id} style={{
+                position: 'relative',
+                marginBottom: '60px'
+              }}>
+                {/* Share and Send options above each pack */}
+                <div style={{
+                  position: 'absolute',
+                  top: '-40px',
+                  right: '15px',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  gap: '10px',
+                  alignItems: 'center',
+                  zIndex: 10
+                }}>
+                  <Image 
+                    src="/icons/share-question-pack.svg"
+                    alt="Share question pack"
+                    width={20}
+                    height={20}
+                    style={{
+                      cursor: 'pointer',
+                      transition: 'transform 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  />
+                  <Image 
+                    src="/icons/send-pack-to-friend.svg"
+                    alt="Send pack to a friend"
+                    width={20}
+                    height={20}
+                    style={{
+                      cursor: 'pointer',
+                      transition: 'transform 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  />
+                </div>
+
+                {/* Question Pack Rectangle */}
+                <div style={{
+                  position: 'relative',
+                  height: '207px',
+                  maxWidth: '852px',
+                  margin: '0 auto'
+                }}>
+                  <svg width="852" height="207" viewBox="0 0 852 207" xmlns="http://www.w3.org/2000/svg" style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'}}>
+                    {/* Fill shapes without strokes */}
+                    <polygon points="3,13 829,13 829,194 3,194" fill="#FFFFFF"/>
+                    <polygon points="3,13 15,3 841,3 829,13" fill="#FFFFFF"/>
+                    <polygon points="829,13 841,3 841,182 829,194" fill="#FFFFFF"/>
+                    
+                    {/* Clean outline strokes */}
+                    {/* Outer perimeter */}
+                    <path d="M 3,194 L 3,13 L 15,3 L 841,3 L 841,182 L 829,194 Z" 
+                          fill="none" stroke="#000000" strokeWidth="2"/>
+                    {/* Internal division lines */}
+                    <line x1="3" y1="13" x2="829" y2="13" stroke="#000000" strokeWidth="2"/>
+                    <line x1="829" y1="13" x2="829" y2="194" stroke="#000000" strokeWidth="2"/>
+                    <line x1="829" y1="13" x2="841" y2="3" stroke="#000000" strokeWidth="2"/>
+                  </svg>
+                  <div style={{
+                    position: 'relative',
+                    zIndex: 2,
+                    height: '100%',
+                    padding: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start'
+                  }}>
+                    <div style={{
+                      fontFamily: "'Madimi One', sans-serif",
+                      fontSize: '16px',
+                      color: '#000000'
+                    }}>
+                      {pack.title}
+                      <div style={{
+                        fontSize: '12px',
+                        color: '#666',
+                        marginTop: '4px'
+                      }}>
+                        {pack.category}
+                      </div>
+                      {pack.completed && (
+                        <div style={{
+                          display: 'inline-block',
+                          marginLeft: '10px',
+                          backgroundColor: '#00CED1',
+                          color: '#FFFFFF',
+                          padding: '4px 8px',
+                          borderRadius: '4px',
+                          fontSize: '12px'
+                        }}>
+                          Completed
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          )}
+
+          {/* Saved Content */}
+          {activeTab === 'Saved' && (
+            <div style={{ marginBottom: '40px' }}>
+              <h3 style={{
+                fontFamily: "'Madimi One', sans-serif",
+                fontSize: '18px',
+                fontWeight: '400',
+                color: '#000000',
+                marginBottom: '15px',
+                letterSpacing: '0.04em'
+              }}>
+                Saved Question Packs
+              </h3>
+              
+              {/* Saved Packs List */}
+              {savedPacks.map((pack) => (
+                <div key={pack.id} style={{
+                  position: 'relative',
+                  marginBottom: '60px'
+                }}>
+                  {/* Share and Send options above each pack */}
+                  <div style={{
+                    position: 'absolute',
+                    top: '-40px',
+                    right: '15px',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: '10px',
+                    alignItems: 'center',
+                    zIndex: 10
+                  }}>
+                    <Image 
+                      src="/icons/share-question-pack.svg"
+                      alt="Share question pack"
+                      width={20}
+                      height={20}
+                      style={{
+                        cursor: 'pointer',
+                        transition: 'transform 0.2s'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                      }}
+                    />
+                    <Image 
+                      src="/icons/send-pack-to-friend.svg"
+                      alt="Send pack to a friend"
+                      width={20}
+                      height={20}
+                      style={{
+                        cursor: 'pointer',
+                        transition: 'transform 0.2s'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                      }}
+                    />
+                  </div>
+
+                  {/* Question Pack Rectangle */}
+                  <div style={{
+                    position: 'relative',
+                    height: '207px',
+                    maxWidth: '852px',
+                    margin: '0 auto'
+                  }}>
+                    <svg width="852" height="207" viewBox="0 0 852 207" xmlns="http://www.w3.org/2000/svg" style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'}}>
+                      {/* Fill shapes without strokes */}
+                      <polygon points="3,13 829,13 829,194 3,194" fill="#FFFFFF"/>
+                      <polygon points="3,13 15,3 841,3 829,13" fill="#FFFFFF"/>
+                      <polygon points="829,13 841,3 841,182 829,194" fill="#FFFFFF"/>
+                      
+                      {/* Clean outline strokes */}
+                      {/* Outer perimeter */}
+                      <path d="M 3,194 L 3,13 L 15,3 L 841,3 L 841,182 L 829,194 Z" 
+                            fill="none" stroke="#000000" strokeWidth="2"/>
+                      {/* Internal division lines */}
+                      <line x1="3" y1="13" x2="829" y2="13" stroke="#000000" strokeWidth="2"/>
+                      <line x1="829" y1="13" x2="829" y2="194" stroke="#000000" strokeWidth="2"/>
+                      <line x1="829" y1="13" x2="841" y2="3" stroke="#000000" strokeWidth="2"/>
+                    </svg>
+                    <div style={{
+                      position: 'relative',
+                      zIndex: 2,
+                      height: '100%',
+                      padding: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'flex-start'
+                    }}>
+                      <div style={{
+                        fontFamily: "'Madimi One', sans-serif",
+                        fontSize: '16px',
+                        color: '#000000'
+                      }}>
+                        {pack.title}
+                        <div style={{
+                          fontSize: '12px',
+                          color: '#666',
+                          marginTop: '4px'
+                        }}>
+                          {pack.category}
+                        </div>
+                        {pack.completed && (
+                          <div style={{
+                            display: 'inline-block',
+                            marginLeft: '10px',
+                            backgroundColor: '#00CED1',
+                            color: '#FFFFFF',
+                            padding: '4px 8px',
+                            borderRadius: '4px',
+                            fontSize: '12px'
+                          }}>
+                            Completed
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Default message when no tab is selected */}
+          {activeTab === 'A Level' && !selectedSubject && (
+            <div style={{
+              textAlign: 'center',
+              padding: '60px',
+              color: '#999999',
+              fontSize: '18px',
+              fontFamily: "'Madimi One', sans-serif"
             }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 5V19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              New Pack
-            </button>
-          </div>
-
-          {/* Teacher Icon */}
-          <div style={{
-            position: 'absolute',
-            bottom: '100px',
-            left: '50px'
-          }}>
-            <Image 
-              src="/icons/teacher.svg" 
-              alt="Teacher" 
-              width={120} 
-              height={120}
-            />
-          </div>
-
-          {/* Decorative Clouds */}
-          <div style={{
-            position: 'absolute',
-            top: '50px',
-            left: '0px'
-          }}>
-            <svg width="100" height="60" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20 40C20 35 24 30 30 30C32 25 38 20 45 25C50 20 60 25 60 35C65 35 70 40 70 45C70 50 65 55 60 55H25C20 55 15 50 20 40Z" fill="#F0F0F0" stroke="#CCCCCC" strokeWidth="1"/>
-            </svg>
-          </div>
+              Hover over A Level to select a subject
+            </div>
+          )}
           
-          <div style={{
-            position: 'absolute',
-            top: '80px',
-            right: '50px'
-          }}>
-            <svg width="120" height="70" viewBox="0 0 120 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M25 50C25 45 29 40 35 40C37 35 43 30 50 35C55 30 65 35 65 45C70 45 75 50 75 55C75 60 70 65 65 65H30C25 65 20 60 25 50Z" fill="#F0F0F0" stroke="#CCCCCC" strokeWidth="1"/>
-            </svg>
-          </div>
+        </div>
         </div>
       </div>
+      
     </div>
   );
 }
