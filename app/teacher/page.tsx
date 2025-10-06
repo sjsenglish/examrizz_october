@@ -247,7 +247,7 @@ export default function TeacherPage() {
                 {[1, 2, 3].map((i) => (
                   <div key={i} style={{
                     backgroundColor: '#FFFFFF',
-                    border: '2px solid #000000',
+                    border: '1px solid #000000',
                     borderRadius: '4px',
                     padding: '20px',
                     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
@@ -303,7 +303,7 @@ export default function TeacherPage() {
                 {/* Add Class Card */}
                 <div style={{
                   backgroundColor: '#E5FAFA',
-                  border: '2px solid #000000',
+                  border: '1px solid #000000',
                   borderRadius: '4px',
                   padding: '20px',
                   display: 'flex',
@@ -338,7 +338,8 @@ export default function TeacherPage() {
               justifyContent: 'flex-start',
               alignItems: 'center',
               margin: '20px 0',
-              paddingLeft: '20px'
+              paddingLeft: '20px',
+              transform: 'translateX(-10%)'
             }}>
               <Image 
                 src="/icons/teacher.svg" 
@@ -382,7 +383,7 @@ export default function TeacherPage() {
                 {/* Pack 1 */}
                 <div style={{
                   backgroundColor: '#FFFFFF',
-                  border: '2px solid #000000',
+                  border: '1px solid #000000',
                   borderRadius: '0px',
                   padding: '20px',
                   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
@@ -455,7 +456,7 @@ export default function TeacherPage() {
                 {/* Pack 2 */}
                 <div style={{
                   backgroundColor: '#FFFFFF',
-                  border: '2px solid #000000',
+                  border: '1px solid #000000',
                   borderRadius: '0px',
                   padding: '20px',
                   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
