@@ -340,9 +340,9 @@ export default function TeacherPage() {
               display: 'flex',
               justifyContent: 'flex-start',
               alignItems: 'center',
-              margin: '20px 0',
+              margin: '10px 0',
               paddingLeft: '20px',
-              transform: 'translateX(-10%)'
+              transform: 'translateX(-20%)'
             }}>
               <Image 
                 src="/icons/teacher.svg" 
