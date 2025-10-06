@@ -228,7 +228,7 @@ export default function TeacherPage() {
             </div>
 
             {/* My Classes */}
-            <div>
+            <div style={{ marginTop: '5vh' }}>
               <h2 style={{
                 fontFamily: "'Madimi One', sans-serif",
                 fontSize: '24px',

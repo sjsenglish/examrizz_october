@@ -110,11 +110,11 @@ export default function AssignQuestionPackStep2Page() {
         {/* Header */}
         <h1 style={{
           fontFamily: "'Madimi One', sans-serif",
-          fontSize: '32px',
+          fontSize: '28px',
           fontWeight: '400',
           letterSpacing: '0.04em',
           color: '#000000',
-          margin: '0 0 40px 0',
+          margin: '0 0 30px 0',
           textAlign: 'left'
         }}>
           ASSIGN QUESTION PACK
@@ -136,19 +136,19 @@ export default function AssignQuestionPackStep2Page() {
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
-          gap: '60px',
-          height: 'calc(100% - 120px)'
+          gap: '40px',
+          height: 'calc(100% - 100px)'
         }}>
           
           {/* Left Column - Assignment Details */}
           <div>
             <h3 style={{
               fontFamily: "'Madimi One', sans-serif",
-              fontSize: '18px',
+              fontSize: '16px',
               fontWeight: 'bold',
               color: '#000000',
-              margin: '0 0 20px 0',
-              paddingBottom: '10px',
+              margin: '0 0 15px 0',
+              paddingBottom: '8px',
               borderBottom: '2px solid #000000'
             }}>
               STEP 3 <span style={{
@@ -163,32 +163,32 @@ export default function AssignQuestionPackStep2Page() {
               backgroundColor: '#FFFFFF',
               border: '1px solid #000000',
               borderRadius: '0px',
-              padding: '20px',
+              padding: '15px',
               boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
             }}>
 
             {/* Due Date */}
-            <div style={{ marginBottom: '30px' }}>
+            <div style={{ marginBottom: '20px' }}>
               <h4 style={{
                 fontFamily: "'Figtree', sans-serif",
-                fontSize: '16px',
+                fontSize: '14px',
                 fontWeight: 'bold',
                 color: '#000000',
-                margin: '0 0 10px 0',
+                margin: '0 0 8px 0',
                 letterSpacing: '0.04em'
               }}>
                 Due Date
               </h4>
-              <div style={{ display: 'flex', gap: '15px' }}>
+              <div style={{ display: 'flex', gap: '10px' }}>
                 <div style={{
                   backgroundColor: '#D3F6F7',
                   border: '1px solid #000000',
                   borderRadius: '0px',
-                  padding: '10px 15px',
+                  padding: '8px 12px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  width: '150px',
+                  width: '120px',
                   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                 }}>
                   <span style={{
@@ -207,11 +207,11 @@ export default function AssignQuestionPackStep2Page() {
                   backgroundColor: '#D3F6F7',
                   border: '1px solid #000000',
                   borderRadius: '0px',
-                  padding: '10px 15px',
+                  padding: '8px 12px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  width: '120px',
+                  width: '100px',
                   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                 }}>
                   <span style={{
@@ -230,16 +230,16 @@ export default function AssignQuestionPackStep2Page() {
             </div>
 
             {/* Time Limit */}
-            <div style={{ marginBottom: '30px' }}>
+            <div style={{ marginBottom: '20px' }}>
               <h4 style={{
                 fontFamily: "'Figtree', sans-serif",
-                fontSize: '16px',
+                fontSize: '14px',
                 fontWeight: 'bold',
                 color: '#000000',
-                margin: '0 0 10px 0',
+                margin: '0 0 8px 0',
                 letterSpacing: '0.04em'
               }}>
-                Time Limit <span style={{ fontWeight: 'normal', color: '#666666' }}>(optional)</span>
+                Time Limit <span style={{ fontWeight: 'normal', color: '#666666', letterSpacing: '0.04em' }}>(optional)</span>
               </h4>
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '10px' }}>
                 <label style={{
@@ -264,31 +264,28 @@ export default function AssignQuestionPackStep2Page() {
                   />
                   Set time limit
                 </label>
-                <div style={{
-                  backgroundColor: '#E5E5E5',
-                  border: '1px solid #CCCCCC',
-                  borderRadius: '0px',
-                  padding: '5px 10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '5px'
-                }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                   <input
                     type="number"
                     value={timeLimitValue}
                     onChange={(e) => setTimeLimitValue(parseInt(e.target.value))}
                     style={{
-                      border: 'none',
-                      backgroundColor: 'transparent',
+                      border: '2px solid #000000',
+                      backgroundColor: '#FFFFFF',
                       width: '40px',
+                      height: '30px',
                       fontFamily: "'Figtree', sans-serif",
-                      fontSize: '14px'
+                      fontSize: '14px',
+                      letterSpacing: '0.04em',
+                      textAlign: 'center',
+                      borderRadius: '0px'
                     }}
                   />
                   <span style={{
                     fontFamily: "'Figtree', sans-serif",
                     fontSize: '14px',
-                    color: '#000000'
+                    color: '#000000',
+                    letterSpacing: '0.04em'
                   }}>
                     minutes
                   </span>
@@ -297,13 +294,13 @@ export default function AssignQuestionPackStep2Page() {
             </div>
 
             {/* Randomize Questions */}
-            <div style={{ marginBottom: '30px' }}>
+            <div style={{ marginBottom: '20px' }}>
               <h4 style={{
                 fontFamily: "'Figtree', sans-serif",
-                fontSize: '16px',
+                fontSize: '14px',
                 fontWeight: 'bold',
                 color: '#000000',
-                margin: '0 0 10px 0',
+                margin: '0 0 8px 0',
                 letterSpacing: '0.04em'
               }}>
                 Randomize question order
@@ -357,27 +354,27 @@ export default function AssignQuestionPackStep2Page() {
             </div>
 
             {/* Instructions */}
-            <div style={{ marginBottom: '30px' }}>
+            <div style={{ marginBottom: '20px' }}>
               <h4 style={{
                 fontFamily: "'Figtree', sans-serif",
-                fontSize: '16px',
+                fontSize: '14px',
                 fontWeight: 'bold',
                 color: '#000000',
-                margin: '0 0 10px 0',
+                margin: '0 0 8px 0',
                 letterSpacing: '0.04em'
               }}>
-                Instructions for students <span style={{ fontWeight: 'normal', color: '#666666' }}>(optional)</span>
+                Instructions for students <span style={{ fontWeight: 'normal', color: '#666666', letterSpacing: '0.04em' }}>(optional)</span>
               </h4>
               <textarea
                 value={instructions}
                 onChange={(e) => setInstructions(e.target.value)}
                 style={{
                   width: '100%',
-                  height: '100px',
+                  height: '50px',
                   backgroundColor: '#D3F6F7',
                   border: '1px solid #000000',
                   borderRadius: '0px',
-                  padding: '15px',
+                  padding: '8px',
                   fontFamily: "'Figtree', sans-serif",
                   fontSize: '14px',
                   letterSpacing: '0.04em',
@@ -388,10 +385,10 @@ export default function AssignQuestionPackStep2Page() {
             </div>
 
             {/* Notify Students */}
-            <div style={{ marginBottom: '30px' }}>
+            <div style={{ marginBottom: '20px' }}>
               <h4 style={{
                 fontFamily: "'Figtree', sans-serif",
-                fontSize: '16px',
+                fontSize: '14px',
                 fontWeight: 'bold',
                 color: '#000000',
                 margin: '0 0 15px 0',
@@ -453,11 +450,11 @@ export default function AssignQuestionPackStep2Page() {
           <div>
             <h3 style={{
               fontFamily: "'Madimi One', sans-serif",
-              fontSize: '18px',
+              fontSize: '16px',
               fontWeight: 'bold',
               color: '#000000',
-              margin: '0 0 20px 0',
-              paddingBottom: '10px',
+              margin: '0 0 15px 0',
+              paddingBottom: '8px',
               borderBottom: '2px solid #000000'
             }}>
               STEP 4 <span style={{
@@ -478,7 +475,7 @@ export default function AssignQuestionPackStep2Page() {
             }}>
               <div style={{
                 fontFamily: "'Figtree', sans-serif",
-                fontSize: '16px',
+                fontSize: '14px',
                 fontWeight: 'bold',
                 color: '#000000',
                 marginBottom: '15px',
@@ -557,13 +554,15 @@ export default function AssignQuestionPackStep2Page() {
                   borderRadius: '8px',
                   padding: '12px 24px',
                   fontFamily: "'Figtree', sans-serif",
-                  fontSize: '16px',
+                  fontSize: '14px',
                   fontWeight: 'bold',
-                  color: '#000000',
+                  color: '#FFFFFF',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px'
+                  gap: '8px',
+                  width: '90px',
+                  justifyContent: 'center'
                 }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -579,13 +578,15 @@ export default function AssignQuestionPackStep2Page() {
                   borderRadius: '8px',
                   padding: '12px 24px',
                   fontFamily: "'Figtree', sans-serif",
-                  fontSize: '16px',
+                  fontSize: '14px',
                   fontWeight: 'bold',
                   color: '#FFFFFF',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px'
+                  gap: '8px',
+                  width: '90px',
+                  justifyContent: 'center'
                 }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5 13L9 17L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
