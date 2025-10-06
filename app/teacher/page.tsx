@@ -352,7 +352,7 @@ export default function TeacherPage() {
             <div style={{
               backgroundColor: '#FFFFFF',
               border: '1px solid #000000',
-              borderRadius: '0px',
+              borderRadius: '4px',
               padding: '20px',
               boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
             }}>
