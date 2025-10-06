@@ -133,7 +133,7 @@ export default function TeacherPage() {
         }}>
           
           {/* Left Column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             
             {/* Quick Actions */}
             <div style={{
@@ -340,9 +340,9 @@ export default function TeacherPage() {
               display: 'flex',
               justifyContent: 'flex-start',
               alignItems: 'center',
-              margin: '5px 0',
+              margin: '0px 0',
               paddingLeft: '20px',
-              transform: 'translateX(-40%)'
+              transform: 'translateX(-30%)'
             }}>
               <Image 
                 src="/icons/teacher.svg" 
