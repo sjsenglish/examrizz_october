@@ -9,9 +9,6 @@ export default function CreateQuestionPackPage() {
   const [packName, setPackName] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('');
   const [showSubjectDropdown, setShowSubjectDropdown] = useState(false);
-  const [numberOfQuestions, setNumberOfQuestions] = useState(31);
-  const [fontSize, setFontSize] = useState(12);
-  const [orderBy, setOrderBy] = useState('Automatic');
   
   // Filter states
   const [questionType, setQuestionType] = useState(true);
@@ -21,17 +18,9 @@ export default function CreateQuestionPackPage() {
   const [examSession, setExamSession] = useState(false);
   const [filter6, setFilter6] = useState(false);
   
-  // Selected question types
+  // Additional filter states for left panel
   const [criticalThinking, setCriticalThinking] = useState(true);
   const [problemSolving, setProblemSolving] = useState(false);
-  
-  // Order by filters
-  const [orderQuestionType, setOrderQuestionType] = useState(true);
-  const [orderSubType, setOrderSubType] = useState(false);
-  const [orderYear, setOrderYear] = useState(false);
-  const [orderDifficulty, setOrderDifficulty] = useState(false);
-  const [orderExamSession, setOrderExamSession] = useState(false);
-  const [orderFilter6, setOrderFilter6] = useState(false);
 
   const subjects = ['Maths', 'Physics', 'Chemistry', 'Biology', 'Economics'];
 
@@ -56,8 +45,7 @@ export default function CreateQuestionPackPage() {
           <h1 style={{
             fontFamily: "'Madimi One', sans-serif",
             fontSize: '24px',
-            fontWeight: '400',
-            fontStyle: 'normal',
+            fontWeight: 400,
             letterSpacing: '0.04em',
             color: '#000000',
             margin: '0',
@@ -133,7 +121,7 @@ export default function CreateQuestionPackPage() {
           <h1 style={{
             fontFamily: "'Madimi One', sans-serif",
             fontSize: '28px',
-            fontWeight: '400',
+            fontWeight: 400,
             letterSpacing: '0.04em',
             color: '#000000',
             margin: '0 0 30px 0',
@@ -154,7 +142,7 @@ export default function CreateQuestionPackPage() {
             Step 1 of 2
           </div>
 
-          {/* Two Question Cards Side by Side - Using QuestionCard Styling */}
+          {/* Two Cards Side by Side */}
           <div style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
@@ -162,7 +150,7 @@ export default function CreateQuestionPackPage() {
             marginBottom: '34px'
           }}>
             
-            {/* Left Question Card - Exact QuestionCard Structure */}
+            {/* Left Card */}
             <article style={{
               backgroundColor: '#FFFFFF',
               borderRadius: '16px',
@@ -171,7 +159,7 @@ export default function CreateQuestionPackPage() {
               boxShadow: '6px 0 0 0 #00CED1, 0 6px 0 0 #00CED1, 6px 6px 0 0 #00CED1, 8px 8px 16px rgba(0, 206, 209, 0.2)',
               position: 'relative'
             }}>
-              {/* Question Header */}
+              {/* Left Card Header */}
               <header style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -189,8 +177,7 @@ export default function CreateQuestionPackPage() {
                     fontFamily: "'Madimi One', sans-serif",
                     fontSize: '22px',
                     color: '#000000',
-                    fontWeight: '400',
-                    fontStyle: 'normal'
+                    fontWeight: 400
                   }}>
                     Pack Name
                   </span>
@@ -215,7 +202,8 @@ export default function CreateQuestionPackPage() {
                     letterSpacing: '0.04em',
                     color: '#000000',
                     marginBottom: '25px',
-                    fontWeight: 'bold'
+                    fontWeight: 'bold',
+                    boxSizing: 'border-box'
                   }}
                 />
 
@@ -224,10 +212,9 @@ export default function CreateQuestionPackPage() {
                   <h3 style={{
                     fontFamily: "'Madimi One', sans-serif",
                     fontSize: '16px',
-                    fontWeight: '400',
+                    fontWeight: 400,
                     color: '#000000',
-                    margin: '0 0 15px 0',
-                    fontStyle: 'normal'
+                    margin: '0 0 15px 0'
                   }}>
                     Subject
                   </h3>
@@ -249,7 +236,8 @@ export default function CreateQuestionPackPage() {
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        fontWeight: 'bold'
+                        fontWeight: 'bold',
+                        boxSizing: 'border-box'
                       }}
                     >
                       {selectedSubject || 'Select subject'}
@@ -308,10 +296,9 @@ export default function CreateQuestionPackPage() {
                   <h3 style={{
                     fontFamily: "'Madimi One', sans-serif",
                     fontSize: '16px',
-                    fontWeight: '400',
+                    fontWeight: 400,
                     color: '#000000',
-                    margin: '0 0 15px 0',
-                    fontStyle: 'normal'
+                    margin: '0 0 15px 0'
                   }}>
                     Question Filters
                   </h3>
@@ -444,32 +431,68 @@ export default function CreateQuestionPackPage() {
                     </div>
                   </div>
 
-                  {/* Clear filters positioned like action buttons */}
+                  {/* Critical Thinking / Problem Solving section */}
+                  <div style={{
+                    backgroundColor: '#B3F0F2',
+                    padding: '15px',
+                    borderRadius: '8px',
+                    marginBottom: '20px'
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      gap: '20px',
+                      flexWrap: 'wrap'
+                    }}>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                        <input 
+                          type="checkbox" 
+                          checked={criticalThinking} 
+                          onChange={(e) => setCriticalThinking(e.target.checked)} 
+                          style={{ accentColor: '#00CED1' }}
+                        />
+                        <span style={{
+                          fontFamily: "'Figtree', sans-serif",
+                          fontSize: '14px',
+                          fontWeight: 'bold',
+                          color: '#000000',
+                          letterSpacing: '0.04em'
+                        }}>
+                          Critical Thinking
+                        </span>
+                      </label>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                        <input 
+                          type="checkbox" 
+                          checked={problemSolving} 
+                          onChange={(e) => setProblemSolving(e.target.checked)} 
+                          style={{ accentColor: '#00CED1' }}
+                        />
+                        <span style={{
+                          fontFamily: "'Figtree', sans-serif",
+                          fontSize: '14px',
+                          fontWeight: 'bold',
+                          color: '#000000',
+                          letterSpacing: '0.04em'
+                        }}>
+                          Problem Solving
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Clear filters button */}
                   <div style={{
                     display: 'flex',
-                    gap: '20px',
-                    justifyContent: 'flex-start'
+                    justifyContent: 'flex-end'
                   }}>
                     <button style={{
-                      backgroundColor: '#E4E0F7',
+                      background: 'none',
                       border: 'none',
-                      borderRadius: '8px',
-                      padding: '12px 20px',
-                      cursor: 'pointer',
                       fontFamily: "'Figtree', sans-serif",
                       fontSize: '14px',
-                      fontWeight: 'bold',
-                      color: '#000000',
-                      boxShadow: '3px 0 0 0 #c0b8d8, 0 3px 0 0 #c0b8d8, 3px 3px 0 0 #c0b8d8, 4px 4px 6px rgba(0, 0, 0, 0.1)',
-                      transition: 'transform 0.2s, box-shadow 0.2s'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '3px 0 0 0 #c0b8d8, 0 4px 0 0 #c0b8d8, 3px 4px 0 0 #c0b8d8, 4px 5px 8px rgba(0, 0, 0, 0.15)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0px)';
-                      e.currentTarget.style.boxShadow = '3px 0 0 0 #c0b8d8, 0 3px 0 0 #c0b8d8, 3px 3px 0 0 #c0b8d8, 4px 4px 6px rgba(0, 0, 0, 0.1)';
+                      color: '#666666',
+                      textDecoration: 'underline',
+                      cursor: 'pointer'
                     }}>
                       clear filters
                     </button>
@@ -478,7 +501,7 @@ export default function CreateQuestionPackPage() {
               </div>
             </article>
 
-            {/* Right Question Card - Exact QuestionCard Structure */}
+            {/* Right Card */}
             <article style={{
               backgroundColor: '#FFFFFF',
               borderRadius: '16px',
@@ -487,7 +510,7 @@ export default function CreateQuestionPackPage() {
               boxShadow: '6px 0 0 0 #00CED1, 0 6px 0 0 #00CED1, 6px 6px 0 0 #00CED1, 8px 8px 16px rgba(0, 206, 209, 0.2)',
               position: 'relative'
             }}>
-              {/* Question Header */}
+              {/* Right Card Header */}
               <header style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -505,8 +528,7 @@ export default function CreateQuestionPackPage() {
                     fontFamily: "'Madimi One', sans-serif",
                     fontSize: '22px',
                     color: '#000000',
-                    fontWeight: '400',
-                    fontStyle: 'normal'
+                    fontWeight: 400
                   }}>
                     Number of Questions
                   </span>
@@ -516,9 +538,8 @@ export default function CreateQuestionPackPage() {
                     padding: '4px 12px',
                     fontFamily: "'Madimi One', sans-serif",
                     fontSize: '16px',
-                    fontWeight: '400',
-                    boxShadow: '2px 2px 0 #000000',
-                    fontStyle: 'normal'
+                    fontWeight: 400,
+                    boxShadow: '2px 2px 0 #000000'
                   }}>
                     Step 1
                   </span>
@@ -526,14 +547,9 @@ export default function CreateQuestionPackPage() {
               </header>
 
               <div style={{ color: '#333333' }}>
-                {/* Number of Questions */}
+                {/* Number of Questions Slider */}
                 <div style={{
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '15px',
-                  fontWeight: 'bold',
-                  lineHeight: '1.6',
-                  marginBottom: '25px',
-                  color: '#333333'
+                  marginBottom: '25px'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '10px' }}>
                     <input
@@ -562,8 +578,8 @@ export default function CreateQuestionPackPage() {
                         left: '20%',
                         top: '50%',
                         transform: 'translate(-50%, -50%)',
-                        width: '30px',
-                        height: '30px',
+                        width: '40px',
+                        height: '40px',
                         backgroundColor: '#E0B4FF',
                         borderRadius: '50%',
                         display: 'flex',
@@ -577,7 +593,6 @@ export default function CreateQuestionPackPage() {
                           alt="Question counter" 
                           width={24} 
                           height={24}
-                          style={{ filter: 'invert(1)' }}
                         />
                       </div>
                     </div>
@@ -626,18 +641,16 @@ export default function CreateQuestionPackPage() {
                     <span style={{
                       fontFamily: "'Madimi One', sans-serif",
                       fontSize: '18px',
-                      fontWeight: '400',
-                      color: '#000000',
-                      fontStyle: 'normal'
+                      fontWeight: 400,
+                      color: '#000000'
                     }}>
                       Font Size 
                     </span>
                     <span style={{
                       fontFamily: "'Madimi One', sans-serif",
                       fontSize: '16px',
-                      fontWeight: '400',
-                      color: '#000000',
-                      fontStyle: 'normal'
+                      fontWeight: 400,
+                      color: '#000000'
                     }}>
                       12pt
                     </span>
@@ -656,8 +669,8 @@ export default function CreateQuestionPackPage() {
                         left: '30%',
                         top: '50%',
                         transform: 'translate(-50%, -50%)',
-                        width: '30px',
-                        height: '30px',
+                        width: '40px',
+                        height: '40px',
                         backgroundColor: '#E0B4FF',
                         borderRadius: '50%',
                         display: 'flex',
@@ -671,7 +684,6 @@ export default function CreateQuestionPackPage() {
                           alt="Font size" 
                           width={24} 
                           height={24}
-                          style={{ filter: 'invert(1)' }}
                         />
                       </div>
                     </div>
@@ -684,10 +696,9 @@ export default function CreateQuestionPackPage() {
                   <h3 style={{
                     fontFamily: "'Madimi One', sans-serif",
                     fontSize: '18px',
-                    fontWeight: '400',
+                    fontWeight: 400,
                     color: '#000000',
-                    margin: '0 0 15px 0',
-                    fontStyle: 'normal'
+                    margin: '0 0 15px 0'
                   }}>
                     Order questions by
                   </h3>
