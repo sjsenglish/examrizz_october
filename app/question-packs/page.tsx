@@ -3,11 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button } from '@/components/ui/Button';
-import { TabIcon } from '@/components/icons/TabIcon';
 import '../../styles/globals.css';
-import '../../components/ExamSearch/ExamSearch.css';
-import '../practice/practice.css';
 
 export default function QuestionPacksPage() {
   const [activeTab, setActiveTab] = useState('Admissions');
@@ -296,7 +292,6 @@ export default function QuestionPacksPage() {
                 onClick={() => setActiveTab('A Level')}
                 aria-label="A Level tab"
               >
-                <TabIcon isActive={activeTab === 'A Level'} />
                 <span>A Level</span>
               </button>
               
@@ -380,7 +375,6 @@ export default function QuestionPacksPage() {
               onClick={() => setActiveTab('Admissions')}
               aria-label="Admissions tab"
             >
-              <TabIcon isActive={activeTab === 'Admissions'} />
               <span>Admissions</span>
             </button>
             
@@ -416,7 +410,6 @@ export default function QuestionPacksPage() {
               onClick={() => setActiveTab('Saved')}
               aria-label="Saved tab"
             >
-              <TabIcon isActive={activeTab === 'Saved'} />
               <span>Saved</span>
             </button>
           </div>
