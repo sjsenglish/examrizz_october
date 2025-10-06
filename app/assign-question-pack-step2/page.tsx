@@ -21,7 +21,7 @@ export default function AssignQuestionPackStep2Page() {
       alignItems: 'flex-start',
       justifyContent: 'center',
       padding: '20px',
-      paddingTop: '5vh'
+      paddingTop: '10vh'
     }}>
       {/* Navbar */}
       <nav style={{
@@ -158,6 +158,15 @@ export default function AssignQuestionPackStep2Page() {
               }}>Assignment details</span>
             </h3>
 
+            {/* Step 3 White Container */}
+            <div style={{
+              backgroundColor: '#FFFFFF',
+              border: '1px solid #000000',
+              borderRadius: '0px',
+              padding: '20px',
+              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
+            }}>
+
             {/* Due Date */}
             <div style={{ marginBottom: '30px' }}>
               <h4 style={{
@@ -172,7 +181,7 @@ export default function AssignQuestionPackStep2Page() {
               </h4>
               <div style={{ display: 'flex', gap: '15px' }}>
                 <div style={{
-                  backgroundColor: '#FFFFFF',
+                  backgroundColor: '#D3F6F7',
                   border: '1px solid #000000',
                   borderRadius: '0px',
                   padding: '10px 15px',
@@ -195,7 +204,7 @@ export default function AssignQuestionPackStep2Page() {
                   </svg>
                 </div>
                 <div style={{
-                  backgroundColor: '#FFFFFF',
+                  backgroundColor: '#D3F6F7',
                   border: '1px solid #000000',
                   borderRadius: '0px',
                   padding: '10px 15px',
@@ -437,6 +446,7 @@ export default function AssignQuestionPackStep2Page() {
                 </label>
               </div>
             </div>
+            </div>
           </div>
 
           {/* Right Column - Review and Confirm */}
@@ -531,17 +541,25 @@ export default function AssignQuestionPackStep2Page() {
             </div>
 
             {/* Action Buttons */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ 
+              position: 'absolute',
+              bottom: '30px',
+              right: '30px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px',
+              alignItems: 'flex-end'
+            }}>
               <Link href="/assign-question-pack" style={{ textDecoration: 'none' }}>
                 <button style={{
-                  backgroundColor: '#E0E0E0',
+                  backgroundColor: '#D4D0FF',
                   border: 'none',
                   borderRadius: '8px',
                   padding: '12px 24px',
                   fontFamily: "'Figtree', sans-serif",
                   fontSize: '16px',
                   fontWeight: 'bold',
-                  color: '#666666',
+                  color: '#000000',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',

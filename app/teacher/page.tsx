@@ -202,7 +202,8 @@ export default function TeacherPage() {
                       color: '#000000',
                       cursor: 'pointer',
                       textAlign: 'center',
-                      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                      width: '100%'
                     }}>
                       Assign Existing Pack
                     </button>
