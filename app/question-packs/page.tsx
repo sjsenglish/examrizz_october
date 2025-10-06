@@ -161,19 +161,19 @@ export default function QuestionPacksPage() {
             alignItems: 'center',
             gap: '10px',
             fontSize: '16px',
-            fontFamily: "'Figtree', sans-serif",
-            fontWeight: '500',
+            fontFamily: "'Madimi One', cursive",
+            fontWeight: '400',
             color: '#000000',
             letterSpacing: '0.04em'
           }}
           onClick={() => window.location.href = '/create-question-pack'}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.3)';
+            e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.5)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = 'translateY(0px)';
-            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.25)';
+            e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.4)';
           }}>
             <span style={{ fontSize: '18px', fontWeight: 'bold' }}>+</span>
             New Pack
@@ -277,21 +277,21 @@ export default function QuestionPacksPage() {
                   border: '1px solid #000000',
                   borderRadius: '4px',
                   cursor: 'pointer',
-                  fontFamily: "'Figtree', sans-serif",
+                  fontFamily: "'Madimi One', cursive",
                   fontSize: '14px',
-                  fontWeight: '500',
+                  fontWeight: '400',
                   color: '#000000',
                   letterSpacing: '0.04em',
-                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.25)',
+                  boxShadow: '0 6px 12px rgba(0, 0, 0, 0.4)',
                   transition: 'transform 0.2s, box-shadow 0.2s'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-1px)';
-                  e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.5)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0px)';
-                  e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.25)';
+                  e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.4)';
                 }}
                 onClick={() => setActiveTab('A Level')}
                 aria-label="A Level tab"

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import '../../styles/globals.css';
 
 export default function CreateQuestionPackPage() {
@@ -165,15 +166,16 @@ export default function CreateQuestionPackPage() {
               {/* Pack Name */}
               <div style={{
                 backgroundColor: '#FFFFFF',
-                border: '1px solid #000000',
-                borderRadius: '8px',
+                border: '2px solid #000000',
+                borderRadius: '0px',
                 padding: '20px',
-                marginBottom: '20px'
+                marginBottom: '20px',
+                boxShadow: '0 4px 8px rgba(0, 255, 255, 0.3)'
               }}>
                 <h3 style={{
-                  fontFamily: "'Figtree', sans-serif",
+                  fontFamily: "'Madimi One', cursive",
                   fontSize: '16px',
-                  fontWeight: 'bold',
+                  fontWeight: '400',
                   color: '#000000',
                   margin: '0 0 15px 0'
                 }}>
@@ -187,11 +189,12 @@ export default function CreateQuestionPackPage() {
                   style={{
                     width: '100%',
                     padding: '10px',
-                    border: '1px solid #CCCCCC',
-                    borderRadius: '4px',
+                    border: '2px solid #000000',
+                    borderRadius: '0px',
                     backgroundColor: '#D3F6F7',
                     fontFamily: "'Figtree', sans-serif",
                     fontSize: '14px',
+                    letterSpacing: '0.04em',
                     color: '#000000'
                   }}
                 />
@@ -200,15 +203,16 @@ export default function CreateQuestionPackPage() {
               {/* Subject */}
               <div style={{
                 backgroundColor: '#FFFFFF',
-                border: '1px solid #000000',
-                borderRadius: '8px',
+                border: '2px solid #000000',
+                borderRadius: '0px',
                 padding: '20px',
-                marginBottom: '20px'
+                marginBottom: '20px',
+                boxShadow: '0 4px 8px rgba(0, 255, 255, 0.3)'
               }}>
                 <h3 style={{
-                  fontFamily: "'Figtree', sans-serif",
+                  fontFamily: "'Madimi One', cursive",
                   fontSize: '16px',
-                  fontWeight: 'bold',
+                  fontWeight: '400',
                   color: '#000000',
                   margin: '0 0 15px 0'
                 }}>
@@ -220,11 +224,12 @@ export default function CreateQuestionPackPage() {
                     style={{
                       width: '100%',
                       padding: '10px',
-                      border: '1px solid #CCCCCC',
-                      borderRadius: '4px',
+                      border: '2px solid #000000',
+                      borderRadius: '0px',
                       backgroundColor: '#D3F6F7',
                       fontFamily: "'Figtree', sans-serif",
                       fontSize: '14px',
+                      letterSpacing: '0.04em',
                       color: '#000000',
                       textAlign: 'left',
                       cursor: 'pointer',
@@ -284,15 +289,16 @@ export default function CreateQuestionPackPage() {
 
               {/* Question Filters */}
               <div style={{
-                backgroundColor: '#FFFFFF',
-                border: '1px solid #000000',
-                borderRadius: '8px',
-                padding: '20px'
+                backgroundColor: '#89F3FF',
+                border: '2px solid #000000',
+                borderRadius: '0px',
+                padding: '20px',
+                boxShadow: '0 4px 8px rgba(0, 255, 255, 0.3)'
               }}>
                 <h3 style={{
-                  fontFamily: "'Figtree', sans-serif",
+                  fontFamily: "'Madimi One', cursive",
                   fontSize: '16px',
-                  fontWeight: 'bold',
+                  fontWeight: '400',
                   color: '#000000',
                   margin: '0 0 15px 0'
                 }}>
@@ -306,27 +312,27 @@ export default function CreateQuestionPackPage() {
                   gap: '10px',
                   marginBottom: '20px'
                 }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
                     <input type="checkbox" checked={questionType} onChange={(e) => setQuestionType(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                     Question Type
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
                     <input type="checkbox" checked={subType} onChange={(e) => setSubType(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                     Sub Type
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
                     <input type="checkbox" checked={year} onChange={(e) => setYear(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                     Year
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
                     <input type="checkbox" checked={difficulty} onChange={(e) => setDifficulty(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                     Difficulty
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
                     <input type="checkbox" checked={examSession} onChange={(e) => setExamSession(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                     Exam Session
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
                     <input type="checkbox" checked={filter6} onChange={(e) => setFilter6(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                     Filter 6
                   </label>
@@ -346,11 +352,11 @@ export default function CreateQuestionPackPage() {
                     gap: '20px',
                     flexWrap: 'wrap'
                   }}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontFamily: "'Figtree', sans-serif" }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
                       <input type="checkbox" checked={criticalThinking} onChange={(e) => setCriticalThinking(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                       Critical Thinking
                     </label>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontFamily: "'Figtree', sans-serif" }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
                       <input type="checkbox" checked={problemSolving} onChange={(e) => setProblemSolving(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                       Problem Solving
                     </label>
@@ -380,20 +386,34 @@ export default function CreateQuestionPackPage() {
               {/* Number of Questions */}
               <div style={{
                 backgroundColor: '#FFFFFF',
-                border: '2px solid #4A90E2',
-                borderRadius: '8px',
+                border: '2px solid #000000',
+                borderRadius: '0px',
                 padding: '20px',
-                marginBottom: '20px'
+                marginBottom: '20px',
+                boxShadow: '0 4px 8px rgba(0, 255, 255, 0.3)'
               }}>
-                <h3 style={{
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  color: '#000000',
-                  margin: '0 0 15px 0'
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  marginBottom: '15px'
                 }}>
-                  Number of Questions
-                </h3>
+                  <Image 
+                    src="/icons/speech-bubble-ghost.svg" 
+                    alt="Question counter" 
+                    width={24} 
+                    height={24}
+                  />
+                  <h3 style={{
+                    fontFamily: "'Madimi One', cursive",
+                    fontSize: '16px',
+                    fontWeight: '400',
+                    color: '#000000',
+                    margin: '0'
+                  }}>
+                    Number of Questions
+                  </h3>
+                </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '10px' }}>
                   <input
                     type="text"
@@ -463,20 +483,34 @@ export default function CreateQuestionPackPage() {
               {/* Font Size */}
               <div style={{
                 backgroundColor: '#FFFFFF',
-                border: '1px solid #000000',
-                borderRadius: '8px',
+                border: '2px solid #000000',
+                borderRadius: '0px',
                 padding: '20px',
-                marginBottom: '20px'
+                marginBottom: '20px',
+                boxShadow: '0 4px 8px rgba(0, 255, 255, 0.3)'
               }}>
-                <h3 style={{
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  color: '#000000',
-                  margin: '0 0 15px 0'
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  marginBottom: '15px'
                 }}>
-                  Font Size <span style={{ fontSize: '12px', fontWeight: 'normal' }}>12pt</span>
-                </h3>
+                  <Image 
+                    src="/icons/speech-bubble-ghost.svg" 
+                    alt="Font size" 
+                    width={24} 
+                    height={24}
+                  />
+                  <h3 style={{
+                    fontFamily: "'Madimi One', cursive",
+                    fontSize: '16px',
+                    fontWeight: '400',
+                    color: '#000000',
+                    margin: '0'
+                  }}>
+                    Font Size <span style={{ fontSize: '12px', fontWeight: 'normal' }}>12pt</span>
+                  </h3>
+                </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                   <span style={{ fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>small</span>
                   <div style={{ 
@@ -512,14 +546,15 @@ export default function CreateQuestionPackPage() {
               {/* Order questions by */}
               <div style={{
                 backgroundColor: '#FFFFFF',
-                border: '1px solid #000000',
-                borderRadius: '8px',
-                padding: '20px'
+                border: '2px solid #000000',
+                borderRadius: '0px',
+                padding: '20px',
+                boxShadow: '0 4px 8px rgba(0, 255, 255, 0.3)'
               }}>
                 <h3 style={{
-                  fontFamily: "'Figtree', sans-serif",
+                  fontFamily: "'Madimi One', cursive",
                   fontSize: '16px',
-                  fontWeight: 'bold',
+                  fontWeight: '400',
                   color: '#000000',
                   margin: '0 0 15px 0'
                 }}>
@@ -570,27 +605,27 @@ export default function CreateQuestionPackPage() {
                   gridTemplateColumns: '1fr 1fr 1fr',
                   gap: '10px'
                 }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
                     <input type="checkbox" checked={orderQuestionType} onChange={(e) => setOrderQuestionType(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                     Question Type
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
                     <input type="checkbox" checked={orderSubType} onChange={(e) => setOrderSubType(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                     Sub Type
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
                     <input type="checkbox" checked={orderYear} onChange={(e) => setOrderYear(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                     Year
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
                     <input type="checkbox" checked={orderDifficulty} onChange={(e) => setOrderDifficulty(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                     Difficulty
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
                     <input type="checkbox" checked={orderExamSession} onChange={(e) => setOrderExamSession(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                     Exam Session
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
                     <input type="checkbox" checked={orderFilter6} onChange={(e) => setOrderFilter6(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                     Filter 6
                   </label>
