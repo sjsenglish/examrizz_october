@@ -152,10 +152,10 @@ export default function QuestionPacksPage() {
           <button style={{
             backgroundColor: '#B3F0F2',
             border: '1px solid #000000',
-            borderRadius: '0px',
+            borderRadius: '4px',
             padding: '12px 20px',
             cursor: 'pointer',
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.25)',
             transition: 'transform 0.2s, box-shadow 0.2s',
             display: 'flex',
             alignItems: 'center',
@@ -168,12 +168,12 @@ export default function QuestionPacksPage() {
           }}
           onClick={() => window.location.href = '/create-question-pack'}
           onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translate(-1px, -1px)';
-            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.3)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translate(0px, 0px)';
-            e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+            e.currentTarget.style.transform = 'translateY(0px)';
+            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.25)';
           }}>
             <span style={{ fontSize: '18px', fontWeight: 'bold' }}>+</span>
             New Pack
@@ -274,15 +274,24 @@ export default function QuestionPacksPage() {
                   justifyContent: 'center',
                   gap: '8px',
                   backgroundColor: activeTab === 'A Level' ? '#B3F0F2' : '#FFFFFF',
-                  border: '2px solid #000000',
-                  borderRadius: '0px',
+                  border: '1px solid #000000',
+                  borderRadius: '4px',
                   cursor: 'pointer',
                   fontFamily: "'Figtree', sans-serif",
                   fontSize: '14px',
                   fontWeight: '500',
                   color: '#000000',
                   letterSpacing: '0.04em',
-                  boxShadow: activeTab === 'A Level' ? '2px 2px 0 #000000' : '2px 2px 0 #CCCCCC'
+                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.25)',
+                  transition: 'transform 0.2s, box-shadow 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0px)';
+                  e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.25)';
                 }}
                 onClick={() => setActiveTab('A Level')}
                 aria-label="A Level tab"
@@ -349,15 +358,24 @@ export default function QuestionPacksPage() {
                 justifyContent: 'center',
                 gap: '8px',
                 backgroundColor: activeTab === 'Admissions' ? '#B3F0F2' : '#FFFFFF',
-                border: '2px solid #000000',
-                borderRadius: '0px',
+                border: '1px solid #000000',
+                borderRadius: '4px',
                 cursor: 'pointer',
                 fontFamily: "'Figtree', sans-serif",
                 fontSize: '14px',
                 fontWeight: '500',
                 color: '#000000',
                 letterSpacing: '0.04em',
-                boxShadow: activeTab === 'Admissions' ? '2px 2px 0 #000000' : '2px 2px 0 #CCCCCC'
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.25)',
+                transition: 'transform 0.2s, box-shadow 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0px)';
+                e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.25)';
               }}
               onClick={() => setActiveTab('Admissions')}
               aria-label="Admissions tab"
@@ -376,15 +394,24 @@ export default function QuestionPacksPage() {
                 justifyContent: 'center',
                 gap: '8px',
                 backgroundColor: activeTab === 'Saved' ? '#B3F0F2' : '#FFFFFF',
-                border: '2px solid #000000',
-                borderRadius: '0px',
+                border: '1px solid #000000',
+                borderRadius: '4px',
                 cursor: 'pointer',
                 fontFamily: "'Figtree', sans-serif",
                 fontSize: '14px',
                 fontWeight: '500',
                 color: '#000000',
                 letterSpacing: '0.04em',
-                boxShadow: activeTab === 'Saved' ? '2px 2px 0 #000000' : '2px 2px 0 #CCCCCC'
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.25)',
+                transition: 'transform 0.2s, box-shadow 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0px)';
+                e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.25)';
               }}
               onClick={() => setActiveTab('Saved')}
               aria-label="Saved tab"
