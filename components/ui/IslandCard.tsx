@@ -54,16 +54,18 @@ export const IslandCard: React.FC<IslandCardProps> = ({
   };
 
   // Floating animation for main hub
-  const floatingVariants = isMainHub ? {
-    animate: {
+  const floatingVariants = {
+    animate: isMainHub ? {
       y: [0, -10, 0],
       transition: {
         duration: 3,
         repeat: Infinity,
         ease: 'easeInOut' as any
       }
+    } : {
+      y: 0
     }
-  } : {};
+  };
 
   // Size mapping
   const sizeClasses = {
@@ -99,7 +101,7 @@ export const IslandCard: React.FC<IslandCardProps> = ({
       <Link href={route} className="block">
         <motion.div
           variants={floatingVariants}
-          animate={isMainHub ? 'animate' : undefined}
+          animate="animate"
           className={`
             relative group cursor-pointer
             ${cardSizeClasses[size]}

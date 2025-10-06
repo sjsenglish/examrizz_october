@@ -21,22 +21,22 @@ export const SteppingStones: React.FC<SteppingStonesProps> = ({
       scale: 0.5,
       y: 20
     },
-    animate: (index: number) => ({
+    animate: {
       opacity: 1,
       scale: 1,
       y: 0,
       transition: {
-        delay: 0.8 + (index * 0.1), // Start after islands
+        delay: 0.8,
         duration: 0.4,
-        ease: 'easeOut'
+        ease: 'easeOut' as any
       }
-    }),
+    },
     hover: {
       scale: 1.1,
       y: -5,
       transition: {
         duration: 0.2,
-        ease: 'easeOut'
+        ease: 'easeOut' as any
       }
     },
     tap: {
@@ -56,7 +56,7 @@ export const SteppingStones: React.FC<SteppingStonesProps> = ({
       transition: {
         duration: 2,
         repeat: Infinity,
-        ease: 'easeOut'
+        ease: 'easeOut' as any
       }
     }
   };
@@ -108,7 +108,11 @@ export const SteppingStones: React.FC<SteppingStonesProps> = ({
             animate="animate"
             whileHover="hover"
             whileTap="tap"
-            custom={index}
+            transition={{
+              delay: 0.8 + (index * 0.1),
+              duration: 0.4,
+              ease: 'easeOut' as any
+            }}
             className="relative z-10"
           >
             <Link href="/search" className="block">
