@@ -190,21 +190,24 @@ export default function TeacherPage() {
                   }}>
                     Create Pack
                   </button>
-                  <button style={{
-                    backgroundColor: '#FFFFFF',
-                    border: '1px solid #CCCCCC',
-                    borderRadius: '0px',
-                    padding: '20px 26px',
-                    fontFamily: "'Figtree', sans-serif",
-                    fontSize: '16px',
-                    letterSpacing: '0.04em',
-                    color: '#000000',
-                    cursor: 'pointer',
-                    textAlign: 'center',
-                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
-                  }}>
-                    Assign Existing Pack
-                  </button>
+                  <Link href="/assign-question-pack" style={{ textDecoration: 'none' }}>
+                    <button style={{
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid #000000',
+                      borderRadius: '0px',
+                      padding: '20px 39px',
+                      fontFamily: "'Figtree', sans-serif",
+                      fontSize: '16px',
+                      letterSpacing: '0.04em',
+                      color: '#000000',
+                      cursor: 'pointer',
+                      textAlign: 'center',
+                      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                      width: '100%'
+                    }}>
+                      Assign Existing Pack
+                    </button>
+                  </Link>
                   <button style={{
                     backgroundColor: '#FFFFFF',
                     border: '1px solid #CCCCCC',
