@@ -124,65 +124,6 @@ export default function QuestionPacksPage() {
             }}>
               Your Question Packs
             </h2>
-            
-            
-            {/* Tabs */}
-            <div className="tabs-container">
-              {/* A Level Tab with Dropdown */}
-              <div 
-                className="tab-wrapper"
-                onMouseEnter={() => setShowALevelDropdown(true)}
-                onMouseLeave={() => setShowALevelDropdown(false)}
-              >
-                <button 
-                  className={`tab ${activeTab === 'A Level' ? 'tab-active' : ''}`}
-                  onClick={() => setActiveTab('A Level')}
-                  aria-label="A Level tab"
-                >
-                  <TabIcon isActive={activeTab === 'A Level'} />
-                  <span className="tab-text">A Level</span>
-                </button>
-                
-                {/* A Level Dropdown */}
-                {showALevelDropdown && (
-                  <div className="dropdown-menu" style={{ top: 'calc(100% - 20px)' }}>
-                    {['Maths', 'Physics', 'Economics', 'Biology', 'Chemistry'].map((subject) => (
-                      <button
-                        key={subject}
-                        className="dropdown-item"
-                        onClick={() => {
-                          setSelectedSubject(subject);
-                          setActiveTab('A Level');
-                          setShowALevelDropdown(false);
-                        }}
-                      >
-                        {subject}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-              
-              {/* Admissions Tab */}
-              <button 
-                className={`tab ${activeTab === 'Admissions' ? 'tab-active' : ''}`}
-                onClick={() => setActiveTab('Admissions')}
-                aria-label="Admissions tab"
-              >
-                <TabIcon isActive={activeTab === 'Admissions'} />
-                <span className="tab-text">Admissions</span>
-              </button>
-              
-              {/* Saved Tab */}
-              <button 
-                className={`tab ${activeTab === 'Saved' ? 'tab-active' : ''}`}
-                onClick={() => setActiveTab('Saved')}
-                aria-label="Saved tab"
-              >
-                <TabIcon isActive={activeTab === 'Saved'} />
-                <span className="tab-text">Saved</span>
-              </button>
-          </div>
           </div>
         </div>
 
@@ -273,7 +214,7 @@ export default function QuestionPacksPage() {
         {/* Search Bar */}
         <div style={{
           maxWidth: '852px',
-          margin: '0 auto 40px auto',
+          margin: '0 auto 20px auto',
           position: 'relative',
           zIndex: 5
         }}>
@@ -300,6 +241,158 @@ export default function QuestionPacksPage() {
               e.currentTarget.style.border = '1px solid #000000';
             }}
           />
+        </div>
+
+        {/* Tabs */}
+        <div style={{
+          maxWidth: '852px',
+          margin: '0 auto 40px auto',
+          position: 'relative',
+          zIndex: 5
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            gap: '10px',
+            width: '100%'
+          }}>
+            {/* A Level Tab with Dropdown */}
+            <div 
+              style={{
+                position: 'relative',
+                flex: '1'
+              }}
+              onMouseEnter={() => setShowALevelDropdown(true)}
+              onMouseLeave={() => setShowALevelDropdown(false)}
+            >
+              <button 
+                style={{
+                  width: '100%',
+                  height: '40px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  backgroundColor: activeTab === 'A Level' ? '#B3F0F2' : '#FFFFFF',
+                  border: '2px solid #000000',
+                  borderRadius: '0px',
+                  cursor: 'pointer',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  color: '#000000',
+                  letterSpacing: '0.04em',
+                  boxShadow: activeTab === 'A Level' ? '2px 2px 0 #000000' : '2px 2px 0 #CCCCCC'
+                }}
+                onClick={() => setActiveTab('A Level')}
+                aria-label="A Level tab"
+              >
+                <TabIcon isActive={activeTab === 'A Level'} />
+                <span>A Level</span>
+              </button>
+              
+              {/* A Level Dropdown */}
+              {showALevelDropdown && (
+                <div style={{
+                  position: 'absolute',
+                  top: 'calc(100% - 5px)',
+                  left: '0',
+                  right: '0',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #000000',
+                  borderRadius: '0px',
+                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                  zIndex: 1000
+                }}>
+                  {['Maths', 'Physics', 'Economics', 'Biology', 'Chemistry'].map((subject) => (
+                    <button
+                      key={subject}
+                      style={{
+                        display: 'block',
+                        width: '100%',
+                        padding: '8px 12px',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        fontFamily: "'Figtree', sans-serif",
+                        fontSize: '14px',
+                        color: '#000000',
+                        letterSpacing: '0.04em'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#F0F0F0';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }}
+                      onClick={() => {
+                        setSelectedSubject(subject);
+                        setActiveTab('A Level');
+                        setShowALevelDropdown(false);
+                      }}
+                    >
+                      {subject}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            {/* Admissions Tab */}
+            <button 
+              style={{
+                flex: '1',
+                height: '40px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                backgroundColor: activeTab === 'Admissions' ? '#B3F0F2' : '#FFFFFF',
+                border: '2px solid #000000',
+                borderRadius: '0px',
+                cursor: 'pointer',
+                fontFamily: "'Figtree', sans-serif",
+                fontSize: '14px',
+                fontWeight: '500',
+                color: '#000000',
+                letterSpacing: '0.04em',
+                boxShadow: activeTab === 'Admissions' ? '2px 2px 0 #000000' : '2px 2px 0 #CCCCCC'
+              }}
+              onClick={() => setActiveTab('Admissions')}
+              aria-label="Admissions tab"
+            >
+              <TabIcon isActive={activeTab === 'Admissions'} />
+              <span>Admissions</span>
+            </button>
+            
+            {/* Saved Tab */}
+            <button 
+              style={{
+                flex: '1',
+                height: '40px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                backgroundColor: activeTab === 'Saved' ? '#B3F0F2' : '#FFFFFF',
+                border: '2px solid #000000',
+                borderRadius: '0px',
+                cursor: 'pointer',
+                fontFamily: "'Figtree', sans-serif",
+                fontSize: '14px',
+                fontWeight: '500',
+                color: '#000000',
+                letterSpacing: '0.04em',
+                boxShadow: activeTab === 'Saved' ? '2px 2px 0 #000000' : '2px 2px 0 #CCCCCC'
+              }}
+              onClick={() => setActiveTab('Saved')}
+              aria-label="Saved tab"
+            >
+              <TabIcon isActive={activeTab === 'Saved'} />
+              <span>Saved</span>
+            </button>
+          </div>
         </div>
 
         {/* Main Content Area */}
