@@ -52,7 +52,7 @@ export default function QuestionPacksPage() {
       }}>
         <Link href="/" style={{ textDecoration: 'none' }}>
           <h1 style={{
-            fontFamily: "'Madimi One', cursive",
+            fontFamily: "'Madimi One', sans-serif",
             fontSize: '24px',
             fontWeight: '400',
             color: '#000000',
@@ -112,7 +112,7 @@ export default function QuestionPacksPage() {
             position: 'relative'
           }}>
             <h2 style={{
-              fontFamily: "'Madimi One', cursive",
+              fontFamily: "'Madimi One', sans-serif",
               fontSize: '28px',
               fontWeight: '400',
               color: '#000000',
@@ -157,7 +157,7 @@ export default function QuestionPacksPage() {
             alignItems: 'center',
             gap: '10px',
             fontSize: '16px',
-            fontFamily: "'Madimi One', cursive",
+            fontFamily: "'Madimi One', sans-serif",
             fontWeight: '400',
             color: '#000000',
             letterSpacing: '0.04em'
@@ -244,7 +244,7 @@ export default function QuestionPacksPage() {
           maxWidth: '852px',
           margin: '0 auto 40px auto',
           position: 'relative',
-          zIndex: 5
+          zIndex: 1000
         }}>
           <div style={{
             display: 'flex',
