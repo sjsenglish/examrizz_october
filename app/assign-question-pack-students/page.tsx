@@ -320,7 +320,7 @@ export default function AssignQuestionPackStudentsPage() {
             {/* Filter and Search */}
             <div style={{
               display: 'flex',
-              gap: '15px',
+              justifyContent: 'space-between',
               marginBottom: '20px',
               alignItems: 'center'
             }}>
@@ -375,7 +375,7 @@ export default function AssignQuestionPackStudentsPage() {
                       borderRadius: '0px',
                       backgroundColor: '#FFFFFF',
                       letterSpacing: '0.04em',
-                      width: '150px'
+                      width: '170px'
                     }}
                   />
                   <div style={{
@@ -479,8 +479,12 @@ export default function AssignQuestionPackStudentsPage() {
             </div>
 
             {/* Next Step Button */}
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Link href="/assign-question-pack-step2" style={{ textDecoration: 'none' }}>
+            <div style={{ 
+              position: 'absolute',
+              bottom: '30px',
+              right: '30px'
+            }}>
+              <Link href="/assign-question-pack-step2-students" style={{ textDecoration: 'none' }}>
                 <button style={{
                   backgroundColor: '#00CED1',
                   border: 'none',

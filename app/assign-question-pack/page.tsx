@@ -383,7 +383,11 @@ export default function AssignQuestionPackPage() {
             </div>
 
             {/* Next Step Button */}
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{ 
+              position: 'absolute',
+              bottom: '30px',
+              right: '30px'
+            }}>
               <Link 
                 href={assignToEntireClass ? "/assign-question-pack-step2" : "/assign-question-pack-students"} 
                 style={{ textDecoration: 'none' }}
