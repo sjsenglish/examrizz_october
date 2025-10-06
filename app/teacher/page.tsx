@@ -133,7 +133,7 @@ export default function TeacherPage() {
         }}>
           
           {/* Left Column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
             
             {/* Quick Actions */}
             <div style={{
@@ -177,9 +177,9 @@ export default function TeacherPage() {
                 }}>
                   <button style={{
                     backgroundColor: '#FFFFFF',
-                    border: '1px solid #CCCCCC',
+                    border: '1px solid #000000',
                     borderRadius: '0px',
-                    padding: '20px 26px',
+                    padding: '20px 39px',
                     fontFamily: "'Figtree', sans-serif",
                     fontSize: '16px',
                     letterSpacing: '0.04em',
@@ -210,9 +210,9 @@ export default function TeacherPage() {
                   </Link>
                   <button style={{
                     backgroundColor: '#FFFFFF',
-                    border: '1px solid #CCCCCC',
+                    border: '1px solid #000000',
                     borderRadius: '0px',
-                    padding: '20px 26px',
+                    padding: '20px 39px',
                     fontFamily: "'Figtree', sans-serif",
                     fontSize: '16px',
                     letterSpacing: '0.04em',
@@ -340,9 +340,9 @@ export default function TeacherPage() {
               display: 'flex',
               justifyContent: 'flex-start',
               alignItems: 'center',
-              margin: '10px 0',
+              margin: '5px 0',
               paddingLeft: '20px',
-              transform: 'translateX(-20%)'
+              transform: 'translateX(-40%)'
             }}>
               <Image 
                 src="/icons/teacher.svg" 

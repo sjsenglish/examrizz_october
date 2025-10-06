@@ -98,12 +98,13 @@ export default function AssignQuestionPackPage() {
 
       {/* Modal */}
       <div style={{
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#F8F9FD',
         border: '1px solid #000000',
         borderRadius: '8px',
         padding: '30px',
-        maxWidth: '1200px',
-        width: '100%',
+        maxWidth: '1440px',
+        width: '96%',
+        height: '90vh',
         position: 'relative',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
       }}>
@@ -158,17 +159,20 @@ export default function AssignQuestionPackPage() {
             <div style={{
               backgroundColor: '#FFFFFF',
               border: '1px solid #000000',
-              borderRadius: '8px',
+              borderRadius: '0px',
               padding: '30px',
               marginBottom: '40px',
-              position: 'relative'
+              position: 'relative',
+              width: '90%',
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
             }}>
               <h2 style={{
                 fontFamily: "'Figtree', sans-serif",
                 fontSize: '20px',
                 fontWeight: 'bold',
                 color: '#000000',
-                margin: '0 0 20px 0'
+                margin: '0 0 20px 0',
+                letterSpacing: '0.04em'
               }}>
                 Calculus Basics Homework
               </h2>
@@ -182,8 +186,9 @@ export default function AssignQuestionPackPage() {
                   <span style={{
                     fontFamily: "'Figtree', sans-serif",
                     fontSize: '16px',
-                    fontWeight: 'bold',
-                    color: '#000000'
+                    fontWeight: 'normal',
+                    color: '#000000',
+                    letterSpacing: '0.04em'
                   }}>
                     28 Questions
                   </span>
@@ -192,8 +197,9 @@ export default function AssignQuestionPackPage() {
                   <span style={{
                     fontFamily: "'Figtree', sans-serif",
                     fontSize: '16px',
-                    fontWeight: 'bold',
-                    color: '#000000'
+                    fontWeight: 'normal',
+                    color: '#000000',
+                    letterSpacing: '0.04em'
                   }}>
                     50 marks
                   </span>
@@ -218,7 +224,7 @@ export default function AssignQuestionPackPage() {
             {/* Step 1 */}
             <div style={{ marginBottom: '40px' }}>
               <h3 style={{
-                fontFamily: "'Figtree', sans-serif",
+                fontFamily: "'Madimi One', sans-serif",
                 fontSize: '18px',
                 fontWeight: 'bold',
                 color: '#000000',
@@ -226,17 +232,11 @@ export default function AssignQuestionPackPage() {
                 paddingBottom: '10px',
                 borderBottom: '2px solid #000000'
               }}>
-                <span style={{
-                  backgroundColor: '#000000',
-                  color: '#FFFFFF',
-                  padding: '4px 8px',
-                  borderRadius: '4px',
-                  marginRight: '12px',
-                  fontSize: '14px'
-                }}>
-                  STEP 1
-                </span>
-                Who should receive this pack?
+                STEP 1 <span style={{
+                  fontFamily: "'Figtree', sans-serif",
+                  fontWeight: 'normal',
+                  letterSpacing: '0.04em'
+                }}>Who should receive this pack?</span>
               </h3>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -247,7 +247,8 @@ export default function AssignQuestionPackPage() {
                   cursor: 'pointer',
                   fontFamily: "'Figtree', sans-serif",
                   fontSize: '16px',
-                  color: '#000000'
+                  color: '#000000',
+                  letterSpacing: '0.04em'
                 }}>
                   <input
                     type="checkbox"
@@ -269,7 +270,8 @@ export default function AssignQuestionPackPage() {
                   cursor: 'pointer',
                   fontFamily: "'Figtree', sans-serif",
                   fontSize: '16px',
-                  color: '#000000'
+                  color: '#000000',
+                  letterSpacing: '0.04em'
                 }}>
                   <input
                     type="checkbox"
@@ -290,7 +292,7 @@ export default function AssignQuestionPackPage() {
           {/* Right Column - Class Selection */}
           <div>
             <h3 style={{
-              fontFamily: "'Figtree', sans-serif",
+              fontFamily: "'Madimi One', sans-serif",
               fontSize: '18px',
               fontWeight: 'bold',
               color: '#000000',
@@ -298,28 +300,23 @@ export default function AssignQuestionPackPage() {
               paddingBottom: '10px',
               borderBottom: '2px solid #000000'
             }}>
-              <span style={{
-                backgroundColor: '#000000',
-                color: '#FFFFFF',
-                padding: '4px 8px',
-                borderRadius: '4px',
-                marginRight: '12px',
-                fontSize: '14px'
-              }}>
-                STEP 2
-              </span>
-              Who should receive this pack?
+              STEP 2 <span style={{
+                fontFamily: "'Figtree', sans-serif",
+                fontWeight: 'normal',
+                letterSpacing: '0.04em'
+              }}>Who should receive this pack?</span>
             </h3>
 
             {/* Class List */}
             <div style={{
-              backgroundColor: '#E5FAFA',
-              border: '1px solid #CCCCCC',
-              borderRadius: '8px',
+              backgroundColor: '#D3F6F7',
+              border: '1px solid #000000',
+              borderRadius: '0px',
               padding: '20px',
               height: '300px',
               overflowY: 'auto',
-              marginBottom: '20px'
+              marginBottom: '20px',
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
             }}>
               {classes.map((className, index) => (
                 <label key={index} style={{
@@ -332,9 +329,11 @@ export default function AssignQuestionPackPage() {
                   color: '#000000',
                   padding: '12px',
                   backgroundColor: '#FFFFFF',
-                  border: '1px solid #CCCCCC',
-                  borderRadius: '4px',
-                  marginBottom: '8px'
+                  border: '1px solid #000000',
+                  borderRadius: '0px',
+                  marginBottom: '8px',
+                  letterSpacing: '0.04em',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                 }}>
                   <input
                     type="checkbox"
@@ -361,7 +360,8 @@ export default function AssignQuestionPackPage() {
               <span style={{
                 fontFamily: "'Figtree', sans-serif",
                 fontSize: '14px',
-                color: '#000000'
+                color: '#000000',
+                letterSpacing: '0.04em'
               }}>
                 Selected - {selectedClasses.length} class{selectedClasses.length !== 1 ? 'es' : ''}, {getTotalStudents()} students
               </span>
@@ -372,7 +372,8 @@ export default function AssignQuestionPackPage() {
                 fontFamily: "'Figtree', sans-serif",
                 fontSize: '14px',
                 textDecoration: 'underline',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                letterSpacing: '0.04em'
               }}
               onClick={() => setSelectedClasses([])}
               >
