@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { TeacherIcon } from '../../components/icons/TeacherIcon';
 import '../../styles/globals.css';
 
 export default function TeacherPage() {
@@ -127,7 +128,8 @@ export default function TeacherPage() {
           gap: '40px',
           maxWidth: '1400px',
           padding: '0 60px 60px',
-          margin: '0 auto'
+          margin: '0 auto',
+          transform: 'translateX(30%)'
         }}>
           
           {/* Left Column */}
@@ -174,13 +176,14 @@ export default function TeacherPage() {
                     backgroundColor: '#FFFFFF',
                     border: '1px solid #CCCCCC',
                     borderRadius: '0px',
-                    padding: '20px',
+                    padding: '20px 26px',
                     fontFamily: "'Figtree', sans-serif",
                     fontSize: '16px',
                     letterSpacing: '0.04em',
                     color: '#000000',
                     cursor: 'pointer',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                   }}>
                     Create Pack
                   </button>
@@ -188,13 +191,14 @@ export default function TeacherPage() {
                     backgroundColor: '#FFFFFF',
                     border: '1px solid #CCCCCC',
                     borderRadius: '0px',
-                    padding: '20px',
+                    padding: '20px 26px',
                     fontFamily: "'Figtree', sans-serif",
                     fontSize: '16px',
                     letterSpacing: '0.04em',
                     color: '#000000',
                     cursor: 'pointer',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                   }}>
                     Assign Existing Pack
                   </button>
@@ -202,13 +206,14 @@ export default function TeacherPage() {
                     backgroundColor: '#FFFFFF',
                     border: '1px solid #CCCCCC',
                     borderRadius: '0px',
-                    padding: '20px',
+                    padding: '20px 26px',
                     fontFamily: "'Figtree', sans-serif",
                     fontSize: '16px',
                     letterSpacing: '0.04em',
                     color: '#000000',
                     cursor: 'pointer',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                   }}>
                     Add Student to Class
                   </button>
@@ -239,9 +244,10 @@ export default function TeacherPage() {
                 {[1, 2, 3].map((i) => (
                   <div key={i} style={{
                     backgroundColor: '#FFFFFF',
-                    border: '1px solid #CCCCCC',
-                    borderRadius: '8px',
-                    padding: '20px'
+                    border: '2px solid #CCCCCC',
+                    borderRadius: '4px',
+                    padding: '20px',
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                   }}>
                     <h3 style={{
                       fontFamily: "'Madimi One', sans-serif",
@@ -255,7 +261,8 @@ export default function TeacherPage() {
                     <p style={{
                       fontFamily: "'Madimi One', sans-serif",
                       fontSize: '14px',
-                      color: '#666666',
+                      color: '#000000',
+                      fontWeight: 'bold',
                       margin: '0 0 8px 0'
                     }}>
                       28 students
@@ -292,16 +299,17 @@ export default function TeacherPage() {
                 
                 {/* Add Class Card */}
                 <div style={{
-                  backgroundColor: '#B3F0F2',
-                  border: '1px solid #CCCCCC',
-                  borderRadius: '8px',
+                  backgroundColor: '#E5FAFA',
+                  border: '2px solid #CCCCCC',
+                  borderRadius: '4px',
                   padding: '20px',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  minHeight: '140px'
+                  minHeight: '140px',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                 }}>
                   <div style={{
                     fontSize: '24px',
@@ -312,7 +320,8 @@ export default function TeacherPage() {
                     fontFamily: "'Madimi One', sans-serif",
                     fontSize: '14px',
                     fontWeight: 'bold',
-                    color: '#000000'
+                    color: '#000000',
+                    letterSpacing: '0.04em'
                   }}>
                     ADD CLASS
                   </span>
@@ -320,12 +329,23 @@ export default function TeacherPage() {
               </div>
             </div>
 
+            {/* Teacher Icon in middle */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              margin: '20px 0'
+            }}>
+              <TeacherIcon size={120} />
+            </div>
+
             {/* Ongoing Packs */}
             <div style={{
               backgroundColor: '#FFFFFF',
               border: '1px solid #000000',
-              borderRadius: '8px',
-              padding: '20px'
+              borderRadius: '0px',
+              padding: '20px',
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
             }}>
               <div style={{
                 backgroundColor: '#B3F0F2',
@@ -351,62 +371,69 @@ export default function TeacherPage() {
                 {/* Pack 1 */}
                 <div style={{
                   backgroundColor: '#FFFFFF',
-                  border: '1px solid #CCCCCC',
-                  borderRadius: '8px',
-                  padding: '20px'
+                  border: '2px solid #CCCCCC',
+                  borderRadius: '0px',
+                  padding: '20px',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <div style={{ flex: 1 }}>
                       <h3 style={{
-                        fontFamily: "'Madimi One', sans-serif",
+                        fontFamily: "'Figtree', sans-serif",
                         fontSize: '16px',
                         fontWeight: 'bold',
                         color: '#000000',
-                        margin: '0 0 8px 0'
+                        margin: '0 0 8px 0',
+                        letterSpacing: '0.04em'
                       }}>
                         Maths A Level Integrals Basics
                       </h3>
                       <p style={{
-                        fontFamily: "'Madimi One', sans-serif",
+                        fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
                         color: '#666666',
-                        margin: '0 0 4px 0'
+                        margin: '0 0 4px 0',
+                        letterSpacing: '0.04em'
                       }}>
                         847 questions completed
                       </p>
                       <p style={{
-                        fontFamily: "'Madimi One', sans-serif",
+                        fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
                         color: '#666666',
-                        margin: '0 0 8px 0'
+                        margin: '0 0 8px 0',
+                        letterSpacing: '0.04em'
                       }}>
                         15/28 done
                       </p>
                       <p style={{
-                        fontFamily: "'Madimi One', sans-serif",
+                        fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
                         color: '#E74C3C',
-                        margin: '0'
+                        margin: '0',
+                        letterSpacing: '0.04em'
                       }}>
                         6 students need support
                       </p>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
                       <span style={{
-                        fontFamily: "'Madimi One', sans-serif",
+                        fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
-                        color: '#666666'
+                        color: '#666666',
+                        letterSpacing: '0.04em'
                       }}>
                         Due tomorrow
                       </span>
                       <button style={{
                         backgroundColor: 'transparent',
                         border: 'none',
-                        fontFamily: "'Madimi One', sans-serif",
+                        fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
                         color: '#0066CC',
                         cursor: 'pointer',
-                        textDecoration: 'underline'
+                        textDecoration: 'underline',
+                        letterSpacing: '0.04em'
                       }}>
                         View →
                       </button>
@@ -417,63 +444,70 @@ export default function TeacherPage() {
                 {/* Pack 2 */}
                 <div style={{
                   backgroundColor: '#FFFFFF',
-                  border: '1px solid #CCCCCC',
-                  borderRadius: '8px',
-                  padding: '20px'
+                  border: '2px solid #CCCCCC',
+                  borderRadius: '0px',
+                  padding: '20px',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <div style={{ flex: 1 }}>
                       <h3 style={{
-                        fontFamily: "'Madimi One', sans-serif",
+                        fontFamily: "'Figtree', sans-serif",
                         fontSize: '16px',
                         fontWeight: 'bold',
                         color: '#000000',
-                        margin: '0 0 8px 0'
+                        margin: '0 0 8px 0',
+                        letterSpacing: '0.04em'
                       }}>
                         Maths A Level Integrals Basics
                       </h3>
                       <p style={{
-                        fontFamily: "'Madimi One', sans-serif",
+                        fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
                         color: '#666666',
-                        margin: '0 0 4px 0'
+                        margin: '0 0 4px 0',
+                        letterSpacing: '0.04em'
                       }}>
                         847 questions completed
                       </p>
                       <p style={{
-                        fontFamily: "'Madimi One', sans-serif",
+                        fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
                         color: '#666666',
-                        margin: '0 0 8px 0'
+                        margin: '0 0 8px 0',
+                        letterSpacing: '0.04em'
                       }}>
                         26/28 done
                       </p>
                       <p style={{
-                        fontFamily: "'Madimi One', sans-serif",
+                        fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
                         color: '#E74C3C',
-                        margin: '0'
+                        margin: '0',
+                        letterSpacing: '0.04em'
                       }}>
                         2 students need support
                       </p>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
                       <span style={{
-                        fontFamily: "'Madimi One', sans-serif",
+                        fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
                         color: '#E74C3C',
-                        fontWeight: 'bold'
+                        fontWeight: 'bold',
+                        letterSpacing: '0.04em'
                       }}>
                         Overdue
                       </span>
                       <button style={{
                         backgroundColor: 'transparent',
                         border: 'none',
-                        fontFamily: "'Madimi One', sans-serif",
+                        fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
                         color: '#0066CC',
                         cursor: 'pointer',
-                        textDecoration: 'underline'
+                        textDecoration: 'underline',
+                        letterSpacing: '0.04em'
                       }}>
                         View →
                       </button>
@@ -486,30 +520,7 @@ export default function TeacherPage() {
 
           {/* Right Column */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
-            
-            {/* Teacher Icon */}
-            <div style={{
-              display: 'flex',
-              justifyContent: 'flex-start'
-            }}>
-              <div style={{
-                width: '120px',
-                height: '80px',
-                backgroundColor: '#B3F0F2',
-                border: '1px solid #000000',
-                borderRadius: '0px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '14px',
-                fontFamily: "'Madimi One', sans-serif",
-                fontWeight: 'bold',
-                color: '#000000',
-                textAlign: 'center'
-              }}>
-                TEACHER
-              </div>
-            </div>
+            {/* Right column content can be added here */}
           </div>
         </div>
       </div>
