@@ -111,7 +111,7 @@ export default function CreateQuestionPackPage() {
           border: '1px solid #000000',
           borderRadius: '8px',
           padding: '40px',
-          maxWidth: '1200px',
+          maxWidth: '1400px',
           width: '95%',
           position: 'relative',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
@@ -154,137 +154,145 @@ export default function CreateQuestionPackPage() {
             Step 1 of 2
           </div>
 
-          {/* Main Content Grid */}
+          {/* Two Question Cards Side by Side */}
           <div style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
-            gap: '40px'
+            gap: '40px',
+            marginBottom: '40px'
           }}>
             
-            {/* Left Column */}
-            <div>
-              {/* Pack Name */}
+            {/* Left Question Card */}
+            <div style={{
+              backgroundColor: '#FFFFFF',
+              borderRadius: '12px',
+              border: '2px solid #000000',
+              padding: '30px',
+              boxShadow: '8px 8px 16px rgba(0, 206, 209, 0.2), 0 4px 8px rgba(0, 255, 255, 0.3)',
+              position: 'relative'
+            }}>
+              {/* Question Header */}
               <div style={{
-                backgroundColor: '#FFFFFF',
-                border: '2px solid #000000',
-                borderRadius: '0px',
-                padding: '20px',
-                marginBottom: '20px',
-                boxShadow: '0 4px 8px rgba(0, 255, 255, 0.3)'
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '25px',
+                flexWrap: 'wrap',
+                gap: '15px'
               }}>
-                <h3 style={{
-                  fontFamily: "'Madimi One', cursive",
-                  fontSize: '16px',
-                  fontWeight: '400',
-                  color: '#000000',
-                  margin: '0 0 15px 0'
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '15px'
                 }}>
-                  Pack Name
-                </h3>
-                <input
-                  type="text"
-                  placeholder="Type your pack name"
-                  value={packName}
-                  onChange={(e) => setPackName(e.target.value)}
+                  <span style={{
+                    fontFamily: "'Madimi One', sans-serif",
+                    fontSize: '20px',
+                    color: '#000000',
+                    fontWeight: '400'
+                  }}>
+                    Pack Name
+                  </span>
+                </div>
+              </div>
+
+              {/* Pack Name Input */}
+              <input
+                type="text"
+                placeholder="Type your pack name"
+                value={packName}
+                onChange={(e) => setPackName(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '15px',
+                  border: '2px solid #000000',
+                  borderRadius: '0px',
+                  backgroundColor: '#D3F6F7',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '16px',
+                  letterSpacing: '0.04em',
+                  color: '#000000',
+                  marginBottom: '25px'
+                }}
+              />
+
+              {/* Subject */}
+              <h3 style={{
+                fontFamily: "'Madimi One', sans-serif",
+                fontSize: '18px',
+                fontWeight: '400',
+                color: '#000000',
+                margin: '0 0 15px 0'
+              }}>
+                Subject
+              </h3>
+              <div style={{ position: 'relative', marginBottom: '25px' }}>
+                <button
+                  onClick={() => setShowSubjectDropdown(!showSubjectDropdown)}
                   style={{
                     width: '100%',
-                    padding: '10px',
+                    padding: '15px',
                     border: '2px solid #000000',
                     borderRadius: '0px',
                     backgroundColor: '#D3F6F7',
                     fontFamily: "'Figtree', sans-serif",
-                    fontSize: '14px',
+                    fontSize: '16px',
                     letterSpacing: '0.04em',
-                    color: '#000000'
+                    color: '#000000',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
                   }}
-                />
-              </div>
-
-              {/* Subject */}
-              <div style={{
-                backgroundColor: '#FFFFFF',
-                border: '2px solid #000000',
-                borderRadius: '0px',
-                padding: '20px',
-                marginBottom: '20px',
-                boxShadow: '0 4px 8px rgba(0, 255, 255, 0.3)'
-              }}>
-                <h3 style={{
-                  fontFamily: "'Madimi One', cursive",
-                  fontSize: '16px',
-                  fontWeight: '400',
-                  color: '#000000',
-                  margin: '0 0 15px 0'
-                }}>
-                  Subject
-                </h3>
-                <div style={{ position: 'relative' }}>
-                  <button
-                    onClick={() => setShowSubjectDropdown(!showSubjectDropdown)}
-                    style={{
-                      width: '100%',
-                      padding: '10px',
-                      border: '2px solid #000000',
-                      borderRadius: '0px',
-                      backgroundColor: '#D3F6F7',
-                      fontFamily: "'Figtree', sans-serif",
-                      fontSize: '14px',
-                      letterSpacing: '0.04em',
-                      color: '#000000',
-                      textAlign: 'left',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center'
-                    }}
-                  >
-                    {selectedSubject || 'Select subject'}
-                    <span style={{ transform: showSubjectDropdown ? 'rotate(180deg)' : 'rotate(0deg)' }}>▼</span>
-                  </button>
-                  {showSubjectDropdown && (
-                    <div style={{
-                      position: 'absolute',
-                      top: '100%',
-                      left: 0,
-                      right: 0,
-                      backgroundColor: '#FFFFFF',
-                      border: '1px solid #CCCCCC',
-                      borderRadius: '4px',
-                      zIndex: 1000,
-                      maxHeight: '200px',
-                      overflowY: 'auto'
-                    }}>
-                      {subjects.map((subject) => (
-                        <button
-                          key={subject}
-                          onClick={() => {
-                            setSelectedSubject(subject);
-                            setShowSubjectDropdown(false);
-                          }}
-                          style={{
-                            width: '100%',
-                            padding: '10px',
-                            border: 'none',
-                            backgroundColor: 'transparent',
-                            textAlign: 'left',
-                            cursor: 'pointer',
-                            fontFamily: "'Figtree', sans-serif",
-                            fontSize: '14px',
-                            color: '#000000'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = '#F0F0F0';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = 'transparent';
-                          }}
-                        >
-                          {subject}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                >
+                  {selectedSubject || 'Select subject'}
+                  <span style={{ transform: showSubjectDropdown ? 'rotate(180deg)' : 'rotate(0deg)' }}>▼</span>
+                </button>
+                {showSubjectDropdown && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: 0,
+                    right: 0,
+                    backgroundColor: '#FFFFFF',
+                    border: '2px solid #000000',
+                    borderRadius: '0px',
+                    zIndex: 1000,
+                    maxHeight: '200px',
+                    overflowY: 'auto'
+                  }}>
+                    {subjects.map((subject) => (
+                      <button
+                        key={subject}
+                        onClick={() => {
+                          setSelectedSubject(subject);
+                          setShowSubjectDropdown(false);
+                        }}
+                        style={{
+                          width: '100%',
+                          padding: '15px',
+                          border: 'none',
+                          backgroundColor: 'transparent',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          fontFamily: "'Figtree', sans-serif",
+                          fontSize: '16px',
+                          letterSpacing: '0.04em',
+                          color: '#000000'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#F0F0F0';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                        }}
+                      >
+                        {subject}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Question Filters */}
@@ -293,10 +301,10 @@ export default function CreateQuestionPackPage() {
                 border: '2px solid #000000',
                 borderRadius: '0px',
                 padding: '20px',
-                boxShadow: '0 4px 8px rgba(0, 255, 255, 0.3)'
+                marginBottom: '20px'
               }}>
                 <h3 style={{
-                  fontFamily: "'Madimi One', cursive",
+                  fontFamily: "'Madimi One', sans-serif",
                   fontSize: '16px',
                   fontWeight: '400',
                   color: '#000000',
@@ -308,7 +316,7 @@ export default function CreateQuestionPackPage() {
                 {/* Filter checkboxes */}
                 <div style={{
                   display: 'grid',
-                  gridTemplateColumns: '1fr 1fr 1fr',
+                  gridTemplateColumns: '1fr 1fr',
                   gap: '10px',
                   marginBottom: '20px'
                 }}>
@@ -344,7 +352,7 @@ export default function CreateQuestionPackPage() {
                   border: '1px solid #CCCCCC',
                   borderRadius: '4px',
                   padding: '20px',
-                  minHeight: '120px',
+                  minHeight: '80px',
                   position: 'relative'
                 }}>
                   <div style={{
@@ -381,255 +389,236 @@ export default function CreateQuestionPackPage() {
               </div>
             </div>
 
-            {/* Right Column */}
-            <div>
+            {/* Right Question Card */}
+            <div style={{
+              backgroundColor: '#FFFFFF',
+              borderRadius: '12px',
+              border: '2px solid #4A90E2',
+              padding: '30px',
+              boxShadow: '8px 8px 16px rgba(0, 206, 209, 0.2), 0 4px 8px rgba(0, 255, 255, 0.3)',
+              position: 'relative'
+            }}>
               {/* Number of Questions */}
               <div style={{
-                backgroundColor: '#FFFFFF',
-                border: '2px solid #000000',
-                borderRadius: '0px',
-                padding: '20px',
-                marginBottom: '20px',
-                boxShadow: '0 4px 8px rgba(0, 255, 255, 0.3)'
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                marginBottom: '25px'
               }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  marginBottom: '15px'
-                }}>
-                  <Image 
-                    src="/icons/speech-bubble-ghost.svg" 
-                    alt="Question counter" 
-                    width={24} 
-                    height={24}
-                  />
-                  <h3 style={{
-                    fontFamily: "'Madimi One', cursive",
-                    fontSize: '16px',
-                    fontWeight: '400',
-                    color: '#000000',
-                    margin: '0'
-                  }}>
-                    Number of Questions
-                  </h3>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '10px' }}>
-                  <input
-                    type="text"
-                    value="1"
-                    readOnly
-                    style={{
-                      width: '40px',
-                      padding: '5px',
-                      border: '1px solid #CCCCCC',
-                      borderRadius: '4px',
-                      textAlign: 'center',
-                      fontFamily: "'Figtree', sans-serif",
-                      fontSize: '14px'
-                    }}
-                  />
-                  <div style={{ 
-                    flex: 1, 
-                    position: 'relative',
-                    height: '20px',
-                    backgroundColor: '#E0E0E0',
-                    borderRadius: '10px'
-                  }}>
-                    <div style={{
-                      position: 'absolute',
-                      left: '20%',
-                      top: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      width: '30px',
-                      height: '30px',
-                      backgroundColor: '#4A90E2',
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'white',
-                      fontSize: '10px',
-                      fontWeight: 'bold'
-                    }}>
-                      31
-                    </div>
-                  </div>
-                  <input
-                    type="text"
-                    value="168"
-                    readOnly
-                    style={{
-                      width: '40px',
-                      padding: '5px',
-                      border: '1px solid #CCCCCC',
-                      borderRadius: '4px',
-                      textAlign: 'center',
-                      fontFamily: "'Figtree', sans-serif",
-                      fontSize: '14px'
-                    }}
-                  />
-                </div>
-                <p style={{
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '12px',
-                  color: '#4A90E2',
+                <Image 
+                  src="/icons/speech-bubble-ghost.svg" 
+                  alt="Question counter" 
+                  width={24} 
+                  height={24}
+                />
+                <h3 style={{
+                  fontFamily: "'Madimi One', sans-serif",
+                  fontSize: '18px',
+                  fontWeight: '400',
+                  color: '#000000',
                   margin: '0'
                 }}>
-                  360 questions available with current filters
-                </p>
+                  Number of Questions
+                </h3>
               </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '25px' }}>
+                <input
+                  type="text"
+                  value="1"
+                  readOnly
+                  style={{
+                    width: '40px',
+                    padding: '8px',
+                    border: '1px solid #CCCCCC',
+                    borderRadius: '4px',
+                    textAlign: 'center',
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '14px'
+                  }}
+                />
+                <div style={{ 
+                  flex: 1, 
+                  position: 'relative',
+                  height: '20px',
+                  backgroundColor: '#E0E0E0',
+                  borderRadius: '10px'
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    left: '20%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: '30px',
+                    height: '30px',
+                    backgroundColor: '#4A90E2',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    fontSize: '10px',
+                    fontWeight: 'bold'
+                  }}>
+                    31
+                  </div>
+                </div>
+                <input
+                  type="text"
+                  value="168"
+                  readOnly
+                  style={{
+                    width: '40px',
+                    padding: '8px',
+                    border: '1px solid #CCCCCC',
+                    borderRadius: '4px',
+                    textAlign: 'center',
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '14px'
+                  }}
+                />
+              </div>
+              <p style={{
+                fontFamily: "'Figtree', sans-serif",
+                fontSize: '12px',
+                color: '#4A90E2',
+                margin: '0 0 25px 0'
+              }}>
+                360 questions available with current filters
+              </p>
 
               {/* Font Size */}
               <div style={{
-                backgroundColor: '#FFFFFF',
-                border: '2px solid #000000',
-                borderRadius: '0px',
-                padding: '20px',
-                marginBottom: '20px',
-                boxShadow: '0 4px 8px rgba(0, 255, 255, 0.3)'
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                marginBottom: '25px'
               }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  marginBottom: '15px'
+                <Image 
+                  src="/icons/speech-bubble-ghost.svg" 
+                  alt="Font size" 
+                  width={24} 
+                  height={24}
+                />
+                <h3 style={{
+                  fontFamily: "'Madimi One', sans-serif",
+                  fontSize: '18px',
+                  fontWeight: '400',
+                  color: '#000000',
+                  margin: '0'
                 }}>
-                  <Image 
-                    src="/icons/speech-bubble-ghost.svg" 
-                    alt="Font size" 
-                    width={24} 
-                    height={24}
-                  />
-                  <h3 style={{
-                    fontFamily: "'Madimi One', cursive",
-                    fontSize: '16px',
-                    fontWeight: '400',
-                    color: '#000000',
-                    margin: '0'
+                  Font Size <span style={{ fontSize: '12px', fontWeight: 'normal' }}>12pt</span>
+                </h3>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '25px' }}>
+                <span style={{ fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>small</span>
+                <div style={{ 
+                  flex: 1, 
+                  position: 'relative',
+                  height: '20px',
+                  backgroundColor: '#E0E0E0',
+                  borderRadius: '10px'
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    left: '30%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: '30px',
+                    height: '30px',
+                    backgroundColor: '#4A90E2',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    fontSize: '10px',
+                    fontWeight: 'bold'
                   }}>
-                    Font Size <span style={{ fontSize: '12px', fontWeight: 'normal' }}>12pt</span>
-                  </h3>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                  <span style={{ fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>small</span>
-                  <div style={{ 
-                    flex: 1, 
-                    position: 'relative',
-                    height: '20px',
-                    backgroundColor: '#E0E0E0',
-                    borderRadius: '10px'
-                  }}>
-                    <div style={{
-                      position: 'absolute',
-                      left: '30%',
-                      top: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      width: '30px',
-                      height: '30px',
-                      backgroundColor: '#4A90E2',
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'white',
-                      fontSize: '10px',
-                      fontWeight: 'bold'
-                    }}>
-                      12
-                    </div>
+                    12
                   </div>
-                  <span style={{ fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>large</span>
                 </div>
+                <span style={{ fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>large</span>
               </div>
 
               {/* Order questions by */}
-              <div style={{
-                backgroundColor: '#FFFFFF',
-                border: '2px solid #000000',
-                borderRadius: '0px',
-                padding: '20px',
-                boxShadow: '0 4px 8px rgba(0, 255, 255, 0.3)'
+              <h3 style={{
+                fontFamily: "'Madimi One', sans-serif",
+                fontSize: '18px',
+                fontWeight: '400',
+                color: '#000000',
+                margin: '0 0 15px 0'
               }}>
-                <h3 style={{
-                  fontFamily: "'Madimi One', cursive",
-                  fontSize: '16px',
-                  fontWeight: '400',
-                  color: '#000000',
-                  margin: '0 0 15px 0'
+                Order questions by
+              </h3>
+              
+              {/* Toggle */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                marginBottom: '20px'
+              }}>
+                <span style={{ 
+                  fontSize: '14px', 
+                  fontFamily: "'Figtree', sans-serif",
+                  backgroundColor: '#00CED1',
+                  color: 'white',
+                  padding: '5px 10px',
+                  borderRadius: '15px'
                 }}>
-                  Order questions by
-                </h3>
-                
-                {/* Toggle */}
+                  Automatic
+                </span>
                 <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  marginBottom: '20px'
+                  width: '40px',
+                  height: '20px',
+                  backgroundColor: '#CCCCCC',
+                  borderRadius: '10px',
+                  position: 'relative',
+                  cursor: 'pointer'
                 }}>
-                  <span style={{ 
-                    fontSize: '14px', 
-                    fontFamily: "'Figtree', sans-serif",
-                    backgroundColor: '#00CED1',
-                    color: 'white',
-                    padding: '5px 10px',
-                    borderRadius: '15px'
-                  }}>
-                    Automatic
-                  </span>
                   <div style={{
-                    width: '40px',
-                    height: '20px',
-                    backgroundColor: '#CCCCCC',
-                    borderRadius: '10px',
-                    position: 'relative',
-                    cursor: 'pointer'
-                  }}>
-                    <div style={{
-                      position: 'absolute',
-                      left: '2px',
-                      top: '2px',
-                      width: '16px',
-                      height: '16px',
-                      backgroundColor: 'white',
-                      borderRadius: '50%'
-                    }}></div>
-                  </div>
-                  <span style={{ fontSize: '14px', fontFamily: "'Figtree', sans-serif" }}>Custom</span>
+                    position: 'absolute',
+                    left: '2px',
+                    top: '2px',
+                    width: '16px',
+                    height: '16px',
+                    backgroundColor: 'white',
+                    borderRadius: '50%'
+                  }}></div>
                 </div>
+                <span style={{ fontSize: '14px', fontFamily: "'Figtree', sans-serif" }}>Custom</span>
+              </div>
 
-                {/* Order by checkboxes */}
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr 1fr',
-                  gap: '10px'
-                }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
-                    <input type="checkbox" checked={orderQuestionType} onChange={(e) => setOrderQuestionType(e.target.checked)} style={{ accentColor: '#00CED1' }} />
-                    Question Type
-                  </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
-                    <input type="checkbox" checked={orderSubType} onChange={(e) => setOrderSubType(e.target.checked)} style={{ accentColor: '#00CED1' }} />
-                    Sub Type
-                  </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
-                    <input type="checkbox" checked={orderYear} onChange={(e) => setOrderYear(e.target.checked)} style={{ accentColor: '#00CED1' }} />
-                    Year
-                  </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
-                    <input type="checkbox" checked={orderDifficulty} onChange={(e) => setOrderDifficulty(e.target.checked)} style={{ accentColor: '#00CED1' }} />
-                    Difficulty
-                  </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
-                    <input type="checkbox" checked={orderExamSession} onChange={(e) => setOrderExamSession(e.target.checked)} style={{ accentColor: '#00CED1' }} />
-                    Exam Session
-                  </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
-                    <input type="checkbox" checked={orderFilter6} onChange={(e) => setOrderFilter6(e.target.checked)} style={{ accentColor: '#00CED1' }} />
-                    Filter 6
-                  </label>
-                </div>
+              {/* Order by checkboxes */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '10px'
+              }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
+                  <input type="checkbox" checked={orderQuestionType} onChange={(e) => setOrderQuestionType(e.target.checked)} style={{ accentColor: '#00CED1' }} />
+                  Question Type
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
+                  <input type="checkbox" checked={orderSubType} onChange={(e) => setOrderSubType(e.target.checked)} style={{ accentColor: '#00CED1' }} />
+                  Sub Type
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
+                  <input type="checkbox" checked={orderYear} onChange={(e) => setOrderYear(e.target.checked)} style={{ accentColor: '#00CED1' }} />
+                  Year
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
+                  <input type="checkbox" checked={orderDifficulty} onChange={(e) => setOrderDifficulty(e.target.checked)} style={{ accentColor: '#00CED1' }} />
+                  Difficulty
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
+                  <input type="checkbox" checked={orderExamSession} onChange={(e) => setOrderExamSession(e.target.checked)} style={{ accentColor: '#00CED1' }} />
+                  Exam Session
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
+                  <input type="checkbox" checked={orderFilter6} onChange={(e) => setOrderFilter6(e.target.checked)} style={{ accentColor: '#00CED1' }} />
+                  Filter 6
+                </label>
               </div>
             </div>
           </div>

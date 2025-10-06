@@ -273,7 +273,7 @@ export default function QuestionPacksPage() {
                   border: '1px solid #000000',
                   borderRadius: '4px',
                   cursor: 'pointer',
-                  fontFamily: "'Madimi One', cursive",
+                  fontFamily: "'Madimi One', sans-serif",
                   fontSize: '14px',
                   fontWeight: '400',
                   color: '#000000',
@@ -306,7 +306,7 @@ export default function QuestionPacksPage() {
                   border: '1px solid #000000',
                   borderRadius: '0px',
                   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                  zIndex: 1000
+                  zIndex: 9999
                 }}>
                   {['Maths', 'Physics', 'Economics', 'Biology', 'Chemistry'].map((subject) => (
                     <button
@@ -325,7 +325,7 @@ export default function QuestionPacksPage() {
                         letterSpacing: '0.04em'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#F0F0F0';
+                        e.currentTarget.style.backgroundColor = '#B3F0F2';
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.backgroundColor = 'transparent';
