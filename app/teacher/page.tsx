@@ -133,7 +133,7 @@ export default function TeacherPage() {
         }}>
           
           {/* Left Column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             
             {/* Quick Actions */}
             <div style={{
