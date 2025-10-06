@@ -125,30 +125,110 @@ export default function QuestionPacksPage() {
               Your Question Packs
             </h2>
             
+            {/* Search Bar */}
+            <div style={{
+              marginBottom: '20px',
+              width: '100%',
+              maxWidth: '400px'
+            }}>
+              <input
+                type="text"
+                placeholder="Search for question packs by name ..."
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: '1px solid #000000',
+                  borderRadius: '0px',
+                  backgroundColor: '#FFFFFF',
+                  fontSize: '14px',
+                  fontFamily: "'Figtree', sans-serif",
+                  letterSpacing: '0.04em',
+                  color: '#000000',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  outline: 'none'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.border = '2px solid #000000';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.border = '1px solid #000000';
+                }}
+              />
+            </div>
+            
             {/* Tabs */}
-            <div className="tabs-container">
+            <div style={{
+              display: 'flex',
+              gap: '20px',
+              alignItems: 'center',
+              flexWrap: 'wrap'
+            }}>
               {/* A Level Tab with Dropdown */}
               <div 
-                className="tab-wrapper"
+                style={{
+                  position: 'relative',
+                  display: 'inline-block'
+                }}
                 onMouseEnter={() => setShowALevelDropdown(true)}
                 onMouseLeave={() => setShowALevelDropdown(false)}
               >
                 <button 
-                  className={`tab ${activeTab === 'A Level' ? 'tab-active' : ''}`}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '8px 16px',
+                    backgroundColor: activeTab === 'A Level' ? '#B3F0F2' : '#FFFFFF',
+                    border: '1px solid #000000',
+                    borderRadius: '0px',
+                    cursor: 'pointer',
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '14px',
+                    color: '#000000',
+                    letterSpacing: '0.04em'
+                  }}
                   onClick={() => setActiveTab('A Level')}
                   aria-label="A Level tab"
                 >
                   <TabIcon isActive={activeTab === 'A Level'} />
-                  <span className="tab-text">A Level</span>
+                  <span>A Level</span>
                 </button>
                 
                 {/* A Level Dropdown */}
                 {showALevelDropdown && (
-                  <div className="dropdown-menu" style={{ top: 'calc(100% - 20px)' }}>
+                  <div style={{
+                    position: 'absolute',
+                    top: 'calc(100% - 5px)',
+                    left: '0',
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #000000',
+                    borderRadius: '0px',
+                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                    zIndex: 1000,
+                    minWidth: '150px'
+                  }}>
                     {['Maths', 'Physics', 'Economics', 'Biology', 'Chemistry'].map((subject) => (
                       <button
                         key={subject}
-                        className="dropdown-item"
+                        style={{
+                          display: 'block',
+                          width: '100%',
+                          padding: '8px 12px',
+                          backgroundColor: 'transparent',
+                          border: 'none',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          fontFamily: "'Figtree', sans-serif",
+                          fontSize: '14px',
+                          color: '#000000',
+                          letterSpacing: '0.04em'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#F0F0F0';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                        }}
                         onClick={() => {
                           setSelectedSubject(subject);
                           setActiveTab('A Level');
@@ -164,22 +244,48 @@ export default function QuestionPacksPage() {
               
               {/* Admissions Tab */}
               <button 
-                className={`tab ${activeTab === 'Admissions' ? 'tab-active' : ''}`}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '8px 16px',
+                  backgroundColor: activeTab === 'Admissions' ? '#B3F0F2' : '#FFFFFF',
+                  border: '1px solid #000000',
+                  borderRadius: '0px',
+                  cursor: 'pointer',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  color: '#000000',
+                  letterSpacing: '0.04em'
+                }}
                 onClick={() => setActiveTab('Admissions')}
                 aria-label="Admissions tab"
               >
                 <TabIcon isActive={activeTab === 'Admissions'} />
-                <span className="tab-text">Admissions</span>
+                <span>Admissions</span>
               </button>
               
               {/* Saved Tab */}
               <button 
-                className={`tab ${activeTab === 'Saved' ? 'tab-active' : ''}`}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '8px 16px',
+                  backgroundColor: activeTab === 'Saved' ? '#B3F0F2' : '#FFFFFF',
+                  border: '1px solid #000000',
+                  borderRadius: '0px',
+                  cursor: 'pointer',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  color: '#000000',
+                  letterSpacing: '0.04em'
+                }}
                 onClick={() => setActiveTab('Saved')}
                 aria-label="Saved tab"
               >
                 <TabIcon isActive={activeTab === 'Saved'} />
-                <span className="tab-text">Saved</span>
+                <span>Saved</span>
               </button>
           </div>
           </div>
@@ -209,28 +315,29 @@ export default function QuestionPacksPage() {
         }}>
           <button style={{
             backgroundColor: '#B3F0F2',
-            border: '2px solid #000000',
-            borderRadius: '8px',
+            border: '1px solid #000000',
+            borderRadius: '0px',
             padding: '12px 20px',
             cursor: 'pointer',
-            boxShadow: '4px 4px 0 #000000',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
             transition: 'transform 0.2s, box-shadow 0.2s',
             display: 'flex',
             alignItems: 'center',
             gap: '10px',
             fontSize: '16px',
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "'Figtree', sans-serif",
             fontWeight: '500',
-            color: '#000000'
+            color: '#000000',
+            letterSpacing: '0.04em'
           }}
           onClick={() => window.location.href = '/create-question-pack'}
           onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translate(-2px, -2px)';
-            e.currentTarget.style.boxShadow = '6px 6px 0 #000000';
+            e.currentTarget.style.transform = 'translate(-1px, -1px)';
+            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = 'translate(0px, 0px)';
-            e.currentTarget.style.boxShadow = '4px 4px 0 #000000';
+            e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
           }}>
             <span style={{ fontSize: '18px', fontWeight: 'bold' }}>+</span>
             New Pack
