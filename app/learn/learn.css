@@ -55,7 +55,7 @@
 .main-content {
   padding-top: 88px;
   padding-left: 20px;
-  padding-right: 20px;
+  padding-right: 325px;
   padding-bottom: 120px;
   position: relative;
   min-height: 100vh;
@@ -81,20 +81,24 @@
   z-index: 50;
 }
 
-/* Content Layout - Centered layout */
+/* Content Layout - Move content left, ensure sidebar stays right */
 .content-layout {
   display: flex;
   gap: 40px;
-  max-width: 1400px;
-  margin: 0 auto;
+  max-width: none;
+  width: 100%;
+  margin: 0;
   padding-top: 40px;
-  transform: translateX(0%);
+  padding-left: 20px;
+  padding-right: 20px;
+  transform: translateX(-5%);
 }
 
-/* Main Learning Section - 60% width, centered */
+/* Main Learning Section - 66% width (10% wider), ensure it doesn't push sidebar down */
 .main-learning-section {
-  flex: 0 0 60%;
+  flex: 0 0 66%;
   margin-left: 0;
+  min-width: 0;
 }
 
 .page-title {
@@ -355,12 +359,14 @@
   background-color: #F0F0F0;
 }
 
-/* Progress Sidebar - positioned to the right */
+/* Progress Sidebar - fixed to right side, never goes below */
 .progress-sidebar {
   flex: 0 0 285px;
-  position: sticky;
+  position: fixed;
   top: 120px;
+  right: 20px;
   height: fit-content;
+  z-index: 10;
 }
 
 .streak-header {
