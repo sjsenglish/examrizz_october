@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArenaIcon } from '../../components/icons/ArenaIcon';
+import Image from 'next/image';
 import './competition.css';
 
 export default function CompetitionPage() {
@@ -38,23 +38,29 @@ export default function CompetitionPage() {
           Discord
         </a>
 
+        {/* Battle Zone Title - Outside container at left edge */}
+        <h1 className="battle-title">BATTLE ZONE</h1>
+
         {/* Arena Icon and Main Container */}
         <div className="content-layout">
           {/* Left side - Arena Icon */}
           <div className="arena-section">
-            <ArenaIcon size={200} />
+            <Image 
+              src="/icons/arena.svg"
+              alt="ARENA"
+              width={180}
+              height={180}
+              className="arena-icon"
+            />
             <p className="arena-text">ARENA</p>
           </div>
 
           {/* Right side - Main Content Container */}
           <div className="battle-container">
-            {/* Weekly Challenge Button */}
+            {/* Weekly Challenge Button - Inside container top right */}
             <div className="weekly-challenge">
               Weekly Challenge
             </div>
-
-            {/* Battle Zone Title */}
-            <h1 className="battle-title">BATTLE ZONE</h1>
 
             {/* Lightning Icon and Select Battle Mode */}
             <div className="select-battle-header">
@@ -62,11 +68,11 @@ export default function CompetitionPage() {
               <h2 className="select-battle-title">Select Battle Mode</h2>
             </div>
 
-            {/* Battle Mode Cards */}
+            {/* Battle Mode Cards - Row of 4 */}
             <div className="battle-mode-grid">
               <div className="battle-mode-card">
                 <div className="mode-header">
-                  <h3 className="mode-title">SOLO MODE</h3>
+                  <div className="mode-title-badge">SOLO MODE</div>
                   <div className="online-indicator">● 4 online</div>
                 </div>
                 <div className="mode-stats">
@@ -80,7 +86,7 @@ export default function CompetitionPage() {
 
               <div className="battle-mode-card">
                 <div className="mode-header">
-                  <h3 className="mode-title">DUO FRIENDS</h3>
+                  <div className="mode-title-badge">DUO FRIENDS</div>
                   <div className="online-indicator">● 4 online</div>
                 </div>
                 <div className="mode-stats">
@@ -94,7 +100,7 @@ export default function CompetitionPage() {
 
               <div className="battle-mode-card">
                 <div className="mode-header">
-                  <h3 className="mode-title">DUO RANDOM</h3>
+                  <div className="mode-title-badge">DUO RANDOM</div>
                   <div className="online-indicator">● 23 players waiting</div>
                 </div>
                 <div className="mode-stats">
@@ -108,7 +114,7 @@ export default function CompetitionPage() {
 
               <div className="battle-mode-card">
                 <div className="mode-header">
-                  <h3 className="mode-title">YOUR STATS</h3>
+                  <div className="mode-title-badge">YOUR STATS</div>
                   <div className="stats-details">details →</div>
                 </div>
                 <div className="mode-stats">
