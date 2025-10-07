@@ -86,9 +86,9 @@ export default function CreateQuestionPackPage() {
 
       {/* Main Content */}
       <div style={{
-        paddingTop: '60px',
+        paddingTop: '80px',
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'center',
         minHeight: '100vh',
         padding: '20px'
@@ -98,11 +98,13 @@ export default function CreateQuestionPackPage() {
           backgroundColor: '#F8F9FD',
           border: '1px solid #000000',
           borderRadius: '8px',
-          padding: '28px 30.21px',
+          padding: '20px 30.21px',
           maxWidth: '1200px',
           width: '85%',
           position: 'relative',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+          maxHeight: 'calc(100vh - 120px)',
+          overflowY: 'auto'
         }}>
           {/* Close Button */}
           <Link href="/question-packs" style={{
@@ -197,7 +199,7 @@ export default function CreateQuestionPackPage() {
                     border: '1px solid #000000',
                     borderRadius: '0px',
                     backgroundColor: '#D3F6F7',
-                    fontFamily: "'Figtree', sans-serif",
+                    fontFamily: "'Madimi One', sans-serif",
                     fontSize: '15px',
                     letterSpacing: '0.04em',
                     color: '#000000',
@@ -227,7 +229,7 @@ export default function CreateQuestionPackPage() {
                         border: '1px solid #000000',
                         borderRadius: '0px',
                         backgroundColor: '#D3F6F7',
-                        fontFamily: "'Figtree', sans-serif",
+                        fontFamily: "'Madimi One', sans-serif",
                         fontSize: '15px',
                         letterSpacing: '0.04em',
                         color: '#000000',
@@ -270,7 +272,7 @@ export default function CreateQuestionPackPage() {
                               backgroundColor: 'transparent',
                               textAlign: 'left',
                               cursor: 'pointer',
-                              fontFamily: "'Figtree', sans-serif",
+                              fontFamily: "'Madimi One', sans-serif",
                               fontSize: '15px',
                               letterSpacing: '0.04em',
                               color: '#333333',
@@ -320,7 +322,7 @@ export default function CreateQuestionPackPage() {
                     }}>
                       <input type="checkbox" checked={questionType} onChange={(e) => setQuestionType(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                       <span style={{
-                        fontFamily: "'Figtree', sans-serif",
+                        fontFamily: "'Madimi One', sans-serif",
                         fontSize: '14px',
                         letterSpacing: '0.04em',
                         fontWeight: 'bold',
@@ -340,7 +342,7 @@ export default function CreateQuestionPackPage() {
                     }}>
                       <input type="checkbox" checked={subType} onChange={(e) => setSubType(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                       <span style={{
-                        fontFamily: "'Figtree', sans-serif",
+                        fontFamily: "'Madimi One', sans-serif",
                         fontSize: '14px',
                         letterSpacing: '0.04em',
                         fontWeight: 'bold',
@@ -360,7 +362,7 @@ export default function CreateQuestionPackPage() {
                     }}>
                       <input type="checkbox" checked={year} onChange={(e) => setYear(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                       <span style={{
-                        fontFamily: "'Figtree', sans-serif",
+                        fontFamily: "'Madimi One', sans-serif",
                         fontSize: '14px',
                         letterSpacing: '0.04em',
                         fontWeight: 'bold',
@@ -380,7 +382,7 @@ export default function CreateQuestionPackPage() {
                     }}>
                       <input type="checkbox" checked={difficulty} onChange={(e) => setDifficulty(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                       <span style={{
-                        fontFamily: "'Figtree', sans-serif",
+                        fontFamily: "'Madimi One', sans-serif",
                         fontSize: '14px',
                         letterSpacing: '0.04em',
                         fontWeight: 'bold',
@@ -400,7 +402,7 @@ export default function CreateQuestionPackPage() {
                     }}>
                       <input type="checkbox" checked={examSession} onChange={(e) => setExamSession(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                       <span style={{
-                        fontFamily: "'Figtree', sans-serif",
+                        fontFamily: "'Madimi One', sans-serif",
                         fontSize: '14px',
                         letterSpacing: '0.04em',
                         fontWeight: 'bold',
@@ -420,7 +422,7 @@ export default function CreateQuestionPackPage() {
                     }}>
                       <input type="checkbox" checked={filter6} onChange={(e) => setFilter6(e.target.checked)} style={{ accentColor: '#00CED1' }} />
                       <span style={{
-                        fontFamily: "'Figtree', sans-serif",
+                        fontFamily: "'Madimi One', sans-serif",
                         fontSize: '14px',
                         letterSpacing: '0.04em',
                         fontWeight: 'bold',
@@ -451,7 +453,7 @@ export default function CreateQuestionPackPage() {
                           style={{ accentColor: '#00CED1' }}
                         />
                         <span style={{
-                          fontFamily: "'Figtree', sans-serif",
+                          fontFamily: "'Madimi One', sans-serif",
                           fontSize: '14px',
                           fontWeight: 'bold',
                           color: '#000000',
@@ -468,7 +470,7 @@ export default function CreateQuestionPackPage() {
                           style={{ accentColor: '#00CED1' }}
                         />
                         <span style={{
-                          fontFamily: "'Figtree', sans-serif",
+                          fontFamily: "'Madimi One', sans-serif",
                           fontSize: '14px',
                           fontWeight: 'bold',
                           color: '#000000',
@@ -488,7 +490,7 @@ export default function CreateQuestionPackPage() {
                     <button style={{
                       background: 'none',
                       border: 'none',
-                      fontFamily: "'Figtree', sans-serif",
+                      fontFamily: "'Madimi One', sans-serif",
                       fontSize: '14px',
                       color: '#666666',
                       textDecoration: 'underline',
@@ -551,7 +553,7 @@ export default function CreateQuestionPackPage() {
                         border: '2px solid #000000',
                         borderRadius: '4px',
                         textAlign: 'center',
-                        fontFamily: "'Figtree', sans-serif",
+                        fontFamily: "'Madimi One', sans-serif",
                         fontSize: '14px',
                         letterSpacing: '0.04em'
                       }}
@@ -587,14 +589,14 @@ export default function CreateQuestionPackPage() {
                         border: '2px solid #000000',
                         borderRadius: '4px',
                         textAlign: 'center',
-                        fontFamily: "'Figtree', sans-serif",
+                        fontFamily: "'Madimi One', sans-serif",
                         fontSize: '14px',
                         letterSpacing: '0.04em'
                       }}
                     />
                   </div>
                   <p style={{
-                    fontFamily: "'Figtree', sans-serif",
+                    fontFamily: "'Madimi One', sans-serif",
                     fontSize: '12px',
                     letterSpacing: '0.04em',
                     color: '#E0B4FF',
@@ -685,7 +687,7 @@ export default function CreateQuestionPackPage() {
                       cursor: 'pointer'
                     }}>
                       <span style={{
-                        fontFamily: "'Figtree', sans-serif",
+                        fontFamily: "'Madimi One', sans-serif",
                         fontSize: '14px',
                         letterSpacing: '0.04em',
                         fontWeight: 'bold',
@@ -705,7 +707,7 @@ export default function CreateQuestionPackPage() {
                       cursor: 'pointer'
                     }}>
                       <span style={{
-                        fontFamily: "'Figtree', sans-serif",
+                        fontFamily: "'Madimi One', sans-serif",
                         fontSize: '14px',
                         letterSpacing: '0.04em',
                         fontWeight: 'bold',
@@ -716,7 +718,7 @@ export default function CreateQuestionPackPage() {
                     </div>
                   </div>
                   <p style={{
-                    fontFamily: "'Figtree', sans-serif",
+                    fontFamily: "'Madimi One', sans-serif",
                     fontSize: '12px',
                     letterSpacing: '0.04em',
                     color: '#666666',
