@@ -58,7 +58,8 @@
   padding-right: 20px;
   padding-bottom: 120px;
   position: relative;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* Back Button - same as video page */
@@ -81,7 +82,7 @@
   z-index: 50;
 }
 
-/* Content Layout - Align sidebar with continue learning box */
+/* Content Layout - Move content right to prevent cutoff */
 .content-layout {
   display: flex;
   gap: 40px;
@@ -91,7 +92,7 @@
   padding-top: 40px;
   padding-left: 20px;
   padding-right: 20px;
-  transform: translateX(-5%);
+  transform: translateX(10%);
   align-items: flex-start;
 }
 
