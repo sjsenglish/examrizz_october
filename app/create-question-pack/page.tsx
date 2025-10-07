@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import '../../styles/globals.css';
+import './create-question-pack.css';
 
 export default function CreateQuestionPackPage() {
   const [packName, setPackName] = useState('');
@@ -25,162 +25,51 @@ export default function CreateQuestionPackPage() {
   const subjects = ['Maths', 'Physics', 'Chemistry', 'Biology', 'Economics'];
 
   return (
-    <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', minHeight: '100vh' }}>
+    <div className="page-background">
       {/* Navbar */}
-      <nav style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: '60px',
-        backgroundColor: '#F8F8F5',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 40px',
-        zIndex: 100,
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
-      }}>
+      <nav className="navbar">
         <Link href="/" style={{ textDecoration: 'none' }}>
-          <h1 style={{
-            fontFamily: "'Madimi One', sans-serif",
-            fontSize: '24px',
-            fontWeight: 400,
-            letterSpacing: '0.04em',
-            color: '#000000',
-            margin: '0',
-            cursor: 'pointer'
-          }}>
-            examrizzsearch
-          </h1>
+          <h1>examrizzsearch</h1>
         </Link>
-        <button style={{
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          padding: '8px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '4px'
-        }}>
-          <div style={{
-            width: '20px',
-            height: '2px',
-            backgroundColor: '#000000',
-            borderRadius: '1px'
-          }}></div>
-          <div style={{
-            width: '20px',
-            height: '2px',
-            backgroundColor: '#000000',
-            borderRadius: '1px'
-          }}></div>
-          <div style={{
-            width: '20px',
-            height: '2px',
-            backgroundColor: '#000000',
-            borderRadius: '1px'
-          }}></div>
+        <button className="hamburger-button">
+          <div className="hamburger-line"></div>
+          <div className="hamburger-line"></div>
+          <div className="hamburger-line"></div>
         </button>
       </nav>
 
       {/* Main Content */}
-      <div style={{
-        paddingTop: '80px',
-        display: 'flex',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        padding: '20px'
-      }}>
+      <div className="main-content">
         {/* Modal */}
-        <div style={{
-          backgroundColor: '#F8F9FD',
-          border: '1px solid #000000',
-          borderRadius: '8px',
-          padding: '20px 30.21px',
-          maxWidth: '1200px',
-          width: '85%',
-          position: 'relative',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-          maxHeight: 'calc(100vh - 120px)',
-          overflowY: 'auto'
-        }}>
+        <div className="modal-container">
           {/* Close Button */}
-          <Link href="/question-packs" style={{
-            position: 'absolute',
-            top: '20px',
-            right: '20px',
-            fontSize: '24px',
-            color: '#000000',
-            textDecoration: 'none',
-            cursor: 'pointer'
-          }}>
+          <Link href="/question-packs" className="close-button">
             ×
           </Link>
 
           {/* Header */}
-          <h1 style={{
-            fontFamily: "'Madimi One', sans-serif",
-            fontSize: '28px',
-            fontWeight: 400,
-            letterSpacing: '0.04em',
-            color: '#000000',
-            margin: '0 0 30px 0',
-            textAlign: 'left'
-          }}>
+          <h1 className="header-title">
             Create Your Question Pack
           </h1>
 
           {/* Step indicator */}
-          <div style={{
-            position: 'absolute',
-            top: '30px',
-            right: '60px',
-            fontFamily: "'Figtree', sans-serif",
-            fontSize: '14px',
-            color: '#666666'
-          }}>
+          <div className="step-indicator">
             Step 1 of 2
           </div>
 
           {/* Two Cards Side by Side */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '34px',
-            marginBottom: '34px'
-          }}>
+          <div className="cards-container">
             
             {/* Left Card */}
-            <article style={{
-              backgroundColor: '#FFFFFF',
-              borderRadius: '16px',
-              border: '3px solid #000000',
-              padding: '25.5px',
-              boxShadow: '6px 0 0 0 #00CED1, 0 6px 0 0 #00CED1, 6px 6px 0 0 #00CED1, 8px 8px 16px rgba(0, 206, 209, 0.2)',
-              position: 'relative'
-            }}>
+            <article className="card">
               {/* Left Card Header */}
-              <header style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '25px',
-                flexWrap: 'wrap',
-                gap: '15px'
-              }}>
+              <header className="card-header">
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '15px'
                 }}>
-                  <span style={{
-                    fontFamily: "'Madimi One', sans-serif",
-                    fontSize: '18px',
-                    color: '#000000',
-                    fontWeight: 400
-                  }}>
+                  <span className="card-title">
                     Pack Name
                   </span>
                 </div>
@@ -193,71 +82,24 @@ export default function CreateQuestionPackPage() {
                   placeholder="Type your pack name"
                   value={packName}
                   onChange={(e) => setPackName(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '15px 20px',
-                    border: '1px solid #000000',
-                    borderRadius: '0px',
-                    backgroundColor: '#D3F6F7',
-                    fontFamily: "'Madimi One', sans-serif",
-                    fontSize: '15px',
-                    letterSpacing: '0.04em',
-                    color: '#000000',
-                    marginBottom: '25px',
-                    fontWeight: 'bold',
-                    boxSizing: 'border-box'
-                  }}
+                  className="pack-name-input"
                 />
 
                 {/* Subject */}
                 <div style={{ marginBottom: '25px' }}>
-                  <h3 style={{
-                    fontFamily: "'Madimi One', sans-serif",
-                    fontSize: '18px',
-                    fontWeight: 400,
-                    color: '#000000',
-                    margin: '0 0 15px 0'
-                  }}>
+                  <h3 className="card-title" style={{ margin: '0 0 15px 0' }}>
                     Subject
                   </h3>
                   <div style={{ position: 'relative' }}>
                     <button
                       onClick={() => setShowSubjectDropdown(!showSubjectDropdown)}
-                      style={{
-                        width: '100%',
-                        padding: '15px',
-                        border: '1px solid #000000',
-                        borderRadius: '0px',
-                        backgroundColor: '#D3F6F7',
-                        fontFamily: "'Madimi One', sans-serif",
-                        fontSize: '15px',
-                        letterSpacing: '0.04em',
-                        color: '#000000',
-                        textAlign: 'left',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        fontWeight: 'bold',
-                        boxSizing: 'border-box'
-                      }}
+                      className="subject-dropdown-button"
                     >
                       {selectedSubject || 'Select subject'}
                       <span style={{ transform: showSubjectDropdown ? 'rotate(180deg)' : 'rotate(0deg)' }}>▼</span>
                     </button>
                     {showSubjectDropdown && (
-                      <div style={{
-                        position: 'absolute',
-                        top: '100%',
-                        left: 0,
-                        right: 0,
-                        backgroundColor: '#FFFFFF',
-                        border: '1px solid #000000',
-                        borderRadius: '0px',
-                        zIndex: 9999,
-                        maxHeight: '200px',
-                        overflowY: 'auto'
-                      }}>
+                      <div className="dropdown-menu">
                         {subjects.map((subject) => (
                           <button
                             key={subject}
@@ -265,25 +107,7 @@ export default function CreateQuestionPackPage() {
                               setSelectedSubject(subject);
                               setShowSubjectDropdown(false);
                             }}
-                            style={{
-                              width: '100%',
-                              padding: '15px',
-                              border: 'none',
-                              backgroundColor: 'transparent',
-                              textAlign: 'left',
-                              cursor: 'pointer',
-                              fontFamily: "'Madimi One', sans-serif",
-                              fontSize: '15px',
-                              letterSpacing: '0.04em',
-                              color: '#333333',
-                              fontWeight: 'bold'
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.backgroundColor = '#B3F0F2';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.backgroundColor = 'transparent';
-                            }}
+                            className="dropdown-item"
                           >
                             {subject}
                           </button>
@@ -295,187 +119,65 @@ export default function CreateQuestionPackPage() {
 
                 {/* Question Filters */}
                 <div style={{ marginBottom: '30px' }}>
-                  <h3 style={{
-                    fontFamily: "'Madimi One', sans-serif",
-                    fontSize: '18px',
-                    fontWeight: 400,
-                    color: '#000000',
-                    margin: '0 0 15px 0'
-                  }}>
+                  <h3 className="card-title" style={{ margin: '0 0 15px 0' }}>
                     Question Filters
                   </h3>
                   
                   {/* Filter checkboxes in grid */}
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '10px',
-                    marginBottom: '20px'
-                  }}>
-                    <div style={{
-                      backgroundColor: '#89F3FF',
-                      padding: '12px',
-                      borderRadius: '4px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}>
-                      <input type="checkbox" checked={questionType} onChange={(e) => setQuestionType(e.target.checked)} style={{ accentColor: '#00CED1' }} />
-                      <span style={{
-                        fontFamily: "'Madimi One', sans-serif",
-                        fontSize: '14px',
-                        letterSpacing: '0.04em',
-                        fontWeight: 'bold',
-                        color: '#000000'
-                      }}>
-                        Question Type
-                      </span>
+                  <div className="filter-grid">
+                    <div className="filter-item">
+                      <input type="checkbox" checked={questionType} onChange={(e) => setQuestionType(e.target.checked)} className="filter-checkbox" />
+                      <span className="filter-label">Question Type</span>
                     </div>
                     
-                    <div style={{
-                      backgroundColor: '#89F3FF',
-                      padding: '12px',
-                      borderRadius: '4px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}>
-                      <input type="checkbox" checked={subType} onChange={(e) => setSubType(e.target.checked)} style={{ accentColor: '#00CED1' }} />
-                      <span style={{
-                        fontFamily: "'Madimi One', sans-serif",
-                        fontSize: '14px',
-                        letterSpacing: '0.04em',
-                        fontWeight: 'bold',
-                        color: '#000000'
-                      }}>
-                        Sub Type
-                      </span>
+                    <div className="filter-item">
+                      <input type="checkbox" checked={subType} onChange={(e) => setSubType(e.target.checked)} className="filter-checkbox" />
+                      <span className="filter-label">Sub Type</span>
                     </div>
                     
-                    <div style={{
-                      backgroundColor: '#89F3FF',
-                      padding: '12px',
-                      borderRadius: '4px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}>
-                      <input type="checkbox" checked={year} onChange={(e) => setYear(e.target.checked)} style={{ accentColor: '#00CED1' }} />
-                      <span style={{
-                        fontFamily: "'Madimi One', sans-serif",
-                        fontSize: '14px',
-                        letterSpacing: '0.04em',
-                        fontWeight: 'bold',
-                        color: '#000000'
-                      }}>
-                        Year
-                      </span>
+                    <div className="filter-item">
+                      <input type="checkbox" checked={year} onChange={(e) => setYear(e.target.checked)} className="filter-checkbox" />
+                      <span className="filter-label">Year</span>
                     </div>
                     
-                    <div style={{
-                      backgroundColor: '#89F3FF',
-                      padding: '12px',
-                      borderRadius: '4px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}>
-                      <input type="checkbox" checked={difficulty} onChange={(e) => setDifficulty(e.target.checked)} style={{ accentColor: '#00CED1' }} />
-                      <span style={{
-                        fontFamily: "'Madimi One', sans-serif",
-                        fontSize: '14px',
-                        letterSpacing: '0.04em',
-                        fontWeight: 'bold',
-                        color: '#000000'
-                      }}>
-                        Difficulty
-                      </span>
+                    <div className="filter-item">
+                      <input type="checkbox" checked={difficulty} onChange={(e) => setDifficulty(e.target.checked)} className="filter-checkbox" />
+                      <span className="filter-label">Difficulty</span>
                     </div>
                     
-                    <div style={{
-                      backgroundColor: '#89F3FF',
-                      padding: '12px',
-                      borderRadius: '4px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}>
-                      <input type="checkbox" checked={examSession} onChange={(e) => setExamSession(e.target.checked)} style={{ accentColor: '#00CED1' }} />
-                      <span style={{
-                        fontFamily: "'Madimi One', sans-serif",
-                        fontSize: '14px',
-                        letterSpacing: '0.04em',
-                        fontWeight: 'bold',
-                        color: '#000000'
-                      }}>
-                        Exam Session
-                      </span>
+                    <div className="filter-item">
+                      <input type="checkbox" checked={examSession} onChange={(e) => setExamSession(e.target.checked)} className="filter-checkbox" />
+                      <span className="filter-label">Exam Session</span>
                     </div>
                     
-                    <div style={{
-                      backgroundColor: '#89F3FF',
-                      padding: '12px',
-                      borderRadius: '4px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}>
-                      <input type="checkbox" checked={filter6} onChange={(e) => setFilter6(e.target.checked)} style={{ accentColor: '#00CED1' }} />
-                      <span style={{
-                        fontFamily: "'Madimi One', sans-serif",
-                        fontSize: '14px',
-                        letterSpacing: '0.04em',
-                        fontWeight: 'bold',
-                        color: '#000000'
-                      }}>
-                        Filter 6
-                      </span>
+                    <div className="filter-item">
+                      <input type="checkbox" checked={filter6} onChange={(e) => setFilter6(e.target.checked)} className="filter-checkbox" />
+                      <span className="filter-label">Filter 6</span>
                     </div>
                   </div>
 
                   {/* Critical Thinking / Problem Solving section */}
-                  <div style={{
-                    backgroundColor: '#B3F0F2',
-                    padding: '15px',
-                    borderRadius: '8px',
-                    marginBottom: '20px'
-                  }}>
-                    <div style={{
-                      display: 'flex',
-                      gap: '20px',
-                      flexWrap: 'wrap'
-                    }}>
-                      <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <div className="critical-thinking-section">
+                    <div className="thinking-options">
+                      <label className="thinking-label">
                         <input 
                           type="checkbox" 
                           checked={criticalThinking} 
                           onChange={(e) => setCriticalThinking(e.target.checked)} 
-                          style={{ accentColor: '#00CED1' }}
+                          className="filter-checkbox"
                         />
-                        <span style={{
-                          fontFamily: "'Madimi One', sans-serif",
-                          fontSize: '14px',
-                          fontWeight: 'bold',
-                          color: '#000000',
-                          letterSpacing: '0.04em'
-                        }}>
+                        <span className="thinking-text">
                           Critical Thinking
                         </span>
                       </label>
-                      <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                      <label className="thinking-label">
                         <input 
                           type="checkbox" 
                           checked={problemSolving} 
                           onChange={(e) => setProblemSolving(e.target.checked)} 
-                          style={{ accentColor: '#00CED1' }}
+                          className="filter-checkbox"
                         />
-                        <span style={{
-                          fontFamily: "'Madimi One', sans-serif",
-                          fontSize: '14px',
-                          fontWeight: 'bold',
-                          color: '#000000',
-                          letterSpacing: '0.04em'
-                        }}>
+                        <span className="thinking-text">
                           Problem Solving
                         </span>
                       </label>
@@ -487,15 +189,7 @@ export default function CreateQuestionPackPage() {
                     display: 'flex',
                     justifyContent: 'flex-end'
                   }}>
-                    <button style={{
-                      background: 'none',
-                      border: 'none',
-                      fontFamily: "'Madimi One', sans-serif",
-                      fontSize: '14px',
-                      color: '#666666',
-                      textDecoration: 'underline',
-                      cursor: 'pointer'
-                    }}>
+                    <button className="clear-filters-button">
                       clear filters
                     </button>
                   </div>
@@ -504,34 +198,15 @@ export default function CreateQuestionPackPage() {
             </article>
 
             {/* Right Card */}
-            <article style={{
-              backgroundColor: '#FFFFFF',
-              borderRadius: '16px',
-              border: '3px solid #000000',
-              padding: '25.5px',
-              boxShadow: '6px 0 0 0 #00CED1, 0 6px 0 0 #00CED1, 6px 6px 0 0 #00CED1, 8px 8px 16px rgba(0, 206, 209, 0.2)',
-              position: 'relative'
-            }}>
+            <article className="card">
               {/* Right Card Header */}
-              <header style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '25px',
-                flexWrap: 'wrap',
-                gap: '15px'
-              }}>
+              <header className="card-header">
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '15px'
                 }}>
-                  <span style={{
-                    fontFamily: "'Madimi One', sans-serif",
-                    fontSize: '18px',
-                    color: '#000000',
-                    fontWeight: 400
-                  }}>
+                  <span className="card-title">
                     Number of Questions
                   </span>
                 </div>
@@ -542,29 +217,14 @@ export default function CreateQuestionPackPage() {
                 <div style={{
                   marginBottom: '25px'
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '10px' }}>
+                  <div className="slider-container">
                     <input
                       type="text"
                       value="1"
                       readOnly
-                      style={{
-                        width: '40px',
-                        padding: '8px',
-                        border: '2px solid #000000',
-                        borderRadius: '4px',
-                        textAlign: 'center',
-                        fontFamily: "'Madimi One', sans-serif",
-                        fontSize: '14px',
-                        letterSpacing: '0.04em'
-                      }}
+                      className="slider-input"
                     />
-                    <div style={{ 
-                      flex: 1, 
-                      position: 'relative',
-                      height: '20px',
-                      backgroundColor: '#E0E0E0',
-                      borderRadius: '10px'
-                    }}>
+                    <div className="slider-track">
                       <Image 
                         src="/icons/speech-bubble-ghost.svg" 
                         alt="Question counter" 
@@ -583,28 +243,10 @@ export default function CreateQuestionPackPage() {
                       type="text"
                       value="168"
                       readOnly
-                      style={{
-                        width: '40px',
-                        padding: '8px',
-                        border: '2px solid #000000',
-                        borderRadius: '4px',
-                        textAlign: 'center',
-                        fontFamily: "'Madimi One', sans-serif",
-                        fontSize: '14px',
-                        letterSpacing: '0.04em'
-                      }}
+                      className="slider-input"
                     />
                   </div>
-                  <p style={{
-                    fontFamily: "'Madimi One', sans-serif",
-                    fontSize: '12px',
-                    letterSpacing: '0.04em',
-                    color: '#E0B4FF',
-                    backgroundColor: '#E0E4FF',
-                    padding: '8px 12px',
-                    borderRadius: '4px',
-                    margin: '0'
-                  }}>
+                  <p className="availability-text">
                     360 questions available with current filters
                   </p>
                 </div>
@@ -617,12 +259,7 @@ export default function CreateQuestionPackPage() {
                     gap: '10px',
                     marginBottom: '15px'
                   }}>
-                    <span style={{
-                      fontFamily: "'Madimi One', sans-serif",
-                      fontSize: '18px',
-                      fontWeight: 400,
-                      color: '#000000'
-                    }}>
+                    <span className="card-title">
                       Font Size 
                     </span>
                     <span style={{
@@ -634,96 +271,33 @@ export default function CreateQuestionPackPage() {
                       12pt
                     </span>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '20px' }}>
-                    <span style={{ fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>small</span>
-                    <div style={{ 
-                      flex: 1, 
-                      position: 'relative',
-                      height: '20px',
-                      backgroundColor: '#E0E0E0',
-                      borderRadius: '10px'
-                    }}>
-                      <div style={{
-                        position: 'absolute',
-                        left: '30%',
-                        top: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: '20px',
-                        height: '20px',
-                        backgroundColor: '#333333',
-                        borderRadius: '50%',
-                        cursor: 'pointer'
-                      }}></div>
+                  <div className="font-size-controls">
+                    <span className="font-size-text">small</span>
+                    <div className="font-slider-track">
+                      <div className="font-slider-thumb"></div>
                     </div>
-                    <span style={{ fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>large</span>
+                    <span className="font-size-text">large</span>
                   </div>
                 </div>
 
                 {/* Order Questions By Section */}
                 <div style={{ marginBottom: '25px' }}>
-                  <h3 style={{
-                    fontFamily: "'Madimi One', sans-serif",
-                    fontSize: '18px',
-                    fontWeight: 400,
-                    color: '#000000',
-                    margin: '0 0 15px 0'
-                  }}>
+                  <h3 className="card-title" style={{ margin: '0 0 15px 0' }}>
                     Order questions by
                   </h3>
-                  <div style={{
-                    display: 'flex',
-                    gap: '0',
-                    width: '240px'
-                  }}>
-                    <div style={{
-                      backgroundColor: '#B3F0F2',
-                      border: '1px solid #000000',
-                      borderRight: 'none',
-                      padding: '10px 20px',
-                      flex: 1,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer'
-                    }}>
-                      <span style={{
-                        fontFamily: "'Madimi One', sans-serif",
-                        fontSize: '14px',
-                        letterSpacing: '0.04em',
-                        fontWeight: 'bold',
-                        color: '#000000'
-                      }}>
+                  <div className="order-buttons">
+                    <div className="order-button-active">
+                      <span className="order-button-text">
                         Automatic
                       </span>
                     </div>
-                    <div style={{
-                      backgroundColor: 'transparent',
-                      border: '1px solid #000000',
-                      padding: '10px 20px',
-                      flex: 1,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer'
-                    }}>
-                      <span style={{
-                        fontFamily: "'Madimi One', sans-serif",
-                        fontSize: '14px',
-                        letterSpacing: '0.04em',
-                        fontWeight: 'bold',
-                        color: '#000000'
-                      }}>
+                    <div className="order-button-inactive">
+                      <span className="order-button-text">
                         Custom
                       </span>
                     </div>
                   </div>
-                  <p style={{
-                    fontFamily: "'Madimi One', sans-serif",
-                    fontSize: '12px',
-                    letterSpacing: '0.04em',
-                    color: '#666666',
-                    margin: '10px 0 0 0'
-                  }}>
+                  <p className="order-description">
                     You'll arrange questions manually in the next step
                   </p>
                 </div>
@@ -731,32 +305,12 @@ export default function CreateQuestionPackPage() {
               </div>
               
               {/* Select Questions Button - Bottom Right */}
-              <div style={{
-                position: 'absolute',
-                bottom: '20px',
-                right: '20px'
-              }}>
-                <button style={{
-                  backgroundColor: '#00CED1',
-                  border: 'none',
-                  borderRadius: '8px',
-                  padding: '12px 20px',
-                  cursor: 'pointer',
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  color: '#FFFFFF',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  boxShadow: '4px 4px 8px rgba(0, 0, 0, 0.2)'
-                }}>
-                  Select Questions
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
-              </div>
+              <button className="select-questions-button">
+                Select Questions
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
             </article>
           </div>
         </div>
