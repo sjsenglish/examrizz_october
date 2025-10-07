@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import './learn.css';
 
 export default function LearnPage() {
@@ -38,41 +39,43 @@ export default function LearnPage() {
 
             {/* Continue Learning Section */}
             <div className="continue-learning-section">
-              <h2 className="section-title">CONTINUE LEARNING</h2>
               <div className="continue-learning-container">
-                <div className="learning-card">
-                  <div className="card-content">
-                    <h3 className="card-title">Maths - Week 3 - Chain Rule Video (10 mins)</h3>
-                    <p className="card-subtitle">Almost done - 4 mins left</p>
+                <h2 className="section-title">CONTINUE LEARNING</h2>
+                <div className="learning-cards-wrapper">
+                  <div className="learning-card">
+                    <div className="card-content">
+                      <h3 className="card-title">Maths - Week 3 - Chain Rule Video (10 mins)</h3>
+                      <p className="card-subtitle">Almost done - 4 mins left</p>
+                    </div>
+                    <div className="card-icon">
+                      {/* Ghost icon placeholder */}
+                      <div className="icon-placeholder">👻</div>
+                    </div>
+                    <button className="continue-button">
+                      CONTINUE LESSON
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
                   </div>
-                  <div className="card-icon">
-                    {/* Ghost icon placeholder */}
-                    <div className="icon-placeholder">👻</div>
-                  </div>
-                  <button className="continue-button">
-                    CONTINUE LESSON
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-                </div>
 
-                <div className="learning-card">
-                  <div className="card-content">
-                    <h3 className="card-title">Study Diary</h3>
-                    <p className="card-subtitle">Last entry - Insights on book X</p>
-                    <p className="card-time">2 hours ago</p>
+                  <div className="learning-card">
+                    <div className="card-content">
+                      <h3 className="card-title">Study Diary</h3>
+                      <p className="card-subtitle">Last entry - Insights on book X</p>
+                      <p className="card-time">2 hours ago</p>
+                    </div>
+                    <div className="card-icon">
+                      {/* Diary icon placeholder */}
+                      <div className="icon-placeholder">📖</div>
+                    </div>
+                    <button className="continue-button">
+                      OPEN BOOK
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
                   </div>
-                  <div className="card-icon">
-                    {/* Diary icon placeholder */}
-                    <div className="icon-placeholder">📖</div>
-                  </div>
-                  <button className="continue-button">
-                    OPEN BOOK
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
                 </div>
               </div>
             </div>
@@ -80,12 +83,7 @@ export default function LearnPage() {
             {/* My Learning Paths Section */}
             <div className="learning-paths-section">
               <div className="section-header">
-                <div className="learn-icon">
-                  <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#00CED1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                  <h2 className="section-title">MY LEARNING PATHS</h2>
-                </div>
+                <h2 className="section-title">MY LEARNING PATHS</h2>
               </div>
 
               <div className="learning-paths-grid">
@@ -219,13 +217,14 @@ export default function LearnPage() {
 
         {/* Fixed Learn Icon */}
         <div className="fixed-learn-icon">
-          <div className="learn-icon-container">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 14l9-5-9-5-9 5 9 5z" fill="#00CED1"/>
-              <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" fill="#00CED1"/>
-            </svg>
-            <span className="learn-text">LEARN</span>
-          </div>
+          <Image 
+            src="/icons/learn.svg"
+            alt="LEARN"
+            width={120}
+            height={120}
+            className="learn-icon-image"
+          />
+          <span className="learn-text">LEARN</span>
         </div>
       </div>
     </div>

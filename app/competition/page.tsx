@@ -38,24 +38,12 @@ export default function CompetitionPage() {
           Discord
         </a>
 
-        {/* Battle Zone Title - Outside container at left edge */}
-        <h1 className="battle-title">BATTLE ZONE</h1>
-
-        {/* Arena Icon and Main Container */}
+        {/* Main Container */}
         <div className="content-layout">
-          {/* Left side - Arena Icon */}
-          <div className="arena-section">
-            <Image 
-              src="/icons/arena.svg"
-              alt="ARENA"
-              width={180}
-              height={180}
-              className="arena-icon"
-            />
-            <p className="arena-text">ARENA</p>
-          </div>
+          {/* Battle Zone Title - Above container */}
+          <h1 className="battle-title">BATTLE ZONE</h1>
 
-          {/* Right side - Main Content Container */}
+          {/* Main Content Container */}
           <div className="battle-container">
             {/* Weekly Challenge Button - Inside container top right */}
             <div className="weekly-challenge">
@@ -178,6 +166,18 @@ export default function CompetitionPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Fixed Arena Icon - Bottom Left */}
+        <div className="fixed-arena-icon">
+          <Image 
+            src="/icons/arena.svg"
+            alt="ARENA"
+            width={144}
+            height={144}
+            className="arena-icon"
+          />
+          <p className="arena-text">ARENA</p>
         </div>
       </div>
     </div>

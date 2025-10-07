@@ -53,7 +53,7 @@
 }
 
 .main-content {
-  padding-top: 120px;
+  padding-top: 140px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -66,8 +66,8 @@
 
 /* Back Button - same as video page */
 .back-button {
-  position: absolute;
-  top: 30px;
+  position: fixed;
+  top: 80px;
   left: 45px;
   display: flex;
   align-items: center;
@@ -81,13 +81,13 @@
   font-size: 13px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  z-index: 10;
+  z-index: 50;
 }
 
 /* Discord Button */
 .discord-button {
-  position: absolute;
-  top: 30px;
+  position: fixed;
+  top: 80px;
   right: 45px;
   display: flex;
   align-items: center;
@@ -102,7 +102,7 @@
   font-weight: 400;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
-  z-index: 10;
+  z-index: 50;
 }
 
 .discord-button:hover {
@@ -112,35 +112,39 @@
 /* Content Layout */
 .content-layout {
   display: flex;
-  gap: 30px;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   margin-top: 20px;
 }
 
-/* Arena Section */
-.arena-section {
+/* Fixed Arena Icon - Bottom Left */
+.fixed-arena-icon {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex: 0 0 200px;
+  z-index: 50;
 }
 
 .arena-icon {
-  drop-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 }
 
 .arena-text {
   font-family: 'Madimi One', sans-serif !important;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 400;
   color: #000000;
-  margin-top: 20px;
+  margin-top: 8px;
   letter-spacing: 0.04em;
 }
 
-/* Battle Container - same as question card container */
+
+/* Battle Container - 30% wider */
 .battle-container {
   background-color: #FFFFFF;
   border-radius: 16px;
@@ -148,8 +152,8 @@
   padding: 20px;
   box-shadow: 5px 0 0 0 #00CED1, 0 5px 0 0 #00CED1, 5px 5px 0 0 #00CED1, 8px 8px 16px rgba(0, 206, 209, 0.2);
   position: relative;
-  flex: 1;
-  max-width: 800px;
+  width: 100%;
+  max-width: 1040px;
   height: fit-content;
 }
 
@@ -169,7 +173,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Battle Zone Title - Outside container at left edge */
+/* Battle Zone Title - Above container */
 .battle-title {
   font-family: 'Madimi One', sans-serif !important;
   font-size: 28px;
@@ -177,10 +181,8 @@
   letter-spacing: 0.04em;
   color: #000000;
   margin: 0 0 20px 0;
-  text-align: left;
-  align-self: flex-start;
+  text-align: center;
   width: 100%;
-  max-width: 1200px;
 }
 
 /* Select Battle Mode Header */

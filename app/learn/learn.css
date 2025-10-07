@@ -63,8 +63,8 @@
 
 /* Back Button - same as video page */
 .back-button {
-  position: absolute;
-  top: 30px;
+  position: fixed;
+  top: 80px;
   left: 45px;
   display: flex;
   align-items: center;
@@ -78,22 +78,23 @@
   font-size: 13px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  z-index: 10;
+  z-index: 50;
 }
 
-/* Content Layout */
+/* Content Layout - Move 10% to the left */
 .content-layout {
   display: flex;
   gap: 40px;
   max-width: 1400px;
   margin: 0 auto;
   padding-top: 40px;
+  transform: translateX(-10%);
 }
 
-/* Main Learning Section - 60% width, starts 20% from left */
+/* Main Learning Section - 60% width, starts 10% from left (moved 10% left) */
 .main-learning-section {
   flex: 0 0 60%;
-  margin-left: 20%;
+  margin-left: 10%;
 }
 
 .page-title {
@@ -121,15 +122,23 @@
 
 .continue-learning-container {
   background-color: #B3F0F2;
-  border-radius: 12px;
+  border: 1px solid #000000;
+  border-radius: 6px;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.learning-cards-wrapper {
   display: flex;
   gap: 20px;
 }
 
 .learning-card {
   background-color: #FFFFFF;
-  border-radius: 8px;
+  border: 1px solid #000000;
+  border-radius: 4px;
   padding: 20px;
   flex: 1;
   position: relative;
@@ -181,15 +190,15 @@
 }
 
 .continue-button {
-  background-color: #00CED1;
-  border: none;
+  background-color: #FFFFFF;
+  border: 1px solid #000000;
   border-radius: 6px;
   padding: 8px 16px;
   font-family: 'Madimi One', sans-serif !important;
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: #FFFFFF;
+  color: #000000;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -228,10 +237,11 @@
 
 .path-card {
   background-color: #FFFFFF;
-  border: 1px solid #E0E0E0;
+  border: 1px solid #000000;
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .path-header {
@@ -294,20 +304,23 @@
 }
 
 .path-button {
-  background-color: #00CED1;
-  border: none;
+  background-color: #B3F0F2;
+  border: 1px solid #000000;
   border-radius: 6px;
   padding: 8px 16px;
   font-family: 'Figtree', sans-serif !important;
   font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: #FFFFFF;
+  color: #000000;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
   transition: all 0.2s ease;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
 }
 
 .path-button:hover {
@@ -315,7 +328,7 @@
 }
 
 .start-button {
-  background-color: #00CED1;
+  background-color: #B3F0F2;
 }
 
 .add-path-button {
@@ -333,15 +346,16 @@
   align-items: center;
   gap: 8px;
   transition: all 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .add-path-button:hover {
   background-color: #F0F0F0;
 }
 
-/* Progress Sidebar */
+/* Progress Sidebar - 25% longer, 5% thinner */
 .progress-sidebar {
-  flex: 0 0 300px;
+  flex: 0 0 285px;
   position: sticky;
   top: 120px;
   height: fit-content;
@@ -368,10 +382,11 @@
 
 .progress-container {
   background-color: #F3F2FF;
-  border: 1px solid #E0E0E0;
+  border: 1px solid #221468;
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-height: 500px;
 }
 
 .progress-section {
@@ -383,7 +398,7 @@
   font-size: 16px;
   font-weight: bold;
   letter-spacing: 0.04em;
-  color: #000000;
+  color: #221468;
   margin: 0 0 10px 0;
 }
 
@@ -398,7 +413,7 @@
   font-size: 18px;
   font-weight: bold;
   letter-spacing: 0.04em;
-  color: #000000;
+  color: #221468;
 }
 
 .level-details {
@@ -413,13 +428,13 @@
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: #666666;
+  color: #221468;
 }
 
 .achievement-section {
   margin-bottom: 20px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #E0E0E0;
+  border-bottom: 1px solid #221468;
 }
 
 .achievement-title {
@@ -427,7 +442,7 @@
   font-size: 12px;
   font-weight: bold;
   letter-spacing: 0.04em;
-  color: #000000;
+  color: #221468;
   margin: 0 0 8px 0;
 }
 
@@ -436,7 +451,7 @@
   font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: #000000;
+  color: #221468;
   margin: 0 0 10px 0;
 }
 
@@ -467,7 +482,7 @@
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: #666666;
+  color: #221468;
 }
 
 .achievement-remaining {
@@ -475,14 +490,14 @@
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: #666666;
+  color: #221468;
   margin: 0;
 }
 
 .recent-section {
   margin-bottom: 20px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #E0E0E0;
+  border-bottom: 1px solid #221468;
 }
 
 .recent-title {
@@ -490,7 +505,7 @@
   font-size: 12px;
   font-weight: bold;
   letter-spacing: 0.04em;
-  color: #000000;
+  color: #221468;
   margin: 0 0 10px 0;
 }
 
@@ -515,7 +530,7 @@
   font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: #000000;
+  color: #221468;
   margin: 0 0 2px 0;
 }
 
@@ -533,7 +548,7 @@
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: #666666;
+  color: #221468;
   margin: 0;
 }
 
@@ -546,7 +561,7 @@
   font-size: 12px;
   font-weight: bold;
   letter-spacing: 0.04em;
-  color: #000000;
+  color: #221468;
   margin: 0 0 10px 0;
 }
 
@@ -555,20 +570,20 @@
   font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: #000000;
+  color: #221468;
   margin: 0 0 4px 0;
 }
 
 .view-all-button {
-  background-color: #FFFFFF;
-  border: 1px solid #000000;
+  background-color: #E3E1FF;
+  border: 1px solid #221468;
   border-radius: 6px;
   padding: 8px 16px;
   font-family: 'Figtree', sans-serif !important;
   font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: #000000;
+  color: #221468;
   cursor: pointer;
   width: 100%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -585,30 +600,27 @@
   bottom: 30px;
   left: 30px;
   z-index: 50;
-}
-
-.learn-icon-container {
-  background-color: #00CED1;
-  border-radius: 50%;
-  padding: 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  gap: 8px;
+}
+
+.learn-icon-image {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.learn-icon-container:hover {
+.learn-icon-image:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
 }
 
 .learn-text {
   font-family: 'Madimi One', sans-serif !important;
-  font-size: 10px;
+  font-size: 16px;
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: #FFFFFF;
+  color: #000000;
 }
