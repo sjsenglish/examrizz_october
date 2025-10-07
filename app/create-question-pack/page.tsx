@@ -98,7 +98,7 @@ export default function CreateQuestionPackPage() {
           backgroundColor: '#F8F9FD',
           border: '1px solid #000000',
           borderRadius: '8px',
-          padding: '30.21px',
+          padding: '27.79px 30.21px',
           maxWidth: '1316.7px',
           width: '89.3475%',
           position: 'relative',
