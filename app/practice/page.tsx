@@ -64,7 +64,7 @@ export default function PracticePage() {
           </div>
 
           <div className="new-pack-button-container">
-            <Link href="/create-question-pack">
+            <Link href="/create-practice-pack">
               <button className="new-pack-button">
                 <span className="new-pack-button-text">+</span>
                 New Pack

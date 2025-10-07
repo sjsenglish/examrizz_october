@@ -3,15 +3,14 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import './select-questions.css';
+import './select-practice-questions.css';
 
-export default function SelectQuestionsPage() {
+export default function SelectPracticeQuestionsPage() {
   const [selectedQuestions, setSelectedQuestions] = useState(111);
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
     <div className="page-background">
-      {/* Navbar */}
       <nav className="navbar">
         <Link href="/" style={{ textDecoration: 'none' }}>
           <h1>examrizzsearch</h1>
@@ -23,28 +22,21 @@ export default function SelectQuestionsPage() {
         </button>
       </nav>
 
-      {/* Main Content */}
       <div className="main-content">
-        {/* Modal */}
         <div className="modal-container">
-          {/* Close Button */}
-          <Link href="/question-packs" className="close-button">
+          <Link href="/practice" className="close-button">
             ×
           </Link>
 
-          {/* Header */}
           <h1 className="header-title">
-            Create Your Question Pack
+            Create Your Practice Pack
           </h1>
 
-          {/* Step indicator */}
           <div className="step-indicator">
             Step 2 of 2
           </div>
 
-          {/* Inner Container - matches create-question-pack styling */}
           <div className="inner-container">
-            {/* Select Questions Section */}
             <div className="select-questions-section">
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '15px' }}>
                 <div>
@@ -55,14 +47,12 @@ export default function SelectQuestionsPage() {
                 </div>
               </div>
 
-              {/* Questions Selected Badge - positioned above and to right of search bar */}
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
                 <div className="questions-selected-badge">
                   {selectedQuestions} questions selected
                 </div>
               </div>
 
-              {/* Search Bar */}
               <div className="search-container" style={{ marginBottom: '15px' }}>
                 <input
                   type="text"
@@ -79,9 +69,7 @@ export default function SelectQuestionsPage() {
                 </button>
               </div>
 
-              {/* Questions Container */}
               <div className="questions-container">
-                {/* First Question - Selected */}
                 <div className="question-card selected">
                   <div className="question-header">
                     <div className="question-checkbox-container">
@@ -90,11 +78,9 @@ export default function SelectQuestionsPage() {
                     </div>
                   </div>
                   <div className="question-content">
-                    {/* Question content area - empty as shown in image */}
                   </div>
                 </div>
 
-                {/* Second Question - Unselected */}
                 <div className="question-card">
                   <div className="question-header">
                     <div className="question-checkbox-container">
@@ -102,14 +88,11 @@ export default function SelectQuestionsPage() {
                     </div>
                   </div>
                   <div className="question-content">
-                    {/* Question content area - empty as shown in image */}
                   </div>
                 </div>
               </div>
 
-              {/* Bottom Buttons Section - contains both side controls and navigation buttons */}
               <div className="bottom-section">
-                {/* Side Controls - now inline with navigation buttons but 30% up */}
                 <div className="inline-controls">
                   <button className="control-button shuffle-button">
                     <span>Shuffle</span>
@@ -130,9 +113,8 @@ export default function SelectQuestionsPage() {
                   </button>
                 </div>
 
-                {/* Navigation Buttons */}
                 <div className="navigation-buttons">
-                  <Link href="/create-question-pack" className="back-button">
+                  <Link href="/create-practice-pack" className="back-button">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
