@@ -55,7 +55,7 @@
 .main-content {
   padding-top: 88px;
   padding-left: 20px;
-  padding-right: 325px;
+  padding-right: 20px;
   padding-bottom: 120px;
   position: relative;
   min-height: 100vh;
@@ -81,7 +81,7 @@
   z-index: 50;
 }
 
-/* Content Layout - Move content left, ensure sidebar stays right */
+/* Content Layout - Align sidebar with continue learning box */
 .content-layout {
   display: flex;
   gap: 40px;
@@ -92,6 +92,7 @@
   padding-left: 20px;
   padding-right: 20px;
   transform: translateX(-5%);
+  align-items: flex-start;
 }
 
 /* Main Learning Section - 66% width (10% wider), ensure it doesn't push sidebar down */
@@ -132,6 +133,7 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  width: 110%;
 }
 
 .learning-cards-wrapper {
@@ -237,6 +239,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   margin-bottom: 20px;
+  width: 110%;
 }
 
 .path-card {
@@ -246,6 +249,7 @@
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: relative;
+  min-height: 180px;
 }
 
 .path-header {
@@ -359,12 +363,11 @@
   background-color: #F0F0F0;
 }
 
-/* Progress Sidebar - fixed to right side, never goes below */
+/* Progress Sidebar - positioned relative to content */
 .progress-sidebar {
   flex: 0 0 285px;
-  position: fixed;
+  position: sticky;
   top: 120px;
-  right: 20px;
   height: fit-content;
   z-index: 10;
 }
