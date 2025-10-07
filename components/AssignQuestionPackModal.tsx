@@ -21,15 +21,6 @@ export const AssignQuestionPackModal: React.FC<AssignQuestionPackModalProps> = (
   const [instructions, setInstructions] = useState('This covers topics from Week 3. Attempt all questions and flag any you find confusing.');
   const [sendEmail, setSendEmail] = useState(true);
   const [showInDashboard, setShowInDashboard] = useState(true);
-  const [showClassFilter, setShowClassFilter] = useState(false);
-  const [selectedFilterClasses, setSelectedFilterClasses] = useState<string[]>(['Year 12 Set 1 - A Level Maths']);
-  
-  const filterClasses = [
-    'Year 12 Set 1 - A Level Maths',
-    'Year 12 Set 2 - A Level Maths', 
-    'Year 11 Set 1 - GCSE Maths',
-    'Year 13 Set 1 - A Level Further Maths'
-  ];
 
   if (!isOpen) return null;
 
@@ -50,14 +41,6 @@ export const AssignQuestionPackModal: React.FC<AssignQuestionPackModalProps> = (
 
   const clearSelection = () => {
     setSelectedClasses([]);
-  };
-  
-  const toggleFilterClass = (className: string) => {
-    if (selectedFilterClasses.includes(className)) {
-      setSelectedFilterClasses(selectedFilterClasses.filter(c => c !== className));
-    } else {
-      setSelectedFilterClasses([...selectedFilterClasses, className]);
-    }
   };
 
   return (
@@ -262,125 +245,6 @@ export const AssignQuestionPackModal: React.FC<AssignQuestionPackModalProps> = (
                     Assign to specific students
                   </span>
                 </label>
-                
-                {/* Filter by class dropdown - only show when "Assign to specific students" is selected */}
-                {!assignToClass && (
-                  <div style={{ marginTop: '20px' }}>
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '15px',
-                      marginBottom: '15px'
-                    }}>
-                      <span style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '16px',
-                        letterSpacing: '0.04em',
-                        color: '#000000',
-                        fontWeight: 'bold'
-                      }}>
-                        Filter by class
-                      </span>
-                      
-                      <div style={{ position: 'relative' }}>
-                        <button
-                          onClick={() => setShowClassFilter(!showClassFilter)}
-                          style={{
-                            backgroundColor: '#E0E4FF',
-                            border: '2px solid #000000',
-                            borderRadius: '8px',
-                            padding: '8px 15px',
-                            fontFamily: "'Figtree', sans-serif",
-                            fontSize: '14px',
-                            letterSpacing: '0.04em',
-                            color: '#000000',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '10px',
-                            minWidth: '200px',
-                            justifyContent: 'space-between'
-                          }}
-                        >
-                          <span>{selectedFilterClasses.length} Classes Selected</span>
-                          <span style={{ transform: showClassFilter ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>▼</span>
-                        </button>
-                        
-                        {showClassFilter && (
-                          <div style={{
-                            position: 'absolute',
-                            top: '100%',
-                            left: 0,
-                            right: 0,
-                            backgroundColor: '#FFFFFF',
-                            border: '2px solid #000000',
-                            borderRadius: '8px',
-                            marginTop: '4px',
-                            zIndex: 1000,
-                            maxHeight: '200px',
-                            overflowY: 'auto',
-                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
-                          }}>
-                            {filterClasses.map((className, index) => (
-                              <div
-                                key={index}
-                                onClick={() => toggleFilterClass(className)}
-                                style={{
-                                  padding: '12px 15px',
-                                  borderBottom: index < filterClasses.length - 1 ? '1px solid #E0E0E0' : 'none',
-                                  cursor: 'pointer',
-                                  backgroundColor: selectedFilterClasses.includes(className) ? '#E0B4FF' : '#FFFFFF',
-                                  fontFamily: "'Figtree', sans-serif",
-                                  fontSize: '14px',
-                                  letterSpacing: '0.04em',
-                                  color: '#000000',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '10px',
-                                  transition: 'background-color 0.2s'
-                                }}
-                              >
-                                {selectedFilterClasses.includes(className) && (
-                                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                    <path d="M3 8L6 11L13 4" stroke="#000000" strokeWidth="2" strokeLinecap="round"/>
-                                  </svg>
-                                )}
-                                <span>{className}</span>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      
-                      <span style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '16px',
-                        letterSpacing: '0.04em',
-                        color: '#000000',
-                        fontWeight: 'bold'
-                      }}>
-                        Search
-                      </span>
-                      
-                      <input
-                        type="text"
-                        placeholder="Search by Name"
-                        style={{
-                          backgroundColor: '#FFFFFF',
-                          border: '2px solid #000000',
-                          borderRadius: '8px',
-                          padding: '8px 40px 8px 15px',
-                          fontFamily: "'Figtree', sans-serif",
-                          fontSize: '14px',
-                          letterSpacing: '0.04em',
-                          color: '#000000',
-                          minWidth: '200px',
-                          outline: 'none'
-                        }}
-                      />
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>
@@ -402,47 +266,42 @@ export const AssignQuestionPackModal: React.FC<AssignQuestionPackModalProps> = (
             
             {/* Classes List */}
             <div style={{
-              border: '2px solid #E0E0E0',
+              border: '2px solid #000000',
               borderRadius: '8px',
               maxHeight: '300px',
-              overflow: 'auto'
+              overflow: 'auto',
+              backgroundColor: '#FFFFFF'
             }}>
               {classes.map((className, index) => (
                 <div 
                   key={index}
                   style={{
-                    padding: '15px 20px',
+                    padding: '12px 15px',
                     borderBottom: index < classes.length - 1 ? '1px solid #E0E0E0' : 'none',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    backgroundColor: selectedClasses.includes(index) ? '#E8FFF8' : '#FFFFFF',
-                    cursor: 'pointer'
+                    backgroundColor: selectedClasses.includes(index) ? '#EBE9FF' : '#FFFFFF',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s'
                   }}
                   onClick={() => toggleClass(index)}
                 >
-                  <span style={{
-                    fontFamily: "'Madimi One', sans-serif",
-                    fontSize: '14px',
-                    color: '#000000'
-                  }}>
-                    {className}
-                  </span>
-                  <div style={{
-                    width: '24px',
-                    height: '24px',
-                    border: '2px solid #000000',
-                    borderRadius: '4px',
-                    backgroundColor: selectedClasses.includes(index) ? '#00D4AA' : '#FFFFFF',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     {selectedClasses.includes(index) && (
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M3 8L6 11L13 4" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"/>
+                        <path d="M3 8L6 11L13 4" stroke="#000000" strokeWidth="2" strokeLinecap="round"/>
                       </svg>
                     )}
+                    <span style={{
+                      fontFamily: "'Figtree', sans-serif",
+                      fontSize: '14px',
+                      letterSpacing: '0.04em',
+                      color: '#000000',
+                      fontWeight: selectedClasses.includes(index) ? 'bold' : 'normal'
+                    }}>
+                      {className}
+                    </span>
                   </div>
                 </div>
               ))}

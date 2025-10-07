@@ -121,6 +121,7 @@
 .section-header {
   display: flex;
   align-items: center;
+  justify-content: space-between; /* Space between title/description and badge */
   gap: 15px; /* Reduced gap */
   margin-bottom: 15px; /* Reduced margin */
   flex-wrap: wrap;
@@ -147,7 +148,7 @@
   background-color: white;
   color: black;
   padding: 8px 16px;
-  border: 2px solid black;
+  border: 1px solid black; /* Thinner outline */
   border-radius: 0px; /* Sharp edges */
   font-family: 'Figtree', sans-serif !important;
   font-size: 14px;
@@ -204,14 +205,15 @@
   padding: 15px; /* Reduced inner padding */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Drop shadow */
   width: 70%; /* Reduced by 30% */
+  height: 230px; /* Made outside rectangle 15% longer heightwise */
 }
 
 .question-card {
   background-color: white;
-  border: 3px solid #00CED1;
+  border: 1px solid #00CED1; /* Thinner blue outline */
   border-radius: 8px;
   padding: 15px; /* Reduced padding */
-  min-height: 80px; /* Reduced height */
+  min-height: 120px; /* Made box height 50% longer (80px * 1.5) */
   position: relative;
 }
 
@@ -266,24 +268,24 @@
 
 .side-controls {
   position: absolute;
-  right: 0;
+  right: 15%; /* Move buttons to the left by 15% */
   top: 50%; /* Move buttons down 50% */
-  width: 180px;
+  width: 144px; /* Reduced by 20% from 180px */
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px; /* Reduced gap */
 }
 
 .control-button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 14px; /* Reduced padding */
+  padding: 8px 11px; /* Reduced padding by 20% */
   border: 2px solid #CCCCCC;
-  border-radius: 8px;
+  border-radius: 6px; /* Slightly smaller radius */
   background-color: white;
   font-family: 'Figtree', sans-serif !important;
-  font-size: 14px;
+  font-size: 12px; /* Reduced font size by ~20% */
   font-weight: bold;
   color: #000000;
   cursor: pointer;

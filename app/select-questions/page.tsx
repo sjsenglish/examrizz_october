@@ -46,31 +46,35 @@ export default function SelectQuestionsPage() {
           <div className="inner-container">
             {/* Select Questions Section */}
             <div className="select-questions-section">
-              <div className="section-header">
-                <h2 className="section-title">Select Questions</h2>
-                <p className="section-description">
-                  Choose 123 questions from 260 available results below.
-                </p>
-                <div className="questions-selected-badge">
-                  {selectedQuestions} questions selected
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '15px' }}>
+                <div>
+                  <h2 className="section-title">Select Questions</h2>
+                  <p className="section-description">
+                    Choose 123 questions from 260 available results below.
+                  </p>
                 </div>
               </div>
 
-              {/* Search Bar */}
-              <div className="search-container">
-                <input
-                  type="text"
-                  placeholder="Search for questions by year, question number, content, ..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="search-input"
-                />
-                <button className="search-button">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/>
-                    <path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2"/>
-                  </svg>
-                </button>
+              {/* Search Bar with Badge */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
+                <div className="search-container" style={{ marginBottom: 0 }}>
+                  <input
+                    type="text"
+                    placeholder="Search for questions by year, question number, content, ..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="search-input"
+                  />
+                  <button className="search-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/>
+                      <path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2"/>
+                    </svg>
+                  </button>
+                </div>
+                <div className="questions-selected-badge">
+                  {selectedQuestions} questions selected
+                </div>
               </div>
 
               {/* Questions Container */}

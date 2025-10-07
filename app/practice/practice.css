@@ -1,88 +1,373 @@
-@import url('https://fonts.googleapis.com/css2?family=Madimi+One&display=swap');
+/* Practice Page Styles - Duplicate of Question Packs */
+@import url('https://fonts.googleapis.com/css2?family=Madimi+One&family=Figtree:wght@400;700&display=swap');
 
-@font-face {
-  font-family: 'Futura PT';
-  src: url('https://fonts.cdnfonts.com/css/futura-pt') format('woff2');
-  font-weight: normal;
-  font-style: normal;
+* {
+  font-family: 'Madimi One', sans-serif !important;
+}
+
+.page-background {
+  background-color: #FFFFFF;
+  min-height: 100vh;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #F8F8F5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar h1 {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #000000;
+  margin: 0;
+  cursor: pointer;
+}
+
+.hamburger-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hamburger-line {
+  width: 20px;
+  height: 2px;
+  background-color: #000000;
+  border-radius: 1px;
+}
+
+.content-with-navbar-padding {
+  padding-top: 60px;
+}
+
+.main-content {
+  padding: 60px;
+  position: relative;
+  padding-bottom: 200px;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.header-container {
+  display: inline-block;
+  text-align: left;
+  position: relative;
+}
+
+.page-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: #000000;
+  margin: 0 0 20px 0;
+}
+
+.practice-icon {
+  position: fixed;
+  left: 80px;
+  bottom: 80px;
+  z-index: 50;
+}
+
+.new-pack-button-container {
+  position: fixed;
+  right: 80px;
+  bottom: 80px;
+  z-index: 100;
+}
+
+.new-pack-button {
+  background-color: #B3F0F2;
+  border: 1px solid #000000;
+  border-radius: 4px;
+  padding: 12px 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-family: 'Madimi One', sans-serif;
+  font-weight: 400;
+  color: #000000;
+  letter-spacing: 0.04em;
+}
+
+.new-pack-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+.new-pack-button-text {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.cloud-decoration-left {
+  position: absolute;
+  left: 5%;
+  top: 10%;
+  z-index: 10;
+  opacity: 0.7;
+}
+
+.cloud-decoration-right {
+  position: absolute;
+  right: 5%;
+  top: 15%;
+  z-index: 10;
+  opacity: 0.7;
+}
+
+.search-bar-container {
+  max-width: 852px;
+  margin: 0 auto 20px auto;
+  position: relative;
+  z-index: 5;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #000000;
+  border-radius: 0px;
+  background-color: #FFFFFF;
+  font-size: 14px;
+  font-family: 'Figtree', sans-serif;
+  letter-spacing: 0.04em;
+  color: #000000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+
+.search-input:focus {
+  border: 2px solid #000000;
 }
 
 .tabs-container {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-bottom: 40px;
-  padding: 0 20px;
-}
-
-.tab {
-  flex: 0 0 auto;
-  padding: 0;
-  font-family: 'Madimi One', cursive;
-  font-size: 22px;
-  background: none;
-  border: none;
-  border-radius: 0;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 400;
+  max-width: 852px;
+  margin: 0 auto 40px auto;
   position: relative;
-  width: 220px;
-  height: 70px;
-  z-index: 3;
-  margin-top: 10px;
-  overflow: visible;
+  z-index: 1000;
+}
+
+.tabs-flex {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
 }
 
-.tab-wide {
-  width: 286px;
+.tab-with-dropdown {
+  position: relative;
+  flex: 1;
 }
 
-.tab:not(.tab-saved) {
-  padding-left: 3px;
-  padding-right: 23px;
-  padding-top: 22px;
-  padding-bottom: 35px;
-}
-
-.tab-wide:not(.tab-saved) {
-  padding-left: 3px;
-  padding-right: 23px;
-  padding-top: 22px;
-  padding-bottom: 35px;
-}
-
-.tab svg:first-child {
-  position: absolute;
-  top: -10px;
-  left: -3px;
-  z-index: -1;
-  pointer-events: none;
-}
-
-.tab-inactive {
-  background-color: transparent;
-  color: #333333;
-}
-
-.tab-active {
-  background-color: transparent;
-  color: #000000;
-  transform: translateY(-2px);
-  z-index: 3;
-}
-
-.tab-saved {
+.tab-button {
+  width: 100%;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding-left: 3px;
-  padding-right: 23px;
-  padding-top: 22px;
-  padding-bottom: 35px;
+  border: 1px solid #000000;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Madimi One', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #000000;
+  letter-spacing: 0.04em;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tab-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+.tab-button.active {
+  background-color: #B3F0F2;
+}
+
+.tab-button.inactive {
+  background-color: #FFFFFF;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% - 5px);
+  left: 0;
+  right: 0;
+  background-color: #FFFFFF;
+  border: 1px solid #000000;
+  border-radius: 0px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background-color: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  color: #000000;
+  letter-spacing: 0.04em;
+}
+
+.dropdown-item:hover {
+  background-color: #B3F0F2;
+}
+
+.main-content-area {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 5;
+}
+
+.section-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #000000;
+  margin-bottom: 15px;
+  letter-spacing: 0.04em;
+}
+
+.pack-item {
+  position: relative;
+  margin-bottom: 60px;
+}
+
+.pack-actions {
+  position: absolute;
+  top: -40px;
+  right: 15px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  z-index: 10;
+}
+
+.pack-action-icon {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.pack-action-icon:hover {
+  transform: scale(1.1);
+}
+
+.pack-rectangle {
+  position: relative;
+  height: 207px;
+  max-width: 852px;
+  margin: 0 auto;
+}
+
+.pack-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.pack-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.pack-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 16px;
+  color: #000000;
+}
+
+.pack-category {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.completed-badge {
+  display: inline-block;
+  margin-left: 10px;
+  background-color: #00CED1;
+  color: #FFFFFF;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.default-message {
+  text-align: center;
+  padding: 60px;
+  color: #999999;
+  font-size: 18px;
+  font-family: 'Madimi One', sans-serif;
+}
+
+.tab-button-regular {
+  flex: 1;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid #000000;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+  letter-spacing: 0.04em;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tab-button-regular:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.tab-button-regular.active {
+  background-color: #B3F0F2;
+}
+
+.tab-button-regular.inactive {
+  background-color: #FFFFFF;
 }
