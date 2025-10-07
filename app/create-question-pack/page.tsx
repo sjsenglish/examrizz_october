@@ -98,7 +98,7 @@ export default function CreateQuestionPackPage() {
           backgroundColor: '#F8F9FD',
           border: '1px solid #000000',
           borderRadius: '8px',
-          padding: '27.79px 30.21px',
+          padding: '36px 30.21px',
           maxWidth: '1316.7px',
           width: '89.3475%',
           position: 'relative',
@@ -175,7 +175,7 @@ export default function CreateQuestionPackPage() {
                 }}>
                   <span style={{
                     fontFamily: "'Madimi One', sans-serif",
-                    fontSize: '22px',
+                    fontSize: '18px',
                     color: '#000000',
                     fontWeight: 400
                   }}>
@@ -211,7 +211,7 @@ export default function CreateQuestionPackPage() {
                 <div style={{ marginBottom: '25px' }}>
                   <h3 style={{
                     fontFamily: "'Madimi One', sans-serif",
-                    fontSize: '16px',
+                    fontSize: '18px',
                     fontWeight: 400,
                     color: '#000000',
                     margin: '0 0 15px 0'
@@ -295,7 +295,7 @@ export default function CreateQuestionPackPage() {
                 <div style={{ marginBottom: '30px' }}>
                   <h3 style={{
                     fontFamily: "'Madimi One', sans-serif",
-                    fontSize: '16px',
+                    fontSize: '18px',
                     fontWeight: 400,
                     color: '#000000',
                     margin: '0 0 15px 0'
@@ -322,6 +322,7 @@ export default function CreateQuestionPackPage() {
                       <span style={{
                         fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
+                        letterSpacing: '0.04em',
                         fontWeight: 'bold',
                         color: '#000000',
                         letterSpacing: '0.04em'
@@ -342,6 +343,7 @@ export default function CreateQuestionPackPage() {
                       <span style={{
                         fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
+                        letterSpacing: '0.04em',
                         fontWeight: 'bold',
                         color: '#000000',
                         letterSpacing: '0.04em'
@@ -362,6 +364,7 @@ export default function CreateQuestionPackPage() {
                       <span style={{
                         fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
+                        letterSpacing: '0.04em',
                         fontWeight: 'bold',
                         color: '#000000',
                         letterSpacing: '0.04em'
@@ -382,6 +385,7 @@ export default function CreateQuestionPackPage() {
                       <span style={{
                         fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
+                        letterSpacing: '0.04em',
                         fontWeight: 'bold',
                         color: '#000000',
                         letterSpacing: '0.04em'
@@ -402,6 +406,7 @@ export default function CreateQuestionPackPage() {
                       <span style={{
                         fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
+                        letterSpacing: '0.04em',
                         fontWeight: 'bold',
                         color: '#000000',
                         letterSpacing: '0.04em'
@@ -422,6 +427,7 @@ export default function CreateQuestionPackPage() {
                       <span style={{
                         fontFamily: "'Figtree', sans-serif",
                         fontSize: '14px',
+                        letterSpacing: '0.04em',
                         fontWeight: 'bold',
                         color: '#000000',
                         letterSpacing: '0.04em'
@@ -526,22 +532,11 @@ export default function CreateQuestionPackPage() {
                 }}>
                   <span style={{
                     fontFamily: "'Madimi One', sans-serif",
-                    fontSize: '22px',
+                    fontSize: '18px',
                     color: '#000000',
                     fontWeight: 400
                   }}>
                     Number of Questions
-                  </span>
-                  <span style={{
-                    backgroundColor: '#40E0D0',
-                    color: '#000000',
-                    padding: '4px 12px',
-                    fontFamily: "'Madimi One', sans-serif",
-                    fontSize: '16px',
-                    fontWeight: 400,
-                    boxShadow: '2px 2px 0 #000000'
-                  }}>
-                    Step 1
                   </span>
                 </div>
               </header>
@@ -563,7 +558,8 @@ export default function CreateQuestionPackPage() {
                         borderRadius: '4px',
                         textAlign: 'center',
                         fontFamily: "'Figtree', sans-serif",
-                        fontSize: '14px'
+                        fontSize: '14px',
+                        letterSpacing: '0.04em'
                       }}
                     />
                     <div style={{ 
@@ -573,28 +569,19 @@ export default function CreateQuestionPackPage() {
                       backgroundColor: '#E0E0E0',
                       borderRadius: '10px'
                     }}>
-                      <div style={{
-                        position: 'absolute',
-                        left: '20%',
-                        top: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: '40px',
-                        height: '40px',
-                        backgroundColor: '#E0B4FF',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '10px',
-                        fontWeight: 'bold'
-                      }}>
-                        <Image 
-                          src="/icons/speech-bubble-ghost.svg" 
-                          alt="Question counter" 
-                          width={24} 
-                          height={24}
-                        />
-                      </div>
+                      <Image 
+                        src="/icons/speech-bubble-ghost.svg" 
+                        alt="Question counter" 
+                        width={30} 
+                        height={30}
+                        style={{
+                          position: 'absolute',
+                          left: '20%',
+                          top: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          cursor: 'pointer'
+                        }}
+                      />
                     </div>
                     <input
                       type="text"
@@ -607,13 +594,15 @@ export default function CreateQuestionPackPage() {
                         borderRadius: '4px',
                         textAlign: 'center',
                         fontFamily: "'Figtree', sans-serif",
-                        fontSize: '14px'
+                        fontSize: '14px',
+                        letterSpacing: '0.04em'
                       }}
                     />
                   </div>
                   <p style={{
                     fontFamily: "'Figtree', sans-serif",
                     fontSize: '12px',
+                    letterSpacing: '0.04em',
                     color: '#E0B4FF',
                     backgroundColor: '#E0E4FF',
                     padding: '8px 12px',
@@ -632,12 +621,6 @@ export default function CreateQuestionPackPage() {
                     gap: '10px',
                     marginBottom: '15px'
                   }}>
-                    <Image 
-                      src="/icons/speech-bubble-ghost.svg" 
-                      alt="Font size" 
-                      width={24} 
-                      height={24}
-                    />
                     <span style={{
                       fontFamily: "'Madimi One', sans-serif",
                       fontSize: '18px',
@@ -656,7 +639,7 @@ export default function CreateQuestionPackPage() {
                     </span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '20px' }}>
-                    <span style={{ fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>small</span>
+                    <span style={{ fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>small</span>
                     <div style={{ 
                       flex: 1, 
                       position: 'relative',
@@ -669,25 +652,14 @@ export default function CreateQuestionPackPage() {
                         left: '30%',
                         top: '50%',
                         transform: 'translate(-50%, -50%)',
-                        width: '40px',
-                        height: '40px',
-                        backgroundColor: '#E0B4FF',
+                        width: '20px',
+                        height: '20px',
+                        backgroundColor: '#333333',
                         borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '10px',
-                        fontWeight: 'bold'
-                      }}>
-                        <Image 
-                          src="/icons/speech-bubble-ghost.svg" 
-                          alt="Font size" 
-                          width={24} 
-                          height={24}
-                        />
-                      </div>
+                        cursor: 'pointer'
+                      }}></div>
                     </div>
-                    <span style={{ fontSize: '12px', fontFamily: "'Figtree', sans-serif" }}>large</span>
+                    <span style={{ fontSize: '12px', fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>large</span>
                   </div>
                 </div>
 
@@ -703,53 +675,56 @@ export default function CreateQuestionPackPage() {
                     Order questions by
                   </h3>
                   <div style={{
-                    backgroundColor: '#00CED1',
-                    borderRadius: '20px',
-                    padding: '8px',
                     display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
+                    gap: '0',
                     width: '240px'
                   }}>
-                    <span style={{
-                      fontFamily: "'Figtree', sans-serif",
-                      fontSize: '14px',
-                      fontWeight: 'bold',
-                      color: '#000000',
-                      padding: '8px 16px'
-                    }}>
-                      Automatic
-                    </span>
                     <div style={{
-                      width: '30px',
-                      height: '30px',
-                      backgroundColor: '#FFFFFF',
-                      borderRadius: '50%',
+                      backgroundColor: '#B3F0F2',
+                      border: '1px solid #000000',
+                      borderRight: 'none',
+                      padding: '10px 20px',
+                      flex: 1,
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      cursor: 'pointer'
                     }}>
-                      <div style={{
-                        width: '20px',
-                        height: '20px',
-                        backgroundColor: '#FFFFFF',
-                        borderRadius: '50%',
-                        border: '2px solid #CCCCCC'
-                      }}></div>
+                      <span style={{
+                        fontFamily: "'Figtree', sans-serif",
+                        fontSize: '14px',
+                        letterSpacing: '0.04em',
+                        fontWeight: 'bold',
+                        color: '#000000'
+                      }}>
+                        Automatic
+                      </span>
                     </div>
-                    <span style={{
-                      fontFamily: "'Figtree', sans-serif",
-                      fontSize: '14px',
-                      fontWeight: 'bold',
-                      color: '#000000',
-                      padding: '8px 16px'
+                    <div style={{
+                      backgroundColor: 'transparent',
+                      border: '1px solid #000000',
+                      padding: '10px 20px',
+                      flex: 1,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer'
                     }}>
-                      Custom
-                    </span>
+                      <span style={{
+                        fontFamily: "'Figtree', sans-serif",
+                        fontSize: '14px',
+                        letterSpacing: '0.04em',
+                        fontWeight: 'bold',
+                        color: '#000000'
+                      }}>
+                        Custom
+                      </span>
+                    </div>
                   </div>
                   <p style={{
                     fontFamily: "'Figtree', sans-serif",
                     fontSize: '12px',
+                    letterSpacing: '0.04em',
                     color: '#666666',
                     margin: '10px 0 0 0'
                   }}>
@@ -757,33 +732,34 @@ export default function CreateQuestionPackPage() {
                   </p>
                 </div>
 
-                {/* Action Buttons */}
-                <div style={{
+              </div>
+              
+              {/* Select Questions Button - Bottom Right */}
+              <div style={{
+                position: 'absolute',
+                bottom: '20px',
+                right: '20px'
+              }}>
+                <button style={{
+                  backgroundColor: '#00CED1',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '12px 20px',
+                  cursor: 'pointer',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  color: '#FFFFFF',
                   display: 'flex',
-                  gap: '20px',
-                  justifyContent: 'flex-end'
+                  alignItems: 'center',
+                  gap: '8px',
+                  boxShadow: '4px 4px 8px rgba(0, 0, 0, 0.2)'
                 }}>
-                  <button style={{
-                    backgroundColor: '#00CED1',
-                    border: 'none',
-                    borderRadius: '8px',
-                    padding: '12px 20px',
-                    cursor: 'pointer',
-                    fontFamily: "'Figtree', sans-serif",
-                    fontSize: '16px',
-                    fontWeight: 'bold',
-                    color: '#FFFFFF',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px'
-                  }}>
-                    Select
-                    <br />Questions
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-                </div>
+                  Select Questions
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
               </div>
             </article>
           </div>
