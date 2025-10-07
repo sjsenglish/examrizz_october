@@ -79,38 +79,37 @@ export default function SelectQuestionsPage() {
                 </button>
               </div>
 
-              {/* Questions Container */}
-              <div className="questions-container">
-                {/* First Question - Selected */}
-                <div className="question-card selected">
-                  <div className="question-header">
-                    <div className="question-checkbox-container">
-                      <input type="checkbox" checked className="question-checkbox" />
-                      <span className="question-number">1</span>
+              {/* Questions Container with Side Controls */}
+              <div className="questions-and-controls-section">
+                <div className="questions-container">
+                  {/* First Question - Selected */}
+                  <div className="question-card selected">
+                    <div className="question-header">
+                      <div className="question-checkbox-container">
+                        <input type="checkbox" checked className="question-checkbox" />
+                        <span className="question-number">1</span>
+                      </div>
+                    </div>
+                    <div className="question-content">
+                      {/* Question content area - empty as shown in image */}
                     </div>
                   </div>
-                  <div className="question-content">
-                    {/* Question content area - empty as shown in image */}
+
+                  {/* Second Question - Unselected */}
+                  <div className="question-card">
+                    <div className="question-header">
+                      <div className="question-checkbox-container">
+                        <input type="checkbox" className="question-checkbox" />
+                      </div>
+                    </div>
+                    <div className="question-content">
+                      {/* Question content area - empty as shown in image */}
+                    </div>
                   </div>
                 </div>
 
-                {/* Second Question - Unselected */}
-                <div className="question-card">
-                  <div className="question-header">
-                    <div className="question-checkbox-container">
-                      <input type="checkbox" className="question-checkbox" />
-                    </div>
-                  </div>
-                  <div className="question-content">
-                    {/* Question content area - empty as shown in image */}
-                  </div>
-                </div>
-              </div>
-
-              {/* Bottom Buttons Section - contains both side controls and navigation buttons */}
-              <div className="bottom-section">
-                {/* Side Controls - now inline with navigation buttons but 30% up */}
-                <div className="inline-controls">
+                {/* Side Controls - now to the right of questions container */}
+                <div className="side-controls-right">
                   <button className="control-button shuffle-button">
                     <span>Shuffle</span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -129,23 +128,23 @@ export default function SelectQuestionsPage() {
                     clear selection
                   </button>
                 </div>
+              </div>
 
-                {/* Navigation Buttons */}
-                <div className="navigation-buttons">
-                  <Link href="/create-question-pack" className="back-button">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    Back
-                  </Link>
-                  
-                  <button className="create-pack-button">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5 12l5 5L20 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    Create Pack
-                  </button>
-                </div>
+              {/* Navigation Buttons - moved up to fit in smaller container */}
+              <div className="navigation-buttons-compact">
+                <Link href="/create-question-pack" className="back-button">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Back
+                </Link>
+                
+                <button className="create-pack-button">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 12l5 5L20 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Create Pack
+                </button>
               </div>
             </div>
           </div>

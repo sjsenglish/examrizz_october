@@ -68,11 +68,11 @@
   border: 1px solid #000000;
   border-radius: 8px;
   padding: 15px 32.6px; /* Reduced padding for better fit */
-  max-width: 1296px; /* Increased from 1200px by 8% */
-  width: 91.8%; /* Increased from 85% by 8% */
+  max-width: 1426px; /* 10% wider: 1296px * 1.1 */
+  width: 95%; /* 10% wider: increased width */
   position: relative;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  max-height: calc(100vh - 100px); /* Reduced max-height */
+  max-height: calc((100vh - 100px) * 0.9); /* 10% shorter height */
   overflow-y: auto;
 }
 
@@ -114,11 +114,12 @@
 
 .card {
   background-color: #FFFFFF;
-  border-radius: 16px;
+  border-radius: 18px; /* 10% bigger: 16px * 1.1 */
   border: 3px solid #000000;
-  padding: 20px; /* Reduced padding */
-  box-shadow: 6px 0 0 0 #00CED1, 0 6px 0 0 #00CED1, 6px 6px 0 0 #00CED1, 8px 8px 16px rgba(0, 206, 209, 0.2);
+  padding: 22px; /* 10% bigger: 20px * 1.1 */
+  box-shadow: 7px 0 0 0 #00CED1, 0 7px 0 0 #00CED1, 7px 7px 0 0 #00CED1, 9px 9px 18px rgba(0, 206, 209, 0.2); /* 10% bigger shadows */
   position: relative;
+  transform: scale(1.1); /* Make entire container 10% bigger */
 }
 
 .card-header {
