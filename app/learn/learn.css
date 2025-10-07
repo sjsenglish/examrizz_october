@@ -81,20 +81,20 @@
   z-index: 50;
 }
 
-/* Content Layout - Move 30% to the right from original position */
+/* Content Layout - Centered layout */
 .content-layout {
   display: flex;
   gap: 40px;
   max-width: 1400px;
   margin: 0 auto;
   padding-top: 40px;
-  transform: translateX(30%);
+  transform: translateX(0%);
 }
 
-/* Main Learning Section - 60% width, starts 30% from left (moved 20% right from -10% position) */
+/* Main Learning Section - 60% width, centered */
 .main-learning-section {
   flex: 0 0 60%;
-  margin-left: 30%;
+  margin-left: 0;
 }
 
 .page-title {
@@ -355,7 +355,7 @@
   background-color: #F0F0F0;
 }
 
-/* Progress Sidebar - 25% longer, 5% thinner */
+/* Progress Sidebar - positioned to the right */
 .progress-sidebar {
   flex: 0 0 285px;
   position: sticky;
