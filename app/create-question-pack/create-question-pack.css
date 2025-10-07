@@ -114,53 +114,53 @@
 
 .card {
   background-color: #FFFFFF;
-  border-radius: 18px; /* 10% bigger: 16px * 1.1 */
+  border-radius: 14px; /* 10% smaller: 16px * 0.9 */
   border: 3px solid #000000;
-  padding: 22px; /* 10% bigger: 20px * 1.1 */
-  box-shadow: 7px 0 0 0 #00CED1, 0 7px 0 0 #00CED1, 7px 7px 0 0 #00CED1, 9px 9px 18px rgba(0, 206, 209, 0.2); /* 10% bigger shadows */
+  padding: 18px; /* 10% smaller: 20px * 0.9 */
+  box-shadow: 5px 0 0 0 #00CED1, 0 5px 0 0 #00CED1, 5px 5px 0 0 #00CED1, 7px 7px 14px rgba(0, 206, 209, 0.2); /* 10% smaller shadows */
   position: relative;
-  transform: scale(1.1); /* Make entire container 10% bigger */
+  transform: scale(0.9); /* Make entire container 10% smaller */
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px; /* Reduced margin */
+  margin-bottom: 14px; /* 10% smaller: 15px * 0.9 */
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 14px; /* 10% smaller: 15px * 0.9 */
 }
 
 .card-title {
   font-family: 'Madimi One', sans-serif !important;
-  font-size: 18px;
+  font-size: 16px; /* 10% smaller: 18px * 0.9 */
   color: #000000;
   font-weight: 400;
 }
 
 .pack-name-input {
   width: 100%;
-  padding: 12px 20px; /* Reduced padding */
+  padding: 11px 18px; /* 10% smaller: 12px * 0.9 and 20px * 0.9 */
   border: 1px solid #000000;
   border-radius: 0px;
   background-color: #D3F6F7;
   font-family: 'Figtree', sans-serif !important;
-  font-size: 15px;
+  font-size: 14px; /* 10% smaller: 15px * 0.9 */
   letter-spacing: 0.04em;
   color: #000000;
-  margin-bottom: 20px; /* Reduced margin */
+  margin-bottom: 18px; /* 10% smaller: 20px * 0.9 */
   font-weight: bold;
   box-sizing: border-box;
 }
 
 .subject-dropdown-button {
   width: 100%;
-  padding: 12px 15px; /* Reduced padding */
+  padding: 11px 14px; /* 10% smaller: 12px * 0.9 and 15px * 0.9 */
   border: 1px solid #000000;
   border-radius: 0px;
   background-color: #D3F6F7;
   font-family: 'Figtree', sans-serif !important;
-  font-size: 15px;
+  font-size: 14px; /* 10% smaller: 15px * 0.9 */
   letter-spacing: 0.04em;
   color: #000000;
   text-align: left;
@@ -206,16 +206,16 @@
 .filter-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px; /* Reduced gap */
-  margin-bottom: 15px; /* Reduced margin */
+  gap: 7px; /* 10% smaller: 8px * 0.9 */
+  margin-bottom: 14px; /* 10% smaller: 15px * 0.9 */
 }
 
 .filter-item {
   background-color: transparent; /* Removed blue background */
-  padding: 8px; /* Reduced padding */
+  padding: 7px; /* 10% smaller: 8px * 0.9 */
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px; /* 10% smaller: 8px * 0.9 */
 }
 
 .filter-checkbox {
@@ -224,7 +224,7 @@
 
 .filter-label {
   font-family: 'Figtree', sans-serif !important; /* Changed to Figtree */
-  font-size: 14px;
+  font-size: 13px; /* 10% smaller: 14px * 0.9 */
   letter-spacing: 0.04em;
   font-weight: bold;
   color: #000000;
@@ -232,15 +232,15 @@
 
 .critical-thinking-section {
   background-color: #D3F6F7; /* Changed to requested color */
-  padding: 12px; /* Reduced padding */
+  padding: 11px; /* 10% smaller: 12px * 0.9 */
   border: 1px solid #000000; /* Added thin straight outline */
   border-radius: 0px; /* Straight edges */
-  margin-bottom: 15px; /* Reduced margin */
+  margin-bottom: 14px; /* 10% smaller: 15px * 0.9 */
 }
 
 .thinking-options {
   display: flex;
-  gap: 20px;
+  gap: 18px; /* 10% smaller: 20px * 0.9 */
   flex-wrap: wrap;
 }
 
@@ -272,36 +272,36 @@
 .slider-container {
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin-bottom: 10px;
+  gap: 14px; /* 10% smaller: 15px * 0.9 */
+  margin-bottom: 9px; /* 10% smaller: 10px * 0.9 */
 }
 
 .slider-input {
-  width: 40px;
-  padding: 8px;
+  width: 36px; /* 10% smaller: 40px * 0.9 */
+  padding: 7px; /* 10% smaller: 8px * 0.9 */
   border: 2px solid #000000;
   border-radius: 4px;
   text-align: center;
   font-family: 'Madimi One', sans-serif !important;
-  font-size: 14px;
+  font-size: 13px; /* 10% smaller: 14px * 0.9 */
   letter-spacing: 0.04em;
 }
 
 .slider-track {
   flex: 1;
   position: relative;
-  height: 20px;
+  height: 18px; /* 10% smaller: 20px * 0.9 */
   background-color: #E0E0E0;
-  border-radius: 10px;
+  border-radius: 9px; /* 10% smaller: 10px * 0.9 */
 }
 
 .availability-text {
   font-family: 'Figtree', sans-serif !important; /* Changed to Figtree */
-  font-size: 12px;
+  font-size: 11px; /* 10% smaller: 12px * 0.9 */
   letter-spacing: 0.04em; /* 4% letter separation */
   color: #000000; /* Changed to black font */
   background-color: #E0E4FF;
-  padding: 8px 12px;
+  padding: 7px 11px; /* 10% smaller: 8px * 0.9 and 12px * 0.9 */
   border-radius: 4px;
   margin: 0;
   width: 50%; /* Made 50% shorter */
@@ -376,20 +376,20 @@
 
 .select-questions-button {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  bottom: 18px; /* 10% smaller: 20px * 0.9 */
+  right: 18px; /* 10% smaller: 20px * 0.9 */
   background-color: #00CED1;
   border: none;
-  border-radius: 8px;
-  padding: 12px 20px;
+  border-radius: 7px; /* 10% smaller: 8px * 0.9 */
+  padding: 11px 18px; /* 10% smaller: 12px * 0.9 and 20px * 0.9 */
   cursor: pointer;
   font-family: 'Madimi One', sans-serif !important;
-  font-size: 16px;
+  font-size: 14px; /* 10% smaller: 16px * 0.9 */
   font-weight: bold;
   color: #FFFFFF;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px; /* 10% smaller: 8px * 0.9 */
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
   text-decoration: none;
   transition: background-color 0.2s;
