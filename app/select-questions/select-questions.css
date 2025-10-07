@@ -105,8 +105,17 @@
   color: #666666;
 }
 
+.inner-container {
+  background-color: #FFFFFF;
+  border-radius: 16px;
+  border: 3px solid #000000;
+  padding: 20px;
+  box-shadow: 6px 0 0 0 #00CED1, 0 6px 0 0 #00CED1, 6px 6px 0 0 #00CED1, 8px 8px 16px rgba(0, 206, 209, 0.2);
+  position: relative;
+}
+
 .select-questions-section {
-  margin-top: 20px;
+  margin-top: 0;
 }
 
 .section-header {
