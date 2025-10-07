@@ -324,8 +324,7 @@ export default function CreateQuestionPackPage() {
                         fontSize: '14px',
                         letterSpacing: '0.04em',
                         fontWeight: 'bold',
-                        color: '#000000',
-                        letterSpacing: '0.04em'
+                        color: '#000000'
                       }}>
                         Question Type
                       </span>
@@ -345,8 +344,7 @@ export default function CreateQuestionPackPage() {
                         fontSize: '14px',
                         letterSpacing: '0.04em',
                         fontWeight: 'bold',
-                        color: '#000000',
-                        letterSpacing: '0.04em'
+                        color: '#000000'
                       }}>
                         Sub Type
                       </span>
@@ -366,8 +364,7 @@ export default function CreateQuestionPackPage() {
                         fontSize: '14px',
                         letterSpacing: '0.04em',
                         fontWeight: 'bold',
-                        color: '#000000',
-                        letterSpacing: '0.04em'
+                        color: '#000000'
                       }}>
                         Year
                       </span>
@@ -387,8 +384,7 @@ export default function CreateQuestionPackPage() {
                         fontSize: '14px',
                         letterSpacing: '0.04em',
                         fontWeight: 'bold',
-                        color: '#000000',
-                        letterSpacing: '0.04em'
+                        color: '#000000'
                       }}>
                         Difficulty
                       </span>
@@ -408,8 +404,7 @@ export default function CreateQuestionPackPage() {
                         fontSize: '14px',
                         letterSpacing: '0.04em',
                         fontWeight: 'bold',
-                        color: '#000000',
-                        letterSpacing: '0.04em'
+                        color: '#000000'
                       }}>
                         Exam Session
                       </span>
@@ -429,8 +424,7 @@ export default function CreateQuestionPackPage() {
                         fontSize: '14px',
                         letterSpacing: '0.04em',
                         fontWeight: 'bold',
-                        color: '#000000',
-                        letterSpacing: '0.04em'
+                        color: '#000000'
                       }}>
                         Filter 6
                       </span>
