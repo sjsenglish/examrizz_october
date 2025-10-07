@@ -112,7 +112,7 @@
   padding: 17px; /* Reduced by 17% from 20px */
   box-shadow: 5px 0 0 0 #00CED1, 0 5px 0 0 #00CED1, 5px 5px 0 0 #00CED1, 7px 7px 13px rgba(0, 206, 209, 0.2); /* Reduced by 17% */
   position: relative;
-  min-height: 27vh; /* Reduced by additional 30%: 38vh * 0.7 = 26.6vh, rounded to 27vh */
+  min-height: 20vh; /* Reduced to eliminate scrolling and prevent bottom cutoff */
 }
 
 .select-questions-section {
@@ -326,7 +326,7 @@
   flex-direction: column; /* Stack buttons vertically */
   align-items: flex-end; /* Align to right */
   gap: 10px; /* Reduced space between buttons */
-  margin-top: -42px; /* Move up by additional 40%: -30px - 12px = -42px for further upward movement */
+  margin-top: -60px; /* Move up significantly to fit within viewport without scrolling */
 }
 
 .back-button {
