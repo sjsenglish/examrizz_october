@@ -55,8 +55,8 @@ export default function SelectQuestionsPage() {
                 </div>
               </div>
 
-              {/* Questions Selected Badge - positioned above and to right of search bar */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
+              {/* Questions Selected Badge - positioned above and to right of search bar within 75% width */}
+              <div style={{ width: '75%', display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
                 <div className="questions-selected-badge">
                   {selectedQuestions} questions selected
                 </div>
