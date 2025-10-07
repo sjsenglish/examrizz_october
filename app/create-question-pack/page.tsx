@@ -232,7 +232,7 @@ export default function CreateQuestionPackPage() {
                         height={20}
                         style={{
                           position: 'absolute',
-                          left: '20%',
+                          left: '30%',
                           top: '50%',
                           transform: 'translate(-50%, -50%)',
                           cursor: 'pointer'
@@ -317,12 +317,12 @@ export default function CreateQuestionPackPage() {
               </div>
               
               {/* Select Questions Button - Bottom Right */}
-              <button className="select-questions-button">
+              <Link href="/select-questions" className="select-questions-button">
                 Select Questions
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-              </button>
+              </Link>
             </article>
           </div>
         </div>

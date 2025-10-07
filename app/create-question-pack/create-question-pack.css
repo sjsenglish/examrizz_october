@@ -388,4 +388,10 @@
   align-items: center;
   gap: 8px;
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.select-questions-button:hover {
+  background-color: #00B8C1;
 }
