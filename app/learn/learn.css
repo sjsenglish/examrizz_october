@@ -134,7 +134,7 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  width: 110%;
+  width: 105%;
 }
 
 .learning-cards-wrapper {
@@ -240,7 +240,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   margin-bottom: 20px;
-  width: 110%;
+  width: 105%;
 }
 
 .path-card {
@@ -368,7 +368,7 @@
 .progress-sidebar {
   flex: 0 0 285px;
   position: sticky;
-  top: 120px;
+  top: 114px;
   height: fit-content;
   z-index: 10;
 }
