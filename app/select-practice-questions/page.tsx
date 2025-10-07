@@ -11,6 +11,7 @@ export default function SelectPracticeQuestionsPage() {
 
   return (
     <div className="page-background">
+      {/* Navbar */}
       <nav className="navbar">
         <Link href="/" style={{ textDecoration: 'none' }}>
           <h1>examrizzsearch</h1>
@@ -22,21 +23,28 @@ export default function SelectPracticeQuestionsPage() {
         </button>
       </nav>
 
+      {/* Main Content */}
       <div className="main-content">
+        {/* Modal */}
         <div className="modal-container">
+          {/* Close Button */}
           <Link href="/practice" className="close-button">
             ×
           </Link>
 
+          {/* Header */}
           <h1 className="header-title">
             Create Your Practice Pack
           </h1>
 
+          {/* Step indicator */}
           <div className="step-indicator">
             Step 2 of 2
           </div>
 
+          {/* Inner Container - matches create-question-pack styling */}
           <div className="inner-container">
+            {/* Select Questions Section */}
             <div className="select-questions-section">
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '15px' }}>
                 <div>
@@ -47,12 +55,14 @@ export default function SelectPracticeQuestionsPage() {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
+              {/* Questions Selected Badge - positioned above and to right of search bar within 75% width */}
+              <div style={{ width: '75%', display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
                 <div className="questions-selected-badge">
                   {selectedQuestions} questions selected
                 </div>
               </div>
 
+              {/* Search Bar */}
               <div className="search-container" style={{ marginBottom: '15px' }}>
                 <input
                   type="text"
@@ -69,31 +79,37 @@ export default function SelectPracticeQuestionsPage() {
                 </button>
               </div>
 
-              <div className="questions-container">
-                <div className="question-card selected">
-                  <div className="question-header">
-                    <div className="question-checkbox-container">
-                      <input type="checkbox" checked className="question-checkbox" />
-                      <span className="question-number">1</span>
+              {/* Questions Container with Side Controls */}
+              <div className="questions-and-controls-section">
+                <div className="questions-container">
+                  {/* First Question - Selected */}
+                  <div className="question-card selected">
+                    <div className="question-header">
+                      <div className="question-checkbox-container">
+                        <input type="checkbox" checked className="question-checkbox" />
+                        <span className="question-number">1</span>
+                      </div>
+                    </div>
+                    <div className="question-content">
+                      {/* Question content area - empty as shown in image */}
                     </div>
                   </div>
-                  <div className="question-content">
+
+                  {/* Second Question - Unselected */}
+                  <div className="question-card">
+                    <div className="question-header">
+                      <div className="question-checkbox-container">
+                        <input type="checkbox" className="question-checkbox" />
+                      </div>
+                    </div>
+                    <div className="question-content">
+                      {/* Question content area - empty as shown in image */}
+                    </div>
                   </div>
                 </div>
 
-                <div className="question-card">
-                  <div className="question-header">
-                    <div className="question-checkbox-container">
-                      <input type="checkbox" className="question-checkbox" />
-                    </div>
-                  </div>
-                  <div className="question-content">
-                  </div>
-                </div>
-              </div>
-
-              <div className="bottom-section">
-                <div className="inline-controls">
+                {/* Side Controls - now to the right of questions container */}
+                <div className="side-controls-right">
                   <button className="control-button shuffle-button">
                     <span>Shuffle</span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -112,22 +128,23 @@ export default function SelectPracticeQuestionsPage() {
                     clear selection
                   </button>
                 </div>
+              </div>
 
-                <div className="navigation-buttons">
-                  <Link href="/create-practice-pack" className="back-button">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    Back
-                  </Link>
-                  
-                  <button className="create-pack-button">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5 12l5 5L20 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    Create Pack
-                  </button>
-                </div>
+              {/* Navigation Buttons - moved up to fit in smaller container */}
+              <div className="navigation-buttons-compact">
+                <Link href="/create-practice-pack" className="back-button">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Back
+                </Link>
+                
+                <button className="create-pack-button">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 12l5 5L20 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Create Pack
+                </button>
               </div>
             </div>
           </div>

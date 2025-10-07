@@ -8,17 +8,28 @@ import './create-practice-pack.css';
 export default function CreatePracticePackPage() {
   const [packName, setPackName] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('');
-  const [selectedExamBoard, setSelectedExamBoard] = useState('');
-  const [selectedQuestionType, setSelectedQuestionType] = useState('');
-  const [selectedSubType, setSelectedSubType] = useState('');
-  const [selectedYear, setSelectedYear] = useState('');
-  const [selectedLevel, setSelectedLevel] = useState('');
-  const [orderMode, setOrderMode] = useState('automatic');
-  const [numberOfQuestions, setNumberOfQuestions] = useState(10);
-  const [fontSize, setFontSize] = useState(14);
+  const [showSubjectDropdown, setShowSubjectDropdown] = useState(false);
+  
+  // Filter states
+  const [questionType, setQuestionType] = useState(true);
+  const [subType, setSubType] = useState(false);
+  const [year, setYear] = useState(false);
+  const [difficulty, setDifficulty] = useState(false);
+  const [examSession, setExamSession] = useState(false);
+  const [filter6, setFilter6] = useState(false);
+  
+  // Additional filter states for left panel
+  const [criticalThinking, setCriticalThinking] = useState(true);
+  const [problemSolving, setProblemSolving] = useState(false);
+  
+  // Order questions state
+  const [orderMode, setOrderMode] = useState('automatic'); // 'automatic' or 'custom'
+
+  const subjects = ['Maths', 'Physics', 'Chemistry', 'Biology', 'Economics'];
 
   return (
     <div className="page-background">
+      {/* Navbar */}
       <nav className="navbar">
         <Link href="/" style={{ textDecoration: 'none' }}>
           <h1>examrizzsearch</h1>
@@ -30,252 +41,340 @@ export default function CreatePracticePackPage() {
         </button>
       </nav>
 
+      {/* Main Content */}
       <div className="main-content">
+        {/* Modal */}
         <div className="modal-container">
+          {/* Close Button */}
           <Link href="/practice" className="close-button">
             ×
           </Link>
 
+          {/* Header */}
           <h1 className="header-title">
             Create Your Practice Pack
           </h1>
 
+          {/* Step indicator */}
           <div className="step-indicator">
             Step 1 of 2
           </div>
 
-          <div className="inner-container">
-            <div className="form-section">
-              <h2 className="section-title">Pack Details</h2>
-              
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label">Type your pack name</label>
-                  <input
-                    type="text"
-                    value={packName}
-                    onChange={(e) => setPackName(e.target.value)}
-                    className="form-input"
-                    placeholder="Enter pack name"
-                  />
+          {/* Two Cards Side by Side */}
+          <div className="cards-container">
+            
+            {/* Left Card */}
+            <article className="card">
+              {/* Left Card Header */}
+              <header className="card-header">
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '15px'
+                }}>
+                  <span className="card-title">
+                    Pack Name
+                  </span>
                 </div>
-              </div>
+              </header>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label">Select subject</label>
-                  <select
-                    value={selectedSubject}
-                    onChange={(e) => setSelectedSubject(e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="">Choose subject</option>
-                    <option value="maths">Maths</option>
-                    <option value="physics">Physics</option>
-                    <option value="chemistry">Chemistry</option>
-                    <option value="biology">Biology</option>
-                    <option value="economics">Economics</option>
-                  </select>
-                </div>
+              <div style={{ color: '#333333' }}>
+                {/* Pack Name Input */}
+                <input
+                  type="text"
+                  placeholder="Type your pack name"
+                  value={packName}
+                  onChange={(e) => setPackName(e.target.value)}
+                  className="pack-name-input"
+                />
 
-                <div className="form-group">
-                  <label className="form-label">Exam board</label>
-                  <select
-                    value={selectedExamBoard}
-                    onChange={(e) => setSelectedExamBoard(e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="">Choose exam board</option>
-                    <option value="aqa">AQA</option>
-                    <option value="edexcel">Edexcel</option>
-                    <option value="ocr">OCR</option>
-                    <option value="wjec">WJEC</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label">Question type</label>
-                  <select
-                    value={selectedQuestionType}
-                    onChange={(e) => setSelectedQuestionType(e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="">Choose question type</option>
-                    <option value="multiple-choice">Multiple Choice</option>
-                    <option value="short-answer">Short Answer</option>
-                    <option value="essay">Essay</option>
-                    <option value="calculation">Calculation</option>
-                  </select>
+                {/* Subject */}
+                <div style={{ marginBottom: '25px' }}>
+                  <h3 className="card-title" style={{ margin: '0 0 15px 0' }}>
+                    Subject
+                  </h3>
+                  <div style={{ position: 'relative' }}>
+                    <button
+                      onClick={() => setShowSubjectDropdown(!showSubjectDropdown)}
+                      className="subject-dropdown-button"
+                    >
+                      {selectedSubject || 'Select subject'}
+                      <span style={{ transform: showSubjectDropdown ? 'rotate(180deg)' : 'rotate(0deg)' }}>▼</span>
+                    </button>
+                    {showSubjectDropdown && (
+                      <div className="dropdown-menu">
+                        {subjects.map((subject) => (
+                          <button
+                            key={subject}
+                            onClick={() => {
+                              setSelectedSubject(subject);
+                              setShowSubjectDropdown(false);
+                            }}
+                            className="dropdown-item"
+                          >
+                            {subject}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                <div className="form-group">
-                  <label className="form-label">Sub type</label>
-                  <select
-                    value={selectedSubType}
-                    onChange={(e) => setSelectedSubType(e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="">Choose sub type</option>
-                    <option value="basic">Basic</option>
-                    <option value="intermediate">Intermediate</option>
-                    <option value="advanced">Advanced</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label">Year</label>
-                  <select
-                    value={selectedYear}
-                    onChange={(e) => setSelectedYear(e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="">Choose year</option>
-                    <option value="2023">2023</option>
-                    <option value="2022">2022</option>
-                    <option value="2021">2021</option>
-                    <option value="2020">2020</option>
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Level</label>
-                  <select
-                    value={selectedLevel}
-                    onChange={(e) => setSelectedLevel(e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="">Choose level</option>
-                    <option value="a-level">A Level</option>
-                    <option value="gcse">GCSE</option>
-                    <option value="undergraduate">Undergraduate</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div className="availability-section">
-              <p className="availability-text">
-                123 questions available for your selection
-              </p>
-            </div>
-
-            <div className="order-section">
-              <h2 className="section-title">Order Questions</h2>
-              
-              <div className="order-buttons">
-                <button 
-                  className={`order-button ${orderMode === 'automatic' ? 'active' : 'inactive'}`}
-                  onClick={() => setOrderMode('automatic')}
-                >
-                  <Image 
-                    src="/icons/ghost-icon.svg"
-                    alt="Ghost"
-                    width={40}
-                    height={40}
-                  />
-                  Automatic
-                </button>
-
-                <button 
-                  className={`order-button ${orderMode === 'custom' ? 'active' : 'inactive'}`}
-                  onClick={() => setOrderMode('custom')}
-                >
-                  <Image 
-                    src="/icons/ghost-icon.svg"
-                    alt="Ghost"
-                    width={40}
-                    height={40}
-                  />
-                  Custom
-                </button>
-              </div>
-
-              {orderMode === 'automatic' && (
-                <div className="filter-section">
+                {/* Question Filters */}
+                <div style={{ marginBottom: '30px' }}>
+                  <h3 className="card-title" style={{ margin: '0 0 15px 0' }}>
+                    Question Filters
+                  </h3>
+                  
+                  {/* Filter checkboxes in grid */}
                   <div className="filter-grid">
                     <div className="filter-item">
-                      <input type="checkbox" id="difficulty" />
-                      <label htmlFor="difficulty">Difficulty</label>
+                      <input type="checkbox" checked={questionType} onChange={(e) => setQuestionType(e.target.checked)} className="filter-checkbox" />
+                      <span className="filter-label">Question Type</span>
                     </div>
+                    
                     <div className="filter-item">
-                      <input type="checkbox" id="topic" />
-                      <label htmlFor="topic">Topic</label>
+                      <input type="checkbox" checked={subType} onChange={(e) => setSubType(e.target.checked)} className="filter-checkbox" />
+                      <span className="filter-label">Sub Type</span>
                     </div>
+                    
                     <div className="filter-item">
-                      <input type="checkbox" id="year" />
-                      <label htmlFor="year">Year</label>
+                      <input type="checkbox" checked={year} onChange={(e) => setYear(e.target.checked)} className="filter-checkbox" />
+                      <span className="filter-label">Year</span>
                     </div>
+                    
                     <div className="filter-item">
-                      <input type="checkbox" id="question-type" />
-                      <label htmlFor="question-type">Question Type</label>
+                      <input type="checkbox" checked={difficulty} onChange={(e) => setDifficulty(e.target.checked)} className="filter-checkbox" />
+                      <span className="filter-label">Difficulty</span>
+                    </div>
+                    
+                    <div className="filter-item">
+                      <input type="checkbox" checked={examSession} onChange={(e) => setExamSession(e.target.checked)} className="filter-checkbox" />
+                      <span className="filter-label">Exam Session</span>
+                    </div>
+                    
+                    <div className="filter-item">
+                      <input type="checkbox" checked={filter6} onChange={(e) => setFilter6(e.target.checked)} className="filter-checkbox" />
+                      <span className="filter-label">Filter 6</span>
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
 
-            <div className="settings-section">
-              <div className="settings-row">
-                <div className="setting-group">
-                  <label className="setting-label">Number of Questions</label>
-                  <div className="slider-container">
-                    <input
-                      type="range"
-                      min="1"
-                      max="100"
-                      value={numberOfQuestions}
-                      onChange={(e) => setNumberOfQuestions(parseInt(e.target.value))}
-                      className="slider"
-                    />
-                    <span className="slider-value">{numberOfQuestions}</span>
-                    <Image 
-                      src="/icons/ghost-icon.svg"
-                      alt="Ghost"
-                      width={40}
-                      height={40}
-                      className="slider-ghost"
-                    />
+                  {/* Critical Thinking / Problem Solving section */}
+                  <div className="critical-thinking-section">
+                    <div className="thinking-options">
+                      <label className="thinking-label">
+                        <input 
+                          type="checkbox" 
+                          checked={criticalThinking} 
+                          onChange={(e) => setCriticalThinking(e.target.checked)} 
+                          className="filter-checkbox"
+                        />
+                        <span className="thinking-text">
+                          Critical Thinking
+                        </span>
+                      </label>
+                      <label className="thinking-label">
+                        <input 
+                          type="checkbox" 
+                          checked={problemSolving} 
+                          onChange={(e) => setProblemSolving(e.target.checked)} 
+                          className="filter-checkbox"
+                        />
+                        <span className="thinking-text">
+                          Problem Solving
+                        </span>
+                      </label>
+                    </div>
                   </div>
-                </div>
 
-                <div className="setting-group">
-                  <label className="setting-label">Font Size</label>
-                  <div className="slider-container">
-                    <input
-                      type="range"
-                      min="10"
-                      max="24"
-                      value={fontSize}
-                      onChange={(e) => setFontSize(parseInt(e.target.value))}
-                      className="slider"
-                    />
-                    <span className="slider-value">{fontSize}px</span>
-                    <Image 
-                      src="/icons/ghost-icon.svg"
-                      alt="Ghost"
-                      width={40}
-                      height={40}
-                      className="slider-ghost"
-                    />
+                  {/* Clear filters button */}
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end'
+                  }}>
+                    <button className="clear-filters-button">
+                      clear filters
+                    </button>
                   </div>
                 </div>
               </div>
-            </div>
+            </article>
 
-            <div className="next-button-section">
-              <Link href="/select-practice-questions">
-                <button className="next-button">
-                  Next
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
+            {/* Right Card */}
+            <article className="card">
+              {/* Right Card Header */}
+              <header className="card-header">
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '15px'
+                }}>
+                  <span className="card-title">
+                    Number of Questions
+                  </span>
+                </div>
+              </header>
+
+              <div style={{ color: '#333333' }}>
+                {/* Number of Questions Slider */}
+                <div style={{
+                  marginBottom: '25px'
+                }}>
+                  <div className="slider-container">
+                    <input
+                      type="text"
+                      value="1"
+                      readOnly
+                      className="slider-input"
+                    />
+                    <div className="slider-track">
+                      <Image 
+                        src="/icons/speech-bubble-ghost.svg" 
+                        alt="Question counter" 
+                        width={40} 
+                        height={40}
+                        style={{
+                          position: 'absolute',
+                          left: '30%',
+                          top: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          cursor: 'pointer'
+                        }}
+                      />
+                    </div>
+                    <input
+                      type="text"
+                      value="168"
+                      readOnly
+                      className="slider-input"
+                    />
+                  </div>
+                  <p className="availability-text">
+                    360 questions available with current filters
+                  </p>
+                </div>
+
+                {/* Font Size Section */}
+                <div style={{ marginBottom: '25px' }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    marginBottom: '15px'
+                  }}>
+                    <span className="card-title">
+                      Font Size 
+                    </span>
+                    <span style={{
+                      fontFamily: "'Madimi One', sans-serif",
+                      fontSize: '16px',
+                      fontWeight: 400,
+                      color: '#000000'
+                    }}>
+                      12pt
+                    </span>
+                  </div>
+                  <div className="font-size-controls">
+                    <span className="font-size-text">small</span>
+                    <div className="font-slider-track">
+                      <Image 
+                        src="/icons/speech-bubble-ghost.svg" 
+                        alt="Font size slider" 
+                        width={40} 
+                        height={40}
+                        style={{
+                          position: 'absolute',
+                          left: '30%',
+                          top: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          cursor: 'pointer'
+                        }}
+                      />
+                    </div>
+                    <span className="font-size-text">large</span>
+                  </div>
+                </div>
+
+                {/* Order Questions By Section */}
+                <div style={{ marginBottom: '25px' }}>
+                  <h3 className="card-title" style={{ margin: '0 0 15px 0' }}>
+                    Order questions by
+                  </h3>
+                  <div className="order-buttons">
+                    <div 
+                      className={orderMode === 'automatic' ? 'order-button-active' : 'order-button-inactive'}
+                      onClick={() => setOrderMode('automatic')}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <span className="order-button-text">
+                        Automatic
+                      </span>
+                    </div>
+                    <div 
+                      className={orderMode === 'custom' ? 'order-button-active' : 'order-button-inactive'}
+                      onClick={() => setOrderMode('custom')}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <span className="order-button-text">
+                        Custom
+                      </span>
+                    </div>
+                  </div>
+                  {orderMode === 'custom' && (
+                    <p className="order-description">
+                      You'll arrange questions manually in the next step
+                    </p>
+                  )}
+
+                  {/* Conditional Filters - Show when Automatic is selected */}
+                  {orderMode === 'automatic' && (
+                    <div style={{ marginTop: '20px' }}>
+                      {/* Filter checkboxes in grid - same as left panel */}
+                      <div className="filter-grid">
+                        <div className="filter-item">
+                          <input type="checkbox" checked={questionType} onChange={(e) => setQuestionType(e.target.checked)} className="filter-checkbox" />
+                          <span className="filter-label">Question Type</span>
+                        </div>
+                        
+                        <div className="filter-item">
+                          <input type="checkbox" checked={subType} onChange={(e) => setSubType(e.target.checked)} className="filter-checkbox" />
+                          <span className="filter-label">Sub Type</span>
+                        </div>
+                        
+                        <div className="filter-item">
+                          <input type="checkbox" checked={year} onChange={(e) => setYear(e.target.checked)} className="filter-checkbox" />
+                          <span className="filter-label">Year</span>
+                        </div>
+                        
+                        <div className="filter-item">
+                          <input type="checkbox" checked={difficulty} onChange={(e) => setDifficulty(e.target.checked)} className="filter-checkbox" />
+                          <span className="filter-label">Difficulty</span>
+                        </div>
+                        
+                        <div className="filter-item">
+                          <input type="checkbox" checked={examSession} onChange={(e) => setExamSession(e.target.checked)} className="filter-checkbox" />
+                          <span className="filter-label">Exam Session</span>
+                        </div>
+                        
+                        <div className="filter-item">
+                          <input type="checkbox" checked={filter6} onChange={(e) => setFilter6(e.target.checked)} className="filter-checkbox" />
+                          <span className="filter-label">Filter 6</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+              </div>
+              
+              {/* Select Questions Button - Bottom Right */}
+              <Link href="/select-practice-questions" className="select-questions-button">
+                Select Questions
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </Link>
-            </div>
+            </article>
           </div>
         </div>
       </div>
