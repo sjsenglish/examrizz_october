@@ -274,7 +274,19 @@ export default function CreateQuestionPackPage() {
                   <div className="font-size-controls">
                     <span className="font-size-text">small</span>
                     <div className="font-slider-track">
-                      <div className="font-slider-thumb"></div>
+                      <Image 
+                        src="/icons/speech-bubble-ghost.svg" 
+                        alt="Font size slider" 
+                        width={20} 
+                        height={20}
+                        style={{
+                          position: 'absolute',
+                          left: '30%',
+                          top: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          cursor: 'pointer'
+                        }}
+                      />
                     </div>
                     <span className="font-size-text">large</span>
                   </div>

@@ -1,5 +1,5 @@
 /* Create Question Pack Page Styles */
-@import url('https://fonts.googleapis.com/css2?family=Madimi+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Madimi+One&family=Figtree:wght@400;700&display=swap');
 
 * {
   font-family: 'Madimi One', sans-serif !important;
@@ -67,12 +67,12 @@
   background-color: #F8F9FD;
   border: 1px solid #000000;
   border-radius: 8px;
-  padding: 20px 32.6px; /* Increased padding by 8% */
+  padding: 15px 32.6px; /* Reduced padding for better fit */
   max-width: 1296px; /* Increased from 1200px by 8% */
   width: 91.8%; /* Increased from 85% by 8% */
   position: relative;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  max-height: calc(100vh - 120px);
+  max-height: calc(100vh - 100px); /* Reduced max-height */
   overflow-y: auto;
 }
 
@@ -88,11 +88,11 @@
 
 .header-title {
   font-family: 'Madimi One', sans-serif !important;
-  font-size: 28px;
+  font-size: 24px; /* Reduced font size */
   font-weight: 400;
   letter-spacing: 0.04em;
   color: #000000;
-  margin: 0 0 30px 0;
+  margin: 0 0 20px 0; /* Reduced margin */
   text-align: left;
 }
 
@@ -108,15 +108,15 @@
 .cards-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 34px;
-  margin-bottom: 34px;
+  gap: 24px; /* Reduced gap */
+  margin-bottom: 20px; /* Reduced margin */
 }
 
 .card {
   background-color: #FFFFFF;
   border-radius: 16px;
   border: 3px solid #000000;
-  padding: 25.5px;
+  padding: 20px; /* Reduced padding */
   box-shadow: 6px 0 0 0 #00CED1, 0 6px 0 0 #00CED1, 6px 6px 0 0 #00CED1, 8px 8px 16px rgba(0, 206, 209, 0.2);
   position: relative;
 }
@@ -125,7 +125,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  margin-bottom: 15px; /* Reduced margin */
   flex-wrap: wrap;
   gap: 15px;
 }
@@ -139,26 +139,26 @@
 
 .pack-name-input {
   width: 100%;
-  padding: 15px 20px;
+  padding: 12px 20px; /* Reduced padding */
   border: 1px solid #000000;
   border-radius: 0px;
   background-color: #D3F6F7;
-  font-family: 'Madimi One', sans-serif !important;
+  font-family: 'Figtree', sans-serif !important;
   font-size: 15px;
   letter-spacing: 0.04em;
   color: #000000;
-  margin-bottom: 25px;
+  margin-bottom: 20px; /* Reduced margin */
   font-weight: bold;
   box-sizing: border-box;
 }
 
 .subject-dropdown-button {
   width: 100%;
-  padding: 15px;
+  padding: 12px 15px; /* Reduced padding */
   border: 1px solid #000000;
   border-radius: 0px;
   background-color: #D3F6F7;
-  font-family: 'Madimi One', sans-serif !important;
+  font-family: 'Figtree', sans-serif !important;
   font-size: 15px;
   letter-spacing: 0.04em;
   color: #000000;
@@ -186,12 +186,12 @@
 
 .dropdown-item {
   width: 100%;
-  padding: 15px;
+  padding: 12px 15px; /* Reduced padding */
   border: none;
   background-color: transparent;
   text-align: left;
   cursor: pointer;
-  font-family: 'Madimi One', sans-serif !important;
+  font-family: 'Figtree', sans-serif !important;
   font-size: 15px;
   letter-spacing: 0.04em;
   color: #333333;
@@ -205,25 +205,24 @@
 .filter-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 8px; /* Reduced gap */
+  margin-bottom: 15px; /* Reduced margin */
 }
 
 .filter-item {
-  background-color: #89F3FF;
-  padding: 12px;
-  border-radius: 4px;
+  background-color: transparent; /* Removed blue background */
+  padding: 8px; /* Reduced padding */
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .filter-checkbox {
-  accent-color: #00CED1;
+  accent-color: #89F3FF !important; /* Changed to requested color */
 }
 
 .filter-label {
-  font-family: 'Madimi One', sans-serif !important;
+  font-family: 'Figtree', sans-serif !important; /* Changed to Figtree */
   font-size: 14px;
   letter-spacing: 0.04em;
   font-weight: bold;
@@ -231,10 +230,11 @@
 }
 
 .critical-thinking-section {
-  background-color: #B3F0F2;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 20px;
+  background-color: #D3F6F7; /* Changed to requested color */
+  padding: 12px; /* Reduced padding */
+  border: 1px solid #000000; /* Added thin straight outline */
+  border-radius: 0px; /* Straight edges */
+  margin-bottom: 15px; /* Reduced margin */
 }
 
 .thinking-options {
@@ -251,7 +251,7 @@
 }
 
 .thinking-text {
-  font-family: 'Madimi One', sans-serif !important;
+  font-family: 'Figtree', sans-serif !important; /* Changed to Figtree */
   font-size: 14px;
   font-weight: bold;
   color: #000000;
@@ -309,12 +309,12 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 15px; /* Reduced margin */
 }
 
 .font-size-text {
   font-size: 12px;
-  font-family: 'Madimi One', sans-serif !important;
+  font-family: 'Figtree', sans-serif !important; /* Changed to Figtree */
   letter-spacing: 0.04em;
 }
 
@@ -324,18 +324,6 @@
   height: 20px;
   background-color: #E0E0E0;
   border-radius: 10px;
-}
-
-.font-slider-thumb {
-  position: absolute;
-  left: 30%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 20px;
-  height: 20px;
-  background-color: #333333;
-  border-radius: 50%;
-  cursor: pointer;
 }
 
 .order-buttons {
