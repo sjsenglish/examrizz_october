@@ -98,9 +98,9 @@ export default function CreateQuestionPackPage() {
           backgroundColor: '#F8F9FD',
           border: '1px solid #000000',
           borderRadius: '8px',
-          padding: '36px 30.21px',
-          maxWidth: '1316.7px',
-          width: '89.3475%',
+          padding: '28px 30.21px',
+          maxWidth: '1200px',
+          width: '85%',
           position: 'relative',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
         }}>
@@ -566,8 +566,8 @@ export default function CreateQuestionPackPage() {
                       <Image 
                         src="/icons/speech-bubble-ghost.svg" 
                         alt="Question counter" 
-                        width={30} 
-                        height={30}
+                        width={20} 
+                        height={20}
                         style={{
                           position: 'absolute',
                           left: '20%',
