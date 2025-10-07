@@ -2,326 +2,173 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { ArenaIcon } from '../../components/icons/ArenaIcon';
+import './competition.css';
 
 export default function CompetitionPage() {
   return (
-    <div style={{ backgroundColor: '#FFFFFF', minHeight: '100vh' }}>
-      {/* Header */}
-      <div style={{
-        padding: '30px 60px',
-        backgroundColor: '#FFFFFF'
-      }}>
+    <div className="page-background">
+      {/* Navbar */}
+      <nav className="navbar">
         <Link href="/" style={{ textDecoration: 'none' }}>
-          <h1 style={{
-            fontFamily: "'Madimi One', cursive",
-            fontSize: '32px',
-            fontWeight: '400',
-            color: '#000000',
-            margin: '0',
-            cursor: 'pointer'
-          }}>
-            examrizzsearch
-          </h1>
+          <h1>examrizzsearch</h1>
         </Link>
-      </div>
+        <button className="hamburger-button">
+          <div className="hamburger-line"></div>
+          <div className="hamburger-line"></div>
+          <div className="hamburger-line"></div>
+        </button>
+      </nav>
 
       {/* Main Content */}
-      <div style={{ 
-        padding: '0 60px 60px',
-        display: 'flex',
-        gap: '40px',
-        alignItems: 'flex-start'
-      }}>
-        
-        {/* Left Side - Arena Illustration */}
-        <div style={{
-          flex: '0 0 300px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '400px'
-        }}>
-          <div style={{
-            width: '250px',
-            height: '250px',
-            backgroundColor: '#F0F0F0',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            border: '3px solid #000000',
-            fontSize: '18px',
-            fontFamily: "'Figtree', sans-serif",
-            color: '#666666'
-          }}>
-            Arena Illustration
-          </div>
-        </div>
+      <div className="main-content">
+        {/* Back Button */}
+        <Link href="/" className="back-button">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          Back
+        </Link>
 
-        {/* Right Side - Main Content */}
-        <div style={{ flex: 1 }}>
-          
-          {/* BATTLE ZONE Header */}
-          <div style={{
-            textAlign: 'center',
-            marginBottom: '40px'
-          }}>
-            <h1 style={{
-              fontFamily: "'Madimi One', cursive",
-              fontSize: '48px',
-              fontWeight: '400',
-              color: '#000000',
-              margin: '0',
-              letterSpacing: '0.05em'
-            }}>
-              BATTLE ZONE
-            </h1>
+        {/* Discord Button */}
+        <a href="#" className="discord-button">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" fill="currentColor"/>
+          </svg>
+          Discord
+        </a>
+
+        {/* Arena Icon and Main Container */}
+        <div className="content-layout">
+          {/* Left side - Arena Icon */}
+          <div className="arena-section">
+            <ArenaIcon size={200} />
+            <p className="arena-text">ARENA</p>
           </div>
 
-          {/* Select Battle Mode Section */}
-          <div style={{ marginBottom: '40px' }}>
-            <h2 style={{
-              fontFamily: "'Figtree', sans-serif",
-              fontSize: '24px',
-              fontWeight: '600',
-              color: '#000000',
-              marginBottom: '20px',
-              textAlign: 'center'
-            }}>
-              Select Battle Mode
-            </h2>
-            
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '20px',
-              marginBottom: '30px'
-            }}>
-              {/* Solo Mode */}
-              <div style={{
-                backgroundColor: '#B3F0F2',
-                border: '2px solid #000000',
-                borderRadius: '12px',
-                padding: '20px',
-                textAlign: 'center',
-                cursor: 'pointer',
-                boxShadow: '0 4px 0 #000000',
-                transition: 'transform 0.2s'
-              }}>
-                <h3 style={{
-                  fontFamily: "'Madimi One', cursive",
-                  fontSize: '18px',
-                  fontWeight: '400',
-                  color: '#000000',
-                  margin: '0'
-                }}>
-                  Solo Mode
-                </h3>
-              </div>
-
-              {/* Duo Friends */}
-              <div style={{
-                backgroundColor: '#D4D0FF',
-                border: '2px solid #000000',
-                borderRadius: '12px',
-                padding: '20px',
-                textAlign: 'center',
-                cursor: 'pointer',
-                boxShadow: '0 4px 0 #000000',
-                transition: 'transform 0.2s'
-              }}>
-                <h3 style={{
-                  fontFamily: "'Madimi One', cursive",
-                  fontSize: '18px',
-                  fontWeight: '400',
-                  color: '#000000',
-                  margin: '0'
-                }}>
-                  Duo Friends
-                </h3>
-              </div>
-
-              {/* Duo Random */}
-              <div style={{
-                backgroundColor: '#FFE4B5',
-                border: '2px solid #000000',
-                borderRadius: '12px',
-                padding: '20px',
-                textAlign: 'center',
-                cursor: 'pointer',
-                boxShadow: '0 4px 0 #000000',
-                transition: 'transform 0.2s'
-              }}>
-                <h3 style={{
-                  fontFamily: "'Madimi One', cursive",
-                  fontSize: '18px',
-                  fontWeight: '400',
-                  color: '#000000',
-                  margin: '0'
-                }}>
-                  Duo Random
-                </h3>
-              </div>
-
-              {/* Your Stats */}
-              <div style={{
-                backgroundColor: '#FFB6C1',
-                border: '2px solid #000000',
-                borderRadius: '12px',
-                padding: '20px',
-                textAlign: 'center',
-                cursor: 'pointer',
-                boxShadow: '0 4px 0 #000000',
-                transition: 'transform 0.2s'
-              }}>
-                <h3 style={{
-                  fontFamily: "'Madimi One', cursive",
-                  fontSize: '18px',
-                  fontWeight: '400',
-                  color: '#000000',
-                  margin: '0'
-                }}>
-                  Your Stats
-                </h3>
-              </div>
-            </div>
-          </div>
-
-          {/* Weekly Challenge */}
-          <div style={{
-            textAlign: 'center',
-            marginBottom: '40px'
-          }}>
-            <button style={{
-              backgroundColor: '#90EE90',
-              border: '3px solid #000000',
-              borderRadius: '15px',
-              padding: '15px 40px',
-              fontFamily: "'Madimi One', cursive",
-              fontSize: '20px',
-              fontWeight: '400',
-              color: '#000000',
-              cursor: 'pointer',
-              boxShadow: '0 6px 0 #000000',
-              transition: 'transform 0.2s'
-            }}>
+          {/* Right side - Main Content Container */}
+          <div className="battle-container">
+            {/* Weekly Challenge Button */}
+            <div className="weekly-challenge">
               Weekly Challenge
-            </button>
-          </div>
+            </div>
 
-          {/* Bottom Section - Leaderboard and Recent Battles */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '40px'
-          }}>
-            
-            {/* Leaderboard */}
-            <div>
-              <h3 style={{
-                fontFamily: "'Figtree', sans-serif",
-                fontSize: '20px',
-                fontWeight: '600',
-                color: '#000000',
-                marginBottom: '15px',
-                textAlign: 'center'
-              }}>
-                Leaderboard
-              </h3>
-              
-              <div style={{
-                backgroundColor: '#F8F8F8',
-                border: '2px solid #000000',
-                borderRadius: '10px',
-                padding: '15px'
-              }}>
-                {[1,2,3,4,5,6,7,8,9,10].map((rank) => (
-                  <div key={rank} style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '8px 0',
-                    borderBottom: rank < 10 ? '1px solid #E0E0E0' : 'none'
-                  }}>
-                    <span style={{
-                      fontFamily: "'Figtree', sans-serif",
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      color: '#000000'
-                    }}>
-                      {rank}. User{rank}
-                    </span>
-                    <span style={{
-                      fontFamily: "'Figtree', sans-serif",
-                      fontSize: '14px',
-                      fontWeight: '600',
-                      color: '#666666'
-                    }}>
-                      {1000 - rank * 50} pts
-                    </span>
-                  </div>
-                ))}
+            {/* Battle Zone Title */}
+            <h1 className="battle-title">BATTLE ZONE</h1>
+
+            {/* Lightning Icon and Select Battle Mode */}
+            <div className="select-battle-header">
+              <div className="lightning-icon">⚡</div>
+              <h2 className="select-battle-title">Select Battle Mode</h2>
+            </div>
+
+            {/* Battle Mode Cards */}
+            <div className="battle-mode-grid">
+              <div className="battle-mode-card">
+                <div className="mode-header">
+                  <h3 className="mode-title">SOLO MODE</h3>
+                  <div className="online-indicator">● 4 online</div>
+                </div>
+                <div className="mode-stats">
+                  <p>247 players competing</p>
+                  <p>Top 10 win Discord badge + 200 points</p>
+                  <p>Your rank #23</p>
+                  <p>3d 14h left</p>
+                </div>
+                <button className="join-button">Join</button>
+              </div>
+
+              <div className="battle-mode-card">
+                <div className="mode-header">
+                  <h3 className="mode-title">DUO FRIENDS</h3>
+                  <div className="online-indicator">● 4 online</div>
+                </div>
+                <div className="mode-stats">
+                  <p>Top - Sarah</p>
+                  <p>Your record: 12W - 8L (60%)</p>
+                  <p>Best streak - 5</p>
+                  <p>daily</p>
+                </div>
+                <button className="join-button">Pick</button>
+              </div>
+
+              <div className="battle-mode-card">
+                <div className="mode-header">
+                  <h3 className="mode-title">DUO RANDOM</h3>
+                  <div className="online-indicator">● 23 players waiting</div>
+                </div>
+                <div className="mode-stats">
+                  <p>Quick match</p>
+                  <p>Your record: 7W - 5L (X%)</p>
+                  <p>Avg wait 30 sec</p>
+                  <p>daily</p>
+                </div>
+                <button className="join-button">Find match</button>
+              </div>
+
+              <div className="battle-mode-card">
+                <div className="mode-header">
+                  <h3 className="mode-title">YOUR STATS</h3>
+                  <div className="stats-details">details →</div>
+                </div>
+                <div className="mode-stats">
+                  <p>This week</p>
+                  <p>Rank #23 ↑</p>
+                  <p>Total 847 pts</p>
+                  <p>Win rate 67%</p>
+                  <p>Streak 4</p>
+                </div>
               </div>
             </div>
 
-            {/* Recent Battles */}
-            <div>
-              <h3 style={{
-                fontFamily: "'Figtree', sans-serif",
-                fontSize: '20px',
-                fontWeight: '600',
-                color: '#000000',
-                marginBottom: '15px',
-                textAlign: 'center'
-              }}>
-                Recent Battles
-              </h3>
-              
-              <div style={{
-                backgroundColor: '#F8F8F8',
-                border: '2px solid #000000',
-                borderRadius: '10px',
-                padding: '15px'
-              }}>
-                {['Solo vs AI', 'Duo with Alex', 'Random Match', 'Solo vs AI', 'Duo with Sam'].map((battle, index) => (
-                  <div key={index} style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '10px 0',
-                    borderBottom: index < 4 ? '1px solid #E0E0E0' : 'none'
-                  }}>
-                    <div>
-                      <div style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '14px',
-                        fontWeight: '500',
-                        color: '#000000'
-                      }}>
-                        {battle}
-                      </div>
-                      <div style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '12px',
-                        color: '#666666'
-                      }}>
-                        {index + 1} day{index !== 0 ? 's' : ''} ago
-                      </div>
-                    </div>
-                    <span style={{
-                      fontFamily: "'Figtree', sans-serif",
-                      fontSize: '12px',
-                      fontWeight: '600',
-                      color: index % 2 === 0 ? '#4CAF50' : '#F44336',
-                      backgroundColor: index % 2 === 0 ? '#E8F5E8' : '#FFEBEE',
-                      padding: '4px 8px',
-                      borderRadius: '4px'
-                    }}>
-                      {index % 2 === 0 ? 'Won' : 'Lost'}
-                    </span>
+            {/* Divider Line */}
+            <div className="divider"></div>
+
+            {/* Bottom Section */}
+            <div className="bottom-section">
+              {/* Leaderboard */}
+              <div className="leaderboard-section">
+                <h3 className="section-title">Leaderboard</h3>
+                <p className="section-subtitle">This week's top 10</p>
+                <div className="leaderboard-container">
+                  <div className="leaderboard-item">
+                    <span className="rank">1.</span>
+                    <span className="username">User X</span>
+                    <span className="points">345 pts</span>
                   </div>
-                ))}
+                  <div className="leaderboard-item">
+                    <span className="rank">2.</span>
+                    <span className="username">User X</span>
+                    <span className="points">320 pts</span>
+                  </div>
+                  <div className="leaderboard-item">
+                    <span className="rank">3.</span>
+                    <span className="username">User X</span>
+                    <span className="points">313 pts</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Recent Battles */}
+              <div className="recent-battles-section">
+                <h3 className="section-title">Recent Battles</h3>
+                <div className="recent-battles-container">
+                  <div className="battle-item">
+                    <div className="battle-info">
+                      <h4 className="battle-title">You vs. Marcus</h4>
+                      <p className="battle-details">Won 7-4 Time 2:35</p>
+                    </div>
+                    <span className="battle-time">2 days ago</span>
+                  </div>
+                  <div className="battle-item">
+                    <div className="battle-info">
+                      <h4 className="battle-title">You vs. Random</h4>
+                      <p className="battle-details">Won 7-4 Time 2:35</p>
+                    </div>
+                    <span className="battle-time">1 week ago</span>
+                  </div>
+                </div>
+                <a href="#" className="view-all-link">view all history →</a>
               </div>
             </div>
           </div>
