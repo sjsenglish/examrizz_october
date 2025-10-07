@@ -295,14 +295,16 @@
 }
 
 .availability-text {
-  font-family: 'Madimi One', sans-serif !important;
+  font-family: 'Figtree', sans-serif !important; /* Changed to Figtree */
   font-size: 12px;
-  letter-spacing: 0.04em;
-  color: #E0B4FF;
+  letter-spacing: 0.04em; /* 4% letter separation */
+  color: #000000; /* Changed to black font */
   background-color: #E0E4FF;
   padding: 8px 12px;
   border-radius: 4px;
   margin: 0;
+  width: 50%; /* Made 50% shorter */
+  display: inline-block;
 }
 
 .font-size-controls {

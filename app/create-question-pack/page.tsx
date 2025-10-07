@@ -21,6 +21,9 @@ export default function CreateQuestionPackPage() {
   // Additional filter states for left panel
   const [criticalThinking, setCriticalThinking] = useState(true);
   const [problemSolving, setProblemSolving] = useState(false);
+  
+  // Order questions state
+  const [orderMode, setOrderMode] = useState('automatic'); // 'automatic' or 'custom'
 
   const subjects = ['Maths', 'Physics', 'Chemistry', 'Biology', 'Economics'];
 
@@ -228,8 +231,8 @@ export default function CreateQuestionPackPage() {
                       <Image 
                         src="/icons/speech-bubble-ghost.svg" 
                         alt="Question counter" 
-                        width={20} 
-                        height={20}
+                        width={40} 
+                        height={40}
                         style={{
                           position: 'absolute',
                           left: '30%',
@@ -277,8 +280,8 @@ export default function CreateQuestionPackPage() {
                       <Image 
                         src="/icons/speech-bubble-ghost.svg" 
                         alt="Font size slider" 
-                        width={20} 
-                        height={20}
+                        width={40} 
+                        height={40}
                         style={{
                           position: 'absolute',
                           left: '30%',
@@ -298,20 +301,68 @@ export default function CreateQuestionPackPage() {
                     Order questions by
                   </h3>
                   <div className="order-buttons">
-                    <div className="order-button-active">
+                    <div 
+                      className={orderMode === 'automatic' ? 'order-button-active' : 'order-button-inactive'}
+                      onClick={() => setOrderMode('automatic')}
+                      style={{ cursor: 'pointer' }}
+                    >
                       <span className="order-button-text">
                         Automatic
                       </span>
                     </div>
-                    <div className="order-button-inactive">
+                    <div 
+                      className={orderMode === 'custom' ? 'order-button-active' : 'order-button-inactive'}
+                      onClick={() => setOrderMode('custom')}
+                      style={{ cursor: 'pointer' }}
+                    >
                       <span className="order-button-text">
                         Custom
                       </span>
                     </div>
                   </div>
-                  <p className="order-description">
-                    You'll arrange questions manually in the next step
-                  </p>
+                  {orderMode === 'custom' && (
+                    <p className="order-description">
+                      You'll arrange questions manually in the next step
+                    </p>
+                  )}
+
+                  {/* Conditional Filters - Show when Automatic is selected */}
+                  {orderMode === 'automatic' && (
+                    <div style={{ marginTop: '20px' }}>
+                      {/* Filter checkboxes in grid - same as left panel */}
+                      <div className="filter-grid">
+                        <div className="filter-item">
+                          <input type="checkbox" checked={questionType} onChange={(e) => setQuestionType(e.target.checked)} className="filter-checkbox" />
+                          <span className="filter-label">Question Type</span>
+                        </div>
+                        
+                        <div className="filter-item">
+                          <input type="checkbox" checked={subType} onChange={(e) => setSubType(e.target.checked)} className="filter-checkbox" />
+                          <span className="filter-label">Sub Type</span>
+                        </div>
+                        
+                        <div className="filter-item">
+                          <input type="checkbox" checked={year} onChange={(e) => setYear(e.target.checked)} className="filter-checkbox" />
+                          <span className="filter-label">Year</span>
+                        </div>
+                        
+                        <div className="filter-item">
+                          <input type="checkbox" checked={difficulty} onChange={(e) => setDifficulty(e.target.checked)} className="filter-checkbox" />
+                          <span className="filter-label">Difficulty</span>
+                        </div>
+                        
+                        <div className="filter-item">
+                          <input type="checkbox" checked={examSession} onChange={(e) => setExamSession(e.target.checked)} className="filter-checkbox" />
+                          <span className="filter-label">Exam Session</span>
+                        </div>
+                        
+                        <div className="filter-item">
+                          <input type="checkbox" checked={filter6} onChange={(e) => setFilter6(e.target.checked)} className="filter-checkbox" />
+                          <span className="filter-label">Filter 6</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
               </div>
