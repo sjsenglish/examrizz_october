@@ -81,20 +81,20 @@
   z-index: 50;
 }
 
-/* Content Layout - Move 10% to the left */
+/* Content Layout - Move 30% to the right from original position */
 .content-layout {
   display: flex;
   gap: 40px;
   max-width: 1400px;
   margin: 0 auto;
   padding-top: 40px;
-  transform: translateX(-10%);
+  transform: translateX(30%);
 }
 
-/* Main Learning Section - 60% width, starts 10% from left (moved 10% left) */
+/* Main Learning Section - 60% width, starts 30% from left (moved 20% right from -10% position) */
 .main-learning-section {
   flex: 0 0 60%;
-  margin-left: 10%;
+  margin-left: 30%;
 }
 
 .page-title {
@@ -190,7 +190,7 @@
 }
 
 .continue-button {
-  background-color: #FFFFFF;
+  background-color: #00CED1;
   border: 1px solid #000000;
   border-radius: 6px;
   padding: 8px 16px;
@@ -198,7 +198,7 @@
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: #000000;
+  color: #FFFFFF;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -321,6 +321,7 @@
   position: absolute;
   bottom: 20px;
   right: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .path-button:hover {
@@ -329,6 +330,7 @@
 
 .start-button {
   background-color: #B3F0F2;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .add-path-button {
