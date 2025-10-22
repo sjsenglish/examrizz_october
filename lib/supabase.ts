@@ -21,7 +21,7 @@ export interface School {
 
 export interface UserProfile {
   id: string;
-  school_id: string;
+  school_id: string | null;
   role: 'teacher' | 'student' | 'admin';
   full_name: string;
   email?: string;
