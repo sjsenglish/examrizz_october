@@ -1,4 +1,4 @@
-import { supabase, PackAssignment, PackAttempt, QuestionPack } from './supabase.ts';
+import { supabase, PackAssignment, PackAttempt, QuestionPack } from './supabase';
 
 export interface AssignmentWithDetails extends PackAssignment {
   pack: QuestionPack;
@@ -317,7 +317,7 @@ export async function getTeacherOngoingAssignments(teacherId: string): Promise<A
       
       // Students with low scores
       completedAttempts.forEach(attempt => {
-        if (attempt.score !== null && attempt.score < 60) {
+        if (attempt.score !== null && attempt.score !== undefined && attempt.score < 60) {
           needingSupport.push({
             student_name: 'Student', // Would need to join with user profiles for real name
             issue: `Score ${attempt.score}/${attempt.total_questions}`,

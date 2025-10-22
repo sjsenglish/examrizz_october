@@ -1,4 +1,4 @@
-import { supabase, Class, ClassMembership, UserProfile } from './supabase.ts';
+import { supabase, Class, ClassMembership, UserProfile } from './supabase';
 
 export interface ClassWithStudents extends Class {
   students: UserProfile[];
