@@ -81,7 +81,7 @@ export default function CreatePracticePackPage() {
         { hitsPerPage: 0 } // We only want the count
       );
 
-      const totalHits = searchResults?.nbHits || 0;
+      const totalHits = ('nbHits' in searchResults) ? searchResults.nbHits : 0;
       setAvailableQuestions(totalHits);
     } catch (error) {
       console.error('Error calculating available questions:', error);
