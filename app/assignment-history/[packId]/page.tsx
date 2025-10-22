@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { use } from 'react';
-import { getCurrentUser, ensureTeacherProfile } from '../../../lib/supabase.ts';
+import { getCurrentUser, ensureTeacherProfile } from '../../../lib/supabase';
 import { getPackAssignmentHistory } from '../../../lib/teacherAssignments';
 
 interface AssignmentHistoryPageProps {

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { supabase, getCurrentUser, ensureTeacherProfile } from '../../lib/supabase.ts';
+import { supabase, getCurrentUser, ensureTeacherProfile } from '../../lib/supabase';
 
 export default function AuthTestPage() {
   const [user, setUser] = useState<any>(null);

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getCurrentUser, ensureTeacherProfile } from '../../lib/supabase.ts';
+import { getCurrentUser, ensureTeacherProfile } from '../../lib/supabase';
 import { getTeacherClasses, getAllTeacherStudents } from '../../lib/teacherClasses';
 import '../../styles/globals.css';
 
