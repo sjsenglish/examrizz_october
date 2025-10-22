@@ -38,7 +38,7 @@ export default function PracticePage() {
   useEffect(() => {
     const fetchPacks = async () => {
       try {
-        const result = await getUserPracticePacks();
+        const result = await getUserPracticePacks() as { success: boolean; packs?: any[]; error?: string };
         if (result.success) {
           setQuestionPacks(result.packs || []);
         } else {
