@@ -500,7 +500,7 @@ export default function ReviewPage({ params }: { params: Promise<{ packId: strin
     : undefined;
     
   // Use the actual userAnswer from the database
-  const displayUserAnswer = userAnswer;
+  const displayUserAnswer = userAnswer || '';
     
   const correctAnswer = currentQuestion.answer_letter;
   const correctCount = (attemptData?.user_answers && pack?.questions) 

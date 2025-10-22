@@ -82,7 +82,7 @@ export default function SelectPracticeQuestionsPage() {
   };
 
   const handleCreatePack = async () => {
-    if (!packData || selectedQuestions.size === 0) return;
+    if (!packData || selectedQuestions.length === 0) return;
     
     setIsCreatingPack(true);
     try {
@@ -97,12 +97,12 @@ export default function SelectPracticeQuestionsPage() {
         }
       });
 
-      if (result.success) {
+      if ((result as { success: boolean; error?: string }).success) {
         // Clear session storage and redirect
         sessionStorage.removeItem('packData');
         router.push('/practice');
       } else {
-        console.error('Failed to create pack:', result.error);
+        console.error('Failed to create pack:', (result as { success: boolean; error?: string }).error);
         alert('Failed to create practice pack. Please try again.');
       }
     } catch (error) {

@@ -27,7 +27,7 @@ export default function PracticePage() {
   const [selectedAdmissionSubject, setSelectedAdmissionSubject] = useState('');
   const [showALevelDropdown, setShowALevelDropdown] = useState(false);
   const [showAdmissionDropdown, setShowAdmissionDropdown] = useState(false);
-  const [questionPacks, setQuestionPacks] = useState([]);
+  const [questionPacks, setQuestionPacks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Available subjects for admissions dropdown
@@ -40,14 +40,14 @@ export default function PracticePage() {
       try {
         const result = await getUserPracticePacks() as { success: boolean; packs?: any[]; error?: string };
         if (result.success) {
-          setQuestionPacks(result.packs || []);
+          setQuestionPacks(result.packs || [] as any[]);
         } else {
           console.error('Failed to fetch packs:', result.error);
-          setQuestionPacks([]);
+          setQuestionPacks([] as any[]);
         }
       } catch (error) {
         console.error('Error fetching packs:', error);
-        setQuestionPacks([]);
+        setQuestionPacks([] as any[]);
       } finally {
         setLoading(false);
       }
