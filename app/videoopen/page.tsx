@@ -17,8 +17,8 @@ export default function VideoOpenPage() {
   const [volume, setVolume] = useState(1);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
   const [videoError, setVideoError] = useState(false);
-  const videoRef = useRef(null);
-  const volumeTimeoutRef = useRef(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const volumeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const togglePlayPause = () => {
     const video = videoRef.current;

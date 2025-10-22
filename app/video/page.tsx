@@ -10,12 +10,12 @@ import './video.css';
 export default function VideoPage() {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
-  const videoRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (dropdownRef.current && event.target instanceof Node && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
     };
@@ -340,12 +340,12 @@ export default function VideoPage() {
                       }}
                       onMouseEnter={(e) => {
                         if (subject !== 'Physics') {
-                          e.target.style.backgroundColor = '#95EAEC';
+                          (e.target as HTMLElement).style.backgroundColor = '#95EAEC';
                         }
                       }}
                       onMouseLeave={(e) => {
                         if (subject !== 'Physics') {
-                          e.target.style.backgroundColor = '#DFF8F9';
+                          (e.target as HTMLElement).style.backgroundColor = '#DFF8F9';
                         }
                       }}
                     >
