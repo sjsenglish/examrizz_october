@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -9,12 +9,66 @@ import './video.css';
 
 export default function VideoPage() {
   const [selectedSubject, setSelectedSubject] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    let startTime = 0;
+
+    const handleLoadedMetadata = () => {
+      const duration = video.duration;
+      const maxStartTime = Math.max(0, duration - 15);
+      startTime = Math.random() * maxStartTime;
+      
+      video.currentTime = startTime;
+      video.play().catch(console.error);
+    };
+
+    const handleTimeUpdate = () => {
+      const video = videoRef.current;
+      if (!video) return;
+      
+      const playedDuration = video.currentTime - startTime;
+      if (playedDuration >= 15) {
+        video.pause();
+        video.removeEventListener('timeupdate', handleTimeUpdate);
+      }
+    };
+
+    video.addEventListener('loadedmetadata', handleLoadedMetadata);
+    video.addEventListener('timeupdate', handleTimeUpdate);
+
+    return () => {
+      if (video) {
+        video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        video.removeEventListener('timeupdate', handleTimeUpdate);
+      }
+    };
+  }, []);
 
   const subjects = [
-    'A Level Chemistry AQA',
-    'A Level Biology AQA', 
-    'A Level Maths AQA',
-    'A Level Physics AQA'
+    'Maths',
+    'Physics',
+    'Economics', 
+    'Biology',
+    'Chemistry'
   ];
 
   const videoPlaceholders = Array(3).fill(null);
@@ -90,18 +144,21 @@ export default function VideoPage() {
         width: '100vw',
         marginLeft: 'calc(-50vw + 50%)',
         height: '520px',
-        backgroundColor: '#d0d0d0',
         marginBottom: '40px',
         marginTop: '60px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontFamily: "'Futura PT', sans-serif",
-        fontSize: '24px',
-        color: '#666666',
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
       }}>
-        Featured Video
+        <video
+          ref={videoRef}
+          src="https://plewvideos.s3.eu-north-1.amazonaws.com/Lesson+1Final.mp4"
+          muted
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            zIndex: 1
+          }}
+        />
         
         {/* Back Button on top of video */}
         <Link 
@@ -122,7 +179,7 @@ export default function VideoPage() {
             fontSize: '13px',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
             transition: 'all 0.3s ease',
-            zIndex: 10
+            zIndex: 20
           }}
         >
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -200,7 +257,7 @@ export default function VideoPage() {
           position: 'absolute',
           bottom: '40px',
           left: '320px',
-          zIndex: 10
+          zIndex: 20
         }}>
           <Image
             src="/svg/ghost-karaoke.svg"
@@ -216,27 +273,88 @@ export default function VideoPage() {
         {/* Subject Selection and Actions */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '30px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <select 
-              value={selectedSubject}
-              onChange={(e) => setSelectedSubject(e.target.value)}
-              style={{
-                padding: '12px 20px',
-                fontSize: '16px',
-                border: '1px solid #000000',
-                backgroundColor: '#E0F7FA',
-                fontFamily: "'Figtree', sans-serif",
-                fontWeight: '400',
-                minWidth: '350px',
-                outline: 'none',
-                marginLeft: '40px',
-                letterSpacing: '0.04em'
-              }}
-            >
-              <option value="">Select subject</option>
-              {subjects.map((subject, index) => (
-                <option key={index} value={subject}>{subject}</option>
-              ))}
-            </select>
+            <div ref={dropdownRef} style={{ position: 'relative', marginLeft: '40px' }}>
+              <button
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                style={{
+                  padding: '12px 40px 12px 20px',
+                  fontSize: '16px',
+                  border: '1px solid #000000',
+                  backgroundColor: '#DFF8F9',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontWeight: '400',
+                  minWidth: '350px',
+                  outline: 'none',
+                  letterSpacing: '0.04em',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                {selectedSubject || 'Select subject'}
+                <svg 
+                  width="12" 
+                  height="12" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  style={{ 
+                    transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.2s ease'
+                  }}
+                >
+                  <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              
+              {isDropdownOpen && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                  width: '100%',
+                  backgroundColor: '#DFF8F9',
+                  border: '1px solid #000000',
+                  borderTop: 'none',
+                  zIndex: 1000,
+                  maxHeight: '200px',
+                  overflowY: 'auto'
+                }}>
+                  {subjects.map((subject, index) => (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        setSelectedSubject(subject);
+                        setIsDropdownOpen(false);
+                      }}
+                      style={{
+                        padding: '12px 20px',
+                        fontSize: '16px',
+                        fontFamily: "'Figtree', sans-serif",
+                        fontWeight: '400',
+                        letterSpacing: '0.04em',
+                        cursor: 'pointer',
+                        backgroundColor: subject === 'Physics' ? '#95EAEC' : '#DFF8F9',
+                        transition: 'background-color 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (subject !== 'Physics') {
+                          e.target.style.backgroundColor = '#95EAEC';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (subject !== 'Physics') {
+                          e.target.style.backgroundColor = '#DFF8F9';
+                        }
+                      }}
+                    >
+                      {subject}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>

@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3005",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3005",
     "lint": "next lint",
     "type-check": "tsc --noEmit"
   },
@@ -14,16 +14,19 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@supabase/supabase-js": "^2.75.1",
     "@tailwindcss/postcss": "^4.1.14",
     "@types/node": "^24.6.1",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
+    "algoliasearch": "^5.40.1",
     "autoprefixer": "^10.4.21",
     "framer-motion": "^12.23.22",
     "next": "^15.5.4",
     "postcss": "^8.5.6",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-instantsearch": "^7.16.3",
     "tailwindcss": "^4.1.13",
     "typescript": "^5.9.3"
   }

@@ -1,21 +1,90 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '../ui/Button';
-import './QuestionCard.css';
+import { QuestionCardProps, Question } from '@/types/question';
+import { VideoModal } from '../VideoModal';
+import styles from './QuestionCard.module.css';
 
-export const QuestionCard: React.FC = () => {
+const getFirebaseImageUrl = (gsUrl: string): string => {
+  if (!gsUrl || !gsUrl.startsWith('gs://')) return '';
+  
+  // Convert gs://bucket-name/path/file.ext to Firebase Storage download URL
+  // Format: https://firebasestorage.googleapis.com/v0/b/bucket-name/o/path%2Ffile.ext?alt=media
+  const urlParts = gsUrl.replace('gs://', '').split('/');
+  const bucketName = urlParts[0];
+  const filePath = urlParts.slice(1).join('/');
+  
+  // URL encode the file path (replace / with %2F)
+  const encodedPath = encodeURIComponent(filePath);
+  
+  const firebaseUrl = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodedPath}?alt=media`;
+  
+  // Debug log to verify URL conversion
+  console.log('Converting Firebase URL:', gsUrl, '→', firebaseUrl);
+  
+  return firebaseUrl;
+};
+
+export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [isAnswerRevealed, setIsAnswerRevealed] = useState(false);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+
+  const handleAnswerClick = (letter: string) => {
+    setSelectedAnswer(letter);
+    setIsAnswerRevealed(true);
+  };
+
+  const handleShowAnswer = () => {
+    setIsAnswerRevealed(true);
+  };
+
+  const handleVideoSolutionClick = () => {
+    setIsVideoModalOpen(true);
+  };
+
+  const handleCloseVideoModal = () => {
+    setIsVideoModalOpen(false);
+  };
+
+  const getOptionClass = (letter: string): string => {
+    if (!isAnswerRevealed) return '';
+    
+    const isCorrect = letter === hit?.correct_answer;
+    const isSelected = letter === selectedAnswer;
+    
+    if (isCorrect) return styles.optionCorrect;
+    if (isSelected && !isCorrect) return styles.optionIncorrect;
+    return '';
+  };
+
+  const getOptionStyle = (letter: string) => {
+    const baseClass = styles.option;
+    const answerClass = getOptionClass(letter);
+    const noHoverClass = isAnswerRevealed ? styles.optionNoHover : '';
+    
+    return `${baseClass} ${answerClass} ${noHoverClass}`.trim();
+  };
+
+  const subType = Array.isArray(hit?.sub_types) ? hit.sub_types[0] : hit?.sub_types;
   return (
-    <article className="question-card">
-      <header className="question-header">
-        <div className="question-info">
-          <span className="question-number">Question 1</span>
-          <span className="year-badge">2022</span>
+    <article className={styles.questionCard}>
+      <header className={styles.questionHeader}>
+        <div className={styles.questionInfo}>
+          <span className={styles.questionNumber}>
+            Question {hit?.question_number || ''}
+          </span>
+          {hit?.year && <span className={styles.yearBadge}>{hit.year}</span>}
         </div>
-        <div className="filter-buttons">
-          <Button variant="filter" size="sm">FILTER 1</Button>
-          <Button variant="filter" size="sm" 
-            style={{ backgroundColor: 'var(--color-secondary-light)' }}>
-            FILTER 2
-          </Button>
+        <div className={styles.filterButtons}>
+          {hit?.question_type && (
+            <Button variant="filter" size="sm">{hit.question_type}</Button>
+          )}
+          {subType && (
+            <Button variant="filter" size="sm" 
+              style={{ backgroundColor: 'var(--color-secondary-light)' }}>
+              {subType}
+            </Button>
+          )}
           <Button variant="filter" size="sm" 
             style={{ backgroundColor: 'transparent' }}>
             SPEC PT. 4.1
@@ -23,43 +92,78 @@ export const QuestionCard: React.FC = () => {
         </div>
       </header>
 
-      <div className="question-content">
-        <p className="question-passage">
-          For centuries the Netherlands has battled with the dangers of water as most of the country lies 
-          below sea level. In 1953, nearly two thousand people were killed by flooding, a disaster on 
-          a scale that it changed everything. Since then Dutch governments have consistently made flood 
-          prevention infrastructure a spending priority. There is a conviction within this is so important that it 
-          overrides political differences. While other countries may be good at rescuing stranded people by 
-          helicopter, or sending in armed forces to clear flood wreckage, the Dutch approach is always 
-          prevention. Now that so many huge coastal cities are threatened, the world needs to learn lessons 
-          from this small country. Since 1953, not one person in the Netherlands has died as a direct result 
-          of flooding.
-        </p>
+      <div className={styles.questionContent}>
+        {hit?.question_content && (
+          <p className={styles.questionPassage}>
+            {hit.question_content}
+          </p>
+        )}
 
-        <div className="question-text">
-          Which one of the following best expresses the main conclusion of the above argument?
-        </div>
+        {hit?.imageFile && (
+          <div className={styles.questionImageContainer}>
+            <img 
+              src={getFirebaseImageUrl(hit.imageFile)} 
+              alt="Question diagram"
+              className={styles.questionImage}
+              onError={(e) => {
+                console.warn('Failed to load question image:', hit.imageFile);
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          </div>
+        )}
 
-        <div className="answer-options">
-          {['A', 'B', 'C', 'D', 'E'].map((letter) => (
-            <div key={letter} className="option">
-              <span className="option-letter">{letter}</span>
-              <span className="option-text">
-                For centuries the Netherlands has battled with the dangers of water.
-              </span>
-            </div>
-          ))}
-        </div>
+        {hit?.question && (
+          <div className={styles.questionText}>
+            {hit.question}
+          </div>
+        )}
 
-        <div className="action-buttons">
-          <Button variant="secondary" size="md" className="show-answer-btn">
+        {hit?.options && hit.options.length > 0 && (
+          <div className={styles.answerOptions}>
+            {hit.options.map((option, index) => {
+              const letter = String.fromCharCode(65 + index); // Convert 0->A, 1->B, etc.
+              const optionText = typeof option === 'string' ? option : option.text;
+              return (
+                <div 
+                  key={index} 
+                  onClick={() => handleAnswerClick(letter)} 
+                  className={getOptionStyle(letter)}
+                >
+                  <span className={styles.optionLetter}>{letter}</span>
+                  <span className={styles.optionText}>{optionText}</span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        <div className={styles.actionButtons}>
+          <Button 
+            variant="secondary" 
+            size="md" 
+            className={styles.showAnswerBtn}
+            onClick={handleShowAnswer}
+          >
             Show Answer
           </Button>
-          <Button variant="primary" size="md">
+          <Button 
+            variant="primary" 
+            size="md"
+            onClick={handleVideoSolutionClick}
+            disabled={!hit?.videoSolutionLink}
+          >
             Video Solution
           </Button>
         </div>
       </div>
+
+      {/* Video Modal */}
+      <VideoModal
+        isOpen={isVideoModalOpen}
+        onClose={handleCloseVideoModal}
+        videoUrl={hit?.videoSolutionLink}
+      />
     </article>
   );
 };

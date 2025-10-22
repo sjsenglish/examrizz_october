@@ -262,10 +262,157 @@
 }
 
 .question-content {
-  min-height: 50px; /* Reduced height */
+  min-height: 50px;
   background-color: rgba(240, 255, 254, 0.3);
   border-radius: 4px;
-  padding: 10px; /* Reduced padding */
+  padding: 10px;
+}
+
+.question-image-container {
+  margin-bottom: 15px;
+}
+
+.question-image {
+  max-width: 100%;
+  height: auto;
+  border: 3px solid #000000;
+  border-radius: 8px;
+  display: block;
+}
+
+.question-text {
+  margin-bottom: 15px;
+  font-family: 'Figtree', sans-serif !important;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333333;
+}
+
+.answer-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.answer-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: #FFFFFF;
+  border: 1px solid #E0E0E0;
+}
+
+.answer-letter {
+  font-family: 'Figtree', sans-serif !important;
+  font-size: 14px;
+  font-weight: bold;
+  color: #000000;
+  min-width: 20px;
+  text-align: center;
+}
+
+.answer-text {
+  font-family: 'Figtree', sans-serif !important;
+  font-size: 14px;
+  color: #333333;
+  flex: 1;
+}
+
+.question-type {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #DFF8F9;
+  color: #000000;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: 'Figtree', sans-serif !important;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Algolia SearchBox styling */
+.search-box-root {
+  width: 100%;
+}
+
+.search-box-form {
+  position: relative;
+  width: 100%;
+}
+
+.search-box-form .search-input {
+  width: 100%;
+  padding: 10px 45px 10px 15px;
+  border: 1px solid black;
+  border-radius: 0px;
+  font-family: 'Figtree', sans-serif !important;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: #666666;
+  background-color: white;
+  box-sizing: border-box;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.search-button {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666666;
+  padding: 4px;
+}
+
+.search-reset {
+  display: none;
+}
+
+/* Hits container with scrollbar */
+.questions-container {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.questions-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.questions-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.questions-container::-webkit-scrollbar-thumb {
+  background: #00CED1;
+  border-radius: 4px;
+}
+
+.questions-container::-webkit-scrollbar-thumb:hover {
+  background: #00B8C1;
+}
+
+/* Algolia Hits styling */
+.hits-root {
+  width: 100%;
+}
+
+.hits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hits-item {
+  width: 100%;
 }
 
 .questions-and-controls-section {
@@ -273,6 +420,52 @@
   gap: 20px;
   margin-bottom: 15px;
   align-items: flex-start;
+}
+
+/* Override Algolia hits styling for new preview components */
+.hits-root {
+  width: 100%;
+}
+
+.hits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0; /* QuestionPreview components have their own margin */
+}
+
+.hits-item {
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure proper spacing in the questions container */
+.questions-container {
+  flex: 1;
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+/* Custom scrollbar for questions container */
+.questions-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.questions-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.questions-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.questions-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }
 
 .side-controls-right {
@@ -333,20 +526,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 10px 20px; /* Reduced padding */
+  gap: 6px;
+  padding: 8px 16px; /* Further reduced padding */
   background-color: #E8E8FF;
   border: none;
-  border-radius: 8px;
-  font-family: 'Figtree', sans-serif !important;
-  font-size: 14px; /* Reduced font size */
+  border-radius: 6px;
+  font-family: 'Madimi One', 'Figtree', sans-serif !important;
+  font-size: 12px; /* Further reduced font size */
   font-weight: bold;
-  color: white; /* White font */
+  color: black; /* Changed to black for opacity */
   text-decoration: none;
   cursor: pointer;
   transition: background-color 0.2s;
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2); /* Drop shadow */
-  width: 180px; /* Reduced width */
+  width: 150px; /* Further reduced width */
 }
 
 .back-button:hover {
@@ -357,19 +550,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 10px 20px; /* Reduced padding */
+  gap: 6px;
+  padding: 8px 16px; /* Further reduced padding */
   background-color: #00CED1;
   border: none;
-  border-radius: 8px;
-  font-family: 'Figtree', sans-serif !important;
-  font-size: 14px; /* Reduced font size */
+  border-radius: 6px;
+  font-family: 'Madimi One', 'Figtree', sans-serif !important;
+  font-size: 12px; /* Further reduced font size */
   font-weight: bold;
-  color: white;
+  color: black; /* Changed to black for opacity */
   cursor: pointer;
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
   transition: background-color 0.2s;
-  width: 180px; /* Reduced width to match back button */
+  width: 150px; /* Further reduced width to match back button */
 }
 
 .create-pack-button:hover {

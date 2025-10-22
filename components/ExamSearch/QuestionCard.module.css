@@ -1,0 +1,213 @@
+/* QuestionCard Component Styles */
+
+.questionCard {
+  background-color: var(--color-white);
+  border-radius: var(--radius-xl);
+  border: var(--border-thick);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-primary-lg),
+              8px 8px 16px rgba(0, 206, 209, 0.2);
+  position: relative;
+  margin-bottom: var(--space-2xl);
+}
+
+.questionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.questionInfo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.questionNumber {
+  font-family: var(--font-primary);
+  font-size: var(--text-2xl);
+  color: var(--color-black);
+  font-weight: 400;
+}
+
+.yearBadge {
+  background-color: #40E0D0;
+  color: var(--color-black);
+  padding: 4px var(--space-md);
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
+  font-weight: 400;
+  box-shadow: var(--shadow-sm);
+}
+
+.filterButtons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.questionContent {
+  color: var(--color-gray-500);
+}
+
+.questionPassage {
+  font-family: var(--font-secondary);
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.questionImageContainer {
+  margin-bottom: 25px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: var(--color-white);
+  border: 2px solid #000000;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.questionImage {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.questionText {
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
+  margin-bottom: 25px;
+  color: var(--color-black);
+  font-weight: 400;
+  background-color: var(--color-white);
+  border: var(--border-medium);
+  padding: 15px var(--space-lg);
+  box-shadow: 3px 0 0 0 #d0d0d0,
+              0 3px 0 0 #d0d0d0,
+              3px 3px 0 0 #d0d0d0,
+              4px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.answerOptions {
+  margin-bottom: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  background-color: transparent;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.option:hover {
+  background-color: rgba(0, 206, 209, 0.1);
+}
+
+.optionNoHover:hover {
+  background-color: transparent;
+}
+
+.optionLetter {
+  font-family: var(--font-primary);
+  font-size: var(--text-2xl);
+  font-weight: 400;
+  margin-right: 15px;
+  min-width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border-radius: var(--radius-sm);
+  border: var(--border-medium);
+  color: var(--color-black);
+}
+
+.optionText {
+  font-family: var(--font-secondary);
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 1.5;
+  color: var(--color-gray-500);
+}
+
+.optionCorrect {
+  border: 2px solid #00CED1;
+  background-color: #DBF7F9;
+  border-radius: 8px;
+  padding: 8px;
+  transition: all 0.2s ease;
+}
+
+.optionIncorrect {
+  border: 2px solid #FF4D6A;
+  background-color: #FADEE8;
+  border-radius: 8px;
+  padding: 8px;
+  transition: all 0.2s ease;
+}
+
+.actionButtons {
+  display: flex;
+  gap: var(--space-lg);
+  justify-content: flex-start;
+}
+
+.showAnswerBtn {
+  background-color: var(--color-secondary-light) !important;
+  box-shadow: 3px 0 0 0 #c0b8d8,
+              0 3px 0 0 #c0b8d8,
+              3px 3px 0 0 #c0b8d8,
+              4px 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+.showAnswerBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 3px 0 0 0 #c0b8d8,
+              0 4px 0 0 #c0b8d8,
+              3px 4px 0 0 #c0b8d8,
+              4px 5px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Disabled button styles */
+.actionButtons button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .questionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .questionImageContainer {
+    width: 100%;
+    display: block;
+  }
+
+  .questionImage {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+  }
+
+  .actionButtons button {
+    width: 100%;
+  }
+}

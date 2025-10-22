@@ -1,37 +1,75 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getUserPracticePacks } from '../../lib/supabaseQuestionPacks';
+import { getAllSubjects, getAvailableSubjects } from '../../lib/subjectConfig';
 import './practice.css';
 
+/**
+ * MAIN PRACTICE PAGE - Question Pack Management
+ * 
+ * This is the STANDALONE practice page (/practice) that handles:
+ * - Managing user's custom question packs
+ * - Browsing practice packs by subject (TSA, A Level subjects)
+ * - Launching practice sessions (/practice-session/[packId])
+ * - Launching review sessions (/review/[packId]) 
+ * - Creating new practice packs (/create-practice-pack)
+ * 
+ * This is DIFFERENT from the "Lesson Practice" tab in /learn-lesson:
+ * - /learn-lesson practice tab = practice questions embedded within lessons
+ * - /practice page = standalone practice sessions with custom question packs
+ */
 export default function PracticePage() {
   const [activeTab, setActiveTab] = useState('Admissions');
   const [selectedSubject, setSelectedSubject] = useState('');
+  const [selectedAdmissionSubject, setSelectedAdmissionSubject] = useState('');
   const [showALevelDropdown, setShowALevelDropdown] = useState(false);
+  const [showAdmissionDropdown, setShowAdmissionDropdown] = useState(false);
+  const [questionPacks, setQuestionPacks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock question packs data
-  const questionPacks = [
-    { id: 1, title: 'Algebra Foundations', subject: 'Maths', completed: true },
-    { id: 2, title: 'Calculus Basics', subject: 'Physics', completed: false },
-    { id: 3, title: 'Organic Chemistry', subject: 'Chemistry', completed: true },
-    { id: 4, title: 'Quadratic Equations', subject: 'Maths', completed: false },
-    { id: 5, title: 'Thermodynamics', subject: 'Physics', completed: true },
-    { id: 6, title: 'Molecular Structure', subject: 'Chemistry', completed: false }
-  ];
+  // Available subjects for admissions dropdown
+  const availableSubjects = getAvailableSubjects(); // This will include TSA
+  const allSubjects = getAllSubjects(); // For A Level dropdown
 
-  const admissionPacks = [
-    { id: 7, title: 'LNAT Critical Thinking', category: 'Law', completed: true },
-    { id: 8, title: 'UCAT Verbal Reasoning', category: 'Medicine', completed: false },
-    { id: 9, title: 'Oxford Interview Prep', category: 'General', completed: true },
-    { id: 10, title: 'Cambridge Mathematics', category: 'Engineering', completed: false }
-  ];
+  // Fetch question packs from Supabase
+  useEffect(() => {
+    const fetchPacks = async () => {
+      try {
+        const result = await getUserPracticePacks();
+        if (result.success) {
+          setQuestionPacks(result.packs || []);
+        } else {
+          console.error('Failed to fetch packs:', result.error);
+          setQuestionPacks([]);
+        }
+      } catch (error) {
+        console.error('Error fetching packs:', error);
+        setQuestionPacks([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const savedPacks = [
-    { id: 11, title: 'Physics Mechanics Review', category: 'A Level', completed: true },
-    { id: 12, title: 'Essay Writing Techniques', category: 'General', completed: false },
-    { id: 13, title: 'Statistics Fundamentals', category: 'A Level', completed: true }
-  ];
+    fetchPacks();
+  }, []);
+
+  // Filter packs by category
+  const getPacksByCategory = (category: string, subject?: string) => {
+    return questionPacks.filter(pack => {
+      if (category === 'A Level') {
+        return subject ? pack.subject === subject : false;
+      } else if (category === 'Admissions') {
+        return availableSubjects.includes(pack.subject || '');
+      } else if (category === 'Saved') {
+        // For now, show all packs as saved - this can be enhanced with favorites functionality
+        return true;
+      }
+      return false;
+    });
+  };
 
   return (
     <div style={{ backgroundColor: '#FFFFFF', minHeight: '100vh' }}>
@@ -343,40 +381,96 @@ export default function PracticePage() {
               )}
             </div>
             
-            {/* Admissions Tab */}
-            <button 
+            {/* Admissions Tab with Dropdown */}
+            <div 
               style={{
-                flex: '1',
-                height: '40px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                backgroundColor: activeTab === 'Admissions' ? '#B3F0F2' : '#FFFFFF',
-                border: '1px solid #000000',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontFamily: "'Figtree', sans-serif",
-                fontSize: '14px',
-                fontWeight: '500',
-                color: '#000000',
-                letterSpacing: '0.04em',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.25)',
-                transition: 'transform 0.2s, box-shadow 0.2s'
+                position: 'relative',
+                flex: '1'
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0px)';
-                e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.25)';
-              }}
-              onClick={() => setActiveTab('Admissions')}
-              aria-label="Admissions tab"
+              onMouseEnter={() => setShowAdmissionDropdown(true)}
+              onMouseLeave={() => setShowAdmissionDropdown(false)}
             >
-              <span>Admissions</span>
-            </button>
+              <button 
+                style={{
+                  width: '100%',
+                  height: '40px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  backgroundColor: activeTab === 'Admissions' ? '#B3F0F2' : '#FFFFFF',
+                  border: '1px solid #000000',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontFamily: "'Madimi One', sans-serif",
+                  fontSize: '14px',
+                  fontWeight: '400',
+                  color: '#000000',
+                  letterSpacing: '0.04em',
+                  boxShadow: '0 6px 12px rgba(0, 0, 0, 0.4)',
+                  transition: 'transform 0.2s, box-shadow 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.5)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0px)';
+                  e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.4)';
+                }}
+                onClick={() => setActiveTab('Admissions')}
+                aria-label="Admissions tab"
+              >
+                <span>Admissions</span>
+              </button>
+              
+              {/* Admissions Dropdown */}
+              {showAdmissionDropdown && (
+                <div style={{
+                  position: 'absolute',
+                  top: 'calc(100% - 5px)',
+                  left: '0',
+                  right: '0',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #000000',
+                  borderRadius: '0px',
+                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                  zIndex: 9999
+                }}>
+                  {availableSubjects.map((subject) => (
+                    <button
+                      key={subject}
+                      style={{
+                        display: 'block',
+                        width: '100%',
+                        padding: '8px 12px',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        fontFamily: "'Figtree', sans-serif",
+                        fontSize: '14px',
+                        color: '#000000',
+                        letterSpacing: '0.04em'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#B3F0F2';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }}
+                      onClick={() => {
+                        setSelectedAdmissionSubject(subject);
+                        setActiveTab('Admissions');
+                        setShowAdmissionDropdown(false);
+                      }}
+                    >
+                      {subject}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             
             {/* Saved Tab */}
             <button 
@@ -439,7 +533,7 @@ export default function PracticePage() {
               </h3>
             
             {/* Question Packs List */}
-            {questionPacks.filter(pack => pack.subject === selectedSubject).map((pack) => (
+            {getPacksByCategory('A Level', selectedSubject).map((pack) => (
               <div key={pack.id} style={{
                 position: 'relative',
                 marginBottom: '60px'
@@ -517,28 +611,98 @@ export default function PracticePage() {
                     height: '100%',
                     padding: '20px',
                     display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-start'
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
                   }}>
+                    <div>
+                      <div style={{
+                        fontFamily: "'Madimi One', sans-serif",
+                        fontSize: '16px',
+                        color: '#000000',
+                        marginBottom: '8px'
+                      }}>
+                        {pack.name}
+                      </div>
+                      <div style={{
+                        fontSize: '12px',
+                        color: '#666',
+                        marginBottom: '12px'
+                      }}>
+                        {pack.subject} • Created {new Date(pack.created_at).toLocaleDateString()}
+                      </div>
+                    </div>
+                    
+                    {/* Practice/Review Mode Buttons */}
                     <div style={{
-                      fontFamily: "'Madimi One', sans-serif",
-                      fontSize: '16px',
-                      color: '#000000'
+                      display: 'flex',
+                      gap: '12px',
+                      alignItems: 'center'
                     }}>
-                      {pack.title}
-                      {pack.completed && (
-                        <div style={{
-                          display: 'inline-block',
-                          marginLeft: '10px',
-                          backgroundColor: '#00CED1',
-                          color: '#FFFFFF',
-                          padding: '4px 8px',
+                      <Link 
+                        href={`/view-pack/${pack.id}`}
+                        style={{
+                          backgroundColor: '#4CAF50',
+                          color: 'white',
+                          padding: '8px 16px',
                           borderRadius: '4px',
-                          fontSize: '12px'
-                        }}>
-                          Completed
-                        </div>
-                      )}
+                          textDecoration: 'none',
+                          fontSize: '12px',
+                          fontWeight: '600',
+                          transition: 'background-color 0.3s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#45a049';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#4CAF50';
+                        }}
+                      >
+                        📖 VIEW
+                      </Link>
+                      
+                      <Link 
+                        href={`/practice-session/${pack.id}`}
+                        style={{
+                          backgroundColor: '#2196F3',
+                          color: 'white',
+                          padding: '8px 16px',
+                          borderRadius: '4px',
+                          textDecoration: 'none',
+                          fontSize: '12px',
+                          fontWeight: '600',
+                          transition: 'background-color 0.3s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#1976D2';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#2196F3';
+                        }}
+                      >
+                        🎯 PRACTICE
+                      </Link>
+                      
+                      <Link 
+                        href={`/review/${pack.id}`}
+                        style={{
+                          backgroundColor: '#9C27B0',
+                          color: 'white',
+                          padding: '8px 16px',
+                          borderRadius: '4px',
+                          textDecoration: 'none',
+                          fontSize: '12px',
+                          fontWeight: '600',
+                          transition: 'background-color 0.3s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#7B1FA2';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#9C27B0';
+                        }}
+                      >
+                        📝 REVIEW
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -548,7 +712,7 @@ export default function PracticePage() {
           )}
 
           {/* Admissions Content */}
-          {activeTab === 'Admissions' && (
+          {activeTab === 'Admissions' && selectedAdmissionSubject && (
             <div style={{ marginBottom: '40px' }}>
               <h3 style={{
                 fontFamily: "'Madimi One', sans-serif",
@@ -558,11 +722,11 @@ export default function PracticePage() {
                 marginBottom: '15px',
                 letterSpacing: '0.04em'
               }}>
-                Admissions Practice Packs
+                {selectedAdmissionSubject} Practice Packs
               </h3>
             
-            {/* Admission Packs List */}
-            {admissionPacks.map((pack) => (
+            {/* Real Question Packs List */}
+            {getPacksByCategory('Admissions').filter(pack => pack.subject === selectedAdmissionSubject).map((pack) => (
               <div key={pack.id} style={{
                 position: 'relative',
                 marginBottom: '60px'
@@ -640,35 +804,98 @@ export default function PracticePage() {
                     height: '100%',
                     padding: '20px',
                     display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-start'
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
                   }}>
-                    <div style={{
-                      fontFamily: "'Madimi One', sans-serif",
-                      fontSize: '16px',
-                      color: '#000000'
-                    }}>
-                      {pack.title}
+                    <div>
+                      <div style={{
+                        fontFamily: "'Madimi One', sans-serif",
+                        fontSize: '16px',
+                        color: '#000000',
+                        marginBottom: '8px'
+                      }}>
+                        {pack.name}
+                      </div>
                       <div style={{
                         fontSize: '12px',
                         color: '#666',
-                        marginTop: '4px'
+                        marginBottom: '12px'
                       }}>
-                        {pack.category}
+                        {pack.subject} • Created {new Date(pack.created_at).toLocaleDateString()}
                       </div>
-                      {pack.completed && (
-                        <div style={{
-                          display: 'inline-block',
-                          marginLeft: '10px',
-                          backgroundColor: '#00CED1',
-                          color: '#FFFFFF',
-                          padding: '4px 8px',
+                    </div>
+                    
+                    {/* Practice/Review Mode Buttons */}
+                    <div style={{
+                      display: 'flex',
+                      gap: '12px',
+                      alignItems: 'center'
+                    }}>
+                      <Link 
+                        href={`/view-pack/${pack.id}`}
+                        style={{
+                          backgroundColor: '#4CAF50',
+                          color: 'white',
+                          padding: '8px 16px',
                           borderRadius: '4px',
-                          fontSize: '12px'
-                        }}>
-                          Completed
-                        </div>
-                      )}
+                          textDecoration: 'none',
+                          fontSize: '12px',
+                          fontWeight: '600',
+                          transition: 'background-color 0.3s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#45a049';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#4CAF50';
+                        }}
+                      >
+                        📖 VIEW
+                      </Link>
+                      
+                      <Link 
+                        href={`/practice-session/${pack.id}`}
+                        style={{
+                          backgroundColor: '#2196F3',
+                          color: 'white',
+                          padding: '8px 16px',
+                          borderRadius: '4px',
+                          textDecoration: 'none',
+                          fontSize: '12px',
+                          fontWeight: '600',
+                          transition: 'background-color 0.3s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#1976D2';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#2196F3';
+                        }}
+                      >
+                        🎯 PRACTICE
+                      </Link>
+                      
+                      <Link 
+                        href={`/review/${pack.id}`}
+                        style={{
+                          backgroundColor: '#9C27B0',
+                          color: 'white',
+                          padding: '8px 16px',
+                          borderRadius: '4px',
+                          textDecoration: 'none',
+                          fontSize: '12px',
+                          fontWeight: '600',
+                          transition: 'background-color 0.3s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#7B1FA2';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#9C27B0';
+                        }}
+                      >
+                        📝 REVIEW
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -688,11 +915,23 @@ export default function PracticePage() {
                 marginBottom: '15px',
                 letterSpacing: '0.04em'
               }}>
-                Saved Practice Packs
+                All Practice Packs
               </h3>
               
-              {/* Saved Packs List */}
-              {savedPacks.map((pack) => (
+              {/* Loading State */}
+              {loading ? (
+                <div style={{
+                  textAlign: 'center',
+                  padding: '60px',
+                  color: '#666',
+                  fontSize: '16px'
+                }}>
+                  Loading your practice packs...
+                </div>
+              ) : (
+                <>
+                  {/* All Packs List */}
+                  {questionPacks.map((pack) => (
                 <div key={pack.id} style={{
                   position: 'relative',
                   marginBottom: '60px'
@@ -770,44 +1009,109 @@ export default function PracticePage() {
                       height: '100%',
                       padding: '20px',
                       display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'flex-start'
+                      justifyContent: 'space-between',
+                      alignItems: 'center'
                     }}>
-                      <div style={{
-                        fontFamily: "'Madimi One', sans-serif",
-                        fontSize: '16px',
-                        color: '#000000'
-                      }}>
-                        {pack.title}
+                      <div>
+                        <div style={{
+                          fontFamily: "'Madimi One', sans-serif",
+                          fontSize: '16px',
+                          color: '#000000',
+                          marginBottom: '8px'
+                        }}>
+                          {pack.name}
+                        </div>
                         <div style={{
                           fontSize: '12px',
                           color: '#666',
-                          marginTop: '4px'
+                          marginBottom: '12px'
                         }}>
-                          {pack.category}
+                          {pack.subject} • Created {new Date(pack.created_at).toLocaleDateString()}
                         </div>
-                        {pack.completed && (
-                          <div style={{
-                            display: 'inline-block',
-                            marginLeft: '10px',
-                            backgroundColor: '#00CED1',
-                            color: '#FFFFFF',
-                            padding: '4px 8px',
+                      </div>
+                      
+                      {/* Practice/Review Mode Buttons */}
+                      <div style={{
+                        display: 'flex',
+                        gap: '12px',
+                        alignItems: 'center'
+                      }}>
+                        <Link 
+                          href={`/view-pack/${pack.id}`}
+                          style={{
+                            backgroundColor: '#4CAF50',
+                            color: 'white',
+                            padding: '8px 16px',
                             borderRadius: '4px',
-                            fontSize: '12px'
-                          }}>
-                            Completed
-                          </div>
-                        )}
+                            textDecoration: 'none',
+                            fontSize: '12px',
+                            fontWeight: '600',
+                            transition: 'background-color 0.3s'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#45a049';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#4CAF50';
+                          }}
+                        >
+                          📖 VIEW
+                        </Link>
+                        
+                        <Link 
+                          href={`/practice-session/${pack.id}`}
+                          style={{
+                            backgroundColor: '#2196F3',
+                            color: 'white',
+                            padding: '8px 16px',
+                            borderRadius: '4px',
+                            textDecoration: 'none',
+                            fontSize: '12px',
+                            fontWeight: '600',
+                            transition: 'background-color 0.3s'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#1976D2';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#2196F3';
+                          }}
+                        >
+                          🎯 PRACTICE
+                        </Link>
+                        
+                        <Link 
+                          href={`/review/${pack.id}`}
+                          style={{
+                            backgroundColor: '#9C27B0',
+                            color: 'white',
+                            padding: '8px 16px',
+                            borderRadius: '4px',
+                            textDecoration: 'none',
+                            fontSize: '12px',
+                            fontWeight: '600',
+                            transition: 'background-color 0.3s'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#7B1FA2';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#9C27B0';
+                          }}
+                        >
+                          📝 REVIEW
+                        </Link>
                       </div>
                     </div>
                   </div>
                 </div>
               ))}
+                </>
+              )}
             </div>
           )}
 
-          {/* Default message when no tab is selected */}
+          {/* Default messages when no subject is selected */}
           {activeTab === 'A Level' && !selectedSubject && (
             <div style={{
               textAlign: 'center',
@@ -817,6 +1121,18 @@ export default function PracticePage() {
               fontFamily: "'Madimi One', sans-serif"
             }}>
               Hover over A Level to select a subject
+            </div>
+          )}
+          
+          {activeTab === 'Admissions' && !selectedAdmissionSubject && (
+            <div style={{
+              textAlign: 'center',
+              padding: '60px',
+              color: '#999999',
+              fontSize: '18px',
+              fontFamily: "'Madimi One', sans-serif"
+            }}>
+              Hover over Admissions to select a subject (TSA available)
             </div>
           )}
           

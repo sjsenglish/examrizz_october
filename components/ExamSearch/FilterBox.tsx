@@ -1,8 +1,22 @@
 import React from 'react';
+import { useRefinementList, useClearRefinements } from 'react-instantsearch';
 import { Button } from '../ui/Button';
 import './FilterBox.css';
 
-export const FilterBox: React.FC = () => {
+interface FilterBoxProps {
+  onHideFilters: () => void;
+}
+
+export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters }) => {
+  const questionTypeRefinement = useRefinementList({
+    attribute: 'question_type',
+  });
+  
+  const subTypesRefinement = useRefinementList({
+    attribute: 'sub_types',
+  });
+  
+  const { refine: clearAllFilters } = useClearRefinements();
   return (
     <div className="filter-box-container">
       <div className="filter-box">
@@ -13,36 +27,50 @@ export const FilterBox: React.FC = () => {
 
         {/* Filter Content Grid */}
         <div className="filter-grid">
-          {/* Column 1 */}
+          {/* Column 1 - Question Types */}
           <div className="filter-column">
             <label className="filter-option">
-              <input type="checkbox" className="filter-checkbox primary" />
+              <input type="checkbox" className="filter-checkbox primary" disabled />
               <span>Question Type</span>
             </label>
             
-            <label className="filter-option">
-              <input type="checkbox" className="filter-checkbox secondary" />
-              <span>Critical Thinking</span>
-            </label>
+            {questionTypeRefinement.items.map((item) => (
+              <label key={item.value} className="filter-option">
+                <input 
+                  type="checkbox" 
+                  className="filter-checkbox secondary"
+                  checked={item.isRefined}
+                  onChange={() => questionTypeRefinement.refine(item.value)}
+                />
+                <span>{item.label} ({item.count})</span>
+              </label>
+            ))}
           </div>
 
-          {/* Column 2 */}
+          {/* Column 2 - Sub Types */}
           <div className="filter-column">
             <label className="filter-option">
-              <input type="checkbox" className="filter-checkbox primary" />
+              <input type="checkbox" className="filter-checkbox primary" disabled />
               <span>Sub Type</span>
             </label>
             
-            <label className="filter-option">
-              <input type="checkbox" className="filter-checkbox secondary" />
-              <span>Problem Solving</span>
-            </label>
+            {subTypesRefinement.items.map((item) => (
+              <label key={item.value} className="filter-option">
+                <input 
+                  type="checkbox" 
+                  className="filter-checkbox secondary"
+                  checked={item.isRefined}
+                  onChange={() => subTypesRefinement.refine(item.value)}
+                />
+                <span>{item.label} ({item.count})</span>
+              </label>
+            ))}
           </div>
 
-          {/* Column 3 */}
+          {/* Column 3 - Placeholder for Year */}
           <div className="filter-column">
             <label className="filter-option">
-              <input type="checkbox" className="filter-checkbox primary" />
+              <input type="checkbox" className="filter-checkbox primary" disabled />
               <span>Year</span>
             </label>
           </div>
@@ -50,8 +78,8 @@ export const FilterBox: React.FC = () => {
 
         {/* Control Buttons */}
         <div className="filter-controls">
-          <Button variant="ghost" size="sm">clear filters</Button>
-          <Button variant="ghost" size="sm">hide filters</Button>
+          <Button variant="ghost" size="sm" onClick={() => clearAllFilters()}>clear filters</Button>
+          <Button variant="ghost" size="sm" onClick={onHideFilters}>hide filters</Button>
         </div>
       </div>
     </div>

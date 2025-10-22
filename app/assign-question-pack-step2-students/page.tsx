@@ -1,24 +1,97 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { getCurrentUser, ensureTeacherProfile } from '../../lib/supabase.ts';
+import { createPackAssignment } from '../../lib/teacherAssignments';
 import '../../styles/globals.css';
 
 export default function AssignQuestionPackStep2StudentsPage() {
+  const router = useRouter();
   const [timeLimit, setTimeLimit] = useState(false);
   const [timeLimitValue, setTimeLimitValue] = useState(60);
   const [randomizeQuestions, setRandomizeQuestions] = useState(true);
   const [emailNotification, setEmailNotification] = useState(true);
   const [showInDashboard, setShowInDashboard] = useState(true);
   const [instructions, setInstructions] = useState("This covers topics from Week 3. Attempt all questions and flag any you find confusing.");
+  const [dueDate, setDueDate] = useState('');
+  const [dueTime, setDueTime] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [selectedStudents, setSelectedStudents] = useState<any[]>([]);
+  const [packInfo, setPackInfo] = useState<any>(null);
 
-  // Mock selected students data (in a real app, this would come from navigation state)
-  const selectedStudents = [
-    { name: 'Sarah M.', class: 'Year 12 Set 1' },
-    { name: 'Alex K.', class: 'Year 12 Set 1' },
-    { name: 'Jamie L.', class: 'Year 12 Set 1' }
-  ];
+  useEffect(() => {
+    // Get data from sessionStorage
+    const studentsData = sessionStorage.getItem('selectedStudents');
+    const packData = sessionStorage.getItem('packInfo');
+    
+    if (studentsData) {
+      setSelectedStudents(JSON.parse(studentsData));
+    }
+    
+    if (packData) {
+      setPackInfo(JSON.parse(packData));
+    }
+  }, []);
+
+  const handleAssign = async () => {
+    if (!packInfo || selectedStudents.length === 0) {
+      alert('Missing pack or student information');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const currentUser = await getCurrentUser();
+      if (!currentUser) {
+        alert('You must be logged in to assign packs');
+        return;
+      }
+
+      // Ensure user has teacher profile
+      const userProfile = await ensureTeacherProfile(currentUser.id, currentUser.email || '');
+      if (!userProfile) {
+        alert('Failed to create or get teacher profile');
+        return;
+      }
+
+      // Prepare assignment data
+      const assignmentData = {
+        assignedToUserIds: selectedStudents.map(s => s.id),
+        dueDate: dueDate && dueTime ? `${dueDate}T${dueTime}:00.000Z` : undefined,
+        timeLimitMinutes: timeLimit ? timeLimitValue : undefined,
+        randomizeQuestions,
+        instructions: instructions.trim() || undefined,
+        emailNotification,
+        showInDashboard,
+        scoreThresholdPercent: 60 // Default threshold
+      };
+
+      const assignments = await createPackAssignment(
+        packInfo.id,
+        currentUser.id,
+        assignmentData
+      );
+
+      if (assignments.length > 0) {
+        // Clear sessionStorage
+        sessionStorage.removeItem('selectedStudents');
+        sessionStorage.removeItem('packInfo');
+        
+        // Redirect to teacher dashboard
+        router.push('/teacher');
+      } else {
+        alert('Failed to create assignments');
+      }
+    } catch (error) {
+      console.error('Error creating assignment:', error);
+      alert('Error creating assignment');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div style={{ 
@@ -187,52 +260,36 @@ export default function AssignQuestionPackStep2StudentsPage() {
                 Due Date
               </h4>
               <div style={{ display: 'flex', gap: '10px' }}>
-                <div style={{
-                  backgroundColor: '#D3F6F7',
-                  border: '1px solid #000000',
-                  borderRadius: '0px',
-                  padding: '8px 12px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  width: '120px',
-                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
-                }}>
-                  <span style={{
+                <input
+                  type="date"
+                  value={dueDate}
+                  onChange={(e) => setDueDate(e.target.value)}
+                  style={{
+                    backgroundColor: '#D3F6F7',
+                    border: '1px solid #000000',
+                    borderRadius: '0px',
+                    padding: '8px 12px',
                     fontFamily: "'Figtree', sans-serif",
                     fontSize: '14px',
-                    color: '#999999',
-                    letterSpacing: '0.04em'
-                  }}>
-                    DD/MM/YYYY
-                  </span>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 18L15 12L9 6" stroke="#00CED1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <div style={{
-                  backgroundColor: '#D3F6F7',
-                  border: '1px solid #000000',
-                  borderRadius: '0px',
-                  padding: '8px 12px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  width: '100px',
-                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
-                }}>
-                  <span style={{
+                    letterSpacing: '0.04em',
+                    width: '140px'
+                  }}
+                />
+                <input
+                  type="time"
+                  value={dueTime}
+                  onChange={(e) => setDueTime(e.target.value)}
+                  style={{
+                    backgroundColor: '#D3F6F7',
+                    border: '1px solid #000000',
+                    borderRadius: '0px',
+                    padding: '8px 12px',
                     fontFamily: "'Figtree', sans-serif",
                     fontSize: '14px',
-                    color: '#999999',
-                    letterSpacing: '0.04em'
-                  }}>
-                    HH:MM
-                  </span>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 18L15 12L9 6" stroke="#00CED1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
+                    letterSpacing: '0.04em',
+                    width: '100px'
+                  }}
+                />
               </div>
             </div>
 
@@ -488,7 +545,7 @@ export default function AssignQuestionPackStep2StudentsPage() {
                 marginBottom: '15px',
                 letterSpacing: '0.04em'
               }}>
-                Pack: Calculus Basics Homework
+                Pack: {packInfo?.name || 'Question Pack'}
               </div>
               
               <div style={{
@@ -509,8 +566,8 @@ export default function AssignQuestionPackStep2StudentsPage() {
                 letterSpacing: '0.04em'
               }}>
                 {selectedStudents.map((student, index) => (
-                  <span key={index}>
-                    {student.name} ({student.class}){index < selectedStudents.length - 1 ? ', ' : ''}
+                  <span key={student.id}>
+                    {student.full_name} ({student.class_name || 'No class'}){index < selectedStudents.length - 1 ? ', ' : ''}
                   </span>
                 ))}
               </div>
@@ -522,7 +579,7 @@ export default function AssignQuestionPackStep2StudentsPage() {
                 marginBottom: '8px',
                 letterSpacing: '0.04em'
               }}>
-                Due: 15/10/2025 at 23:59
+                Due: {dueDate && dueTime ? `${dueDate} at ${dueTime}` : 'No due date set'}
               </div>
               
               <div style={{
@@ -592,9 +649,11 @@ export default function AssignQuestionPackStep2StudentsPage() {
                 </button>
               </Link>
 
-              <Link href="/teacher" style={{ textDecoration: 'none' }}>
-                <button style={{
-                  backgroundColor: '#00CED1',
+              <button 
+                onClick={handleAssign}
+                disabled={loading}
+                style={{
+                  backgroundColor: loading ? '#CCC' : '#00CED1',
                   border: 'none',
                   borderRadius: '8px',
                   padding: '12px 24px',
@@ -602,19 +661,35 @@ export default function AssignQuestionPackStep2StudentsPage() {
                   fontSize: '14px',
                   fontWeight: 'bold',
                   color: '#FFFFFF',
-                  cursor: 'pointer',
+                  cursor: loading ? 'not-allowed' : 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
                   width: '108px',
                   justifyContent: 'center'
-                }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5 13L9 17L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                  Assign
-                </button>
-              </Link>
+                }}
+              >
+                {loading ? (
+                  <>
+                    <div style={{
+                      width: '16px',
+                      height: '16px',
+                      border: '2px solid #FFF',
+                      borderTop: '2px solid transparent',
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite'
+                    }} />
+                    Assigning...
+                  </>
+                ) : (
+                  <>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5 13L9 17L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    Assign
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>

@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { InstantSearch, useSearchBox, Hits, useStats, Configure } from 'react-instantsearch';
+import { searchClient, INDEX_NAME } from '../../lib/algolia';
 import { SettingsButton } from '../SettingsButton';
 import { TabIcon } from '../icons/TabIcon';
 import { Button } from '../ui/Button';
@@ -11,17 +13,88 @@ import '../../styles/globals.css';
 import '../../styles/pages/exam-search.css';
 import './ExamSearch.css';
 
+const SearchBar: React.FC = () => {
+  const { query, refine } = useSearchBox();
+  
+  return (
+    <input 
+      type="text" 
+      className="search-bar" 
+      placeholder="Search for past exam questions..."
+      aria-label="Search questions"
+      value={query}
+      onChange={(e) => refine(e.target.value)}
+    />
+  );
+};
+
+const ResultsCount: React.FC = () => {
+  const { nbHits } = useStats();
+  return <span className="results-count">{nbHits.toLocaleString()} results found</span>;
+};
+
 const ExamSearch: React.FC = () => {
   const [activeTab, setActiveTab] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('');
+  const [selectedAdmissionsTest, setSelectedAdmissionsTest] = useState('');
   const [showALevelDropdown, setShowALevelDropdown] = useState(false);
+  const [showAdmissionsDropdown, setShowAdmissionsDropdown] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
 
   const aLevelSubjects = ['Maths', 'Physics', 'Economics', 'Biology', 'Chemistry'];
+  const admissionsTests = ['BMAT', 'TSA', 'Interview'];
 
+  const showTSAResults = activeTab === 'Admissions' && selectedAdmissionsTest === 'TSA';
 
   return (
-    <div className="exam-search-wrapper">
-      <div className="exam-search-container">
+    <InstantSearch 
+      searchClient={searchClient} 
+      indexName={INDEX_NAME}
+      future={{ preserveSharedStateOnUnmount: true }}
+    >
+      <Configure hitsPerPage={20} />
+      <div className="exam-search-wrapper">
+        {/* Navbar */}
+        <nav className="navbar" style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '60px',
+          backgroundColor: '#F8F8F5',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0 40px',
+          zIndex: 100,
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+        }}>
+          <Link href="/" style={{ textDecoration: 'none' }}>
+            <h1 style={{
+              fontFamily: "'Madimi One', cursive",
+              fontSize: '24px',
+              fontWeight: '400',
+              color: '#000000',
+              margin: 0,
+              cursor: 'pointer'
+            }}>examrizzsearch</h1>
+          </Link>
+          <button className="hamburger-button" style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: '5px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px'
+          }}>
+            <div style={{ width: '24px', height: '2px', backgroundColor: '#000', borderRadius: '1px' }}></div>
+            <div style={{ width: '24px', height: '2px', backgroundColor: '#000', borderRadius: '1px' }}></div>
+            <div style={{ width: '24px', height: '2px', backgroundColor: '#000', borderRadius: '1px' }}></div>
+          </button>
+        </nav>
+
+        <div className="exam-search-container" style={{ paddingTop: '80px' }}>
         <SettingsButton />
         
         {/* Cloud Icons */}
@@ -38,12 +111,7 @@ const ExamSearch: React.FC = () => {
         
         {/* Search Bar */}
         <section className="search-section">
-          <input 
-            type="text" 
-            className="search-bar" 
-            placeholder="Search for past exam questions..."
-            aria-label="Search questions"
-          />
+          <SearchBar />
         </section>
 
         {/* Tabs */}
@@ -83,31 +151,65 @@ const ExamSearch: React.FC = () => {
             )}
           </div>
           
-          {/* Admissions Tab */}
-          <button 
-            className={`tab ${activeTab === 'Admissions' ? 'tab-active' : ''}`}
-            onClick={() => setActiveTab('Admissions')}
-            aria-label="Admissions tab"
+          {/* Admissions Tab with Dropdown */}
+          <div 
+            className="tab-wrapper"
+            onMouseEnter={() => setShowAdmissionsDropdown(true)}
+            onMouseLeave={() => setShowAdmissionsDropdown(false)}
           >
-            <TabIcon isActive={activeTab === 'Admissions'} />
-            <span className="tab-text">Admissions</span>
-          </button>
+            <button 
+              className={`tab ${activeTab === 'Admissions' ? 'tab-active' : ''}`}
+              onClick={() => setActiveTab('Admissions')}
+              aria-label="Admissions tab"
+            >
+              <TabIcon isActive={activeTab === 'Admissions'} />
+              <span className="tab-text">Admissions</span>
+            </button>
+            
+            {/* Admissions Dropdown */}
+            {showAdmissionsDropdown && (
+              <div className="dropdown-menu">
+                {admissionsTests.map((test) => (
+                  <button
+                    key={test}
+                    className="dropdown-item"
+                    onClick={() => {
+                      setSelectedAdmissionsTest(test);
+                      setActiveTab('Admissions');
+                      setShowAdmissionsDropdown(false);
+                    }}
+                  >
+                    {test}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </nav>
 
         {/* Admissions Filter Box */}
-        {activeTab === 'Admissions' && <FilterBox />}
+        {showTSAResults && showFilters && (
+          <FilterBox onHideFilters={() => setShowFilters(false)} />
+        )}
 
         {/* Results Section */}
-        <section className="results-section">
-          <div className="results-header">
-            <span className="results-count">346 results found</span>
-            <Button variant="ghost" size="sm">show filters</Button>
-          </div>
+        {showTSAResults && (
+          <section className="results-section">
+            <div className="results-header">
+              <ResultsCount />
+              {!showFilters && (
+                <Button variant="ghost" size="sm" onClick={() => setShowFilters(true)}>
+                  show filters
+                </Button>
+              )}
+            </div>
 
-          <QuestionCard />
-        </section>
+            <Hits hitComponent={QuestionCard} />
+          </section>
+        )}
+        </div>
       </div>
-    </div>
+    </InstantSearch>
   );
 };
 

@@ -1,13 +1,156 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { InstantSearch, SearchBox, Hits, Configure } from 'react-instantsearch';
+import { searchClient, getIndexForSubject } from '../../lib/algolia';
+import { getSubjectConfig } from '../../lib/subjectConfig';
+import { createPracticePack } from '../../lib/supabaseQuestionPacks.js';
+import { useRouter } from 'next/navigation';
+import { QuestionPreview } from '../../components/QuestionPreview/QuestionPreview';
+import { QuestionModal } from '../../components/QuestionModal/QuestionModal';
 import './select-practice-questions.css';
 
+interface PackData {
+  packName: string;
+  subject: string;
+  numberOfQuestions: number;
+  fontSize: number;
+  filters: Record<string, string[]>;
+  orderMode: string;
+}
+
+
+// QuestionHit component - now uses QuestionPreview
+const QuestionHit: React.FC<{ hit: any; isSelected: boolean; onToggle: () => void; onViewFull: () => void; subject: string }> = ({ hit, isSelected, onToggle, onViewFull, subject }) => {
+  return (
+    <QuestionPreview
+      hit={hit}
+      isSelected={isSelected}
+      onToggle={onToggle}
+      onViewFull={onViewFull}
+      subject={subject}
+    />
+  );
+};
+
 export default function SelectPracticeQuestionsPage() {
-  const [selectedQuestions, setSelectedQuestions] = useState(111);
+  const router = useRouter();
+  const [packData, setPackData] = useState<PackData | null>(null);
+  const [selectedQuestions, setSelectedQuestions] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isCreatingPack, setIsCreatingPack] = useState(false);
+  const [modalQuestion, setModalQuestion] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showOverview, setShowOverview] = useState(true);
+
+  useEffect(() => {
+    // Load pack data from session storage
+    const storedPackData = sessionStorage.getItem('packData');
+    if (storedPackData) {
+      const parsedData = JSON.parse(storedPackData);
+      setPackData(parsedData);
+    } else {
+      // Redirect back if no pack data
+      router.push('/create-practice-pack');
+    }
+  }, [router]);
+
+  const handleQuestionToggle = (question: any) => {
+    const isSelected = selectedQuestions.some(q => q.objectID === question.objectID);
+    if (isSelected) {
+      setSelectedQuestions(selectedQuestions.filter(q => q.objectID !== question.objectID));
+    } else {
+      setSelectedQuestions([...selectedQuestions, question]);
+    }
+  };
+
+  const handleViewFullQuestion = (question: any) => {
+    setModalQuestion(question);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setModalQuestion(null);
+  };
+
+  const handleModalToggleSelection = () => {
+    if (modalQuestion) {
+      handleQuestionToggle(modalQuestion);
+    }
+  };
+
+  const handleCreatePack = async () => {
+    if (!packData || selectedQuestions.size === 0) return;
+    
+    setIsCreatingPack(true);
+    try {
+      const result = await createPracticePack({
+        name: packData.packName,
+        subject: packData.subject,
+        questionIds: selectedQuestions.map(q => q.objectID),
+        settings: {
+          fontSize: packData.fontSize,
+          orderMode: packData.orderMode,
+          filters: packData.filters
+        }
+      });
+
+      if (result.success) {
+        // Clear session storage and redirect
+        sessionStorage.removeItem('packData');
+        router.push('/practice');
+      } else {
+        console.error('Failed to create pack:', result.error);
+        alert('Failed to create practice pack. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error creating pack:', error);
+      alert('Failed to create practice pack. Please try again.');
+    } finally {
+      setIsCreatingPack(false);
+    }
+  };
+
+  // Build search filters based on pack data
+  const getSearchFilters = () => {
+    if (!packData) return '';
+    
+    const subjectConfig = getSubjectConfig(packData.subject);
+    
+    if (!subjectConfig || !subjectConfig.available) {
+      // Subject not available, return filter that matches nothing
+      return 'objectID:"none"';
+    }
+    
+    // Build filters from the new filter structure
+    const filterClauses: string[] = [];
+    
+    if (subjectConfig.filters && packData.filters) {
+      for (const filterConfig of subjectConfig.filters) {
+        const selectedValues = packData.filters[filterConfig.id] || [];
+        if (selectedValues.length > 0) {
+          const clause = selectedValues
+            .map(value => `${filterConfig.field}:"${value}"`)
+            .join(' OR ');
+          filterClauses.push(`(${clause})`);
+        }
+      }
+    }
+    
+    return filterClauses.join(' AND ');
+  };
+
+  // Get the appropriate index name for the subject
+  const getIndexName = () => {
+    if (!packData) return null;
+    return getIndexForSubject(packData.subject) || 'copy_tsa_questions'; // Fallback for compatibility
+  };
+
+  if (!packData) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="page-background">
@@ -25,130 +168,214 @@ export default function SelectPracticeQuestionsPage() {
 
       {/* Main Content */}
       <div className="main-content">
-        {/* Modal */}
-        <div className="modal-container">
-          {/* Close Button */}
-          <Link href="/practice" className="close-button">
-            ×
-          </Link>
+        <InstantSearch searchClient={searchClient} indexName={getIndexName() || 'copy_tsa_questions'}>
+          <Configure filters={getSearchFilters()} hitsPerPage={20} />
+          
+          {/* Modal */}
+          <div className="modal-container">
+            {/* Close Button */}
+            <Link href="/practice" className="close-button">
+              ×
+            </Link>
 
-          {/* Header */}
-          <h1 className="header-title">
-            Create Your Practice Pack
-          </h1>
+            {/* Header */}
+            <h1 className="header-title">
+              Create Your Practice Pack: {packData.packName}
+            </h1>
 
-          {/* Step indicator */}
-          <div className="step-indicator">
-            Step 2 of 2
-          </div>
+            {/* Step indicator */}
+            <div className="step-indicator">
+              Step 2 of 2 - {packData.subject} Questions
+            </div>
 
-          {/* Inner Container - matches create-question-pack styling */}
-          <div className="inner-container">
-            {/* Select Questions Section */}
-            <div className="select-questions-section">
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '15px' }}>
-                <div>
-                  <h2 className="section-title">Select Questions</h2>
-                  <p className="section-description">
-                    Choose 123 questions from 260 available results below.
-                  </p>
-                </div>
-              </div>
-
-              {/* Questions Selected Badge - positioned above and to right of search bar within 75% width */}
-              <div style={{ width: '75%', display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
-                <div className="questions-selected-badge">
-                  {selectedQuestions} questions selected
-                </div>
-              </div>
-
-              {/* Search Bar */}
-              <div className="search-container" style={{ marginBottom: '15px' }}>
-                <input
-                  type="text"
-                  placeholder="Search for questions by year, question number, content, ..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="search-input"
-                />
-                <button className="search-button">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/>
-                    <path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2"/>
-                  </svg>
-                </button>
-              </div>
-
-              {/* Questions Container with Side Controls */}
-              <div className="questions-and-controls-section">
-                <div className="questions-container">
-                  {/* First Question - Selected */}
-                  <div className="question-card selected">
-                    <div className="question-header">
-                      <div className="question-checkbox-container">
-                        <input type="checkbox" checked className="question-checkbox" />
-                        <span className="question-number">1</span>
-                      </div>
-                    </div>
-                    <div className="question-content">
-                      {/* Question content area - empty as shown in image */}
-                    </div>
-                  </div>
-
-                  {/* Second Question - Unselected */}
-                  <div className="question-card">
-                    <div className="question-header">
-                      <div className="question-checkbox-container">
-                        <input type="checkbox" className="question-checkbox" />
-                      </div>
-                    </div>
-                    <div className="question-content">
-                      {/* Question content area - empty as shown in image */}
-                    </div>
+            {/* Inner Container */}
+            <div className="inner-container">
+              {/* Select Questions Section */}
+              <div className="select-questions-section">
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '15px' }}>
+                  <div>
+                    <h2 className="section-title">Select Questions</h2>
+                    <p className="section-description">
+                      Choose up to {packData.numberOfQuestions} questions from the available results below.
+                    </p>
                   </div>
                 </div>
 
-                {/* Side Controls - now to the right of questions container */}
-                <div className="side-controls-right">
-                  <button className="control-button shuffle-button">
-                    <span>Shuffle</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
+                {/* Question Overview Section */}
+                {showOverview && selectedQuestions.length > 0 && (
+                  <div style={{ marginBottom: '20px' }}>
+                    <h3 style={{ 
+                      fontFamily: "'Madimi One', sans-serif",
+                      fontSize: '18px',
+                      fontWeight: '400',
+                      color: '#000000',
+                      margin: '0 0 15px 0'
+                    }}>
+                      Question Overview
+                    </h3>
+                    <div style={{ 
+                      display: 'flex', 
+                      flexWrap: 'wrap', 
+                      gap: '10px', 
+                      marginBottom: '15px' 
+                    }}>
+                      {selectedQuestions.map((question, index) => (
+                        <button
+                          key={question.objectID}
+                          onClick={() => handleViewFullQuestion(question)}
+                          style={{
+                            fontFamily: "'Madimi One', sans-serif",
+                            fontSize: '16px',
+                            fontWeight: '400',
+                            padding: '12px 20px',
+                            backgroundColor: 'white',
+                            border: '2px solid black',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                            minWidth: '50px',
+                            textAlign: 'center',
+                            transition: 'all 0.2s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#f0f0f0';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = 'white';
+                          }}
+                        >
+                          {index + 1}
+                        </button>
+                      ))}
+                    </div>
+                    <button 
+                      onClick={() => setShowOverview(false)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        fontFamily: "'Figtree', sans-serif",
+                        fontSize: '14px',
+                        color: '#666666',
+                        textDecoration: 'underline',
+                        cursor: 'pointer',
+                        padding: '0',
+                        marginBottom: '15px'
+                      }}
+                    >
+                      hide overview
+                    </button>
+                  </div>
+                )}
 
-                  <button className="control-button fullscreen-button">
-                    <span>Full Screen</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M16 21h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                {!showOverview && selectedQuestions.length > 0 && (
+                  <button 
+                    onClick={() => setShowOverview(true)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      fontFamily: "'Figtree', sans-serif",
+                      fontSize: '14px',
+                      color: '#666666',
+                      textDecoration: 'underline',
+                      cursor: 'pointer',
+                      padding: '0',
+                      marginBottom: '15px'
+                    }}
+                  >
+                    pin overview
                   </button>
+                )}
 
-                  <button className="clear-selection-link">
-                    clear selection
+                {/* Questions Selected Badge */}
+                <div style={{ width: '75%', display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
+                  <div className="questions-selected-badge">
+                    {selectedQuestions.length} questions selected
+                  </div>
+                </div>
+
+                {/* Search Bar using Algolia SearchBox */}
+                <div className="search-container" style={{ marginBottom: '15px' }}>
+                  <SearchBox
+                    placeholder="Search for questions by year, question number, content, ..."
+                    classNames={{
+                      root: 'search-box-root',
+                      form: 'search-box-form',
+                      input: 'search-input',
+                      submit: 'search-button',
+                      reset: 'search-reset'
+                    }}
+                  />
+                </div>
+
+                {/* Questions Container with Side Controls */}
+                <div className="questions-and-controls-section">
+                  <div className="questions-container">
+                    <Hits 
+                      hitComponent={({ hit }) => (
+                        <QuestionHit
+                          hit={hit}
+                          isSelected={selectedQuestions.some(q => q.objectID === hit.objectID)}
+                          onToggle={() => handleQuestionToggle(hit)}
+                          onViewFull={() => handleViewFullQuestion(hit)}
+                          subject={packData?.subject || ''}
+                        />
+                      )}
+                      classNames={{
+                        root: 'hits-root',
+                        list: 'hits-list',
+                        item: 'hits-item'
+                      }}
+                    />
+                  </div>
+
+                  {/* Side Controls */}
+                  <div className="side-controls-right">
+                    <button 
+                      className="clear-selection-link"
+                      onClick={() => setSelectedQuestions([])}
+                    >
+                      clear selection
+                    </button>
+                  </div>
+                </div>
+
+                {/* Navigation Buttons */}
+                <div className="navigation-buttons-compact">
+                  <Link href="/create-practice-pack" className="back-button">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    Back
+                  </Link>
+                  
+                  <button 
+                    className="create-pack-button"
+                    onClick={handleCreatePack}
+                    disabled={selectedQuestions.length === 0 || isCreatingPack}
+                    style={{ 
+                      opacity: selectedQuestions.length === 0 || isCreatingPack ? 0.5 : 1,
+                      cursor: selectedQuestions.length === 0 || isCreatingPack ? 'not-allowed' : 'pointer'
+                    }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5 12l5 5L20 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    {isCreatingPack ? 'Creating...' : 'Create Pack'}
                   </button>
                 </div>
-              </div>
-
-              {/* Navigation Buttons - moved up to fit in smaller container */}
-              <div className="navigation-buttons-compact">
-                <Link href="/create-practice-pack" className="back-button">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                  Back
-                </Link>
-                
-                <button className="create-pack-button">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5 12l5 5L20 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                  Create Pack
-                </button>
               </div>
             </div>
           </div>
-        </div>
+        </InstantSearch>
+        
+        {/* Question Modal */}
+        <QuestionModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          hit={modalQuestion}
+          isSelected={modalQuestion ? selectedQuestions.some(q => q.objectID === modalQuestion.objectID) : false}
+          onToggleSelection={handleModalToggleSelection}
+        />
       </div>
     </div>
   );

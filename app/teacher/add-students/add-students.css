@@ -1,0 +1,437 @@
+@import url('https://fonts.googleapis.com/css2?family=Madimi+One&family=Figtree:wght@400;500;600&display=swap');
+
+/* =============================================================================
+   ADD STUDENTS PAGE LAYOUT
+   ============================================================================= */
+
+.add-students-wrapper {
+  background: #FFFFFF;
+  min-height: 100vh;
+  font-family: 'Figtree', sans-serif;
+  position: relative;
+}
+
+/* =============================================================================
+   NAVBAR
+   ============================================================================= */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #F8F8F5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-logo {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #000;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+}
+
+.navbar-menu {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.navbar-menu-line {
+  width: 20px;
+  height: 2px;
+  background-color: #000;
+  border-radius: 1px;
+}
+
+/* =============================================================================
+   PAGE HEADER
+   ============================================================================= */
+
+.page-header {
+  padding: 100px 40px 30px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  color: #000;
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+}
+
+/* =============================================================================
+   SCHOOL TABS
+   ============================================================================= */
+
+.school-tabs-wrapper {
+  padding: 0 40px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.school-tabs-container {
+  max-width: 1200px;
+}
+
+.school-tabs-label {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 8px;
+  letter-spacing: 0.04em;
+}
+
+.school-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.school-tab {
+  padding: 8px 16px;
+  background: #FFFFFF;
+  border: 1px solid #000;
+  border-radius: 4px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.04em;
+}
+
+.school-tab.active {
+  background: #B3F0F2;
+  color: #000;
+}
+
+.school-tab:hover {
+  background: #E5FAFA;
+}
+
+/* =============================================================================
+   CONTENT CONTAINER
+   ============================================================================= */
+
+.content-container {
+  padding: 0 40px 80px;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* =============================================================================
+   SEARCH AND CONTROLS
+   ============================================================================= */
+
+.students-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 20px;
+  max-width: 1200px;
+}
+
+.search-container {
+  position: relative;
+  flex: 1;
+  max-width: 600px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px;
+  padding-right: 40px;
+  border: 1px solid #000;
+  border-radius: 4px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  background: white;
+  color: #000;
+  letter-spacing: 0.04em;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #999;
+}
+
+.search-input:focus {
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(179, 240, 242, 0.2);
+}
+
+.search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #666;
+  pointer-events: none;
+}
+
+.sort-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sort-label {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  letter-spacing: 0.04em;
+}
+
+.sort-select {
+  padding: 8px 12px;
+  border: 1px solid #000;
+  border-radius: 4px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  background: white;
+  color: #000;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  outline: none;
+}
+
+.sort-select:focus {
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(179, 240, 242, 0.2);
+}
+
+/* =============================================================================
+   TABLE STYLES
+   ============================================================================= */
+
+.table-container {
+  background: #E5FAFA;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+}
+
+.table-header {
+  background: #B3F0F2;
+  display: flex;
+  padding: 12px 0;
+  border: 1px solid #000;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  margin-bottom: 8px;
+}
+
+.header-cell {
+  flex: 1;
+  padding: 0 20px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-cell {
+  flex: 0.3;
+  justify-content: center;
+}
+
+.header-checkbox {
+  background: none;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  color: #000;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.table-body {
+  background: white;
+  border: 1px solid #000;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.table-row {
+  display: flex;
+  border-bottom: 1px solid #000;
+  background: white;
+  transition: background-color 0.2s ease;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-row:hover {
+  background: #F3F2FF;
+}
+
+.table-cell {
+  padding: 12px 20px;
+  font-size: 14px;
+  color: #333;
+  letter-spacing: 0.04em;
+  flex: 1;
+  border-right: 1px solid #000;
+  display: flex;
+  align-items: center;
+}
+
+.table-cell:last-child {
+  border-right: none;
+}
+
+.table-cell.checkbox-cell {
+  flex: 0.3;
+  justify-content: center;
+}
+
+.student-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #B3F0F2;
+}
+
+/* =============================================================================
+   HELP POPUP
+   ============================================================================= */
+
+.help-popup {
+  position: fixed;
+  bottom: 200px;
+  right: 40px;
+  background: white;
+  border: 1px solid #000;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 280px;
+  z-index: 50;
+}
+
+.help-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  color: #666;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+}
+
+.help-content {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  color: #333;
+  letter-spacing: 0.04em;
+  padding-right: 20px;
+}
+
+/* =============================================================================
+   GHOST ICON
+   ============================================================================= */
+
+.ghost-icon {
+  position: fixed;
+  bottom: 60px;
+  right: 60px;
+  z-index: 40;
+}
+
+.ghost-character {
+  font-size: 48px;
+  margin-bottom: -10px;
+  display: block;
+}
+
+.ghost-book {
+  font-size: 24px;
+  display: block;
+  text-align: center;
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
+
+@media (max-width: 1200px) {
+  .page-header,
+  .school-tabs-wrapper,
+  .content-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  .navbar {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .students-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .search-container {
+    max-width: 100%;
+  }
+  
+  .sort-container {
+    justify-content: flex-end;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  .table-header,
+  .table-row {
+    min-width: 800px;
+  }
+  
+  .help-popup {
+    right: 20px;
+    bottom: 160px;
+    max-width: 240px;
+  }
+  
+  .ghost-icon {
+    bottom: 40px;
+    right: 40px;
+  }
+}

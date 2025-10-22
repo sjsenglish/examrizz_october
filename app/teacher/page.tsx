@@ -1,11 +1,79 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getCurrentUser, getUserProfile, ensureTeacherProfile } from '../../lib/supabase.ts';
+import { getTeacherClasses } from '../../lib/teacherClasses';
+import { getTeacherPacksWithAssignments, getTeacherOngoingAssignments } from '../../lib/teacherAssignments';
 import '../../styles/globals.css';
 
 export default function TeacherPage() {
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
+  const [classes, setClasses] = useState<any[]>([]);
+  const [questionPacks, setQuestionPacks] = useState<any[]>([]);
+  const [ongoingAssignments, setOngoingAssignments] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function loadTeacherData() {
+      try {
+        const currentUser = await getCurrentUser();
+        if (!currentUser) {
+          console.error('No authenticated user');
+          setLoading(false);
+          return;
+        }
+
+        setUser(currentUser);
+
+        // Ensure user has a teacher profile (create if needed)
+        const userProfile = await ensureTeacherProfile(currentUser.id, currentUser.email || '');
+        if (!userProfile) {
+          console.error('Failed to create or get teacher profile');
+          setLoading(false);
+          return;
+        }
+
+        // Load teacher's data in parallel
+        const [teacherClasses, teacherPacks, ongoingAssignments] = await Promise.all([
+          getTeacherClasses(currentUser.id),
+          getTeacherPacksWithAssignments(currentUser.id),
+          getTeacherOngoingAssignments(currentUser.id)
+        ]);
+
+        setClasses(teacherClasses);
+        setQuestionPacks(teacherPacks);
+        setOngoingAssignments(ongoingAssignments);
+      } catch (error) {
+        console.error('Error loading teacher data:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadTeacherData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div style={{ 
+        backgroundColor: '#FFFFFF', 
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <div style={{
+          fontFamily: "'Madimi One', sans-serif",
+          fontSize: '18px',
+          color: '#000000'
+        }}>
+          Loading...
+        </div>
+      </div>
+    );
+  }
   return (
     <div style={{ backgroundColor: '#FFFFFF', minHeight: '100vh' }}>
       {/* Navbar */}
@@ -249,8 +317,8 @@ export default function TeacherPage() {
                 gap: '20px'
               }}>
                 {/* Class Cards */}
-                {[1, 2, 3].map((i) => (
-                  <div key={i} style={{
+                {classes.map((classItem) => (
+                  <div key={classItem.id} style={{
                     backgroundColor: '#FFFFFF',
                     border: '1px solid #000000',
                     borderRadius: '4px',
@@ -264,7 +332,7 @@ export default function TeacherPage() {
                       color: '#000000',
                       margin: '0 0 8px 0'
                     }}>
-                      Y12 Set
+                      {classItem.name}
                     </h3>
                     <p style={{
                       fontFamily: "'Madimi One', sans-serif",
@@ -273,7 +341,7 @@ export default function TeacherPage() {
                       fontWeight: 'bold',
                       margin: '0 0 8px 0'
                     }}>
-                      28 students
+                      {classItem.studentCount} students
                     </p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '15px' }}>
                       <div style={{
@@ -287,53 +355,82 @@ export default function TeacherPage() {
                         fontSize: '14px',
                         color: '#000000'
                       }}>
-                        3 active
+                        {ongoingAssignments.length} active
                       </span>
                     </div>
-                    <button style={{
-                      backgroundColor: 'transparent',
-                      border: 'none',
-                      fontFamily: "'Madimi One', sans-serif",
-                      fontSize: '14px',
-                      color: '#0066CC',
-                      cursor: 'pointer',
-                      textDecoration: 'underline',
-                      float: 'right'
-                    }}>
-                      View →
-                    </button>
+                    <Link href={`/teacher/class/${classItem.id}`} style={{ textDecoration: 'none' }}>
+                      <button style={{
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        fontFamily: "'Madimi One', sans-serif",
+                        fontSize: '14px',
+                        color: '#0066CC',
+                        cursor: 'pointer',
+                        textDecoration: 'underline',
+                        float: 'right'
+                      }}>
+                        View →
+                      </button>
+                    </Link>
                   </div>
                 ))}
                 
-                {/* Add Class Card */}
-                <div style={{
-                  backgroundColor: '#E5FAFA',
-                  border: '1px solid #000000',
-                  borderRadius: '4px',
-                  padding: '20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  minHeight: '140px',
-                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
-                }}>
+                {/* Show empty state if no classes */}
+                {classes.length === 0 && (
                   <div style={{
-                    fontSize: '24px',
-                    marginBottom: '8px',
-                    fontWeight: 'bold'
-                  }}>+</div>
-                  <span style={{
-                    fontFamily: "'Madimi One', sans-serif",
-                    fontSize: '14px',
-                    fontWeight: 'bold',
-                    color: '#000000',
-                    letterSpacing: '0.04em'
+                    gridColumn: '1 / -1',
+                    textAlign: 'center',
+                    padding: '40px',
+                    color: '#666',
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '16px'
                   }}>
-                    ADD CLASS
-                  </span>
-                </div>
+                    No classes yet. Start by adding students to create your first class.
+                  </div>
+                )}
+                
+                {/* Add Class Card */}
+                <Link href="/teacher/add-students" style={{ textDecoration: 'none' }}>
+                  <div style={{
+                    backgroundColor: '#E5FAFA',
+                    border: '1px solid #000000',
+                    borderRadius: '4px',
+                    padding: '20px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    minHeight: '140px',
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#B3F0F2';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#E5FAFA';
+                    e.currentTarget.style.transform = 'translateY(0px)';
+                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                  }}>
+                    <div style={{
+                      fontSize: '24px',
+                      marginBottom: '8px',
+                      fontWeight: 'bold'
+                    }}>+</div>
+                    <span style={{
+                      fontFamily: "'Madimi One', sans-serif",
+                      fontSize: '14px',
+                      fontWeight: 'bold',
+                      color: '#000000',
+                      letterSpacing: '0.04em'
+                    }}>
+                      ADD CLASS
+                    </span>
+                  </div>
+                </Link>
               </div>
             </div>
 
@@ -385,152 +482,92 @@ export default function TeacherPage() {
               </div>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                {/* Pack 1 */}
-                <div style={{
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid #000000',
-                  borderRadius: '0px',
-                  padding: '20px',
-                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <div style={{ flex: 1 }}>
-                      <h3 style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '16px',
-                        fontWeight: 'bold',
-                        color: '#000000',
-                        margin: '0 0 8px 0',
-                        letterSpacing: '0.04em'
-                      }}>
-                        Maths A Level Integrals Basics
-                      </h3>
-                      <p style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '14px',
-                        color: '#666666',
-                        margin: '0 0 4px 0',
-                        letterSpacing: '0.04em'
-                      }}>
-                        847 questions completed
-                      </p>
-                      <p style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '14px',
-                        color: '#666666',
-                        margin: '0 0 8px 0',
-                        letterSpacing: '0.04em'
-                      }}>
-                        15/28 done
-                      </p>
-                      <p style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '14px',
-                        color: '#000000',
-                        margin: '0',
-                        letterSpacing: '0.04em'
-                      }}>
-                        6 students need support
-                      </p>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
-                      <span style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '14px',
-                        color: '#666666',
-                        letterSpacing: '0.04em'
-                      }}>
-                        Due tomorrow
-                      </span>
-                      <button style={{
-                        backgroundColor: 'transparent',
-                        border: 'none',
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '14px',
-                        color: '#0066CC',
-                        cursor: 'pointer',
-                        textDecoration: 'underline',
-                        letterSpacing: '0.04em'
-                      }}>
-                        View →
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Pack 2 */}
-                <div style={{
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid #000000',
-                  borderRadius: '0px',
-                  padding: '20px',
-                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <div style={{ flex: 1 }}>
-                      <h3 style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '16px',
-                        fontWeight: 'bold',
-                        color: '#000000',
-                        margin: '0 0 8px 0',
-                        letterSpacing: '0.04em'
-                      }}>
-                        Maths A Level Integrals Basics
-                      </h3>
-                      <p style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '14px',
-                        color: '#666666',
-                        margin: '0 0 4px 0',
-                        letterSpacing: '0.04em'
-                      }}>
-                        847 questions completed
-                      </p>
-                      <p style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '14px',
-                        color: '#666666',
-                        margin: '0 0 8px 0',
-                        letterSpacing: '0.04em'
-                      }}>
-                        26/28 done
-                      </p>
-                      <p style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '14px',
-                        color: '#000000',
-                        margin: '0',
-                        letterSpacing: '0.04em'
-                      }}>
-                        2 students need support
-                      </p>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
-                      <span style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '14px',
-                        color: '#000000',
-                        fontWeight: 'bold',
-                        letterSpacing: '0.04em'
-                      }}>
-                        Overdue
-                      </span>
-                      <button style={{
-                        backgroundColor: 'transparent',
-                        border: 'none',
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '14px',
-                        color: '#0066CC',
-                        cursor: 'pointer',
-                        textDecoration: 'underline',
-                        letterSpacing: '0.04em'
-                      }}>
-                        View →
-                      </button>
+                {ongoingAssignments.length > 0 ? ongoingAssignments.map((assignment) => (
+                  <div key={assignment.pack.id} style={{
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #000000',
+                    borderRadius: '0px',
+                    padding: '20px',
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div style={{ flex: 1 }}>
+                        <h3 style={{
+                          fontFamily: "'Figtree', sans-serif",
+                          fontSize: '16px',
+                          fontWeight: 'bold',
+                          color: '#000000',
+                          margin: '0 0 8px 0',
+                          letterSpacing: '0.04em'
+                        }}>
+                          {assignment.pack.name}
+                        </h3>
+                        <p style={{
+                          fontFamily: "'Figtree', sans-serif",
+                          fontSize: '14px',
+                          color: '#666666',
+                          margin: '0 0 4px 0',
+                          letterSpacing: '0.04em'
+                        }}>
+                          {assignment.analytics.totalCompleted} questions completed
+                        </p>
+                        <p style={{
+                          fontFamily: "'Figtree', sans-serif",
+                          fontSize: '14px',
+                          color: '#666666',
+                          margin: '0 0 8px 0',
+                          letterSpacing: '0.04em'
+                        }}>
+                          {assignment.analytics.totalCompleted}/{assignment.analytics.totalAssigned} done
+                        </p>
+                        <p style={{
+                          fontFamily: "'Figtree', sans-serif",
+                          fontSize: '14px',
+                          color: '#000000',
+                          margin: '0',
+                          letterSpacing: '0.04em'
+                        }}>
+                          {assignment.analytics.needingSupport.length} students need support
+                        </p>
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+                        <span style={{
+                          fontFamily: "'Figtree', sans-serif",
+                          fontSize: '14px',
+                          color: assignment.isOverdue ? '#000000' : '#666666',
+                          fontWeight: assignment.isOverdue ? 'bold' : 'normal',
+                          letterSpacing: '0.04em'
+                        }}>
+                          {assignment.isOverdue ? 'Overdue' : assignment.dueDate ? `Due ${new Date(assignment.dueDate).toLocaleDateString()}` : 'No due date'}
+                        </span>
+                        <Link href={`/assignment-history/${assignment.pack.id}`} style={{ textDecoration: 'none' }}>
+                          <button style={{
+                            backgroundColor: 'transparent',
+                            border: 'none',
+                            fontFamily: "'Figtree', sans-serif",
+                            fontSize: '14px',
+                            color: '#0066CC',
+                            cursor: 'pointer',
+                            textDecoration: 'underline',
+                            letterSpacing: '0.04em'
+                          }}>
+                            View →
+                          </button>
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )) : (
+                  <div style={{
+                    textAlign: 'center',
+                    padding: '40px',
+                    color: '#666',
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '16px'
+                  }}>
+                    No ongoing assignments. Create and assign your first question pack!
+                  </div>
+                )}
               </div>
             </div>
           </div>

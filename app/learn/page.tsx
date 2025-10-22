@@ -69,12 +69,12 @@ export default function LearnPage() {
                       {/* Diary icon placeholder */}
                       <div className="icon-placeholder">📖</div>
                     </div>
-                    <button className="continue-button">
+                    <Link href="/study-book" className="continue-button">
                       OPEN BOOK
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -142,9 +142,9 @@ export default function LearnPage() {
                     <p className="path-week">Not started</p>
                     <p className="path-level"></p>
                   </div>
-                  <button className="path-button start-button">
+                  <Link href="/learn-lesson" className="path-button start-button">
                     Start
-                  </button>
+                  </Link>
                 </div>
               </div>
 

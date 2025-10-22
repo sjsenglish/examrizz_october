@@ -1,24 +1,83 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getCurrentUser, ensureTeacherProfile } from '../../lib/supabase.ts';
+import { getTeacherClasses, getAllTeacherStudents } from '../../lib/teacherClasses';
 import '../../styles/globals.css';
 
+interface Student {
+  id: string;
+  full_name: string;
+  email?: string;
+  class_name?: string;
+}
+
+interface Class {
+  id: string;
+  name: string;
+  studentCount: number;
+}
+
 export default function AssignQuestionPackStudentsPage() {
-  const [selectedStudents, setSelectedStudents] = useState([0]); // First student selected by default
+  const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedClass, setSelectedClass] = useState('All Classes');
-  
-  const students = [
-    { name: 'Jake T.', class: 'Year 12 Set 1' },
-    { name: 'Jake T.', class: 'Year 12 Set 1' },
-    { name: 'Jake T.', class: 'Year 12 Set 1' },
-    { name: 'Jake T.', class: 'Year 12 Set 1' },
-    { name: 'Sarah M.', class: 'Year 12 Set 1' },
-    { name: 'Alex K.', class: 'Year 12 Set 1' },
-    { name: 'Jamie L.', class: 'Year 12 Set 1' }
-  ];
+  const [students, setStudents] = useState<Student[]>([]);
+  const [classes, setClasses] = useState<Class[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [packInfo, setPackInfo] = useState<any>(null);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const currentUser = await getCurrentUser();
+        if (!currentUser) {
+          console.error('No authenticated user');
+          setLoading(false);
+          return;
+        }
+
+        // Ensure user has teacher profile
+        const userProfile = await ensureTeacherProfile(currentUser.id, currentUser.email || '');
+        if (!userProfile) {
+          console.error('Failed to create or get teacher profile');
+          setLoading(false);
+          return;
+        }
+
+        // Load classes and students
+        const [teacherClasses, allStudents] = await Promise.all([
+          getTeacherClasses(currentUser.id),
+          getAllTeacherStudents(currentUser.id)
+        ]);
+
+        setClasses(teacherClasses);
+        setStudents(allStudents);
+
+        // Get pack info from URL params or sessionStorage
+        const urlParams = new URLSearchParams(window.location.search);
+        const packId = urlParams.get('packId');
+        
+        if (packId) {
+          // In a real app, you'd fetch pack details from the database
+          setPackInfo({
+            id: packId,
+            name: 'Calculus Basics Homework',
+            questions: 28,
+            marks: 50
+          });
+        }
+      } catch (error) {
+        console.error('Error loading data:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadData();
+  }, []);
 
   const handleStudentToggle = (index: number) => {
     setSelectedStudents(prev => 
@@ -32,9 +91,40 @@ export default function AssignQuestionPackStudentsPage() {
     setSelectedStudents([]);
   };
 
-  const filteredStudents = students.filter(student => 
-    student.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredStudents = students.filter(student => {
+    const matchesSearch = student.full_name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesClass = selectedClass === 'All Classes' || student.class_name === selectedClass;
+    return matchesSearch && matchesClass;
+  });
+
+  const handleNextStep = () => {
+    // Store selected students in sessionStorage for next step
+    const selectedStudentData = selectedStudents.map(index => filteredStudents[index]);
+    sessionStorage.setItem('selectedStudents', JSON.stringify(selectedStudentData));
+    if (packInfo) {
+      sessionStorage.setItem('packInfo', JSON.stringify(packInfo));
+    }
+  };
+
+  if (loading) {
+    return (
+      <div style={{ 
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <div style={{
+          fontFamily: "'Madimi One', sans-serif",
+          fontSize: '18px',
+          color: '#FFFFFF'
+        }}>
+          Loading...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ 
@@ -184,7 +274,7 @@ export default function AssignQuestionPackStudentsPage() {
                 margin: '0 0 20px 0',
                 letterSpacing: '0.04em'
               }}>
-                Calculus Basics Homework
+                {packInfo?.name || 'Question Pack'}
               </h2>
               
               <div style={{ 
@@ -200,7 +290,7 @@ export default function AssignQuestionPackStudentsPage() {
                     color: '#000000',
                     letterSpacing: '0.04em'
                   }}>
-                    28 Questions
+                    {packInfo?.questions || 0} Questions
                   </span>
                 </div>
                 <div>
@@ -211,7 +301,7 @@ export default function AssignQuestionPackStudentsPage() {
                     color: '#000000',
                     letterSpacing: '0.04em'
                   }}>
-                    50 marks
+                    {packInfo?.marks || 0} marks
                   </span>
                 </div>
               </div>
@@ -348,7 +438,11 @@ export default function AssignQuestionPackStudentsPage() {
                   }}
                 >
                   <option>All Classes</option>
-                  <option>Year 12 Set 1</option>
+                  {classes.map((classItem) => (
+                    <option key={classItem.id} value={classItem.name}>
+                      {classItem.name}
+                    </option>
+                  ))}
                 </select>
               </div>
               
@@ -406,7 +500,7 @@ export default function AssignQuestionPackStudentsPage() {
               boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
             }}>
               {filteredStudents.map((student, index) => (
-                <label key={index} style={{
+                <label key={student.id} style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
@@ -433,17 +527,32 @@ export default function AssignQuestionPackStudentsPage() {
                         accentColor: '#89F3FF'
                       }}
                     />
-                    <span>{student.name}</span>
+                    <span>{student.full_name}</span>
                   </div>
                   <span style={{
                     fontSize: '12px',
                     color: '#666666',
                     letterSpacing: '0.04em'
                   }}>
-                    {student.class}
+                    {student.class_name || 'No class'}
                   </span>
                 </label>
               ))}
+              
+              {filteredStudents.length === 0 && (
+                <div style={{
+                  textAlign: 'center',
+                  padding: '40px',
+                  color: '#666',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px'
+                }}>
+                  {students.length === 0 
+                    ? 'No students found. Add students to your classes first.'
+                    : 'No students match your search criteria.'
+                  }
+                </div>
+              )}
             </div>
 
             {/* Selection Summary */}
@@ -485,20 +594,24 @@ export default function AssignQuestionPackStudentsPage() {
               right: '30px'
             }}>
               <Link href="/assign-question-pack-step2-students" style={{ textDecoration: 'none' }}>
-                <button style={{
-                  backgroundColor: '#00CED1',
-                  border: 'none',
-                  borderRadius: '8px',
-                  padding: '12px 24px',
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  color: '#FFFFFF',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}>
+                <button 
+                  onClick={handleNextStep}
+                  disabled={selectedStudents.length === 0}
+                  style={{
+                    backgroundColor: selectedStudents.length === 0 ? '#CCC' : '#00CED1',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '12px 24px',
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    color: '#FFFFFF',
+                    cursor: selectedStudents.length === 0 ? 'not-allowed' : 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
                   Next Step
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>

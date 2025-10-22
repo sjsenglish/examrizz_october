@@ -1,0 +1,469 @@
+@import url('https://fonts.googleapis.com/css2?family=Madimi+One&family=Figtree:wght@400;500;600&display=swap');
+
+/* =============================================================================
+   PRACTICE SESSION LAYOUT
+   ============================================================================= */
+
+.practice-session-wrapper {
+  background: #F9F9FF;
+  min-height: 100vh;
+  font-family: 'Madimi One', sans-serif;
+}
+
+/* Navbar */
+.practice-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #F8F8F5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.practice-logo {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #000000;
+  text-decoration: none;
+  margin: 0;
+  cursor: pointer;
+}
+
+.practice-menu-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.practice-menu-line {
+  width: 20px;
+  height: 2px;
+  background-color: #000000;
+  border-radius: 1px;
+}
+
+/* Main Container */
+.practice-session-container {
+  padding: 80px 40px 40px;
+  display: flex;
+  gap: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Left Side - Question Section */
+.practice-question-section {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Right Side - Info Section */
+.practice-info-section {
+  width: 350px;
+  flex-shrink: 0;
+}
+
+/* =============================================================================
+   PACK TITLE BOX
+   ============================================================================= */
+
+.practice-pack-title-box {
+  background: white;
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.practice-pack-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #000;
+  margin: 0 0 8px 0;
+}
+
+.practice-pack-subtitle {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+/* =============================================================================
+   QUESTION OVERVIEW BOX
+   ============================================================================= */
+
+.practice-question-overview {
+  background: white;
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.practice-overview-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  margin: 0 0 15px 0;
+}
+
+.practice-question-numbers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.practice-question-number-box {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: 'Madimi One', sans-serif;
+  font-weight: 400;
+  color: #000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.practice-question-number-box:hover {
+  background: #f0f0f0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.practice-question-number-box.active {
+  background: white;
+  border-color: #000;
+}
+
+.practice-question-number-box.answered {
+  background: #DBF7F9;
+  border-color: #00CED1;
+}
+
+.practice-question-number-box.active.answered {
+  background: #DBF7F9;
+  border-color: #00CED1;
+}
+
+.practice-overview-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.practice-time {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  letter-spacing: 0.04em;
+}
+
+.practice-question-count {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+  letter-spacing: 0.04em;
+}
+
+/* =============================================================================
+   QUESTION CONTENT
+   ============================================================================= */
+
+.practice-question-container {
+  background: white;
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.practice-question-header {
+  margin-bottom: 20px;
+}
+
+.practice-question-number {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #000;
+}
+
+.practice-year-info {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 14px;
+  color: #666;
+  margin-left: 8px;
+}
+
+.practice-question-content {
+  line-height: 1.6;
+}
+
+.practice-question-passage {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  color: #333;
+}
+
+.practice-question-image-container {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.practice-question-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.practice-question-text {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  margin-bottom: 25px;
+}
+
+/* =============================================================================
+   ANSWER OPTIONS
+   ============================================================================= */
+
+.practice-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.practice-option-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 15px 20px;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.practice-option-item:hover {
+  border-color: #00CED1;
+  background: #f8fffe;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.practice-option-item.selected {
+  background: #DBF7F9;
+  border-color: #00CED1;
+}
+
+.practice-option-item.selected:hover {
+  background: #DBF7F9;
+  border-color: #00CED1;
+}
+
+.practice-option-letter {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  min-width: 20px;
+  flex-shrink: 0;
+}
+
+.practice-option-text {
+  flex: 1;
+  font-family: 'Madimi One', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* =============================================================================
+   NAVIGATION BUTTONS
+   ============================================================================= */
+
+.practice-navigation-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.practice-previous-button,
+.practice-next-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: 2px solid #000;
+  border-radius: 8px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.3);
+}
+
+.practice-previous-button {
+  background: #E7E6FF;
+  color: #000;
+}
+
+.practice-previous-button:hover:not(:disabled) {
+  background: #ddd9ff;
+  transform: translateY(-1px);
+  box-shadow: 0 7px 0 rgba(0, 0, 0, 0.3);
+}
+
+.practice-next-button {
+  background: #B3F0F2;
+  color: #000;
+}
+
+.practice-next-button:hover:not(:disabled) {
+  background: #9ee9ec;
+  transform: translateY(-1px);
+  box-shadow: 0 7px 0 rgba(0, 0, 0, 0.3);
+}
+
+.practice-previous-button:disabled,
+.practice-next-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* =============================================================================
+   COWBOY ICON
+   ============================================================================= */
+
+.practice-cowboy-icon {
+  position: fixed;
+  bottom: 80px;
+  right: 80px;
+  z-index: 50;
+  opacity: 0.8;
+}
+
+/* =============================================================================
+   LOADING AND ERROR STATES
+   ============================================================================= */
+
+.practice-loading,
+.practice-error,
+.practice-completion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  font-family: 'Madimi One', sans-serif;
+  font-size: 18px;
+  color: #666;
+  text-align: center;
+}
+
+.practice-completion h1 {
+  font-size: 32px;
+  color: #000;
+  margin-bottom: 20px;
+}
+
+.practice-completion p {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
+
+@media (max-width: 1200px) {
+  .practice-session-container {
+    flex-direction: column;
+    padding: 80px 20px 40px;
+  }
+  
+  .practice-info-section {
+    width: 100%;
+    order: -1;
+  }
+  
+  .practice-cowboy-icon {
+    bottom: 40px;
+    right: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .practice-question-numbers {
+    gap: 6px;
+  }
+  
+  .practice-question-number-box {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
+  }
+  
+  .practice-navigation-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .practice-previous-button,
+  .practice-next-button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .practice-cowboy-icon {
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .practice-cowboy-icon img {
+    width: 80px;
+    height: 80px;
+  }
+}

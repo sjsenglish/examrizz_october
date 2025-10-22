@@ -8,6 +8,7 @@
   box-shadow: var(--shadow-primary-lg),
               8px 8px 16px rgba(0, 206, 209, 0.2);
   position: relative;
+  margin-bottom: var(--space-2xl);
 }
 
 .question-header {
@@ -117,6 +118,18 @@
   font-weight: bold;
   line-height: 1.5;
   color: var(--color-gray-500);
+}
+
+.option-correct {
+  border: 2px solid #00CED1;
+  background-color: #DBF7F9;
+  transition: all 0.2s ease;
+}
+
+.option-incorrect {
+  border: 2px solid #FF4D6A;
+  background-color: #FADEE8;
+  transition: all 0.2s ease;
 }
 
 .action-buttons {

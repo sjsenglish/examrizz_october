@@ -1,0 +1,523 @@
+@import url('https://fonts.googleapis.com/css2?family=Madimi+One&family=Figtree:wght@400;500;600&display=swap');
+
+/* =============================================================================
+   REVIEW PAGE LAYOUT
+   ============================================================================= */
+
+.review-wrapper {
+  background: #F9F9FF;
+  min-height: 100vh;
+  font-family: 'Madimi One', sans-serif;
+}
+
+/* Navbar */
+.review-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #F8F8F5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.review-logo {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #000000;
+  text-decoration: none;
+  margin: 0;
+  cursor: pointer;
+}
+
+.review-menu-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.review-menu-line {
+  width: 20px;
+  height: 2px;
+  background-color: #000000;
+  border-radius: 1px;
+}
+
+/* =============================================================================
+   QUIZ REVIEW HEADER
+   ============================================================================= */
+
+.review-header-container {
+  padding: 80px 40px 30px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.review-header-content {
+  background: white;
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.review-header-left {
+  flex: 1;
+}
+
+.review-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #000;
+  margin: 0 0 8px 0;
+}
+
+.review-pack-info {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.review-stats {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.review-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #000;
+}
+
+.review-stat-circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.review-stat-circle.correct {
+  background: #00CED1;
+}
+
+.review-stat-circle.incorrect {
+  background: #FF4D6A;
+}
+
+.review-stat-separator {
+  color: #666;
+}
+
+.review-practice-again-button {
+  background: #B3F0F2;
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.3);
+}
+
+.review-practice-again-button:hover {
+  background: #9ee9ec;
+  transform: translateY(-1px);
+  box-shadow: 0 7px 0 rgba(0, 0, 0, 0.3);
+}
+
+.review-header-right {
+  margin-left: 40px;
+}
+
+.review-question-numbers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 300px;
+}
+
+.review-question-number-box {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: 'Madimi One', sans-serif;
+  font-weight: 400;
+  color: #000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.review-question-number-box:hover {
+  background: #f0f0f0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.review-question-number-box.active {
+  background: white;
+  border-color: #000;
+  border-width: 3px;
+}
+
+.review-question-number-box.correct {
+  background: #00CED1;
+  border-color: #00CED1;
+  color: white;
+}
+
+.review-question-number-box.incorrect {
+  background: #FADEE8;
+  border-color: #FF4D6A;
+  color: #FF4D6A;
+}
+
+.review-question-number-box.active.correct {
+  background: #00CED1;
+  border-color: #000;
+  border-width: 3px;
+  color: white;
+}
+
+.review-question-number-box.active.incorrect {
+  background: #FADEE8;
+  border-color: #000;
+  border-width: 3px;
+  color: #FF4D6A;
+}
+
+/* =============================================================================
+   MAIN CONTENT AREA
+   ============================================================================= */
+
+.review-content-container {
+  padding: 0 40px 40px;
+  display: flex;
+  gap: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.review-question-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.review-video-section {
+  width: 350px;
+  flex-shrink: 0;
+}
+
+/* =============================================================================
+   QUESTION DISPLAY
+   ============================================================================= */
+
+.review-question-container {
+  background: white;
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.review-question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.review-question-number {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #000;
+}
+
+.review-year-info {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 14px;
+  color: #666;
+}
+
+.review-status-badge {
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.review-status-badge.correct {
+  background: #00CED1;
+  color: white;
+}
+
+.review-status-badge.incorrect {
+  background: #FF4D6A;
+  color: white;
+}
+
+.review-difficulty {
+  background: #E0E7FF;
+  color: #4338CA;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.review-question-content {
+  line-height: 1.6;
+}
+
+.review-question-passage {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  color: #333;
+}
+
+.review-question-image-container {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.review-question-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.review-question-text {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  margin-bottom: 25px;
+}
+
+/* =============================================================================
+   ANSWER OPTIONS
+   ============================================================================= */
+
+.review-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.review-option-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 15px 20px;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.review-option-item.correct-answer {
+  background: #DBF7F9;
+  border-color: #00CED1;
+}
+
+.review-option-item.incorrect-answer {
+  background: #FADEE8;
+  border-color: #FF4D6A;
+}
+
+/* User's incorrect answer */
+.review-option-item.user-incorrect {
+  background: #FADEE8;
+  border-color: #FF4D6A;
+}
+
+.review-option-letter {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  min-width: 20px;
+  flex-shrink: 0;
+}
+
+.review-option-text {
+  flex: 1;
+  font-family: 'Madimi One', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* =============================================================================
+   VIDEO SOLUTION SECTION
+   ============================================================================= */
+
+.review-video-container {
+  background: white;
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.review-video-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #000;
+  margin: 0 0 15px 0;
+}
+
+.review-video-player {
+  background: #f5f5f5;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.review-video-placeholder {
+  text-align: center;
+  padding: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Madimi One', sans-serif;
+  font-size: 18px;
+}
+
+.review-video-placeholder p {
+  margin: 10px 0;
+}
+
+.review-answer-indicators {
+  display: flex;
+  gap: 15px;
+}
+
+.review-answer-indicator {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.review-answer-indicator.correct {
+  background: #00CED1;
+  color: white;
+}
+
+.review-answer-indicator.incorrect {
+  background: #FF4D6A;
+  color: white;
+}
+
+/* =============================================================================
+   LOADING AND ERROR STATES
+   ============================================================================= */
+
+.review-loading,
+.review-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  font-family: 'Madimi One', sans-serif;
+  font-size: 18px;
+  color: #666;
+  text-align: center;
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
+
+@media (max-width: 1200px) {
+  .review-content-container {
+    flex-direction: column;
+    padding: 0 20px 40px;
+  }
+  
+  .review-video-section {
+    width: 100%;
+  }
+  
+  .review-header-container {
+    padding: 80px 20px 30px;
+  }
+  
+  .review-header-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .review-header-right {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .review-question-numbers {
+    gap: 6px;
+    max-width: none;
+  }
+  
+  .review-question-number-box {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
+  }
+  
+  .review-stats {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}

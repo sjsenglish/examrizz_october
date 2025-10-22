@@ -1,0 +1,461 @@
+@import url('https://fonts.googleapis.com/css2?family=Madimi+One&display=swap');
+
+.view-pack-wrapper {
+  background: white;
+  min-height: 100vh;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #F8F8F5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #000000;
+  text-decoration: none;
+  margin: 0;
+  cursor: pointer;
+}
+
+.menu-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu-line {
+  width: 20px;
+  height: 2px;
+  background-color: #000000;
+  border-radius: 1px;
+}
+
+.view-pack-container {
+  font-family: 'Madimi One', cursive;
+  padding: 80px 20px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.pack-header {
+  background: white;
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 8px 15px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 84.5%;
+  margin-left: 120px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.pack-title {
+  font-size: 24px;
+  font-weight: 400;
+  color: #000;
+  margin: 0;
+  font-family: 'Madimi One', cursive;
+  text-align: center;
+}
+
+.subject-tag {
+  position: absolute;
+  right: 20px;
+  display: inline-block;
+  background: #00CED1;
+  color: #000;
+  border: 2px solid #000;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-family: 'Madimi One', cursive;
+  font-weight: 400;
+}
+
+.content-wrapper {
+  position: relative;
+  display: block;
+  margin-top: 0;
+}
+
+.icon-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.pack-icon {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+
+.question-overview {
+  background: #F9F9FF;
+  border: 2px solid #221468;
+  border-radius: 8px;
+  padding: 8px;
+  margin-top: 0;
+  margin-bottom: 30px;
+  width: 84.5%;
+  margin-left: 120px;
+}
+
+.question-overview.pinned {
+  position: sticky;
+  top: 20px;
+  z-index: 10;
+}
+
+.overview-title {
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0 0 8px 0;
+  color: #000;
+  font-family: 'Madimi One', cursive;
+}
+
+.overview-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2px;
+}
+
+.question-numbers {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.question-number-box {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: 'Madimi One', cursive;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+}
+
+.question-number-box:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.pack-info {
+  text-align: right;
+  color: #221468;
+}
+
+.info-line {
+  font-size: 12px;
+  margin-bottom: 4px;
+  font-family: 'Madimi One', cursive;
+}
+
+.overview-controls {
+  display: flex;
+  gap: 15px;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.control-link {
+  color: #666;
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: 'Madimi One', cursive;
+  padding: 0;
+}
+
+.control-link:hover {
+  color: #221468;
+}
+
+.questions-section {
+  width: 100%;
+  margin-top: 30px;
+}
+
+.question-container {
+  position: relative;
+  margin-bottom: 40px;
+  scroll-margin-top: 20px;
+}
+
+.question-tag {
+  position: absolute;
+  left: -52px;
+  top: 20px;
+  background: white;
+  color: #000;
+  border: 2px solid #000;
+  padding: 8px 20px 8px 20px;
+  font-size: 14px;
+  font-family: 'Madimi One', cursive;
+  border-radius: 0 4px 4px 0;
+  z-index: 1;
+  border-left: none;
+}
+
+.question-content-wrapper {
+  border: 1px solid #000;
+  border-radius: 8px;
+  padding: 20px;
+  margin-left: 120px;
+  width: 84.5%;
+  display: flex;
+  gap: 30px;
+  background: white;
+}
+
+.question-card {
+  width: 50%;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 0;
+}
+
+.question-text {
+  font-size: 14px;
+  margin-bottom: 15px;
+  color: #000;
+  font-family: 'Madimi One', cursive;
+}
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 15px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.option-item.correct-answer {
+  background: #DBF7F9;
+  border: 2px solid #00CED1;
+}
+
+.option-letter {
+  font-weight: 500;
+  font-size: 16px;
+  color: #000;
+  font-family: 'Madimi One', cursive;
+  min-width: 20px;
+}
+
+.option-text {
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+  font-family: 'Madimi One', cursive;
+}
+
+.video-section {
+  width: 45%;
+  flex-shrink: 0;
+  margin-top: 0;
+}
+
+.video-title {
+  font-size: 18px;
+  font-weight: 400;
+  margin: 0 0 15px 0;
+  color: #000;
+  font-family: 'Madimi One', cursive;
+}
+
+.video-container {
+  background: #f5f5f5;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-player {
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+}
+
+.video-player iframe {
+  border-radius: 4px;
+}
+
+.video-player p {
+  margin: 0 0 10px 0;
+  color: #666;
+  font-family: 'Madimi One', cursive;
+}
+
+.video-player small {
+  color: #999;
+  font-size: 12px;
+  font-family: 'Madimi One', cursive;
+}
+
+.video-placeholder {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+}
+
+.video-placeholder p {
+  margin: 5px 0;
+  font-size: 14px;
+  font-family: 'Madimi One', cursive;
+  color: rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 1200px) {
+  .question-content-wrapper {
+    flex-direction: column;
+  }
+  
+  .video-section {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+  
+  .icon-container {
+    display: none;
+  }
+  
+  .question-tag {
+    position: static;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    display: inline-block;
+  }
+  
+  .question-content-wrapper {
+    padding-left: 0;
+  }
+}
+
+/* =============================================================================
+   TSA-SPECIFIC QUESTION STYLING
+   ============================================================================= */
+
+.question-passage {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  color: #333;
+  font-family: 'Madimi One', cursive;
+}
+
+.question-image-container {
+  margin: 15px 0;
+  text-align: center;
+}
+
+.question-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.year-info {
+  color: #666;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+/* Enhanced option styling for TSA questions */
+.options-list .option-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 12px 15px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  transition: all 0.2s;
+  margin-bottom: 8px;
+}
+
+.options-list .option-item:hover {
+  border-color: #ccc;
+  background: #fafafa;
+}
+
+.options-list .option-item.correct-answer {
+  background: #DBF7F9;
+  border: 2px solid #00CED1;
+}
+
+.options-list .option-item.correct-answer:hover {
+  background: #DBF7F9;
+  border: 2px solid #00CED1;
+}
+
+.options-list .option-letter {
+  font-weight: 500;
+  font-size: 16px;
+  color: #000;
+  font-family: 'Madimi One', cursive;
+  min-width: 20px;
+  flex-shrink: 0;
+}
+
+.options-list .option-text {
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+  font-family: 'Madimi One', cursive;
+  line-height: 1.5;
+}
