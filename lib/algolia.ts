@@ -81,7 +81,7 @@ export async function getQuestionsByIds(
       }
     }]);
 
-    const hits = results.results[0].hits;
+    const hits = ('hits' in results.results[0]) ? results.results[0].hits : [];
     
     // Return questions in the same order as requested IDs
     const questionsMap = new Map(hits.map((q: any) => [q.objectID, q]));

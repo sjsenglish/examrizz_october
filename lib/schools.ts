@@ -1,4 +1,4 @@
-import { supabase, School, UserProfile } from './supabase.ts';
+import { supabase, School, UserProfile } from './supabase';
 
 // Get school by school code
 export async function getSchoolByCode(schoolCode: string): Promise<School | null> {

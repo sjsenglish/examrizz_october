@@ -204,7 +204,7 @@ const ExamSearch: React.FC = () => {
               )}
             </div>
 
-            <Hits hitComponent={QuestionCard} />
+            <Hits hitComponent={({ hit }) => <QuestionCard hit={hit as any} />} />
           </section>
         )}
         </div>

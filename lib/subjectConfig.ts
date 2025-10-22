@@ -61,18 +61,18 @@ export const SUBJECT_CONFIGS: SubjectConfig[] = [
     name: 'BMAT',
     indexName: 'bmat_questions', // Update this when BMAT index is created
     available: false, // Set to true when index is ready
-    filters: {
+    filters: [
       // Add BMAT-specific filters here when needed
-    }
+    ]
   },
   {
     id: 'maths',
     name: 'Maths',
     indexName: 'maths_questions', // Update this when Maths index is created
     available: false, // Set to true when index is ready
-    filters: {
+    filters: [
       // Add Maths-specific filters here when needed
-    }
+    ]
   }
 ];
 

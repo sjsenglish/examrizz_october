@@ -40,7 +40,7 @@ export const QuestionFilters: React.FC<QuestionFiltersProps> = ({
               }
             }]);
 
-            const facetValues = response.results[0]?.facets?.[filter.field];
+            const facetValues = ('facets' in response.results[0] && response.results[0].facets) ? response.results[0].facets[filter.field] : undefined;
             const options: FilterOption[] = [];
             
             if (facetValues) {
