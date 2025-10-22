@@ -62,7 +62,7 @@ export async function getTeacherClasses(teacherId: string): Promise<ClassWithStu
           };
         }
 
-        const students = memberships?.map(m => m.user_profiles).filter(Boolean) as UserProfile[] || [];
+        const students = (memberships?.map(m => m.user_profiles).filter(Boolean) || []) as unknown as UserProfile[];
         
         return {
           ...classItem,
@@ -102,7 +102,7 @@ export async function getClassStudents(classId: string): Promise<Student[]> {
       return [];
     }
 
-    return memberships?.map(m => m.user_profiles).filter(Boolean) as Student[] || [];
+    return (memberships?.map(m => m.user_profiles).filter(Boolean) || []) as unknown as Student[];
   } catch (error) {
     console.error('Error in getClassStudents:', error);
     return [];
@@ -165,7 +165,7 @@ export async function getAllTeacherStudents(teacherId: string): Promise<Student[
       if (membership.user_profiles) {
         const classInfo = classes.find(c => c.id === membership.class_id);
         const student: Student = {
-          ...(membership.user_profiles as UserProfile),
+          ...(membership.user_profiles as unknown as UserProfile),
           class_name: classInfo?.name
         };
         studentsMap.set(student.id, student);
