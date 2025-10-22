@@ -40,11 +40,11 @@ export default function VideoOpenPage() {
     setIsMuted(video.muted);
   };
 
-  const handleVolumeChange = (e) => {
+  const handleVolumeChange = (e: React.MouseEvent<HTMLDivElement>) => {
     const video = videoRef.current;
     if (!video) return;
 
-    const rect = e.target.getBoundingClientRect();
+    const rect = (e.target as HTMLElement).getBoundingClientRect();
     const percent = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
     const newVolume = 1 - percent; // Invert because we want top = high volume
     
@@ -84,7 +84,7 @@ export default function VideoOpenPage() {
     }
   };
 
-  const handleProgressChange = (e) => {
+  const handleProgressChange = (e: React.MouseEvent<HTMLDivElement>) => {
     const video = videoRef.current;
     
     if (!video) return;
@@ -131,13 +131,13 @@ export default function VideoOpenPage() {
     }
   };
 
-  const handleProgressMouseDown = (e) => {
+  const handleProgressMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     const video = videoRef.current;
     if (!video || !duration) return;
 
     const progressBar = e.currentTarget;
     
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: MouseEvent) => {
       const rect = progressBar.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
       const width = rect.width;
@@ -154,12 +154,12 @@ export default function VideoOpenPage() {
     };
 
     // Start dragging
-    handleMouseMove(e);
+    handleMouseMove(e.nativeEvent);
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
 
-  const formatTime = (time) => {
+  const formatTime = (time: number) => {
     if (!time || isNaN(time)) return '0:00';
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
@@ -191,7 +191,7 @@ export default function VideoOpenPage() {
       }
     };
     
-    const handleError = (e) => {
+    const handleError = (e: Event) => {
       setVideoError(true);
     };
     
