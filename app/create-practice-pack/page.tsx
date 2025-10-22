@@ -81,7 +81,7 @@ export default function CreatePracticePackPage() {
         { hitsPerPage: 0 } // We only want the count
       );
 
-      const totalHits = ('nbHits' in searchResults) ? searchResults.nbHits : 0;
+      const totalHits = ('nbHits' in searchResults) ? (searchResults.nbHits || 0) : 0;
       setAvailableQuestions(totalHits);
     } catch (error) {
       console.error('Error calculating available questions:', error);
@@ -118,12 +118,12 @@ export default function CreatePracticePackPage() {
     router.push('/select-practice-questions');
   };
 
-  const handleQuestionSliderChange = (e) => {
+  const handleQuestionSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
     setNumberOfQuestions(value);
   };
 
-  const handleFontSizeSliderChange = (e) => {
+  const handleFontSizeSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
     setFontSize(value);
   };
