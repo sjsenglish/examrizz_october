@@ -1992,3 +1992,239 @@
   font-size: 14px;
   color: #666;
 }
+
+/* =============================================================================
+   NEW UI COMPONENTS STYLES
+   ============================================================================= */
+
+/* Subject Input in Profile Tab */
+.subject-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #221468;
+  border-radius: 8px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 16px;
+  color: #221468;
+  background: white;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.subject-input:focus {
+  border-color: #00CED1;
+  box-shadow: 0 0 0 3px rgba(0, 206, 209, 0.1);
+}
+
+.subject-input::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+/* Upload Section in Notes Tab */
+.upload-section {
+  background: white;
+  border: 2px solid #221468;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.upload-area {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  border: 2px dashed #221468;
+  border-radius: 8px;
+  background: #F8F7FF;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.file-upload-label:hover {
+  background: #F0EEFF;
+  border-color: #00CED1;
+}
+
+.file-upload-label span {
+  font-family: 'Figtree', sans-serif;
+  font-size: 16px;
+  color: #221468;
+  margin-top: 12px;
+}
+
+.file-upload-label .file-types {
+  font-size: 14px;
+  color: #666;
+  margin-top: 8px;
+}
+
+.uploaded-files-list {
+  background: #F8F7FF;
+  border: 1px solid #E8E6FF;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.uploaded-files-list h4 {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #221468;
+  margin: 0 0 12px 0;
+}
+
+.uploaded-file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #E8E6FF;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.uploaded-file-item:last-child {
+  margin-bottom: 0;
+}
+
+.file-name {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  color: #221468;
+}
+
+.remove-file-btn {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: #FF4D6A;
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.remove-file-btn:hover {
+  background: #FF2B4F;
+  transform: scale(1.1);
+}
+
+/* Ask Bo Chat Updates */
+.chat-input-area {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 13px;
+  border-top: 1px solid #E7E6FF;
+}
+
+.discord-help-btn {
+  width: 100%;
+  padding: 10px 20px;
+  background: #5865F2;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.discord-help-btn:hover {
+  background: #4752C4;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(88, 101, 242, 0.3);
+}
+
+/* Context Indicator */
+.context-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: #00CED1;
+  color: white;
+  border-radius: 16px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  margin-left: auto;
+}
+
+/* Questions Section Updates */
+.questions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.edit-mode-toggle {
+  padding: 10px 20px;
+  background: white;
+  border: 2px solid #221468;
+  border-radius: 20px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #221468;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-mode-toggle:hover {
+  background: #F5F3FF;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(34, 20, 104, 0.2);
+}
+
+/* Read-only textarea styles */
+.question-textarea:read-only {
+  background: #F8F8F8;
+  border-color: #DDD;
+  cursor: not-allowed;
+  color: #666;
+}
+
+.question-textarea:read-only::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .questions-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .edit-mode-toggle {
+    width: 100%;
+  }
+
+  .discord-help-btn {
+    font-size: 13px;
+  }
+}

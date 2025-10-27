@@ -13,6 +13,10 @@ const tabs = [
 export default function StudyBookPage() {
   const [activeTab, setActiveTab] = useState('profile');
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [userSubject, setUserSubject] = useState('');
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [boEditMode, setBoEditMode] = useState(false);
+  const [viewingFile, setViewingFile] = useState(null);
   const [questionPages, setQuestionPages] = useState({
     question1: [{ id: 1, content: '', title: 'Page 1' }],
     question2: [{ id: 1, content: '', title: 'Page 1' }],
@@ -32,6 +36,27 @@ export default function StudyBookPage() {
           <div className="content-area-left">
             <h2 className="profile-title">User's examrizz profile</h2>
             <div className="content-grid">
+              {/* Subject Input Window */}
+              <div className="content-window medium">
+                <div className="window-title-bar">
+                  <span className="window-title">Your Course</span>
+                  <div className="window-controls">
+                    <button className="window-control minimize">−</button>
+                    <button className="window-control maximize">□</button>
+                    <button className="window-control close">×</button>
+                  </div>
+                </div>
+                <div className="window-body">
+                  <input 
+                    type="text" 
+                    placeholder="e.g., Economics, Computer Science" 
+                    className="subject-input"
+                    value={userSubject}
+                    onChange={(e) => setUserSubject(e.target.value)}
+                  />
+                </div>
+              </div>
+
               {/* Window 1 - Large */}
               <div className="content-window large">
                 <div className="window-title-bar">
@@ -872,10 +897,67 @@ export default function StudyBookPage() {
   };
 
   const renderNotesTab = () => {
+    const handleFileUpload = (e) => {
+      const files = Array.from(e.target.files);
+      const newFiles = files.map(file => ({
+        id: Date.now() + Math.random(),
+        name: file.name,
+        size: file.size,
+        type: file.type
+      }));
+      setUploadedFiles(prev => [...prev, ...newFiles]);
+    };
+
+    const removeFile = (fileId) => {
+      setUploadedFiles(prev => prev.filter(f => f.id !== fileId));
+    };
+
     return (
       <div className="accordion-content">
         <div className="main-container">
           <div className="notes-container" style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 200px)' }}>
+            {/* Upload Section */}
+            <div className="upload-section">
+              <div className="section-header">
+                <h3 className="section-title">📎 Upload Materials</h3>
+              </div>
+              <div className="upload-area">
+                <input 
+                  type="file" 
+                  accept=".pdf,.docx,.txt,.doc" 
+                  multiple
+                  onChange={handleFileUpload}
+                  className="file-input"
+                  id="file-upload"
+                />
+                <label htmlFor="file-upload" className="file-upload-label">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#221468" strokeWidth="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                  <span>Click to upload or drag and drop</span>
+                  <span className="file-types">PDF, DOCX, TXT (Max 10MB)</span>
+                </label>
+                {uploadedFiles.length > 0 && (
+                  <div className="uploaded-files-list">
+                    <h4>Uploaded Files:</h4>
+                    {uploadedFiles.map(file => (
+                      <div key={file.id} className="uploaded-file-item">
+                        <span className="file-name">📄 {file.name}</span>
+                        <button 
+                          className="remove-file-btn"
+                          onClick={() => removeFile(file.id)}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Research Section */}
             <div className="research-container">
               <h2 className="section-main-title">Research</h2>
@@ -1464,8 +1546,9 @@ export default function StudyBookPage() {
             <textarea
               className="question-textarea"
               value={currentPage?.content || ''}
-              onChange={(e) => updatePageContent(question, activePages[question], e.target.value)}
-              placeholder={`Start writing your response for ${title} here...`}
+              onChange={(e) => boEditMode ? updatePageContent(question, activePages[question], e.target.value) : null}
+              placeholder={boEditMode ? `Start writing your response for ${title} here...` : `Waiting for Bo to guide you...`}
+              readOnly={!boEditMode}
             />
             <div className="question-actions">
               <button 
@@ -1492,6 +1575,11 @@ export default function StudyBookPage() {
               <div className="chat-container full-chat">
                 <div className="chat-header">
                   <span className="chat-title">Ask Bo - Your AI Assistant</span>
+                  {viewingFile && (
+                    <span className="context-indicator">
+                      📄 Viewing: {viewingFile}
+                    </span>
+                  )}
                 </div>
                 <div className="chat-messages">
                   <div className="message buddy-message">
@@ -1501,13 +1589,18 @@ export default function StudyBookPage() {
                     </div>
                   </div>
                 </div>
-                <div className="chat-input">
-                  <input type="text" placeholder="Ask Bo anything about your personal statement..." />
-                  <button className="send-button">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#00CED1" stroke="#00CED1" strokeWidth="2">
-                      <path d="M22 2L11 13"/>
-                      <path d="M22 2l-7 20-4-9-9-4 20-7z"/>
-                    </svg>
+                <div className="chat-input-area">
+                  <div className="chat-input">
+                    <input type="text" placeholder="Ask Bo anything about your personal statement..." />
+                    <button className="send-button">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="#00CED1" stroke="#00CED1" strokeWidth="2">
+                        <path d="M22 2L11 13"/>
+                        <path d="M22 2l-7 20-4-9-9-4 20-7z"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <button className="discord-help-btn">
+                    Can't help? Ask a Teacher →
                   </button>
                 </div>
               </div>
@@ -1515,7 +1608,15 @@ export default function StudyBookPage() {
 
             {/* Question Writing Boxes */}
             <div className="questions-section">
-              <h2 className="section-title">Personal Statement Questions</h2>
+              <div className="questions-header">
+                <h2 className="section-title">Personal Statement Questions</h2>
+                <button 
+                  className="edit-mode-toggle"
+                  onClick={() => setBoEditMode(!boEditMode)}
+                >
+                  {boEditMode ? '🔓 Edit Mode Enabled' : '🔒 Bo Controls Writing'}
+                </button>
+              </div>
               <div className="questions-container">
                 {renderQuestionBox(1, "Question 1")}
                 {renderQuestionBox(2, "Question 2")}
