@@ -6,15 +6,23 @@ import './study-book.css';
 
 const tabs = [
   { id: 'profile', label: 'Profile' },
-  { id: 'research', label: 'Research' },
-  { id: 'projects', label: 'Projects' },
-  { id: 'extra', label: 'Extra' },
-  { id: 'saved-links', label: 'Saved Links' }
+  { id: 'notes', label: 'Notes' },
+  { id: 'ask-bo', label: 'Ask Bo' }
 ];
 
 export default function StudyBookPage() {
   const [activeTab, setActiveTab] = useState('profile');
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [questionPages, setQuestionPages] = useState({
+    question1: [{ id: 1, content: '', title: 'Page 1' }],
+    question2: [{ id: 1, content: '', title: 'Page 1' }],
+    question3: [{ id: 1, content: '', title: 'Page 1' }]
+  });
+  const [activePages, setActivePages] = useState({
+    question1: 1,
+    question2: 1,
+    question3: 1
+  });
 
   const renderProfileTab = () => {
     return (
@@ -863,18 +871,671 @@ export default function StudyBookPage() {
     );
   };
 
+  const renderNotesTab = () => {
+    return (
+      <div className="accordion-content">
+        <div className="main-container">
+          <div className="notes-container" style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 200px)' }}>
+            {/* Research Section */}
+            <div className="research-container">
+              <h2 className="section-main-title">Research</h2>
+              {/* Books Section */}
+              <div className="research-section">
+                <div className="section-header">
+                  <h3 className="section-title">BOOKS</h3>
+                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
+                </div>
+                <div className="research-grid">
+                  <div className="research-item">
+                    <img src="/icons/books.svg" alt="Book" className="item-icon" />
+                    <div className="item-content">
+                      <h4 className="item-title">Thinking Fast & Slow</h4>
+                      <p className="item-status">Finished</p>
+                      <p className="item-action">Add insights →</p>
+                    </div>
+                  </div>
+                  <div className="research-item">
+                    <img src="/icons/books.svg" alt="Book" className="item-icon" />
+                    <div className="item-content">
+                      <h4 className="item-title">Thinking Fast & Slow</h4>
+                      <p className="item-status">Reading</p>
+                      <p className="item-action">Add insights →</p>
+                      <p className="item-link">View insights →</p>
+                    </div>
+                  </div>
+                  <div className="research-item">
+                    <img src="/icons/books.svg" alt="Book" className="item-icon" />
+                    <div className="item-content">
+                      <h4 className="item-title">Thinking Fast & Slow</h4>
+                      <p className="item-status">Not started</p>
+                      <p className="item-action">Edit →</p>
+                    </div>
+                  </div>
+                  <div className="research-item">
+                    <img src="/icons/books.svg" alt="Book" className="item-icon" />
+                    <div className="item-content">
+                      <h4 className="item-title">Thinking Fast & Slow</h4>
+                      <p className="item-status">Not started</p>
+                      <p className="item-action">Edit →</p>
+                    </div>
+                  </div>
+                </div>
+                <button className="see-all-btn">SEE ALL</button>
+              </div>
+
+              {/* Academic Papers Section */}
+              <div className="research-section">
+                <div className="section-header">
+                  <h3 className="section-title">ACADEMIC PAPERS</h3>
+                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
+                </div>
+                <div className="research-list">
+                  <div className="research-item-list">
+                    <img src="/icons/academic-paper.svg" alt="Paper" className="item-icon" />
+                    <div className="item-content">
+                      <h4 className="item-title">Evaluating the Effect of Psychedelics on Depression in Cancer Patients</h4>
+                      <p className="item-details">Cancer Research Journal, 2025</p>
+                      <p className="item-details">M. Kruger, K. Choi, et. al</p>
+                      <p className="item-status">Finished</p>
+                      <p className="item-action">Add insights →</p>
+                    </div>
+                  </div>
+                  <div className="research-item-list">
+                    <img src="/icons/academic-paper.svg" alt="Paper" className="item-icon" />
+                    <div className="item-content">
+                      <h4 className="item-title">Evaluating the Effect of Psychedelics on Depression in Cancer Patients</h4>
+                      <p className="item-details">Cancer Research Journal, 2025</p>
+                      <p className="item-details">M. Kruger, K. Choi, et. al</p>
+                      <p className="item-status">Reading</p>
+                      <p className="item-action">Add insights →</p>
+                      <p className="item-link">View insights →</p>
+                    </div>
+                  </div>
+                </div>
+                <button className="see-all-btn">SEE ALL</button>
+              </div>
+
+              {/* Lectures Section */}
+              <div className="research-section">
+                <div className="section-header">
+                  <h3 className="section-title">LECTURES</h3>
+                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
+                </div>
+                <div className="research-list">
+                  <div className="research-item-list">
+                    <img src="/icons/lectures.svg" alt="Lecture" className="item-icon" />
+                    <div className="item-content">
+                      <h4 className="item-title">Evaluating the Effect of Psychedelics on Depression in Cancer Patients</h4>
+                      <p className="item-details">Cancer Research Journal, 2025</p>
+                      <p className="item-details">M. Kruger, K. Choi, et. al</p>
+                      <p className="item-status">Not Started</p>
+                      <p className="item-action">Add insights →</p>
+                    </div>
+                  </div>
+                  <div className="research-item-list">
+                    <img src="/icons/lectures.svg" alt="Lecture" className="item-icon" />
+                    <div className="item-content">
+                      <h4 className="item-title">Evaluating the Effect of Psychedelics on Depression in Cancer Patients</h4>
+                      <p className="item-details">Cancer Research Journal, 2025</p>
+                      <p className="item-details">M. Kruger, K. Choi, et. al</p>
+                      <p className="item-status">Reading</p>
+                      <p className="item-action">Add insights →</p>
+                      <p className="item-link">View insights →</p>
+                    </div>
+                  </div>
+                </div>
+                <button className="see-all-btn">SEE ALL</button>
+              </div>
+
+              {/* Textbooks Section */}
+              <div className="research-section">
+                <div className="section-header">
+                  <h3 className="section-title">TEXTBOOKS</h3>
+                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
+                </div>
+                <div className="research-list">
+                  <div className="research-item-list">
+                    <img src="/icons/textbooks.svg" alt="Textbook" className="item-icon" />
+                    <div className="item-content">
+                      <h4 className="item-title">Quantum Mechanics Basics</h4>
+                      <p className="item-details">Pearson, 2018</p>
+                      <p className="item-details">M. Kruger, K. Choi, et. al</p>
+                      <p className="item-status">Reading</p>
+                      <p className="item-action">Add insights →</p>
+                    </div>
+                  </div>
+                  <div className="research-item-list">
+                    <img src="/icons/textbooks.svg" alt="Textbook" className="item-icon" />
+                    <div className="item-content">
+                      <h4 className="item-title">Quantum Mechanics Basics</h4>
+                      <p className="item-details">Pearson, 2018</p>
+                      <p className="item-details">M. Kruger, K. Choi, et. al</p>
+                      <p className="item-status">Not started</p>
+                      <p className="item-action">Edit →</p>
+                    </div>
+                  </div>
+                </div>
+                <button className="see-all-btn">SEE ALL</button>
+              </div>
+            </div>
+
+            {/* Projects Section */}
+            <div className="projects-container">
+              <h2 className="section-main-title">Projects</h2>
+              {/* Essays Section */}
+              <div className="projects-section">
+                <div className="section-header">
+                  <h3 className="section-title">ESSAYS</h3>
+                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
+                </div>
+                <div className="essays-description">
+                  Super-curricular essays for your personal statement and interviews
+                </div>
+                <div className="essays-actions">
+                  <button className="action-btn primary">+ New Essay</button>
+                  <button className="action-btn secondary">Import from Google Docs</button>
+                </div>
+                
+                <div className="essays-list">
+                  <div className="essay-item">
+                    <div className="essay-icon">
+                      <img src="/icons/essays.svg" alt="Essay" className="item-icon" />
+                    </div>
+                    <div className="essay-content">
+                      <div className="essay-header">
+                        <h4 className="essay-title">How does behavioural economics challenge traditional theory?</h4>
+                        <span className="essay-edited">Last edited: 2 hours ago</span>
+                      </div>
+                      <div className="essay-details">
+                        <span className="essay-subject">Economics, 847 words</span>
+                        <span className="essay-status">Draft</span>
+                      </div>
+                      <div className="essay-actions">
+                        <div className="essay-actions-left">
+                          <button className="essay-action-btn continue">Continue Writing</button>
+                          <button className="essay-action-btn view">View</button>
+                          <button className="essay-action-btn delete">Delete</button>
+                        </div>
+                        <div className="essay-actions-right">
+                          <button className="essay-action-btn add-ps">Add to PS</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="essay-item">
+                    <div className="essay-icon">
+                      <img src="/icons/essays.svg" alt="Essay" className="item-icon" />
+                    </div>
+                    <div className="essay-content">
+                      <div className="essay-header">
+                        <h4 className="essay-title">The ethics of AI in healthcare</h4>
+                        <span className="essay-completed">Completed: Oct 9 2025</span>
+                      </div>
+                      <div className="essay-details">
+                        <span className="essay-subject">Philosophy, 1241 words</span>
+                        <span className="essay-status final">Final</span>
+                      </div>
+                      <div className="essay-actions">
+                        <div className="essay-actions-left">
+                          <button className="essay-action-btn view">View</button>
+                          <button className="essay-action-btn export">Export PDF</button>
+                        </div>
+                        <div className="essay-actions-right">
+                          <button className="essay-action-btn add-ps blue">In PS</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="section-footer">
+                  <span className="section-count">2 of 5 essays</span>
+                </div>
+              </div>
+
+              {/* EPQ Section */}
+              <div className="projects-section">
+                <div className="section-header">
+                  <h3 className="section-title">EPQ (Extended Project Qualification)</h3>
+                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
+                </div>
+                <div className="epq-description">
+                  Your independent research project
+                </div>
+                
+                <div className="epq-project">
+                  <div className="epq-icon">
+                    <img src="/icons/essays.svg" alt="EPQ" className="item-icon" />
+                  </div>
+                  <div className="epq-content">
+                    <div className="epq-header">
+                      <h4 className="epq-title">Project Title: Price Elasticity in the Fast Food Market</h4>
+                      <span className="epq-progress">40%</span>
+                    </div>
+                    <div className="epq-progress-bar">
+                      <div className="progress-fill" style={{width: '40%'}}></div>
+                    </div>
+                    <div className="epq-status">
+                      <span className="status-label">Status: Research Phase</span>
+                    </div>
+                    
+                    <div className="epq-sections">
+                      <h5 className="sections-title">Sections:</h5>
+                      <div className="sections-list">
+                        <div className="section-item completed">
+                          <div className="checkbox completed">✓</div>
+                          <span>Introduction</span>
+                        </div>
+                        <div className="section-item completed">
+                          <div className="checkbox completed">✓</div>
+                          <span>Literature</span>
+                        </div>
+                        <div className="section-item in-progress">
+                          <div className="checkbox in-progress">◐</div>
+                          <span>Methodology (in progress)</span>
+                        </div>
+                        <div className="section-item">
+                          <div className="checkbox"></div>
+                          <span>Data Collection</span>
+                        </div>
+                        <div className="section-item">
+                          <div className="checkbox"></div>
+                          <span>Analysis</span>
+                        </div>
+                        <div className="section-item">
+                          <div className="checkbox"></div>
+                          <span>Conclusion</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="epq-meta">
+                      <div className="epq-stats">
+                        <span>Target: 5,000 words</span>
+                        <span>Current: 1,847</span>
+                      </div>
+                      <div className="epq-deadline">
+                        <span>Due: 15 March 2026</span>
+                        <span>120 days left</span>
+                      </div>
+                    </div>
+                    
+                    <div className="epq-actions">
+                      <div className="epq-actions-left">
+                        <button className="epq-action-btn continue">Continue Working</button>
+                        <button className="epq-action-btn timeline">View Timeline</button>
+                      </div>
+                      <div className="epq-actions-right">
+                        <button className="epq-action-btn add-ps">Add to PS</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="epq-new">
+                  <button className="action-btn primary">+ Start New EPQ</button>
+                </div>
+              </div>
+
+              {/* MOOCs Section */}
+              <div className="projects-section">
+                <div className="section-header">
+                  <h3 className="section-title">MOOCS (Online Courses)</h3>
+                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
+                </div>
+                <div className="moocs-description">
+                  Super-curricular essays for your personal statement and interviews.
+                </div>
+                <div className="moocs-actions">
+                  <button className="action-btn primary">+ Add MOOC</button>
+                  <button className="action-btn secondary">Import from Google Docs</button>
+                </div>
+                
+                <div className="moocs-list">
+                  <div className="mooc-item">
+                    <div className="mooc-icon">
+                      <img src="/icons/moocs.svg" alt="MOOC" className="item-icon" />
+                    </div>
+                    <div className="mooc-content">
+                      <div className="mooc-header">
+                        <h4 className="mooc-title">Introduction to Behavioural Economics</h4>
+                        <div className="mooc-subjects">Economics, Psychology</div>
+                      </div>
+                      <div className="mooc-provider">Yale University, Coursera</div>
+                      <div className="mooc-progress-section">
+                        <span className="mooc-status">Status: 78% Complete</span>
+                        <div className="mooc-progress-bar">
+                          <div className="progress-fill" style={{width: '78%'}}></div>
+                        </div>
+                        <span className="mooc-week">Week 6/8</span>
+                      </div>
+                      <div className="mooc-dates">
+                        <span>Started: 1 Sept 2025</span>
+                        <span>Expected Finish: 25 Oct 2025</span>
+                      </div>
+                      <div className="mooc-actions">
+                        <div className="mooc-actions-left">
+                          <button className="mooc-action-btn insights">Add Insight</button>
+                          <button className="mooc-action-btn view">View Insights</button>
+                        </div>
+                        <div className="mooc-actions-right">
+                          <button className="mooc-action-btn add-ps">Add to PS</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mooc-item">
+                    <div className="mooc-icon">
+                      <img src="/icons/moocs.svg" alt="MOOC" className="item-icon" />
+                    </div>
+                    <div className="mooc-content">
+                      <div className="mooc-header">
+                        <h4 className="mooc-title">Introduction to Behavioural Economics</h4>
+                        <div className="mooc-subjects">Economics</div>
+                      </div>
+                      <div className="mooc-provider">Yale University, Coursera</div>
+                      <div className="mooc-progress-section">
+                        <span className="mooc-status">Status: 78% Complete</span>
+                        <div className="mooc-progress-bar">
+                          <div className="progress-fill" style={{width: '78%'}}></div>
+                        </div>
+                      </div>
+                      <div className="mooc-dates">
+                        <span>Started: 1 Sept 2025</span>
+                        <span>Expected Finish: 25 Oct 2025</span>
+                      </div>
+                      <div className="mooc-actions">
+                        <div className="mooc-actions-left">
+                          <button className="mooc-action-btn insights">Add Insight</button>
+                          <button className="mooc-action-btn view">View Insights</button>
+                        </div>
+                        <div className="mooc-actions-right">
+                          <button className="mooc-action-btn add-ps blue">In PS</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="section-footer">
+                  <span className="section-count">2 of 3 MOOCS</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Extras Section */}
+            <div className="extras-container">
+              <h2 className="section-main-title">Extra Activities</h2>
+              {/* Internships & Work Experience Section */}
+              <div className="extras-section">
+                <div className="section-header">
+                  <h3 className="section-title">INTERNSHIPS & WORK EXPERIENCE</h3>
+                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
+                </div>
+                <div className="extras-actions">
+                  <button className="action-btn primary">+ Add Experience</button>
+                </div>
+                
+                <div className="internships-list">
+                  <div className="internship-item">
+                    <div className="internship-icon">
+                      <img src="/icons/internships.svg" alt="Internship" className="item-icon" />
+                    </div>
+                    <div className="internship-content">
+                      <div className="internship-header">
+                        <h4 className="internship-title">Economics Research Intern</h4>
+                        <span className="internship-updated">Last updated: 1 week ago</span>
+                      </div>
+                      <div className="internship-company">Bank of England</div>
+                      <div className="internship-details">
+                        <span className="internship-subject">Economics, 847 words</span>
+                      </div>
+                      <div className="internship-dates">
+                        <span>July - Aug 2025, 6 weeks</span>
+                      </div>
+                      <div className="internship-actions">
+                        <div className="internship-actions-left">
+                          <button className="internship-action-btn edit">Edit</button>
+                          <button className="internship-action-btn view">View Details</button>
+                        </div>
+                        <div className="internship-actions-right">
+                          <button className="internship-action-btn add-ps">Add to PS</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="section-footer">
+                  <span className="section-count">1 of 3 experiences</span>
+                </div>
+              </div>
+
+              {/* Societies & Clubs Section */}
+              <div className="extras-section">
+                <div className="section-header">
+                  <h3 className="section-title">SOCIETIES & CLUBS</h3>
+                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
+                </div>
+                <div className="extras-actions">
+                  <button className="action-btn primary">+ Add Society</button>
+                </div>
+                
+                <div className="societies-list">
+                  <div className="society-item">
+                    <div className="society-icon">
+                      <img src="/icons/societies.svg" alt="Society" className="item-icon" />
+                    </div>
+                    <div className="society-content">
+                      <div className="society-header">
+                        <h4 className="society-title">Economics Society</h4>
+                        <span className="society-updated">Last updated: 2 days ago</span>
+                      </div>
+                      <div className="society-school">Sixth Form</div>
+                      <div className="society-role">
+                        <span>President: Sept 2024 - Present</span>
+                      </div>
+                      <div className="society-description">
+                        <span>Leadership</span>
+                      </div>
+                      <div className="society-actions">
+                        <div className="society-actions-left">
+                          <button className="society-action-btn edit">Edit</button>
+                          <button className="society-action-btn view">View Details</button>
+                        </div>
+                        <div className="society-actions-right">
+                          <button className="society-action-btn add-ps">Add to PS</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="section-footer">
+                  <span className="section-count">1 of 3 societies</span>
+                </div>
+              </div>
+
+              {/* Academic Challenges & Competitions Section */}
+              <div className="extras-section">
+                <div className="section-header">
+                  <h3 className="section-title">ACADEMIC CHALLENGES & COMPETITIONS</h3>
+                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
+                </div>
+                <div className="extras-actions">
+                  <button className="action-btn primary">+ Add Challenge</button>
+                  <button className="action-btn secondary">Browse Upcoming →</button>
+                </div>
+                
+                <div className="challenges-list">
+                  <div className="challenge-item">
+                    <div className="challenge-icon">
+                      <img src="/icons/academic-challenges.svg" alt="Challenge" className="item-icon" />
+                    </div>
+                    <div className="challenge-content">
+                      <div className="challenge-header">
+                        <h4 className="challenge-title">UK Economics Challenge</h4>
+                        <span className="challenge-completed">Completed: March 2025</span>
+                      </div>
+                      <div className="challenge-type">National Competition</div>
+                      <div className="challenge-achievement">
+                        <span>Gold Award, Top 10%</span>
+                      </div>
+                      <div className="challenge-subject">
+                        <span>Economics</span>
+                      </div>
+                      <div className="challenge-actions">
+                        <div className="challenge-actions-left">
+                          <button className="challenge-action-btn edit">Edit</button>
+                          <button className="challenge-action-btn view">View Details</button>
+                        </div>
+                        <div className="challenge-actions-right">
+                          <button className="challenge-action-btn add-ps">Add to PS</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="section-footer">
+                  <span className="section-count">1 of 5 challenges</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderAskBoTab = () => {
+    const addNewPage = (question) => {
+      const newPageId = Math.max(...questionPages[question].map(p => p.id)) + 1;
+      setQuestionPages(prev => ({
+        ...prev,
+        [question]: [...prev[question], { id: newPageId, content: '', title: `Page ${newPageId}` }]
+      }));
+      setActivePages(prev => ({ ...prev, [question]: newPageId }));
+    };
+
+    const updatePageContent = (question, pageId, content) => {
+      setQuestionPages(prev => ({
+        ...prev,
+        [question]: prev[question].map(p => 
+          p.id === pageId ? { ...p, content } : p
+        )
+      }));
+    };
+
+    const savePage = (question, pageId) => {
+      const page = questionPages[question].find(p => p.id === pageId);
+      console.log(`Saving ${question}, Page ${pageId}:`, page);
+      // Database save will be implemented later
+    };
+
+    const renderQuestionBox = (questionNum, title) => {
+      const question = `question${questionNum}`;
+      const currentPage = questionPages[question].find(p => p.id === activePages[question]);
+
+      return (
+        <div className="question-box">
+          <div className="question-header">
+            <h3 className="question-title">{title}</h3>
+            <div className="page-navigation">
+              <div className="page-tabs">
+                {questionPages[question].map(page => (
+                  <button
+                    key={page.id}
+                    className={`page-tab ${activePages[question] === page.id ? 'active' : ''}`}
+                    onClick={() => setActivePages(prev => ({ ...prev, [question]: page.id }))}
+                  >
+                    {page.title}
+                  </button>
+                ))}
+                <button className="add-page-btn" onClick={() => addNewPage(question)}>
+                  + New Page
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="question-content">
+            <textarea
+              className="question-textarea"
+              value={currentPage?.content || ''}
+              onChange={(e) => updatePageContent(question, activePages[question], e.target.value)}
+              placeholder={`Start writing your response for ${title} here...`}
+            />
+            <div className="question-actions">
+              <button 
+                className="save-btn"
+                onClick={() => savePage(question, activePages[question])}
+              >
+                Save Page {activePages[question]}
+              </button>
+              <div className="word-count">
+                {currentPage?.content ? currentPage.content.split(/\s+/).filter(word => word.length > 0).length : 0} words
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    return (
+      <div className="accordion-content">
+        <div className="main-container">
+          <div className="ask-bo-container">
+            {/* Chat Interface */}
+            <div className="ask-bo-chat">
+              <div className="chat-container full-chat">
+                <div className="chat-header">
+                  <span className="chat-title">Ask Bo - Your AI Assistant</span>
+                </div>
+                <div className="chat-messages">
+                  <div className="message buddy-message">
+                    <div className="message-time">Now</div>
+                    <div className="message-content">
+                      Hi! I'm Bo, your AI assistant. I can help you with your personal statement questions, provide feedback, and offer guidance. How can I help you today?
+                    </div>
+                  </div>
+                </div>
+                <div className="chat-input">
+                  <input type="text" placeholder="Ask Bo anything about your personal statement..." />
+                  <button className="send-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#00CED1" stroke="#00CED1" strokeWidth="2">
+                      <path d="M22 2L11 13"/>
+                      <path d="M22 2l-7 20-4-9-9-4 20-7z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Question Writing Boxes */}
+            <div className="questions-section">
+              <h2 className="section-title">Personal Statement Questions</h2>
+              <div className="questions-container">
+                {renderQuestionBox(1, "Question 1")}
+                {renderQuestionBox(2, "Question 2")}
+                {renderQuestionBox(3, "Question 3")}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderTabContent = () => {
     switch (activeTab) {
       case 'profile':
         return renderProfileTab();
-      case 'research':
-        return renderResearchTab();
-      case 'projects':
-        return renderProjectsTab();
-      case 'extra':
-        return renderExtrasTab();
-      case 'saved-links':
-        return <div className="tab-content">Saved Links content coming soon...</div>;
+      case 'notes':
+        return renderNotesTab();
+      case 'ask-bo':
+        return renderAskBoTab();
       default:
         return null;
     }
