@@ -14,15 +14,15 @@ export default function StudyBookPage() {
   const [activeTab, setActiveTab] = useState('profile');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [userSubject, setUserSubject] = useState('');
-  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [uploadedFiles, setUploadedFiles] = useState<{id: number, name: string, size: number, type: string}[]>([]);
   const [boEditMode, setBoEditMode] = useState(false);
-  const [viewingFile, setViewingFile] = useState(null);
-  const [questionPages, setQuestionPages] = useState({
+  const [viewingFile, setViewingFile] = useState<string | null>(null);
+  const [questionPages, setQuestionPages] = useState<{[key: string]: Array<{id: number, content: string, title: string}>}>({
     question1: [{ id: 1, content: '', title: 'Page 1' }],
     question2: [{ id: 1, content: '', title: 'Page 1' }],
     question3: [{ id: 1, content: '', title: 'Page 1' }]
   });
-  const [activePages, setActivePages] = useState({
+  const [activePages, setActivePages] = useState<{[key: string]: number}>({
     question1: 1,
     question2: 1,
     question3: 1
@@ -897,8 +897,8 @@ export default function StudyBookPage() {
   };
 
   const renderNotesTab = () => {
-    const handleFileUpload = (e) => {
-      const files = Array.from(e.target.files);
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = Array.from(e.target.files || []);
       const newFiles = files.map(file => ({
         id: Date.now() + Math.random(),
         name: file.name,
@@ -908,7 +908,7 @@ export default function StudyBookPage() {
       setUploadedFiles(prev => [...prev, ...newFiles]);
     };
 
-    const removeFile = (fileId) => {
+    const removeFile = (fileId: number) => {
       setUploadedFiles(prev => prev.filter(f => f.id !== fileId));
     };
 
@@ -1493,7 +1493,7 @@ export default function StudyBookPage() {
   };
 
   const renderAskBoTab = () => {
-    const addNewPage = (question) => {
+    const addNewPage = (question: string) => {
       const newPageId = Math.max(...questionPages[question].map(p => p.id)) + 1;
       setQuestionPages(prev => ({
         ...prev,
@@ -1502,7 +1502,7 @@ export default function StudyBookPage() {
       setActivePages(prev => ({ ...prev, [question]: newPageId }));
     };
 
-    const updatePageContent = (question, pageId, content) => {
+    const updatePageContent = (question: string, pageId: number, content: string) => {
       setQuestionPages(prev => ({
         ...prev,
         [question]: prev[question].map(p => 
@@ -1511,13 +1511,13 @@ export default function StudyBookPage() {
       }));
     };
 
-    const savePage = (question, pageId) => {
+    const savePage = (question: string, pageId: number) => {
       const page = questionPages[question].find(p => p.id === pageId);
       console.log(`Saving ${question}, Page ${pageId}:`, page);
       // Database save will be implemented later
     };
 
-    const renderQuestionBox = (questionNum, title) => {
+    const renderQuestionBox = (questionNum: number, title: string) => {
       const question = `question${questionNum}`;
       const currentPage = questionPages[question].find(p => p.id === activePages[question]);
 
