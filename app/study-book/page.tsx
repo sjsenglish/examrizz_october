@@ -25,7 +25,7 @@ export default function StudyBookPage() {
   const [activeTab, setActiveTab] = useState('profile');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [userSubject, setUserSubject] = useState('');
-  const [uploadedFiles, setUploadedFiles] = useState<{id: string, filename: string, file_size: number, file_type: string, file_url: string, created_at: string}[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<{id: string, file_name: string, file_type: string, file_path: string, created_at: string}[]>([]);
   const [uploadProgress, setUploadProgress] = useState<{[key: string]: number}>({});
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [editingSections, setEditingSections] = useState<{[key: string]: boolean}>({});
@@ -1434,14 +1434,18 @@ export default function StudyBookPage() {
                            file.file_type.includes('word') ? '📝' : '📄'}
                         </span>
                         <div className="file-details">
-                          <span className="file-name">{file.filename}</span>
-                          <span className="file-size">{(file.file_size / 1024).toFixed(1)} KB</span>
+                          <span className="file-name">{file.file_name}</span>
                           <span className="file-date">{new Date(file.created_at).toLocaleDateString()}</span>
                         </div>
                         <div className="file-actions">
                           <button 
                             className="view-file-btn"
-                            onClick={() => window.open(file.file_url, '_blank')}
+                            onClick={() => {
+                              const { data: { publicUrl } } = supabase.storage
+                                .from('user-materials')
+                                .getPublicUrl(file.file_path);
+                              window.open(publicUrl, '_blank');
+                            }}
                           >
                             View
                           </button>

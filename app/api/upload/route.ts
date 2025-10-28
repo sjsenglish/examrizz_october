@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { data: uploadData, error: uploadError } = await supabase.storage
-      .from('study-materials')
+      .from('user-materials')
       .upload(fileName, uint8Array, {
         contentType: file.type,
         upsert: false
@@ -70,32 +70,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to upload file' }, { status: 500 });
     }
 
-    const { data: { publicUrl } } = supabase.storage
-      .from('study-materials')
-      .getPublicUrl(fileName);
-
     const fileRecord = {
       user_id: user.id,
-      filename: file.name,
-      original_filename: file.name,
+      file_name: file.name,
       file_path: fileName,
-      file_url: publicUrl,
       file_type: file.type,
-      file_size: file.size,
       extracted_text: extractedText,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      created_at: new Date().toISOString()
     };
 
     const { data: dbData, error: dbError } = await supabase
-      .from('uploaded_files')
+      .from('user_uploads')
       .insert(fileRecord)
       .select()
       .single();
 
     if (dbError) {
       console.error('Database error:', dbError);
-      await supabase.storage.from('study-materials').remove([fileName]);
+      await supabase.storage.from('user-materials').remove([fileName]);
       return NextResponse.json({ error: 'Failed to save file record' }, { status: 500 });
     }
 
@@ -103,10 +95,9 @@ export async function POST(request: NextRequest) {
       success: true,
       file: {
         id: dbData.id,
-        filename: dbData.filename,
+        file_name: dbData.file_name,
         file_type: dbData.file_type,
-        file_size: dbData.file_size,
-        file_url: dbData.file_url,
+        file_path: dbData.file_path,
         extracted_text: dbData.extracted_text,
         created_at: dbData.created_at
       }

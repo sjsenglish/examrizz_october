@@ -955,8 +955,8 @@ export async function POST(request: NextRequest) {
     // Get user's uploaded files and notes for additional context
     const [filesResponse, notesResponse] = await Promise.all([
       supabase
-        .from('uploaded_files')
-        .select('filename, extracted_text')
+        .from('user_uploads')
+        .select('file_name, extracted_text')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(5),
@@ -977,7 +977,7 @@ export async function POST(request: NextRequest) {
       contextString += '\n\nCONTEXT - UPLOADED MATERIALS:\n';
       filesResponse.data.forEach((file, index) => {
         if (file.extracted_text && file.extracted_text.trim()) {
-          contextString += `\n${index + 1}. ${file.filename}:\n${file.extracted_text.slice(0, 1000)}${file.extracted_text.length > 1000 ? '...' : ''}\n`;
+          contextString += `\n${index + 1}. ${file.file_name}:\n${file.extracted_text.slice(0, 1000)}${file.extracted_text.length > 1000 ? '...' : ''}\n`;
         }
       });
     }

@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { data, error } = await supabase
-      .from('uploaded_files')
+      .from('user_uploads')
       .select('*')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false });
@@ -53,7 +53,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const { data: fileRecord, error: fetchError } = await supabase
-      .from('uploaded_files')
+      .from('user_uploads')
       .select('file_path')
       .eq('id', id)
       .eq('user_id', user.id)
@@ -64,7 +64,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const { error: deleteDbError } = await supabase
-      .from('uploaded_files')
+      .from('user_uploads')
       .delete()
       .eq('id', id)
       .eq('user_id', user.id);
@@ -75,7 +75,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const { error: deleteStorageError } = await supabase.storage
-      .from('study-materials')
+      .from('user-materials')
       .remove([fileRecord.file_path]);
 
     if (deleteStorageError) {
