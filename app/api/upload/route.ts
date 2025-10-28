@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs';
+const pdfParse = require('pdf-parse');
 import mammoth from 'mammoth';
 
 const supabase = createClient(
@@ -45,20 +45,10 @@ export async function POST(request: NextRequest) {
 
     try {
       if (fileExtension === 'pdf') {
-        const loadingTask = pdfjsLib.getDocument({ data: uint8Array });
-        const pdf = await loadingTask.promise;
-        let text = '';
-        
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i);
-          const textContent = await page.getTextContent();
-          const pageText = textContent.items
-            .map((item: any) => item.str)
-            .join(' ');
-          text += pageText + '\n';
-        }
-        
-        extractedText = text.trim();
+        // Convert Uint8Array to Buffer for pdf-parse
+        const pdfBuffer = Buffer.from(uint8Array);
+        const pdfData = await pdfParse(pdfBuffer);
+        extractedText = pdfData.text;
       } else if (fileExtension === 'docx') {
         const result = await mammoth.extractRawText({ buffer: Buffer.from(uint8Array) });
         extractedText = result.value;
