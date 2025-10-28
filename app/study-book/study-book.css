@@ -2326,3 +2326,29 @@
 .chat-messages::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
+
+/* =============================================================================
+   LOGOUT BUTTON STYLING
+   ============================================================================= */
+
+.logout-button {
+  background: linear-gradient(135deg, #6366f1, #06b6d4);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logout-button:hover {
+  background: linear-gradient(135deg, #4f46e5, #0891b2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.logout-button:active {
+  transform: translateY(0);
+}
