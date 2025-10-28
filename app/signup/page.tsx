@@ -35,10 +35,15 @@ export default function SignupPage() {
     setError('');
 
     try {
-      // Create auth user
+      // Create auth user - the database trigger will automatically create user_profiles row
       const { data, error: authError } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            full_name: fullName
+          }
+        }
       });
 
       if (authError) {
@@ -47,25 +52,6 @@ export default function SignupPage() {
       }
 
       if (data.user) {
-        // Create user profile
-        const { error: profileError } = await supabase
-          .from('user_profiles')
-          .insert({
-            id: data.user.id,
-            auth_user_id: data.user.id,
-            full_name: fullName,
-            role: 'student',
-            subject: null,
-            discord_username: null,
-            school_id: null
-          });
-
-        if (profileError) {
-          console.error('Profile creation error:', profileError);
-          setError('Account created but profile setup failed. Please contact support.');
-          return;
-        }
-
         // Check if email confirmation is required
         if (data.session) {
           router.push('/study-book');
