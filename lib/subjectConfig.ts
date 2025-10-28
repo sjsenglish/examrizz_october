@@ -60,9 +60,18 @@ export const SUBJECT_CONFIGS: SubjectConfig[] = [
     id: 'bmat',
     name: 'BMAT',
     indexName: 'bmat_questions', // Update this when BMAT index is created
-    available: false, // Set to true when index is ready
+    available: true, // Set to true when index is ready
     filters: [
       // Add BMAT-specific filters here when needed
+    ]
+  },
+  {
+    id: 'interview',
+    name: 'Interview',
+    indexName: 'interview_questions', // Update this when Interview index is created
+    available: true, // Set to true when index is ready
+    filters: [
+      // Add Interview-specific filters here when needed
     ]
   },
   {

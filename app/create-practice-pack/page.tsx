@@ -142,27 +142,25 @@ export default function CreatePracticePackPage() {
         </button>
       </nav>
 
+      {/* Close Button */}
+      <Link href="/practice" className="close-button">
+        ×
+      </Link>
+
       {/* Main Content */}
       <div className="main-content">
-        {/* Modal */}
-        <div className="modal-container">
-          {/* Close Button */}
-          <Link href="/practice" className="close-button">
-            ×
-          </Link>
+        {/* Header */}
+        <h1 className="header-title">
+          Create Your Practice Pack
+        </h1>
 
-          {/* Header */}
-          <h1 className="header-title">
-            Create Your Practice Pack
-          </h1>
+        {/* Step indicator */}
+        <div className="step-indicator">
+          Step 1 of 2
+        </div>
 
-          {/* Step indicator */}
-          <div className="step-indicator">
-            Step 1 of 2
-          </div>
-
-          {/* Two Cards Side by Side */}
-          <div className="cards-container">
+        {/* Two Cards Side by Side */}
+        <div className="cards-container">
             
             {/* Left Card */}
             <article className="card">

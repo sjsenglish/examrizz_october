@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, use } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
 import { getQuestionsByIds } from '../../../lib/algolia';
 import './practice-session.css';
@@ -511,6 +512,34 @@ export default function PracticeSessionPage({ params }: { params: Promise<{ pack
           <div className="practice-menu-line"></div>
         </button>
       </nav>
+
+      {/* Back Button */}
+      <Link 
+        href="/practice"
+        style={{
+          position: 'absolute',
+          top: '80px',
+          left: '40px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          padding: '9px 18px',
+          backgroundColor: '#FFFFFF',
+          borderRadius: '8px',
+          textDecoration: 'none',
+          color: '#333333',
+          fontFamily: "'Madimi One', cursive",
+          fontSize: '13px',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+          transition: 'all 0.3s ease',
+          zIndex: 20
+        }}
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+        Back
+      </Link>
 
       <div className="practice-session-container">
         {/* Left Side - Question */}

@@ -22,7 +22,7 @@ import './practice.css';
  * - /practice page = standalone practice sessions with custom question packs
  */
 export default function PracticePage() {
-  const [activeTab, setActiveTab] = useState('Admissions');
+  const [activeTab, setActiveTab] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('');
   const [selectedAdmissionSubject, setSelectedAdmissionSubject] = useState('');
   const [showALevelDropdown, setShowALevelDropdown] = useState(false);
@@ -346,7 +346,7 @@ export default function PracticePage() {
                   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                   zIndex: 9999
                 }}>
-                  {['Maths', 'Physics', 'Economics', 'Biology', 'Chemistry'].map((subject) => (
+                  {['Maths', 'Physics', 'English Lit', 'Biology', 'Chemistry'].map((subject) => (
                     <button
                       key={subject}
                       style={{
