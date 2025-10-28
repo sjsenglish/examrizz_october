@@ -55,7 +55,7 @@
 
 /* Main Container */
 .practice-session-container {
-  padding: 80px 40px 40px;
+  padding: 140px 40px 40px;
   display: flex;
   gap: 40px;
   max-width: 1400px;
