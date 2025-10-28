@@ -398,8 +398,8 @@
 .chat-container {
   background: white;
   border-radius: 10px;
-  height: 500px;
-  max-height: calc(100vh - 300px);
+  height: 700px;
+  max-height: calc(100vh - 200px);
   display: flex;
   flex-direction: column;
   border: 1px solid #000000;
@@ -448,12 +448,15 @@
 
 .chat-messages {
   flex: 1;
-  padding: 13px;
+  padding: 16px;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  min-height: 240px;
+  gap: 12px;
+  min-height: 400px;
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
 }
 
 .message {
@@ -475,21 +478,21 @@
 
 .message-time {
   font-family: 'Figtree', sans-serif;
-  font-size: 8px;
+  font-size: 11px;
   color: #666;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
   letter-spacing: 0.04em;
 }
 
 .message-content {
   background: #F3F2FF;
-  padding: 8px 10px;
-  border-radius: 6px;
+  padding: 12px 14px;
+  border-radius: 8px;
   font-family: 'Figtree', sans-serif;
-  font-size: 10px;
+  font-size: 14px;
   color: #221468;
-  line-height: 1.4;
-  letter-spacing: 0.04em;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
   border: 1px solid #E7E6FF;
 }
 
@@ -512,22 +515,23 @@
 }
 
 .chat-input {
-  padding: 13px;
+  padding: 16px;
   border-top: 1px solid #E7E6FF;
   display: flex;
-  gap: 6px;
+  gap: 8px;
   align-items: center;
 }
 
 .chat-input input {
   flex: 1;
-  padding: 6px 10px;
+  padding: 10px 12px;
   border: 1px solid #D4D0FF;
-  border-radius: 5px;
+  border-radius: 6px;
   font-family: 'Figtree', sans-serif;
-  font-size: 10px;
+  font-size: 14px;
   background: white;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
+  min-height: 20px;
 }
 
 .chat-input input:focus {
@@ -539,9 +543,9 @@
 .send-button {
   background: white;
   border: 1px solid #00CED1;
-  border-radius: 5px;
-  width: 26px;
-  height: 26px;
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -554,8 +558,8 @@
 }
 
 .send-button svg {
-  width: 11px;
-  height: 11px;
+  width: 16px;
+  height: 16px;
   stroke: #00CED1;
   fill: #00CED1;
 }
@@ -2283,7 +2287,7 @@
 
 .user-message .message-time {
   text-align: right;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
 }
 
 /* Disabled input styling */

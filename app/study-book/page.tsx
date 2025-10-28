@@ -87,7 +87,17 @@ export default function StudyBookPage() {
   }, [messages]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Only scroll if we're in the Ask Bo tab and have messages
+    if (activeTab === 'ask-bo' && messages.length > 0) {
+      // Use a timeout to ensure the message is rendered before scrolling
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'end',
+          inline: 'nearest'
+        });
+      }, 100);
+    }
   };
 
   const loadConversationHistory = async (currentUserId: string) => {
