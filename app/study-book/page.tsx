@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
 import './study-book.css';
 
 const supabase = createClient(
@@ -1819,7 +1820,9 @@ export default function StudyBookPage() {
                     <div className="message buddy-message">
                       <div className="message-time">Now</div>
                       <div className="message-content">
-                        Hi! I'm Bo, your AI assistant. I can help you with your personal statement questions, provide feedback, and offer guidance. How can I help you today?
+                        <ReactMarkdown>
+                          Hi! I'm Bo, your AI assistant. I can help you with your personal statement questions, provide feedback, and offer guidance. How can I help you today?
+                        </ReactMarkdown>
                       </div>
                     </div>
                   ) : (
@@ -1829,7 +1832,11 @@ export default function StudyBookPage() {
                           {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </div>
                         <div className="message-content">
-                          {message.content}
+                          {message.role === 'assistant' ? (
+                            <ReactMarkdown>{message.content}</ReactMarkdown>
+                          ) : (
+                            message.content
+                          )}
                         </div>
                       </div>
                     ))

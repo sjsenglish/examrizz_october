@@ -2356,3 +2356,103 @@
 .logout-button:active {
   transform: translateY(0);
 }
+
+/* =============================================================================
+   MARKDOWN STYLING FOR BO CHAT MESSAGES
+   ============================================================================= */
+
+/* Style ReactMarkdown output to match chat aesthetic */
+.message-content .react-markdown,
+.buddy-message .message-content {
+  /* Reset any default margins */
+}
+
+.buddy-message .message-content p {
+  margin: 0 0 8px 0;
+  line-height: 1.5;
+}
+
+.buddy-message .message-content p:last-child {
+  margin-bottom: 0;
+}
+
+.buddy-message .message-content strong {
+  font-weight: 600;
+  color: #1a0f5e;
+}
+
+.buddy-message .message-content em {
+  font-style: italic;
+  color: #2d1a6b;
+}
+
+.buddy-message .message-content ul,
+.buddy-message .message-content ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.buddy-message .message-content li {
+  margin: 4px 0;
+  line-height: 1.4;
+}
+
+.buddy-message .message-content code {
+  background: rgba(34, 20, 104, 0.1);
+  color: #1a0f5e;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 13px;
+}
+
+.buddy-message .message-content pre {
+  background: rgba(34, 20, 104, 0.05);
+  border: 1px solid rgba(34, 20, 104, 0.1);
+  border-radius: 6px;
+  padding: 12px;
+  margin: 8px 0;
+  overflow-x: auto;
+}
+
+.buddy-message .message-content pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+.buddy-message .message-content blockquote {
+  border-left: 3px solid #221468;
+  margin: 8px 0;
+  padding: 8px 12px;
+  background: rgba(34, 20, 104, 0.05);
+  font-style: italic;
+}
+
+.buddy-message .message-content h1,
+.buddy-message .message-content h2,
+.buddy-message .message-content h3,
+.buddy-message .message-content h4,
+.buddy-message .message-content h5,
+.buddy-message .message-content h6 {
+  color: #1a0f5e;
+  font-weight: 600;
+  margin: 12px 0 6px 0;
+  line-height: 1.3;
+}
+
+.buddy-message .message-content h1 { font-size: 16px; }
+.buddy-message .message-content h2 { font-size: 15px; }
+.buddy-message .message-content h3 { font-size: 14px; }
+.buddy-message .message-content h4,
+.buddy-message .message-content h5,
+.buddy-message .message-content h6 { font-size: 14px; }
+
+.buddy-message .message-content a {
+  color: #00CED1;
+  text-decoration: underline;
+}
+
+.buddy-message .message-content a:hover {
+  color: #008B8B;
+}
