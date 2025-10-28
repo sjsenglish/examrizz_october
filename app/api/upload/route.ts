@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import mammoth from 'mammoth';
-
-// Remove all PDF processing - just upload the file and extract text later client-side or via a separate service
+const pdfParse = require('pdf-parse-fork');
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -46,7 +45,16 @@ export async function POST(request: NextRequest) {
 
     try {
       if (fileExtension === 'pdf') {
-        extractedText = ''; // Skip extraction, store empty text for now
+        try {
+          // Attempt PDF text extraction with pdf-parse-fork
+          const pdfBuffer = Buffer.from(uint8Array);
+          const pdfData = await pdfParse(pdfBuffer);
+          extractedText = pdfData.text || '';
+        } catch (pdfError) {
+          // If PDF extraction fails, continue with empty text instead of failing the upload
+          console.warn('PDF text extraction failed, continuing with empty text:', pdfError);
+          extractedText = '';
+        }
       } else if (fileExtension === 'docx') {
         const result = await mammoth.extractRawText({ buffer: Buffer.from(uint8Array) });
         extractedText = result.value;
@@ -54,8 +62,14 @@ export async function POST(request: NextRequest) {
         extractedText = new TextDecoder().decode(uint8Array);
       }
     } catch (extractionError) {
-      console.error('Text extraction error:', extractionError);
-      return NextResponse.json({ error: 'Failed to extract text from file' }, { status: 500 });
+      // Only fail the upload for DOCX/TXT extraction errors, not PDF
+      if (fileExtension !== 'pdf') {
+        console.error('Text extraction error:', extractionError);
+        return NextResponse.json({ error: 'Failed to extract text from file' }, { status: 500 });
+      }
+      // For PDF, log warning and continue with empty text
+      console.warn('Fallback: PDF extraction failed, continuing with empty text:', extractionError);
+      extractedText = '';
     }
 
     const { data: uploadData, error: uploadError } = await supabase.storage
