@@ -952,6 +952,46 @@ export async function POST(request: NextRequest) {
       .eq('conversation_id', currentConversationId)
       .order('created_at', { ascending: true });
 
+    // Get user's uploaded files and notes for additional context
+    const [filesResponse, notesResponse] = await Promise.all([
+      supabase
+        .from('uploaded_files')
+        .select('filename, extracted_text')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(5),
+      supabase
+        .from('question_drafts')
+        .select('section_type, content')
+        .eq('user_id', userId)
+        .not('content', 'is', null)
+        .not('content', 'eq', '')
+        .order('updated_at', { ascending: false })
+        .limit(10)
+    ]);
+
+    // Build context string for the system prompt
+    let contextString = '';
+    
+    if (filesResponse.data && filesResponse.data.length > 0) {
+      contextString += '\n\nCONTEXT - UPLOADED MATERIALS:\n';
+      filesResponse.data.forEach((file, index) => {
+        if (file.extracted_text && file.extracted_text.trim()) {
+          contextString += `\n${index + 1}. ${file.filename}:\n${file.extracted_text.slice(0, 1000)}${file.extracted_text.length > 1000 ? '...' : ''}\n`;
+        }
+      });
+    }
+
+    if (notesResponse.data && notesResponse.data.length > 0) {
+      contextString += '\n\nCONTEXT - STUDENT NOTES:\n';
+      notesResponse.data.forEach((note, index) => {
+        contextString += `\n${index + 1}. ${note.section_type?.toUpperCase()} NOTES:\n${note.content}\n`;
+      });
+    }
+
+    // Enhanced system prompt with user context
+    const enhancedSystemPrompt = BO_SYSTEM_PROMPT + contextString + (contextString ? '\n\nWhen relevant, reference specific details from the student\'s uploaded materials and notes to provide personalized advice. Help them connect their experiences to their personal statement.' : '');
+
     // Prepare messages for Anthropic API
     const messages = (messageHistory || []).slice(-20).map(msg => ({
       role: msg.role === 'assistant' ? 'assistant' as const : 'user' as const,
@@ -965,7 +1005,7 @@ export async function POST(request: NextRequest) {
           const response = await anthropic.messages.create({
             model: 'claude-sonnet-4-5-20250929',
             max_tokens: 2000,
-            system: BO_SYSTEM_PROMPT,
+            system: enhancedSystemPrompt,
             messages: messages,
             stream: true
           });

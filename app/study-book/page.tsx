@@ -25,7 +25,12 @@ export default function StudyBookPage() {
   const [activeTab, setActiveTab] = useState('profile');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [userSubject, setUserSubject] = useState('');
-  const [uploadedFiles, setUploadedFiles] = useState<{id: number, name: string, size: number, type: string}[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<{id: string, filename: string, file_size: number, file_type: string, file_url: string, created_at: string}[]>([]);
+  const [uploadProgress, setUploadProgress] = useState<{[key: string]: number}>({});
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [editingSections, setEditingSections] = useState<{[key: string]: boolean}>({});
+  const [sectionNotes, setSectionNotes] = useState<{[key: string]: string}>({});
+  const [savingNotes, setSavingNotes] = useState<{[key: string]: boolean}>({});
   const [boEditMode, setBoEditMode] = useState(false);
   const [viewingFile, setViewingFile] = useState<string | null>(null);
   const [questionPages, setQuestionPages] = useState<{[key: string]: Array<{id: number, content: string, title: string}>}>({
@@ -75,6 +80,7 @@ export default function StudyBookPage() {
       if (profile) {
         setUserId(profile.id);
         loadConversationHistory(profile.id);
+        loadUploadedFiles();
       } else {
         console.error('No user profile found for user:', user.id);
       }
@@ -261,6 +267,169 @@ export default function StudyBookPage() {
       </div>
     );
   }
+
+  const loadUploadedFiles = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const response = await fetch('/api/files', {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`
+        }
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setUploadedFiles(result.files || []);
+      }
+    } catch (error) {
+      console.error('Load files error:', error);
+    }
+  };
+
+  const toggleSectionEdit = (sectionType: string) => {
+    setEditingSections(prev => ({
+      ...prev,
+      [sectionType]: !prev[sectionType]
+    }));
+
+    if (!editingSections[sectionType]) {
+      loadSectionNotes(sectionType);
+    }
+  };
+
+  const loadSectionNotes = async (sectionType: string) => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const response = await fetch(`/api/notes?section_type=${sectionType}`, {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`
+        }
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        const existingNote = result.notes[0];
+        setSectionNotes(prev => ({
+          ...prev,
+          [sectionType]: existingNote?.content || ''
+        }));
+      }
+    } catch (error) {
+      console.error('Load notes error:', error);
+    }
+  };
+
+  const saveSectionNotes = async (sectionType: string) => {
+    const content = sectionNotes[sectionType];
+    if (!content?.trim()) return;
+
+    setSavingNotes(prev => ({ ...prev, [sectionType]: true }));
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const existingNotesResponse = await fetch(`/api/notes?section_type=${sectionType}`, {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`
+        }
+      });
+
+      let method = 'POST';
+      let body: any = {
+        content,
+        section_type: sectionType,
+        title: `${sectionType} notes`
+      };
+
+      if (existingNotesResponse.ok) {
+        const result = await existingNotesResponse.json();
+        const existingNote = result.notes[0];
+        if (existingNote) {
+          method = 'PUT';
+          body.id = existingNote.id;
+        }
+      }
+
+      const response = await fetch('/api/notes', {
+        method,
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (response.ok) {
+        setEditingSections(prev => ({ ...prev, [sectionType]: false }));
+      }
+    } catch (error) {
+      console.error('Save notes error:', error);
+    } finally {
+      setSavingNotes(prev => ({ ...prev, [sectionType]: false }));
+    }
+  };
+
+  const updateSectionNotes = (sectionType: string, content: string) => {
+    setSectionNotes(prev => ({
+      ...prev,
+      [sectionType]: content
+    }));
+  };
+
+  const renderEditableSection = (sectionType: string, sectionTitle: string) => {
+    const isEditing = editingSections[sectionType];
+    const content = sectionNotes[sectionType] || '';
+    const isSaving = savingNotes[sectionType];
+
+    return (
+      <div className="section-header">
+        <h3 className="section-title">{sectionTitle}</h3>
+        <div className="section-actions">
+          {isEditing ? (
+            <>
+              <button 
+                className="save-btn"
+                onClick={() => saveSectionNotes(sectionType)}
+                disabled={isSaving}
+              >
+                {isSaving ? 'Saving...' : 'Save'}
+              </button>
+              <button 
+                className="cancel-btn"
+                onClick={() => toggleSectionEdit(sectionType)}
+              >
+                Cancel
+              </button>
+            </>
+          ) : (
+            <img 
+              src="/icons/edit-icon.svg" 
+              alt="Edit" 
+              className="edit-icon" 
+              onClick={() => toggleSectionEdit(sectionType)}
+              style={{ cursor: 'pointer' }}
+            />
+          )}
+        </div>
+        {isEditing && (
+          <div className="edit-area">
+            <textarea
+              value={content}
+              onChange={(e) => updateSectionNotes(sectionType, e.target.value)}
+              placeholder={`Add your notes about ${sectionTitle.toLowerCase()}...`}
+              className="section-textarea"
+              rows={6}
+            />
+          </div>
+        )}
+      </div>
+    );
+  };
 
   const renderProfileTab = () => {
     return (
@@ -1131,20 +1300,83 @@ export default function StudyBookPage() {
   };
 
   const renderNotesTab = () => {
-    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(e.target.files || []);
-      const newFiles = files.map(file => ({
-        id: Date.now() + Math.random(),
-        name: file.name,
-        size: file.size,
-        type: file.type
-      }));
-      setUploadedFiles(prev => [...prev, ...newFiles]);
+      setUploadError(null);
+
+      for (const file of files) {
+        const fileId = Date.now() + Math.random();
+        setUploadProgress(prev => ({ ...prev, [fileId]: 0 }));
+
+        try {
+          const formData = new FormData();
+          formData.append('file', file);
+
+          const { data: { session } } = await supabase.auth.getSession();
+          if (!session) {
+            throw new Error('No authentication session');
+          }
+
+          const response = await fetch('/api/upload', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${session.access_token}`
+            },
+            body: formData
+          });
+
+          setUploadProgress(prev => ({ ...prev, [fileId]: 50 }));
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Upload failed');
+          }
+
+          const result = await response.json();
+          setUploadProgress(prev => ({ ...prev, [fileId]: 100 }));
+
+          setUploadedFiles(prev => [...prev, result.file]);
+
+          setTimeout(() => {
+            setUploadProgress(prev => {
+              const newProgress = { ...prev };
+              delete newProgress[fileId];
+              return newProgress;
+            });
+          }, 1000);
+
+        } catch (error) {
+          console.error('Upload error:', error);
+          setUploadError(error instanceof Error ? error.message : 'Upload failed');
+          setUploadProgress(prev => {
+            const newProgress = { ...prev };
+            delete newProgress[fileId];
+            return newProgress;
+          });
+        }
+      }
+
+      e.target.value = '';
     };
 
-    const removeFile = (fileId: number) => {
-      setUploadedFiles(prev => prev.filter(f => f.id !== fileId));
+    const removeFile = async (fileId: string) => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) return;
+
+        await fetch(`/api/upload?id=${fileId}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`
+          }
+        });
+
+        setUploadedFiles(prev => prev.filter(f => f.id !== fileId));
+      } catch (error) {
+        console.error('Delete error:', error);
+      }
     };
+
 
     return (
       <div className="accordion-content">
@@ -1173,18 +1405,53 @@ export default function StudyBookPage() {
                   <span>Click to upload or drag and drop</span>
                   <span className="file-types">PDF, DOCX, TXT (Max 10MB)</span>
                 </label>
+                {uploadError && (
+                  <div className="upload-error">
+                    <span className="error-text">⚠️ {uploadError}</span>
+                  </div>
+                )}
+                
+                {Object.keys(uploadProgress).length > 0 && (
+                  <div className="upload-progress">
+                    {Object.entries(uploadProgress).map(([fileId, progress]) => (
+                      <div key={fileId} className="progress-item">
+                        <span>Uploading...</span>
+                        <div className="progress-bar">
+                          <div className="progress-fill" style={{width: `${progress}%`}}></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 {uploadedFiles.length > 0 && (
                   <div className="uploaded-files-list">
                     <h4>Uploaded Files:</h4>
                     {uploadedFiles.map(file => (
                       <div key={file.id} className="uploaded-file-item">
-                        <span className="file-name">📄 {file.name}</span>
-                        <button 
-                          className="remove-file-btn"
-                          onClick={() => removeFile(file.id)}
-                        >
-                          ×
-                        </button>
+                        <span className="file-icon">
+                          {file.file_type.includes('pdf') ? '📄' : 
+                           file.file_type.includes('word') ? '📝' : '📄'}
+                        </span>
+                        <div className="file-details">
+                          <span className="file-name">{file.filename}</span>
+                          <span className="file-size">{(file.file_size / 1024).toFixed(1)} KB</span>
+                          <span className="file-date">{new Date(file.created_at).toLocaleDateString()}</span>
+                        </div>
+                        <div className="file-actions">
+                          <button 
+                            className="view-file-btn"
+                            onClick={() => window.open(file.file_url, '_blank')}
+                          >
+                            View
+                          </button>
+                          <button 
+                            className="remove-file-btn"
+                            onClick={() => removeFile(file.id)}
+                          >
+                            ×
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -1197,10 +1464,7 @@ export default function StudyBookPage() {
               <h2 className="section-main-title">Research</h2>
               {/* Books Section */}
               <div className="research-section">
-                <div className="section-header">
-                  <h3 className="section-title">BOOKS</h3>
-                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
-                </div>
+                {renderEditableSection('books', 'BOOKS')}
                 <div className="research-grid">
                   <div className="research-item">
                     <img src="/icons/books.svg" alt="Book" className="item-icon" />
@@ -1241,10 +1505,7 @@ export default function StudyBookPage() {
 
               {/* Academic Papers Section */}
               <div className="research-section">
-                <div className="section-header">
-                  <h3 className="section-title">ACADEMIC PAPERS</h3>
-                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
-                </div>
+                {renderEditableSection('academic_papers', 'ACADEMIC PAPERS')}
                 <div className="research-list">
                   <div className="research-item-list">
                     <img src="/icons/academic-paper.svg" alt="Paper" className="item-icon" />
@@ -1273,10 +1534,7 @@ export default function StudyBookPage() {
 
               {/* Lectures Section */}
               <div className="research-section">
-                <div className="section-header">
-                  <h3 className="section-title">LECTURES</h3>
-                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
-                </div>
+                {renderEditableSection('lectures', 'LECTURES')}
                 <div className="research-list">
                   <div className="research-item-list">
                     <img src="/icons/lectures.svg" alt="Lecture" className="item-icon" />
@@ -1305,10 +1563,7 @@ export default function StudyBookPage() {
 
               {/* Textbooks Section */}
               <div className="research-section">
-                <div className="section-header">
-                  <h3 className="section-title">TEXTBOOKS</h3>
-                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
-                </div>
+                {renderEditableSection('textbooks', 'TEXTBOOKS')}
                 <div className="research-list">
                   <div className="research-item-list">
                     <img src="/icons/textbooks.svg" alt="Textbook" className="item-icon" />
@@ -1340,10 +1595,7 @@ export default function StudyBookPage() {
               <h2 className="section-main-title">Projects</h2>
               {/* Essays Section */}
               <div className="projects-section">
-                <div className="section-header">
-                  <h3 className="section-title">ESSAYS</h3>
-                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
-                </div>
+                {renderEditableSection('essays', 'ESSAYS')}
                 <div className="essays-description">
                   Super-curricular essays for your personal statement and interviews
                 </div>
@@ -1412,10 +1664,7 @@ export default function StudyBookPage() {
 
               {/* EPQ Section */}
               <div className="projects-section">
-                <div className="section-header">
-                  <h3 className="section-title">EPQ (Extended Project Qualification)</h3>
-                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
-                </div>
+                {renderEditableSection('epq', 'EPQ (Extended Project Qualification)')}
                 <div className="epq-description">
                   Your independent research project
                 </div>
@@ -1496,10 +1745,7 @@ export default function StudyBookPage() {
 
               {/* MOOCs Section */}
               <div className="projects-section">
-                <div className="section-header">
-                  <h3 className="section-title">MOOCS (Online Courses)</h3>
-                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
-                </div>
+                {renderEditableSection('moocs', 'MOOCS (Online Courses)')}
                 <div className="moocs-description">
                   Super-curricular essays for your personal statement and interviews.
                 </div>
@@ -1586,10 +1832,7 @@ export default function StudyBookPage() {
               <h2 className="section-main-title">Extra Activities</h2>
               {/* Internships & Work Experience Section */}
               <div className="extras-section">
-                <div className="section-header">
-                  <h3 className="section-title">INTERNSHIPS & WORK EXPERIENCE</h3>
-                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
-                </div>
+                {renderEditableSection('internships', 'INTERNSHIPS & WORK EXPERIENCE')}
                 <div className="extras-actions">
                   <button className="action-btn primary">+ Add Experience</button>
                 </div>
@@ -1676,10 +1919,7 @@ export default function StudyBookPage() {
 
               {/* Academic Challenges & Competitions Section */}
               <div className="extras-section">
-                <div className="section-header">
-                  <h3 className="section-title">ACADEMIC CHALLENGES & COMPETITIONS</h3>
-                  <img src="/icons/edit-icon.svg" alt="Edit" className="edit-icon" />
-                </div>
+                {renderEditableSection('competitions', 'ACADEMIC CHALLENGES & COMPETITIONS')}
                 <div className="extras-actions">
                   <button className="action-btn primary">+ Add Challenge</button>
                   <button className="action-btn secondary">Browse Upcoming →</button>
