@@ -635,73 +635,82 @@ export default function PracticePage() {
                     {/* Practice/Review Mode Buttons */}
                     <div style={{
                       display: 'flex',
-                      gap: '12px',
+                      gap: '8px',
                       alignItems: 'center'
                     }}>
                       <Link 
                         href={`/view-pack/${pack.id}`}
                         style={{
-                          backgroundColor: '#4CAF50',
-                          color: 'white',
+                          backgroundColor: '#D3F6F7',
+                          color: '#000000',
+                          border: '1px solid #000000',
                           padding: '8px 16px',
-                          borderRadius: '4px',
+                          borderRadius: '8px',
                           textDecoration: 'none',
                           fontSize: '12px',
-                          fontWeight: '600',
-                          transition: 'background-color 0.3s'
+                          fontFamily: "'Figtree', sans-serif",
+                          fontWeight: '500',
+                          letterSpacing: '0.04em',
+                          transition: 'all 0.2s ease'
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = '#45a049';
+                          e.currentTarget.style.backgroundColor = '#C1E8EA';
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = '#4CAF50';
+                          e.currentTarget.style.backgroundColor = '#D3F6F7';
                         }}
                       >
-                        📖 VIEW
+                        View Pack
                       </Link>
                       
                       <Link 
                         href={`/practice-session/${pack.id}`}
                         style={{
-                          backgroundColor: '#2196F3',
-                          color: 'white',
+                          backgroundColor: '#D3F6F7',
+                          color: '#000000',
+                          border: '1px solid #000000',
                           padding: '8px 16px',
-                          borderRadius: '4px',
+                          borderRadius: '8px',
                           textDecoration: 'none',
                           fontSize: '12px',
-                          fontWeight: '600',
-                          transition: 'background-color 0.3s'
+                          fontFamily: "'Figtree', sans-serif",
+                          fontWeight: '500',
+                          letterSpacing: '0.04em',
+                          transition: 'all 0.2s ease'
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = '#1976D2';
+                          e.currentTarget.style.backgroundColor = '#C1E8EA';
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = '#2196F3';
+                          e.currentTarget.style.backgroundColor = '#D3F6F7';
                         }}
                       >
-                        🎯 PRACTICE
+                        Practice
                       </Link>
                       
                       <Link 
                         href={`/review/${pack.id}`}
                         style={{
-                          backgroundColor: '#9C27B0',
-                          color: 'white',
+                          backgroundColor: '#D3F6F7',
+                          color: '#000000',
+                          border: '1px solid #000000',
                           padding: '8px 16px',
-                          borderRadius: '4px',
+                          borderRadius: '8px',
                           textDecoration: 'none',
                           fontSize: '12px',
-                          fontWeight: '600',
-                          transition: 'background-color 0.3s'
+                          fontFamily: "'Figtree', sans-serif",
+                          fontWeight: '500',
+                          letterSpacing: '0.04em',
+                          transition: 'all 0.2s ease'
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = '#7B1FA2';
+                          e.currentTarget.style.backgroundColor = '#C1E8EA';
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = '#9C27B0';
+                          e.currentTarget.style.backgroundColor = '#D3F6F7';
                         }}
                       >
-                        📝 REVIEW
+                        Review
                       </Link>
                     </div>
                   </div>
@@ -828,73 +837,82 @@ export default function PracticePage() {
                     {/* Practice/Review Mode Buttons */}
                     <div style={{
                       display: 'flex',
-                      gap: '12px',
+                      gap: '8px',
                       alignItems: 'center'
                     }}>
                       <Link 
                         href={`/view-pack/${pack.id}`}
                         style={{
-                          backgroundColor: '#4CAF50',
-                          color: 'white',
+                          backgroundColor: '#D3F6F7',
+                          color: '#000000',
+                          border: '1px solid #000000',
                           padding: '8px 16px',
-                          borderRadius: '4px',
+                          borderRadius: '8px',
                           textDecoration: 'none',
                           fontSize: '12px',
-                          fontWeight: '600',
-                          transition: 'background-color 0.3s'
+                          fontFamily: "'Figtree', sans-serif",
+                          fontWeight: '500',
+                          letterSpacing: '0.04em',
+                          transition: 'all 0.2s ease'
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = '#45a049';
+                          e.currentTarget.style.backgroundColor = '#C1E8EA';
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = '#4CAF50';
+                          e.currentTarget.style.backgroundColor = '#D3F6F7';
                         }}
                       >
-                        📖 VIEW
+                        View Pack
                       </Link>
                       
                       <Link 
                         href={`/practice-session/${pack.id}`}
                         style={{
-                          backgroundColor: '#2196F3',
-                          color: 'white',
+                          backgroundColor: '#D3F6F7',
+                          color: '#000000',
+                          border: '1px solid #000000',
                           padding: '8px 16px',
-                          borderRadius: '4px',
+                          borderRadius: '8px',
                           textDecoration: 'none',
                           fontSize: '12px',
-                          fontWeight: '600',
-                          transition: 'background-color 0.3s'
+                          fontFamily: "'Figtree', sans-serif",
+                          fontWeight: '500',
+                          letterSpacing: '0.04em',
+                          transition: 'all 0.2s ease'
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = '#1976D2';
+                          e.currentTarget.style.backgroundColor = '#C1E8EA';
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = '#2196F3';
+                          e.currentTarget.style.backgroundColor = '#D3F6F7';
                         }}
                       >
-                        🎯 PRACTICE
+                        Practice
                       </Link>
                       
                       <Link 
                         href={`/review/${pack.id}`}
                         style={{
-                          backgroundColor: '#9C27B0',
-                          color: 'white',
+                          backgroundColor: '#D3F6F7',
+                          color: '#000000',
+                          border: '1px solid #000000',
                           padding: '8px 16px',
-                          borderRadius: '4px',
+                          borderRadius: '8px',
                           textDecoration: 'none',
                           fontSize: '12px',
-                          fontWeight: '600',
-                          transition: 'background-color 0.3s'
+                          fontFamily: "'Figtree', sans-serif",
+                          fontWeight: '500',
+                          letterSpacing: '0.04em',
+                          transition: 'all 0.2s ease'
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = '#7B1FA2';
+                          e.currentTarget.style.backgroundColor = '#C1E8EA';
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = '#9C27B0';
+                          e.currentTarget.style.backgroundColor = '#D3F6F7';
                         }}
                       >
-                        📝 REVIEW
+                        Review
                       </Link>
                     </div>
                   </div>
