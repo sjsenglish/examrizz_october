@@ -88,7 +88,6 @@ export async function POST(request: NextRequest) {
         .from('conversations')
         .select('id')
         .eq('user_id', userId)
-        .eq('type', 'bo_chat')
         .order('created_at', { ascending: false })
         .limit(1)
         .single();
@@ -101,8 +100,8 @@ export async function POST(request: NextRequest) {
           .from('conversations')
           .insert({
             user_id: userId,
-            type: 'bo_chat',
-            title: 'Personal Statement Chat with Bo'
+            protocol_state: null,
+            context: null
           })
           .select('id')
           .single();
@@ -119,6 +118,7 @@ export async function POST(request: NextRequest) {
       .from('messages')
       .insert({
         conversation_id: currentConversationId,
+        user_id: userId,
         role: 'user',
         content: message
       });
@@ -173,6 +173,7 @@ export async function POST(request: NextRequest) {
             .from('messages')
             .insert({
               conversation_id: currentConversationId,
+              user_id: userId,
               role: 'assistant',
               content: fullResponse
             });

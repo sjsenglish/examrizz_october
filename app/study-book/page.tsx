@@ -47,8 +47,17 @@ export default function StudyBookPage() {
     const getCurrentUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        setUserId(user.id);
-        loadConversationHistory(user.id);
+        // Get user profile ID instead of auth user ID
+        const { data: profile } = await supabase
+          .from('user_profiles')
+          .select('id')
+          .eq('auth_user_id', user.id)
+          .single();
+        
+        if (profile) {
+          setUserId(profile.id);
+          loadConversationHistory(profile.id);
+        }
       }
     };
     getCurrentUser();
@@ -70,7 +79,6 @@ export default function StudyBookPage() {
         .from('conversations')
         .select('id')
         .eq('user_id', currentUserId)
-        .eq('type', 'bo_chat')
         .order('created_at', { ascending: false })
         .limit(1)
         .single();
