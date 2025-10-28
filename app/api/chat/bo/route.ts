@@ -963,7 +963,7 @@ export async function POST(request: NextRequest) {
       async start(controller) {
         try {
           const response = await anthropic.messages.create({
-            model: 'claude-3-5-sonnet-20241022',
+            model: 'claude-sonnet-4-5-20250929',
             max_tokens: 2000,
             system: BO_SYSTEM_PROMPT,
             messages: messages,
