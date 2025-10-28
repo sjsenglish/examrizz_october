@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { InstantSearch, useSearchBox, Hits, useStats, Configure } from 'react-instantsearch';
 import { searchClient, INDEX_NAME } from '../../lib/algolia';
 import { SettingsButton } from '../SettingsButton';
@@ -41,7 +42,7 @@ const ExamSearch: React.FC = () => {
   const [showAdmissionsDropdown, setShowAdmissionsDropdown] = useState(false);
   const [showFilters, setShowFilters] = useState(true);
 
-  const aLevelSubjects = ['Maths', 'Physics', 'Economics', 'Biology', 'Chemistry'];
+  const aLevelSubjects = ['Maths', 'Physics', 'English Lit', 'Biology', 'Chemistry'];
   const admissionsTests = ['BMAT', 'TSA', 'Interview'];
 
   const showTSAResults = activeTab === 'Admissions' && selectedAdmissionsTest === 'TSA';
@@ -127,12 +128,17 @@ const ExamSearch: React.FC = () => {
             onMouseLeave={() => setShowALevelDropdown(false)}
           >
             <button 
-              className={`tab ${activeTab === 'A Level' ? 'tab-active' : ''}`}
+              className={`tab svg-tab ${activeTab === 'A Level' ? 'tab-active' : ''}`}
               onClick={() => setActiveTab('A Level')}
               aria-label="A Level tab"
             >
-              <TabIcon isActive={activeTab === 'A Level'} />
-              <span className="tab-text">A Level</span>
+              <Image 
+                src="/a-level-box-white.svg" 
+                alt="A Level" 
+                width={178} 
+                height={32}
+                className="svg-icon"
+              />
             </button>
             
             {/* A Level Dropdown */}
@@ -162,12 +168,17 @@ const ExamSearch: React.FC = () => {
             onMouseLeave={() => setShowAdmissionsDropdown(false)}
           >
             <button 
-              className={`tab ${activeTab === 'Admissions' ? 'tab-active' : ''}`}
+              className={`tab svg-tab ${activeTab === 'Admissions' ? 'tab-active' : ''}`}
               onClick={() => setActiveTab('Admissions')}
               aria-label="Admissions tab"
             >
-              <TabIcon isActive={activeTab === 'Admissions'} />
-              <span className="tab-text">Admissions</span>
+              <Image 
+                src="/admissions-box-white.svg" 
+                alt="Admissions" 
+                width={178} 
+                height={32}
+                className="svg-icon"
+              />
             </button>
             
             {/* Admissions Dropdown */}

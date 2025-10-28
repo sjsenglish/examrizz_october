@@ -125,6 +125,24 @@
   overflow: visible;
 }
 
+.svg-tab {
+  padding: 0;
+  width: auto;
+  height: auto;
+  background: none;
+  border: none;
+}
+
+.svg-icon {
+  transition: filter 0.3s ease;
+  cursor: pointer;
+}
+
+.svg-tab:hover .svg-icon,
+.svg-tab.tab-active .svg-icon {
+  filter: sepia(1) saturate(5) hue-rotate(150deg) brightness(1.2);
+}
+
 .tab svg {
   position: absolute;
   top: -10px;
@@ -146,13 +164,13 @@
 /* Dropdown */
 .dropdown-menu {
   position: absolute;
-  top: calc(100% - 8px); /* 20% smaller: 10px -> 8px */
+  top: calc(100% - 2px);
   left: 0;
   z-index: var(--z-dropdown);
   background-color: var(--color-primary-light);
   border: var(--border-medium);
   border-top: none;
-  width: 232px; /* 20% smaller: 290px -> 232px */
+  width: 178px;
   box-shadow: var(--shadow-md);
 }
 
