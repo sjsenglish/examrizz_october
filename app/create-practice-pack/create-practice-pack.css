@@ -343,6 +343,142 @@
   cursor: not-allowed;
 }
 
+/* Filter Grid and Items */
+.filter-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.filter-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #00CED1;
+  cursor: pointer;
+}
+
+.filter-label {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  color: #333333;
+  cursor: pointer;
+}
+
+/* Critical Thinking Section */
+.critical-thinking-section {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #F8F8F5;
+  border-radius: 8px;
+  border: 1px solid #E0E0E0;
+}
+
+.thinking-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.thinking-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.thinking-text {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  color: #333333;
+}
+
+/* Clear Filters Button */
+.clear-filters-button {
+  background: none;
+  border: none;
+  color: #00CED1;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 8px 0;
+  transition: color 0.3s ease;
+}
+
+.clear-filters-button:hover {
+  color: #00B8C1;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .cards-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    max-width: 800px;
+  }
+  
+  .main-content {
+    padding: 80px 20px 40px 20px;
+  }
+  
+  .navbar {
+    padding: 0 20px;
+  }
+  
+  .close-button {
+    right: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .step-indicator {
+    font-size: 14px;
+    margin-bottom: 40px;
+  }
+  
+  .card {
+    padding: 20px;
+    min-height: auto;
+  }
+  
+  .filter-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .slider-container {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+  
+  .font-size-controls {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+  
+  .select-questions-button {
+    position: static;
+    width: 100%;
+    margin-top: 30px;
+    justify-content: center;
+  }
+}
+
 /* Remove any global font overrides */
 * {
   font-family: inherit;
