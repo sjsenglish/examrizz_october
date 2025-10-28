@@ -72,7 +72,7 @@ const ExamSearch: React.FC = () => {
           <Link href="/" style={{ textDecoration: 'none' }}>
             <h1 style={{
               fontFamily: "'Madimi One', cursive",
-              fontSize: '24px',
+              fontSize: '19.2px', /* 20% smaller: 24px -> 19.2px */
               fontWeight: '400',
               color: '#000000',
               margin: 0,
@@ -94,7 +94,11 @@ const ExamSearch: React.FC = () => {
           </button>
         </nav>
 
-        <div className="exam-search-container" style={{ paddingTop: '80px' }}>
+        <div className="exam-search-container" style={{ 
+          paddingTop: '60px', /* 15% less: 80px -> 68px, rounded to 60px for better UX */
+          minHeight: '100vh', /* Ensure page takes full height */
+          overflow: showTSAResults ? 'auto' : 'hidden' /* Prevent scroll until questions load */
+        }}>
         <SettingsButton />
         
         {/* Cloud Icons */}

@@ -5,14 +5,15 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 1200px;
+  max-width: 960px; /* 20% smaller: 1200px -> 960px */
   margin: 0 auto;
-  padding: 20px 60px;
+  padding: 12px 48px; /* 20% smaller: 20px -> 16px, 60px -> 48px, moved up 15%: 16px -> 12px */
   position: relative;
+  transform: translateY(-15%); /* Move up 15% */
 }
 
 .cloud-icon {
-  width: 120px;
+  width: 96px; /* 20% smaller: 120px -> 96px */
   height: auto;
   opacity: 0.8;
 }
@@ -34,17 +35,18 @@
 
 .page-title-section {
   text-align: center;
-  margin-bottom: 32px;
-  padding-top: 20px;
+  margin-bottom: 20px; /* 20% smaller: 32px -> 26px, moved up 15%: 26px -> 20px */
+  padding-top: 10px; /* 20% smaller: 20px -> 16px, moved up 15%: 16px -> 10px */
+  transform: translateY(-15%); /* Move up 15% */
 }
 
 .page-main-title {
   font-family: 'Madimi One', cursive;
-  font-size: 96px;
+  font-size: 77px; /* 20% smaller: 96px -> 77px */
   font-weight: 400;
   color: #000000;
   margin: 0;
-  letter-spacing: -2px;
+  letter-spacing: -1.6px; /* 20% smaller: -2px -> -1.6px */
 }
 
 .exam-search-header {
@@ -67,22 +69,23 @@
 
 /* Search Section */
 .search-section {
-  max-width: 900px;
+  max-width: 720px; /* 20% smaller: 900px -> 720px */
   margin: 0 auto;
   padding: 0 var(--space-lg);
+  transform: translateY(-15%); /* Move up 15% */
 }
 
 .search-bar {
   width: 100%;
-  padding: var(--space-lg);
-  font-size: var(--text-base);
+  padding: calc(var(--space-lg) * 0.8); /* 20% smaller padding */
+  font-size: calc(var(--text-base) * 0.8); /* 20% smaller font */
   border: var(--border-thick);
   background-color: var(--color-white);
   border-radius: var(--radius-lg);
   outline: none;
   font-family: var(--font-secondary);
   box-shadow: var(--shadow-primary-lg),
-              8px 8px 12px rgba(0, 206, 209, 0.2);
+              6.4px 6.4px 9.6px rgba(0, 206, 209, 0.2); /* 20% smaller: 8px -> 6.4px, 12px -> 9.6px */
   position: relative;
   z-index: 1;
 }
@@ -93,12 +96,13 @@
 
 /* Tabs */
 .tabs-container {
-  max-width: 1200px;
-  margin: var(--space-lg) auto var(--space-xl);
+  max-width: 960px; /* 20% smaller: 1200px -> 960px */
+  margin: calc(var(--space-lg) * 0.85) auto calc(var(--space-xl) * 0.85); /* 15% less margin to move up */
   display: flex;
   padding: 0 var(--space-lg);
-  gap: var(--space-3xl);
+  gap: calc(var(--space-3xl) * 0.8); /* 20% smaller gap */
   justify-content: center;
+  transform: translateY(-15%); /* Move up 15% */
 }
 
 .tab-wrapper {
@@ -106,18 +110,18 @@
 }
 
 .tab {
-  padding: var(--space-md) var(--space-2xl);
+  padding: calc(var(--space-md) * 0.8) calc(var(--space-2xl) * 0.8); /* 20% smaller padding */
   font-family: var(--font-primary);
-  font-size: var(--text-2xl);
+  font-size: calc(var(--text-2xl) * 0.8); /* 20% smaller font */
   background: none;
   border: none;
   cursor: pointer;
   transition: all var(--transition-base);
   font-weight: 400;
   position: relative;
-  width: 320px;
+  width: 256px; /* 20% smaller: 320px -> 256px */
   z-index: 3;
-  margin-top: 10px;
+  margin-top: 8px; /* 20% smaller: 10px -> 8px */
   overflow: visible;
 }
 
@@ -142,26 +146,26 @@
 /* Dropdown */
 .dropdown-menu {
   position: absolute;
-  top: calc(100% - 10px);
+  top: calc(100% - 8px); /* 20% smaller: 10px -> 8px */
   left: 0;
   z-index: var(--z-dropdown);
   background-color: var(--color-primary-light);
   border: var(--border-medium);
   border-top: none;
-  width: 290px;
+  width: 232px; /* 20% smaller: 290px -> 232px */
   box-shadow: var(--shadow-md);
 }
 
 .dropdown-item {
   display: block;
   width: 100%;
-  padding: 15px var(--space-lg);
+  padding: 12px calc(var(--space-lg) * 0.8); /* 20% smaller: 15px -> 12px */
   background-color: var(--color-white);
   border: none;
   border-bottom: 1px solid var(--color-black);
   text-align: left;
   font-family: var(--font-primary);
-  font-size: var(--text-base);
+  font-size: calc(var(--text-base) * 0.8); /* 20% smaller font */
   color: var(--color-black);
   cursor: pointer;
   transition: background-color var(--transition-fast);
