@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-const pdfParse = require('pdf-parse');
 import mammoth from 'mammoth';
+
+// Remove all PDF processing - just upload the file and extract text later client-side or via a separate service
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -45,10 +46,7 @@ export async function POST(request: NextRequest) {
 
     try {
       if (fileExtension === 'pdf') {
-        // Convert Uint8Array to Buffer for pdf-parse
-        const pdfBuffer = Buffer.from(uint8Array);
-        const pdfData = await pdfParse(pdfBuffer);
-        extractedText = pdfData.text;
+        extractedText = ''; // Skip extraction, store empty text for now
       } else if (fileExtension === 'docx') {
         const result = await mammoth.extractRawText({ buffer: Buffer.from(uint8Array) });
         extractedText = result.value;
