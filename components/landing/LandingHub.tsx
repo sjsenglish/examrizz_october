@@ -43,8 +43,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
           left: '50%',
           top: '55%',
           transform: 'translate(-50%, -50%)',
-          width: '1600px',
-          height: '800px',
+          width: '1440px', /* 10% smaller: 1600px -> 1440px */
+          height: '720px', /* 10% smaller: 800px -> 720px */
           zIndex: 15
         }}
       >
@@ -61,8 +61,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             <Image 
               src="/icons/arena.svg"
               alt="ARENA"
-              width={276}
-              height={276}
+              width={248} /* 10% smaller: 276 -> 248 */
+              height={248} /* 10% smaller: 276 -> 248 */
               className="drop-shadow-lg"
             />
           </Link>
@@ -81,8 +81,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             <Image 
               src="/icons/video.svg"
               alt="VIDEO"
-              width={230}
-              height={230}
+              width={207} /* 10% smaller: 230 -> 207 */
+              height={207} /* 10% smaller: 230 -> 207 */
               className="drop-shadow-lg"
             />
           </Link>
@@ -101,8 +101,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             <Image 
               src="/icons/practice.svg"
               alt="PRACTICE"
-              width={230}
-              height={230}
+              width={207} /* 10% smaller: 230 -> 207 */
+              height={207} /* 10% smaller: 230 -> 207 */
               className="drop-shadow-lg"
             />
           </Link>
@@ -121,8 +121,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             <Image 
               src="/icons/teacher.svg"
               alt="TEACHER"
-              width={253}
-              height={253}
+              width={228} /* 10% smaller: 253 -> 228 */
+              height={228} /* 10% smaller: 253 -> 228 */
               className="drop-shadow-lg"
             />
           </Link>
@@ -141,8 +141,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             <Image 
               src="/icons/learn.svg"
               alt="LEARN"
-              width={207}
-              height={207}
+              width={186} /* 10% smaller: 207 -> 186 */
+              height={186} /* 10% smaller: 207 -> 186 */
               className="drop-shadow-lg"
             />
           </Link>
@@ -156,8 +156,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
         <Image 
           src="/svg/island-cloud-big.svg"
           alt="Cloud"
-          width={180}
-          height={120}
+          width={162} /* 10% smaller: 180 -> 162 */
+          height={108} /* 10% smaller: 120 -> 108 */
         />
       </div>
       
@@ -166,8 +166,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
         <Image 
           src="/svg/island-cloud-big.svg"
           alt="Cloud"
-          width={180}
-          height={120}
+          width={162} /* 10% smaller: 180 -> 162 */
+          height={108} /* 10% smaller: 120 -> 108 */
         />
       </div>
       
@@ -176,8 +176,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
         <Image 
           src="/svg/island-cloud-medium.svg"
           alt="Cloud"
-          width={120}
-          height={80}
+          width={108} /* 10% smaller: 120 -> 108 */
+          height={72} /* 10% smaller: 80 -> 72 */
         />
       </div>
       
@@ -186,8 +186,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
         <Image 
           src="/svg/island-cloud-medium.svg"
           alt="Cloud"
-          width={120}
-          height={80}
+          width={108} /* 10% smaller: 120 -> 108 */
+          height={72} /* 10% smaller: 80 -> 72 */
         />
       </div>
 

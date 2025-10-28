@@ -72,7 +72,7 @@ const ExamSearch: React.FC = () => {
           <Link href="/" style={{ textDecoration: 'none' }}>
             <h1 style={{
               fontFamily: "'Madimi One', cursive",
-              fontSize: '19.2px', /* 20% smaller: 24px -> 19.2px */
+              fontSize: '24px', /* Original size - same as island page navbar */
               fontWeight: '400',
               color: '#000000',
               margin: 0,
