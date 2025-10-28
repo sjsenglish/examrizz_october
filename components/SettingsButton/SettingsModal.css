@@ -97,6 +97,15 @@
   transform: translateX(25px);
 }
 
+.saving-indicator {
+  font-family: 'Madimi One', cursive;
+  font-size: 11px;
+  color: #00CED1;
+  text-align: center;
+  margin-top: 8px;
+  font-weight: 400;
+}
+
 .site-mode-section {
   text-align: left;
 }
