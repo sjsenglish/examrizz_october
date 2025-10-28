@@ -9,6 +9,38 @@ import { getAllSubjects, getSubjectConfig } from '../../lib/subjectConfig';
 import { QuestionFilters } from '../../components/QuestionFilters/QuestionFilters';
 import './create-practice-pack.css';
 
+function QuestionFiltersSection({ 
+  selectedSubject, 
+  onFiltersChange 
+}: { 
+  selectedSubject: string; 
+  onFiltersChange: (filters: Record<string, string[]>) => void; 
+}) {
+  const subjectConfig = getSubjectConfig(selectedSubject);
+  const indexName = getIndexForSubject(selectedSubject);
+  
+  if (!subjectConfig || !subjectConfig.filters || !indexName) {
+    return (
+      <div style={{ marginBottom: '30px' }}>
+        <h3 className="card-title" style={{ margin: '0 0 15px 0' }}>
+          Question Filters
+        </h3>
+        <p style={{ color: '#999', fontSize: '14px' }}>
+          No filters available for {selectedSubject}
+        </p>
+      </div>
+    );
+  }
+  
+  return (
+    <QuestionFilters
+      filters={subjectConfig.filters}
+      indexName={indexName}
+      onFiltersChange={onFiltersChange}
+    />
+  );
+}
+
 export default function CreatePracticePackPage() {
   const router = useRouter();
   
@@ -16,28 +48,22 @@ export default function CreatePracticePackPage() {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [showSubjectDropdown, setShowSubjectDropdown] = useState(false);
   
-  // Slider states
   const [numberOfQuestions, setNumberOfQuestions] = useState(1);
   const [fontSize, setFontSize] = useState(12);
   
-  // Filter states - now managed by the new filter component
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({});
   
-  // Memoized callback for filter changes to prevent unnecessary re-renders
   const handleFiltersChange = useCallback((filters: Record<string, string[]>) => {
     setSelectedFilters(filters);
   }, []);
   
-  // Order questions state
-  const [orderMode, setOrderMode] = useState('automatic'); // 'automatic' or 'custom'
+  const [orderMode, setOrderMode] = useState('automatic');
   
-  // Available question count state
   const [availableQuestions, setAvailableQuestions] = useState(0);
   const [isLoadingCount, setIsLoadingCount] = useState(false);
 
   const subjects = getAllSubjects();
 
-  // Calculate available questions based on filters
   const calculateAvailableQuestions = async () => {
     if (!selectedSubject) {
       setAvailableQuestions(0);
@@ -49,13 +75,11 @@ export default function CreatePracticePackPage() {
       const subjectConfig = getSubjectConfig(selectedSubject);
       
       if (!subjectConfig || !subjectConfig.available) {
-        // Subject index not available yet
         setAvailableQuestions(0);
         setIsLoadingCount(false);
         return;
       }
 
-      // Build search filters from selected filter values
       let filters = '';
       
       if (subjectConfig.filters) {
@@ -74,11 +98,10 @@ export default function CreatePracticePackPage() {
         filters = filterClauses.join(' AND ');
       }
       
-      // Search with filters to get count
       const searchResults = await searchSubjectQuestions(
         selectedSubject,
         filters,
-        { hitsPerPage: 0 } // We only want the count
+        { hitsPerPage: 0 }
       );
 
       const totalHits = ('nbHits' in searchResults) ? (searchResults.nbHits || 0) : 0;
@@ -91,12 +114,10 @@ export default function CreatePracticePackPage() {
     }
   };
 
-  // Update available questions when filters change
   useEffect(() => {
     calculateAvailableQuestions();
   }, [selectedSubject, selectedFilters]);
 
-  // Ensure numberOfQuestions doesn't exceed availableQuestions
   useEffect(() => {
     if (availableQuestions > 0 && numberOfQuestions > availableQuestions) {
       setNumberOfQuestions(availableQuestions);
@@ -104,7 +125,6 @@ export default function CreatePracticePackPage() {
   }, [availableQuestions, numberOfQuestions]);
 
   const handleSelectQuestions = () => {
-    // Store pack data in sessionStorage to pass to next step
     const packData = {
       packName,
       subject: selectedSubject,
@@ -128,9 +148,11 @@ export default function CreatePracticePackPage() {
     setFontSize(value);
   };
 
+  const questionSliderPosition = ((numberOfQuestions / (availableQuestions || 1)) * 100);
+  const fontSliderPosition = (((fontSize - 10) / 6) * 100);
+
   return (
     <div className="page-background">
-      {/* Navbar */}
       <nav className="navbar">
         <Link href="/" style={{ textDecoration: 'none' }}>
           <h1>examrizzsearch</h1>
@@ -142,297 +164,259 @@ export default function CreatePracticePackPage() {
         </button>
       </nav>
 
-      {/* Close Button */}
       <Link href="/practice" className="close-button">
         ×
       </Link>
 
-      {/* Main Content */}
       <div className="main-content">
-        {/* Header */}
         <h1 className="header-title">
           Create Your Practice Pack
         </h1>
 
-        {/* Step indicator */}
         <div className="step-indicator">
           Step 1 of 2
         </div>
 
-        {/* Two Cards Side by Side */}
         <div className="cards-container">
-            
-            {/* Left Card */}
-            <article className="card">
-              {/* Left Card Header */}
-              <header className="card-header">
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '15px'
-                }}>
-                  <span className="card-title">
-                    Pack Name
-                  </span>
-                </div>
-              </header>
+          <article className="card">
+            <header className="card-header">
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '15px'
+              }}>
+                <span className="card-title">
+                  Pack Name
+                </span>
+              </div>
+            </header>
 
-              <div style={{ color: '#333333' }}>
-                {/* Pack Name Input */}
-                <input
-                  type="text"
-                  placeholder="Type your pack name"
-                  value={packName}
-                  onChange={(e) => setPackName(e.target.value)}
-                  className="pack-name-input"
+            <div style={{ color: '#333333' }}>
+              <input
+                type="text"
+                placeholder="Type your pack name"
+                value={packName}
+                onChange={(e) => setPackName(e.target.value)}
+                className="pack-name-input"
+              />
+
+              <div style={{ marginBottom: '25px' }}>
+                <h3 className="card-title" style={{ margin: '0 0 15px 0' }}>
+                  Subject
+                </h3>
+                <div style={{ position: 'relative' }}>
+                  <button
+                    onClick={() => setShowSubjectDropdown(!showSubjectDropdown)}
+                    className="subject-dropdown-button"
+                  >
+                    {selectedSubject || 'Select subject'}
+                    <span style={{ transform: showSubjectDropdown ? 'rotate(180deg)' : 'rotate(0deg)' }}>▼</span>
+                  </button>
+                  {showSubjectDropdown && (
+                    <div className="dropdown-menu">
+                      {subjects.map((subject) => (
+                        <button
+                          key={subject}
+                          onClick={() => {
+                            setSelectedSubject(subject);
+                            setShowSubjectDropdown(false);
+                          }}
+                          className="dropdown-item"
+                        >
+                          {subject}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {selectedSubject && (
+                <QuestionFiltersSection
+                  selectedSubject={selectedSubject}
+                  onFiltersChange={handleFiltersChange}
                 />
+              )}
+            </div>
+          </article>
 
-                {/* Subject */}
-                <div style={{ marginBottom: '25px' }}>
-                  <h3 className="card-title" style={{ margin: '0 0 15px 0' }}>
-                    Subject
-                  </h3>
-                  <div style={{ position: 'relative' }}>
-                    <button
-                      onClick={() => setShowSubjectDropdown(!showSubjectDropdown)}
-                      className="subject-dropdown-button"
-                    >
-                      {selectedSubject || 'Select subject'}
-                      <span style={{ transform: showSubjectDropdown ? 'rotate(180deg)' : 'rotate(0deg)' }}>▼</span>
-                    </button>
-                    {showSubjectDropdown && (
-                      <div className="dropdown-menu">
-                        {subjects.map((subject) => (
-                          <button
-                            key={subject}
-                            onClick={() => {
-                              setSelectedSubject(subject);
-                              setShowSubjectDropdown(false);
-                            }}
-                            className="dropdown-item"
-                          >
-                            {subject}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Question Filters - New Component */}
-                {selectedSubject && (() => {
-                  const subjectConfig = getSubjectConfig(selectedSubject);
-                  const indexName = getIndexForSubject(selectedSubject);
-                  
-                  if (!subjectConfig || !subjectConfig.filters || !indexName) {
-                    return (
-                      <div style={{ marginBottom: '30px' }}>
-                        <h3 className="card-title" style={{ margin: '0 0 15px 0' }}>
-                          Question Filters
-                        </h3>
-                        <p style={{ color: '#999', fontSize: '14px' }}>
-                          No filters available for {selectedSubject}
-                        </p>
-                      </div>
-                    );
-                  }
-                  
-                  return (
-                    <QuestionFilters
-                      filters={subjectConfig.filters}
-                      indexName={indexName}
-                      onFiltersChange={handleFiltersChange}
-                    />
-                  );
-                })()}
+          <article className="card">
+            <header className="card-header">
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '15px'
+              }}>
+                <span className="card-title">
+                  Number of Questions
+                </span>
               </div>
-            </article>
+            </header>
 
-            {/* Right Card */}
-            <article className="card">
-              {/* Right Card Header */}
-              <header className="card-header">
+            <div style={{ color: '#333333' }}>
+              <div style={{
+                marginBottom: '25px'
+              }}>
+                <div className="slider-container">
+                  <input
+                    type="text"
+                    value="1"
+                    readOnly
+                    className="slider-input"
+                  />
+                  <div className="slider-track">
+                    <input
+                      type="range"
+                      min="1"
+                      max={availableQuestions || 1}
+                      value={numberOfQuestions}
+                      onChange={handleQuestionSliderChange}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        opacity: 0,
+                        cursor: 'pointer',
+                        position: 'absolute'
+                      }}
+                    />
+                    <Image 
+                      src="/icons/speech-bubble-ghost.svg" 
+                      alt="Question counter" 
+                      width={40} 
+                      height={40}
+                      style={{
+                        position: 'absolute',
+                        left: `${questionSliderPosition}%`,
+                        top: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        cursor: 'pointer',
+                        pointerEvents: 'none'
+                      }}
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    value={availableQuestions || 0}
+                    readOnly
+                    className="slider-input"
+                  />
+                </div>
+                <p className="availability-text">
+                  {numberOfQuestions} questions selected - {isLoadingCount ? 'Loading...' : `${availableQuestions} questions available with current filters`}
+                </p>
+              </div>
+
+              <div style={{ marginBottom: '25px' }}>
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '15px'
+                  gap: '10px',
+                  marginBottom: '15px'
                 }}>
                   <span className="card-title">
-                    Number of Questions
+                    Font Size 
+                  </span>
+                  <span style={{
+                    fontFamily: "'Madimi One', sans-serif",
+                    fontSize: '16px',
+                    fontWeight: 400,
+                    color: '#000000'
+                  }}>
+                    {fontSize}pt
                   </span>
                 </div>
-              </header>
-
-              <div style={{ color: '#333333' }}>
-                {/* Number of Questions Slider */}
-                <div style={{
-                  marginBottom: '25px'
-                }}>
-                  <div className="slider-container">
+                <div className="font-size-controls">
+                  <span className="font-size-text">small</span>
+                  <div className="font-slider-track">
                     <input
-                      type="text"
-                      value="1"
-                      readOnly
-                      className="slider-input"
+                      type="range"
+                      min="10"
+                      max="16"
+                      value={fontSize}
+                      onChange={handleFontSizeSliderChange}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        opacity: 0,
+                        cursor: 'pointer',
+                        position: 'absolute'
+                      }}
                     />
-                    <div className="slider-track">
-                      <input
-                        type="range"
-                        min="1"
-                        max={availableQuestions || 1}
-                        value={numberOfQuestions}
-                        onChange={handleQuestionSliderChange}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          opacity: 0,
-                          cursor: 'pointer',
-                          position: 'absolute'
-                        }}
-                      />
-                      <Image 
-                        src="/icons/speech-bubble-ghost.svg" 
-                        alt="Question counter" 
-                        width={40} 
-                        height={40}
-                        style={{
-                          position: 'absolute',
-                          left: `${(numberOfQuestions / (availableQuestions || 1)) * 100}%`,
-                          top: '50%',
-                          transform: 'translate(-50%, -50%)',
-                          cursor: 'pointer',
-                          pointerEvents: 'none'
-                        }}
-                      />
-                    </div>
-                    <input
-                      type="text"
-                      value={availableQuestions || 0}
-                      readOnly
-                      className="slider-input"
+                    <Image 
+                      src="/icons/speech-bubble-ghost.svg" 
+                      alt="Font size slider" 
+                      width={40} 
+                      height={40}
+                      style={{
+                        position: 'absolute',
+                        left: `${fontSliderPosition}%`,
+                        top: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        cursor: 'pointer',
+                        pointerEvents: 'none'
+                      }}
                     />
                   </div>
-                  <p className="availability-text">
-                    {numberOfQuestions} questions selected - {isLoadingCount ? 'Loading...' : `${availableQuestions} questions available with current filters`}
-                  </p>
+                  <span className="font-size-text">large</span>
                 </div>
-
-                {/* Font Size Section */}
-                <div style={{ marginBottom: '25px' }}>
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                    marginBottom: '15px'
-                  }}>
-                    <span className="card-title">
-                      Font Size 
-                    </span>
-                    <span style={{
-                      fontFamily: "'Madimi One', sans-serif",
-                      fontSize: '16px',
-                      fontWeight: 400,
-                      color: '#000000'
-                    }}>
-                      {fontSize}pt
-                    </span>
-                  </div>
-                  <div className="font-size-controls">
-                    <span className="font-size-text">small</span>
-                    <div className="font-slider-track">
-                      <input
-                        type="range"
-                        min="10"
-                        max="16"
-                        value={fontSize}
-                        onChange={handleFontSizeSliderChange}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          opacity: 0,
-                          cursor: 'pointer',
-                          position: 'absolute'
-                        }}
-                      />
-                      <Image 
-                        src="/icons/speech-bubble-ghost.svg" 
-                        alt="Font size slider" 
-                        width={40} 
-                        height={40}
-                        style={{
-                          position: 'absolute',
-                          left: `${((fontSize - 10) / 6) * 100}%`,
-                          top: '50%',
-                          transform: 'translate(-50%, -50%)',
-                          cursor: 'pointer',
-                          pointerEvents: 'none'
-                        }}
-                      />
-                    </div>
-                    <span className="font-size-text">large</span>
-                  </div>
-                </div>
-
-                {/* Order Questions By Section */}
-                <div style={{ marginBottom: '25px' }}>
-                  <h3 className="card-title" style={{ margin: '0 0 15px 0' }}>
-                    Order questions by
-                  </h3>
-                  <div className="order-buttons">
-                    <div 
-                      className={orderMode === 'automatic' ? 'order-button-active' : 'order-button-inactive'}
-                      onClick={() => setOrderMode('automatic')}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <span className="order-button-text">
-                        Automatic
-                      </span>
-                    </div>
-                    <div 
-                      className={orderMode === 'custom' ? 'order-button-active' : 'order-button-inactive'}
-                      onClick={() => setOrderMode('custom')}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <span className="order-button-text">
-                        Custom
-                      </span>
-                    </div>
-                  </div>
-                  {orderMode === 'custom' && (
-                    <p className="order-description">
-                      You'll arrange questions manually in the next step
-                    </p>
-                  )}
-
-                  {/* Ordering info for Automatic mode */}
-                  {orderMode === 'automatic' && (
-                    <div style={{ marginTop: '20px' }}>
-                      <p style={{ fontSize: '14px', color: '#666' }}>
-                        Questions will be automatically ordered based on the filters you selected
-                      </p>
-                    </div>
-                  )}
-                </div>
-
               </div>
-              
-              {/* Select Questions Button - Bottom Right */}
-              <button 
-                onClick={handleSelectQuestions}
-                className="select-questions-button"
-                disabled={!packName || !selectedSubject}
-                style={{ 
-                  opacity: (!packName || !selectedSubject) ? 0.5 : 1,
-                  cursor: (!packName || !selectedSubject) ? 'not-allowed' : 'pointer'
-                }}
-              >
-                Select Questions
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-            </article>
-          </div>
+
+              <div style={{ marginBottom: '25px' }}>
+                <h3 className="card-title" style={{ margin: '0 0 15px 0' }}>
+                  Order questions by
+                </h3>
+                <div className="order-buttons">
+                  <div 
+                    className={orderMode === 'automatic' ? 'order-button-active' : 'order-button-inactive'}
+                    onClick={() => setOrderMode('automatic')}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <span className="order-button-text">
+                      Automatic
+                    </span>
+                  </div>
+                  <div 
+                    className={orderMode === 'custom' ? 'order-button-active' : 'order-button-inactive'}
+                    onClick={() => setOrderMode('custom')}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <span className="order-button-text">
+                      Custom
+                    </span>
+                  </div>
+                </div>
+                {orderMode === 'custom' && (
+                  <p className="order-description">
+                    You will arrange questions manually in the next step
+                  </p>
+                )}
+
+                {orderMode === 'automatic' && (
+                  <div style={{ marginTop: '20px' }}>
+                    <p style={{ fontSize: '14px', color: '#666' }}>
+                      Questions will be automatically ordered based on the filters you selected
+                    </p>
+                  </div>
+                )}
+              </div>
+
+            </div>
+            
+            <button 
+              onClick={handleSelectQuestions}
+              className="select-questions-button"
+              disabled={!packName || !selectedSubject}
+              style={{ 
+                opacity: (!packName || !selectedSubject) ? 0.5 : 1,
+                cursor: (!packName || !selectedSubject) ? 'not-allowed' : 'pointer'
+              }}
+            >
+              Select Questions
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </article>
         </div>
       </div>
     </div>
