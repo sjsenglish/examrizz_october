@@ -1,8 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { createClient } from '@supabase/supabase-js';
 import './study-book.css';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 const tabs = [
   { id: 'profile', label: 'Profile' },
@@ -27,6 +33,172 @@ export default function StudyBookPage() {
     question2: 1,
     question3: 1
   });
+
+  // Chat state
+  const [messages, setMessages] = useState<Array<{id: string, role: 'user' | 'assistant', content: string, timestamp: Date}>>([]);
+  const [currentMessage, setCurrentMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Get current user on mount
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUserId(user.id);
+        loadConversationHistory(user.id);
+      }
+    };
+    getCurrentUser();
+  }, []);
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const loadConversationHistory = async (currentUserId: string) => {
+    try {
+      // Get the most recent conversation
+      const { data: conversation } = await supabase
+        .from('conversations')
+        .select('id')
+        .eq('user_id', currentUserId)
+        .eq('type', 'bo_chat')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (conversation) {
+        setConversationId(conversation.id);
+
+        // Load messages for this conversation
+        const { data: messageHistory } = await supabase
+          .from('messages')
+          .select('id, role, content, created_at')
+          .eq('conversation_id', conversation.id)
+          .order('created_at', { ascending: true });
+
+        if (messageHistory) {
+          const formattedMessages = messageHistory.map(msg => ({
+            id: msg.id,
+            role: msg.role as 'user' | 'assistant',
+            content: msg.content,
+            timestamp: new Date(msg.created_at)
+          }));
+          setMessages(formattedMessages);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading conversation history:', error);
+    }
+  };
+
+  const sendMessage = async () => {
+    if (!currentMessage.trim() || !userId || isLoading) return;
+
+    const userMessage = {
+      id: Date.now().toString(),
+      role: 'user' as const,
+      content: currentMessage.trim(),
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setCurrentMessage('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/chat/bo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userMessage.content,
+          conversationId,
+          userId
+        })
+      });
+
+      if (!response.ok) throw new Error('Failed to send message');
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let assistantMessage = '';
+
+      // Add initial assistant message
+      const assistantId = (Date.now() + 1).toString();
+      setMessages(prev => [...prev, {
+        id: assistantId,
+        role: 'assistant',
+        content: '',
+        timestamp: new Date()
+      }]);
+
+      while (reader) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n');
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              
+              if (data.type === 'token') {
+                assistantMessage += data.content;
+                setMessages(prev => prev.map(msg => 
+                  msg.id === assistantId 
+                    ? { ...msg, content: assistantMessage }
+                    : msg
+                ));
+                
+                if (data.conversationId && !conversationId) {
+                  setConversationId(data.conversationId);
+                }
+              } else if (data.type === 'complete') {
+                if (data.conversationId && !conversationId) {
+                  setConversationId(data.conversationId);
+                }
+              } else if (data.type === 'error') {
+                setMessages(prev => prev.map(msg => 
+                  msg.id === assistantId 
+                    ? { ...msg, content: data.content }
+                    : msg
+                ));
+              }
+            } catch (e) {
+              console.error('Error parsing SSE data:', e);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again.',
+        timestamp: new Date()
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
 
   const renderProfileTab = () => {
     return (
@@ -1582,17 +1754,54 @@ export default function StudyBookPage() {
                   )}
                 </div>
                 <div className="chat-messages">
-                  <div className="message buddy-message">
-                    <div className="message-time">Now</div>
-                    <div className="message-content">
-                      Hi! I'm Bo, your AI assistant. I can help you with your personal statement questions, provide feedback, and offer guidance. How can I help you today?
+                  {messages.length === 0 ? (
+                    <div className="message buddy-message">
+                      <div className="message-time">Now</div>
+                      <div className="message-content">
+                        Hi! I'm Bo, your AI assistant. I can help you with your personal statement questions, provide feedback, and offer guidance. How can I help you today?
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    messages.map((message) => (
+                      <div key={message.id} className={`message ${message.role === 'assistant' ? 'buddy-message' : 'user-message'}`}>
+                        <div className="message-time">
+                          {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                        <div className="message-content">
+                          {message.content}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                  {isLoading && (
+                    <div className="message buddy-message">
+                      <div className="message-time">Now</div>
+                      <div className="message-content">
+                        <div className="typing-indicator">
+                          <span></span>
+                          <span></span>
+                          <span></span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <div ref={messagesEndRef} />
                 </div>
                 <div className="chat-input-area">
                   <div className="chat-input">
-                    <input type="text" placeholder="Ask Bo anything about your personal statement..." />
-                    <button className="send-button">
+                    <input 
+                      type="text" 
+                      placeholder="Ask Bo anything about your personal statement..." 
+                      value={currentMessage}
+                      onChange={(e) => setCurrentMessage(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      disabled={isLoading}
+                    />
+                    <button 
+                      className="send-button"
+                      onClick={sendMessage}
+                      disabled={isLoading || !currentMessage.trim()}
+                    >
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="#00CED1" stroke="#00CED1" strokeWidth="2">
                         <path d="M22 2L11 13"/>
                         <path d="M22 2l-7 20-4-9-9-4 20-7z"/>
