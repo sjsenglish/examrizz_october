@@ -64,23 +64,22 @@ export default function StudyBookPage() {
   useEffect(() => {
     if (!user) return;
     const getCurrentUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        // Get user profile ID instead of auth user ID
-        const { data: profile } = await supabase
-          .from('user_profiles')
-          .select('id')
-          .eq('auth_user_id', user.id)
-          .single();
-        
-        if (profile) {
-          setUserId(profile.id);
-          loadConversationHistory(profile.id);
-        }
+      // Get user profile ID - assuming user_profiles.id matches auth.users.id
+      const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('id')
+        .eq('id', user.id)
+        .single();
+      
+      if (profile) {
+        setUserId(profile.id);
+        loadConversationHistory(profile.id);
+      } else {
+        console.error('No user profile found for user:', user.id);
       }
     };
     getCurrentUser();
-  }, []);
+  }, [user]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -128,7 +127,15 @@ export default function StudyBookPage() {
   };
 
   const sendMessage = async () => {
-    if (!currentMessage.trim() || !userId || isLoading) return;
+    console.log('sendMessage called', { currentMessage, userId, isLoading });
+    if (!currentMessage.trim() || !userId || isLoading) {
+      console.log('sendMessage blocked:', { 
+        messageEmpty: !currentMessage.trim(), 
+        noUserId: !userId, 
+        isLoading 
+      });
+      return;
+    }
 
     const userMessage = {
       id: Date.now().toString(),
