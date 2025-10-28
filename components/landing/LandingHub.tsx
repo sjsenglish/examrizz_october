@@ -50,22 +50,27 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
       >
         {/* ARENA - top-left (20% from left, 25% from top) */}
         <div 
-          className="absolute"
+          className="absolute group"
           style={{
             left: '32%',
             top: '18%',
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <Link href="/competition" className="block">
+          <div className="relative">
             <Image 
               src="/icons/arena.svg"
               alt="ARENA"
               width={248} /* 10% smaller: 276 -> 248 */
               height={248} /* 10% smaller: 276 -> 248 */
-              className="drop-shadow-lg"
+              className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
             />
-          </Link>
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <span className="bg-white/95 px-4 py-2 rounded-lg border-2 border-black shadow-lg font-['Madimi_One'] text-lg">
+                Coming Soon
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* VIDEO - top-right (75% from left, 25% from top) */}
@@ -110,22 +115,27 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
 
         {/* TEACHER - bottom-left (25% from left, 55% from top) - MOVED UP */}
         <div 
-          className="absolute"
+          className="absolute group"
           style={{
             left: '25%',
             top: '55%',
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <Link href="/teacher" className="block">
+          <div className="relative">
             <Image 
               src="/icons/teacher.svg"
               alt="TEACHER"
               width={228} /* 10% smaller: 253 -> 228 */
               height={228} /* 10% smaller: 253 -> 228 */
-              className="drop-shadow-lg"
+              className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
             />
-          </Link>
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <span className="bg-white/95 px-4 py-2 rounded-lg border-2 border-black shadow-lg font-['Madimi_One'] text-lg">
+                Coming Soon
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* LEARN - bottom-right (70% from left, 45% from top) - MOVED UP */}

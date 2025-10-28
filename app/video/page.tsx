@@ -227,28 +227,30 @@ export default function VideoPage() {
             }}>
               Learn A Level Maths with videos and original practice questions!
             </p>
-            <button style={{
-              padding: '8px 21px',
-              backgroundColor: '#00CED1',
-              color: '#000000',
-              border: '1px solid #000000',
-              borderRadius: '6px',
-              fontFamily: "'Madimi One', cursive",
-              fontSize: '13px',
-              fontWeight: '400',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '7px',
-              margin: '0 auto',
-              transition: 'all 0.3s ease',
-              boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.2)'
-            }}>
-              Start maths series
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
+            <Link href="/videogallery/maths" style={{ textDecoration: 'none' }}>
+              <button style={{
+                padding: '8px 21px',
+                backgroundColor: '#00CED1',
+                color: '#000000',
+                border: '1px solid #000000',
+                borderRadius: '6px',
+                fontFamily: "'Madimi One', cursive",
+                fontSize: '13px',
+                fontWeight: '400',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '7px',
+                margin: '0 auto',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.2)'
+              }}>
+                Start maths series
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            </Link>
           </div>
         </div>
         
@@ -419,9 +421,9 @@ export default function VideoPage() {
                 fontWeight: '400',
                 color: '#000000'
               }}>
-                A Level Chemistry AQA
+                English Lit Fundamentals
               </h3>
-              <Link href="/videogallery" style={{ textDecoration: 'none' }}>
+              <Link href="/videogallery/english" style={{ textDecoration: 'none' }}>
                 <button style={{
                   padding: '8px 16px',
                   backgroundColor: '#FFFFFF',
@@ -470,9 +472,8 @@ export default function VideoPage() {
             
             <div style={{ display: 'flex', gap: '20px', flex: '1', justifyContent: 'space-between' }}>
               {videoPlaceholders.map((_, index) => (
-                <div 
-                  key={index} 
-                  style={{ 
+                <Link key={index} href={`/video/${index + 1}`} style={{ textDecoration: 'none' }}>
+                  <div style={{ 
                     backgroundColor: '#d0d0d0',
                     border: '1px solid #000000',
                     borderRadius: '8px',
@@ -485,13 +486,19 @@ export default function VideoPage() {
                     fontSize: '14px',
                     color: '#666666',
                     position: 'relative',
-                    cursor: index === 0 ? 'pointer' : 'default'
+                    cursor: 'pointer',
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease'
                   }}
-                  onClick={index === 0 ? () => window.location.href = '/videoopen' : undefined}
-                >
-                  Video {index + 1}
-                  {index === 0 && (
-                    <Link href="/videoopen" style={{ 
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}>
+                    Video {index + 1}
+                    <div style={{ 
                       position: 'absolute',
                       top: '50%',
                       left: '50%',
@@ -503,16 +510,15 @@ export default function VideoPage() {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      textDecoration: 'none',
                       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
                       transition: 'all 0.3s ease'
                     }}>
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <polygon points="9,6 9,18 17,12" fill="#000000"/>
                       </svg>
-                    </Link>
-                  )}
-                </div>
+                    </div>
+                  </div>
+                </Link>
               ))}
             </div>
             
@@ -552,9 +558,9 @@ export default function VideoPage() {
                 fontWeight: '400',
                 color: '#000000'
               }}>
-                A Level Biology AQA
+                The How To Series
               </h3>
-              <Link href="/videogallery" style={{ textDecoration: 'none' }}>
+              <Link href="/videogallery/howto" style={{ textDecoration: 'none' }}>
                 <button style={{
                   padding: '8px 16px',
                   backgroundColor: '#FFFFFF',
@@ -603,9 +609,8 @@ export default function VideoPage() {
             
             <div style={{ display: 'flex', gap: '20px', flex: '1', justifyContent: 'space-between' }}>
               {videoPlaceholders.map((_, index) => (
-                <div 
-                  key={index} 
-                  style={{ 
+                <Link key={index} href={`/video/${index + 4}`} style={{ textDecoration: 'none' }}>
+                  <div style={{ 
                     backgroundColor: '#d0d0d0',
                     border: '1px solid #000000',
                     borderRadius: '8px',
@@ -616,11 +621,41 @@ export default function VideoPage() {
                     justifyContent: 'center',
                     fontFamily: "'Futura PT', sans-serif",
                     fontSize: '14px',
-                    color: '#666666'
+                    color: '#666666',
+                    position: 'relative',
+                    cursor: 'pointer',
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease'
                   }}
-                >
-                  Video {index + 1}
-                </div>
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}>
+                    Video {index + 1}
+                    <div style={{ 
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                      borderRadius: '50%',
+                      width: '60px',
+                      height: '60px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                      transition: 'all 0.3s ease'
+                    }}>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="9,6 9,18 17,12" fill="#000000"/>
+                      </svg>
+                    </div>
+                  </div>
+                </Link>
               ))}
             </div>
             

@@ -135,8 +135,8 @@ const ExamSearch: React.FC = () => {
               <Image 
                 src="/a-level-box-white.svg" 
                 alt="A Level" 
-                width={178} 
-                height={32}
+                width={356} 
+                height={64}
                 className="svg-icon"
               />
             </button>
@@ -175,8 +175,8 @@ const ExamSearch: React.FC = () => {
               <Image 
                 src="/admissions-box-white.svg" 
                 alt="Admissions" 
-                width={178} 
-                height={32}
+                width={356} 
+                height={64}
                 className="svg-icon"
               />
             </button>
