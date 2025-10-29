@@ -490,7 +490,7 @@ export default function BuddyPage() {
                   <p>Ask me anything about your personal statement, and I'll guide you through the process step by step.</p>
                 </div>
               ) : (
-                messages.map(message => (
+                [...messages].reverse().map(message => (
                   <div key={message.id} className={`message ${message.role}`}>
                     <div className="message-content">
                       {message.role === 'assistant' ? (

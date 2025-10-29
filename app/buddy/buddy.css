@@ -77,10 +77,11 @@ body {
    ============================================================================= */
 
 .buddy-page {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background: var(--bg-secondary);
+  overflow: hidden;
 }
 
 /* =============================================================================
@@ -218,6 +219,7 @@ body {
   margin-top: var(--navbar-height);
   height: calc(100vh - var(--navbar-height));
   position: relative;
+  overflow: hidden;
 }
 
 /* =============================================================================
@@ -356,6 +358,7 @@ body {
   background: var(--bg-primary);
   height: 100%;
   position: relative;
+  overflow: hidden;
 }
 
 /* =============================================================================
@@ -459,21 +462,21 @@ body {
 .messages-container {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   min-height: 0;
-  padding-bottom: 140px;
+  padding-bottom: 100px;
+  position: relative;
 }
 
 .messages-wrapper {
   padding: var(--space-6);
   display: flex;
-  flex-direction: column-reverse;
-  gap: var(--space-6);
-  max-width: 800px;
-  margin: 0 auto;
+  flex-direction: column;
+  gap: var(--space-4);
   width: 100%;
-  min-height: min-content;
+  max-width: none;
 }
 
 .welcome-message {
@@ -502,31 +505,21 @@ body {
 .message {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-1);
   width: 100%;
 }
 
-.message.user {
-  align-items: stretch;
-}
-
-.message.assistant {
-  align-items: stretch;
-}
-
 .message-content {
-  padding: var(--space-4) var(--space-5);
-  border-radius: var(--border-radius);
   font-size: 15px;
   line-height: 1.6;
   width: 100%;
   word-wrap: break-word;
-  position: relative;
 }
 
 .message.user .message-content {
-  background: #9333ea;
-  color: white;
+  background: #f4f4f4;
+  color: var(--text-primary);
+  padding: var(--space-3) var(--space-4);
   border-radius: var(--border-radius);
   margin: 0;
 }
@@ -534,8 +527,7 @@ body {
 .message.assistant .message-content {
   background: transparent;
   color: var(--text-primary);
-  border: none;
-  padding: var(--space-4) 0;
+  padding: 0;
   margin: 0;
 }
 
@@ -600,19 +592,18 @@ body {
    ============================================================================= */
 
 .chat-input-area {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: var(--space-4) var(--space-6) var(--space-6);
+  padding: var(--space-4) var(--space-6);
   border-top: 1px solid var(--border-primary);
   background: var(--bg-primary);
   z-index: 100;
 }
 
 .input-wrapper {
-  max-width: 800px;
-  margin: 0 auto;
+  width: 100%;
   position: relative;
   display: flex;
   align-items: flex-end;
@@ -740,8 +731,8 @@ body {
   }
   
   .messages-wrapper {
-    padding: var(--space-4) var(--space-4) 140px;
-    gap: var(--space-4);
+    padding: var(--space-4);
+    gap: var(--space-3);
   }
   
   .message-content {
