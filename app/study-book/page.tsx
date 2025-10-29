@@ -74,10 +74,15 @@ export default function StudyBookPage() {
 
   // Categories for materials
   const categories = [
-    { id: 'notes', label: 'Notes', icon: '/icons/learn-hub-book.svg', count: 0 },
-    { id: 'uploads', label: 'Uploads', icon: '/icons/essays.svg', count: 0 },
-    { id: 'resources', label: 'Resources', icon: '/icons/books.svg', count: 0 },
-    { id: 'practice', label: 'Practice', icon: '/icons/practice.svg', count: 0 }
+    { id: 'books', label: 'Books', icon: '/icons/books.svg', count: 0 },
+    { id: 'essays', label: 'Essays', icon: '/icons/essays.svg', count: 0 },
+    { id: 'moocs', label: 'MOOCs', icon: '/icons/moocs.svg', count: 0 },
+    { id: 'lectures', label: 'Lectures', icon: '/icons/lectures.svg', count: 0 },
+    { id: 'textbooks', label: 'Textbooks', icon: '/icons/learn-hub-book.svg', count: 0 },
+    { id: 'societies', label: 'Societies', icon: '/icons/love-letter.svg', count: 0 },
+    { id: 'challenges', label: 'Challenges', icon: '/icons/academic-challenges.svg', count: 0 },
+    { id: 'internships', label: 'Internships', icon: '/icons/internships.svg', count: 0 },
+    { id: 'academic-papers', label: 'Academic Papers', icon: '/icons/academic-paper.svg', count: 0 }
   ];
 
   // Auth protection - check if user is logged in
@@ -392,85 +397,217 @@ export default function StudyBookPage() {
 
   return (
     <div className="study-book-new">
-      {/* Fixed Left Sidebar */}
-      <div className="sidebar">
-        <div className="sidebar-content">
-          {/* Logo */}
-          <div className="sidebar-logo">
-            <Link href="/" className="logo-link">
-              <h1>examrizz</h1>
-            </Link>
-          </div>
-
-          {/* Navigation */}
-          <nav className="sidebar-nav">
-            <button 
-              className={`nav-item ${activeTab === 'materials' ? 'active' : ''}`}
-              onClick={() => setActiveTab('materials')}
-            >
-              <img src="/icons/learn-hub-book.svg" alt="Study Materials" />
-              <span>Study Materials</span>
-            </button>
-            
-            <button 
-              className={`nav-item ${activeTab === 'chat' ? 'active' : ''}`}
-              onClick={() => setActiveTab('chat')}
-            >
-              <img src="/icons/speech-bubble-ghost.svg" alt="Buddy Chat" />
-              <span>Buddy Chat</span>
-            </button>
-            
-            <button 
-              className={`nav-item ${activeTab === 'profile' ? 'active' : ''}`}
-              onClick={() => setActiveTab('profile')}
-            >
-              <img src="/svg/ghost.svg" alt="Profile" />
-              <span>Profile</span>
-            </button>
-          </nav>
-
-          {/* User section */}
-          <div className="sidebar-user">
-            <div className="user-avatar">
-              <img src="/svg/ghost.svg" alt="User" />
+      {/* Navbar */}
+      <nav className="navbar">
+        <Link href="/" style={{ textDecoration: 'none' }}>
+          <h1 style={{
+            fontFamily: "'Madimi One', cursive",
+            fontSize: '24px',
+            fontWeight: '400',
+            color: '#000000',
+            margin: '0',
+            cursor: 'pointer'
+          }}>
+            examrizzsearch
+          </h1>
+        </Link>
+        <div style={{ position: 'relative' }}>
+          <button 
+            onClick={() => setShowDropdown(!showDropdown)}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '8px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px'
+            }}
+          >
+            <div style={{
+              width: '20px',
+              height: '2px',
+              backgroundColor: '#000000',
+              borderRadius: '1px'
+            }}></div>
+            <div style={{
+              width: '20px',
+              height: '2px',
+              backgroundColor: '#000000',
+              borderRadius: '1px'
+            }}></div>
+            <div style={{
+              width: '20px',
+              height: '2px',
+              backgroundColor: '#000000',
+              borderRadius: '1px'
+            }}></div>
+          </button>
+          
+          {showDropdown && (
+            <div style={{
+              position: 'absolute',
+              top: '100%',
+              right: '0',
+              marginTop: '8px',
+              backgroundColor: '#FFFFFF',
+              border: '2px solid #000000',
+              borderRadius: '8px',
+              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+              zIndex: 10000,
+              minWidth: '160px',
+              padding: '8px 0'
+            }}>
+              <Link 
+                href="/terms-and-conditions"
+                style={{
+                  display: 'block',
+                  padding: '12px 20px',
+                  color: '#000000',
+                  textDecoration: 'none',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  letterSpacing: '0.04em',
+                  transition: 'background-color 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#F8F8F5';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
+                onClick={() => setShowDropdown(false)}
+              >
+                Terms & Conditions
+              </Link>
+              <Link 
+                href="/payment"
+                style={{
+                  display: 'block',
+                  padding: '12px 20px',
+                  color: '#000000',
+                  textDecoration: 'none',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  letterSpacing: '0.04em',
+                  transition: 'background-color 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#F8F8F5';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
+                onClick={() => setShowDropdown(false)}
+              >
+                Payment
+              </Link>
+              <Link 
+                href="/help"
+                style={{
+                  display: 'block',
+                  padding: '12px 20px',
+                  color: '#000000',
+                  textDecoration: 'none',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  letterSpacing: '0.04em',
+                  transition: 'background-color 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#F8F8F5';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
+                onClick={() => setShowDropdown(false)}
+              >
+                Help
+              </Link>
             </div>
-            <button className="logout-btn" onClick={handleLogout}>
-              Logout
-            </button>
-          </div>
+          )}
         </div>
+      </nav>
 
-        {/* Hamburger Menu Dropdown */}
-        <div className="sidebar-hamburger">
-          <div style={{ position: 'relative' }}>
-            <button 
-              onClick={() => setShowDropdown(!showDropdown)}
-              className="hamburger-btn"
-            >
-              <div className="hamburger-line"></div>
-              <div className="hamburger-line"></div>
-              <div className="hamburger-line"></div>
-            </button>
-            
-            {showDropdown && (
-              <div className="hamburger-dropdown">
-                <Link href="/terms-and-conditions" onClick={() => setShowDropdown(false)}>
-                  Terms & Conditions
-                </Link>
-                <Link href="/payment" onClick={() => setShowDropdown(false)}>
-                  Payment
-                </Link>
-                <Link href="/help" onClick={() => setShowDropdown(false)}>
-                  Help
-                </Link>
-              </div>
-            )}
-          </div>
+      {/* Back Button */}
+      <Link 
+        href="/learn" 
+        style={{
+          position: 'absolute',
+          top: '90px',
+          left: '45px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          padding: '9px 18px',
+          backgroundColor: '#FFFFFF',
+          borderRadius: '8px',
+          textDecoration: 'none',
+          color: '#333333',
+          fontFamily: "'Madimi One', cursive",
+          fontSize: '13px',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+          transition: 'all 0.3s ease',
+          zIndex: 20
+        }}
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+        Learn Hub
+      </Link>
+
+      {/* Tab Navigation */}
+      <div className="tab-navigation">
+        <div className="tab-container">
+          <button 
+            className={`tab ${activeTab === 'materials' ? 'active' : ''}`}
+            onClick={() => setActiveTab('materials')}
+          >
+            Study Materials
+          </button>
+          <button 
+            className={`tab ${activeTab === 'chat' ? 'active' : ''}`}
+            onClick={() => setActiveTab('chat')}
+          >
+            Buddy Chat
+          </button>
+          <button 
+            className={`tab ${activeTab === 'profile' ? 'active' : ''}`}
+            onClick={() => setActiveTab('profile')}
+          >
+            Profile
+          </button>
         </div>
       </div>
 
+      {/* User Actions */}
+      <div style={{ position: 'absolute', top: '90px', right: '45px', zIndex: 20 }}>
+        <button 
+          onClick={handleLogout}
+          style={{
+            padding: '9px 18px',
+            backgroundColor: '#FFFFFF',
+            borderRadius: '8px',
+            border: '1px solid #000000',
+            fontFamily: "'Figtree', sans-serif",
+            fontSize: '13px',
+            fontWeight: '500',
+            color: '#333333',
+            cursor: 'pointer',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+            transition: 'all 0.3s ease'
+          }}
+        >
+          Logout
+        </button>
+      </div>
+
       {/* Main Content Area */}
-      <div className="main-content">
+      <div className="main-content-container">
         {activeTab === 'materials' && (
           <div className="materials-page">
             <div className="materials-layout">
@@ -529,39 +666,31 @@ export default function StudyBookPage() {
 
         {activeTab === 'chat' && (
           <div className="chat-page">
-            <div className="chat-layout">
-              {/* Left Chat History */}
-              <div className="chat-history">
-                <h3>Chat History</h3>
-                <div className="history-list">
-                  <div className="history-item active">
-                    Current Session
-                  </div>
-                </div>
-              </div>
-
-              {/* Center Chat Interface */}
-              <div className="chat-interface">
+            <div className="chat-layout-new">
+              {/* Chat Interface - Now Wider */}
+              <div className="chat-interface-wide">
                 <div className="chat-header">
                   <h2>Buddy Chat</h2>
                 </div>
                 
-                <div className="chat-messages">
-                  {messages.map(message => (
-                    <div key={message.id} className={`message ${message.role}`}>
-                      <div className="message-content">
-                        {message.role === 'assistant' ? (
-                          <ReactMarkdown>{message.content}</ReactMarkdown>
-                        ) : (
-                          message.content
-                        )}
+                <div className="chat-messages-scrollable">
+                  <div className="messages-container">
+                    {messages.map(message => (
+                      <div key={message.id} className={`message ${message.role}`}>
+                        <div className="message-content">
+                          {message.role === 'assistant' ? (
+                            <ReactMarkdown>{message.content}</ReactMarkdown>
+                          ) : (
+                            message.content
+                          )}
+                        </div>
+                        <div className="message-time">
+                          {message.timestamp.toLocaleTimeString()}
+                        </div>
                       </div>
-                      <div className="message-time">
-                        {message.timestamp.toLocaleTimeString()}
-                      </div>
-                    </div>
-                  ))}
-                  <div ref={messagesEndRef} />
+                    ))}
+                    <div ref={messagesEndRef} />
+                  </div>
                 </div>
 
                 <div className="chat-input-area">

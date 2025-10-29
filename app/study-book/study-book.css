@@ -53,9 +53,104 @@ body {
    ============================================================================= */
 
 .study-book-new {
-  display: flex;
-  min-height: 100vh;
   background: var(--bg-white);
+  min-height: 100vh;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #F8F8F5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Tab Navigation */
+.tab-navigation {
+  background: transparent;
+  padding: 80px 40px 10px 40px;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  z-index: 90;
+}
+
+.tab-container {
+  display: flex;
+  gap: 0;
+  width: 100%;
+  max-width: 1093px;
+  position: relative;
+}
+
+.tab {
+  background: #E7E6FF;
+  border: 1px solid #221468;
+  border-bottom: none;
+  border-radius: 0;
+  padding: 12px 20px;
+  font-family: 'Madimi One', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #221468;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-right: none;
+  position: relative;
+  letter-spacing: 0.04em;
+  flex: 1;
+  text-align: center;
+}
+
+.tab:first-child {
+  border-top-left-radius: 10px;
+  border-left: 1px solid #221468;
+}
+
+.tab:last-child {
+  border-top-right-radius: 10px;
+  border-right: 1px solid #221468;
+}
+
+.tab:not(:first-child) {
+  border-top-right-radius: 10px;
+}
+
+.tab:not(:last-child) {
+  border-right: 1px solid #221468;
+}
+
+.tab:hover {
+  background: #DDD9FF;
+}
+
+.tab.active {
+  background: #F3F2FF;
+  color: #221468;
+  font-weight: 600;
+  z-index: 1;
+}
+
+.main-content-container {
+  background: #F3F2FF;
+  border: 1px solid #221468;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  padding: 24px;
+  min-height: calc(100vh - 200px);
+  margin: 0 40px;
+  margin-top: -1px;
+  box-sizing: border-box;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .loading-container {
@@ -83,187 +178,11 @@ body {
 }
 
 /* =============================================================================
-   SIDEBAR
-   ============================================================================= */
-
-.sidebar {
-  width: var(--sidebar-width);
-  background: var(--bg-white);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  height: 100vh;
-  z-index: 100;
-}
-
-.sidebar-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-24);
-}
-
-.sidebar-logo {
-  margin-bottom: var(--space-48);
-}
-
-.logo-link {
-  text-decoration: none;
-}
-
-.sidebar-logo h1 {
-  font-family: var(--font-heading);
-  font-size: 32px;
-  letter-spacing: 0.04em;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.sidebar-nav {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-16);
-  padding: var(--space-16);
-  background: none;
-  border: none;
-  border-radius: var(--border-radius-sm);
-  font-family: var(--font-body);
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: left;
-}
-
-.nav-item:hover {
-  background: var(--bg-gray);
-  color: var(--text-primary);
-}
-
-.nav-item.active {
-  background: var(--primary);
-  color: var(--bg-white);
-}
-
-.nav-item img {
-  width: 24px;
-  height: 24px;
-}
-
-.sidebar-user {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-16);
-  padding-top: var(--space-24);
-  border-top: 1px solid var(--border);
-}
-
-.user-avatar {
-  display: flex;
-  justify-content: center;
-}
-
-.user-avatar img {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-}
-
-.logout-btn {
-  padding: var(--space-8) var(--space-16);
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: var(--border-radius-sm);
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.logout-btn:hover {
-  background: var(--bg-gray);
-  color: var(--text-primary);
-}
-
-.sidebar-hamburger {
-  padding: var(--space-16) var(--space-24);
-  border-top: 1px solid var(--border);
-}
-
-.hamburger-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: var(--space-8);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.hamburger-line {
-  width: 20px;
-  height: 2px;
-  background-color: var(--text-primary);
-  border-radius: 1px;
-}
-
-.hamburger-dropdown {
-  position: absolute;
-  bottom: 100%;
-  left: 0;
-  right: 0;
-  margin-bottom: var(--space-8);
-  background: var(--bg-white);
-  border: 2px solid var(--text-primary);
-  border-radius: var(--border-radius-sm);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 10000;
-  padding: var(--space-8) 0;
-}
-
-.hamburger-dropdown a {
-  display: block;
-  padding: var(--space-16) var(--space-24);
-  color: var(--text-primary);
-  text-decoration: none;
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  transition: background-color 0.2s ease;
-}
-
-.hamburger-dropdown a:hover {
-  background: var(--bg-gray);
-}
-
-/* =============================================================================
-   MAIN CONTENT
-   ============================================================================= */
-
-.main-content {
-  flex: 1;
-  margin-left: var(--sidebar-width);
-  background: var(--bg-gray);
-  min-height: 100vh;
-}
-
-/* =============================================================================
    MATERIALS PAGE
    ============================================================================= */
 
 .materials-page {
-  padding: var(--space-48);
+  padding: 0;
 }
 
 .materials-layout {
@@ -457,54 +376,25 @@ body {
    ============================================================================= */
 
 .chat-page {
-  padding: var(--space-48);
+  padding: 0;
 }
 
-.chat-layout {
+.chat-layout-new {
   display: grid;
-  grid-template-columns: 20% 45% 35%;
+  grid-template-columns: 65% 35%;
   gap: var(--space-24);
   max-width: 1600px;
   margin: 0 auto;
-  height: calc(100vh - 96px);
+  height: calc(100vh - 200px);
 }
 
-.chat-history {
-  background: var(--bg-white);
-  padding: var(--space-24);
-  border-radius: var(--border-radius);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.chat-history h3 {
-  font-family: var(--font-heading);
-  font-size: 18px;
-  letter-spacing: 0.04em;
-  color: var(--text-primary);
-  margin: 0 0 var(--space-16) 0;
-}
-
-.history-item {
-  padding: var(--space-8);
-  border-radius: var(--border-radius-sm);
-  font-size: 14px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.history-item:hover,
-.history-item.active {
-  background: var(--bg-gray);
-  color: var(--text-primary);
-}
-
-.chat-interface {
+.chat-interface-wide {
   background: var(--bg-white);
   border-radius: var(--border-radius);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .chat-header {
@@ -520,13 +410,22 @@ body {
   margin: 0;
 }
 
-.chat-messages {
+.chat-messages-scrollable {
   flex: 1;
-  padding: var(--space-24);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  min-height: 0;
+  scroll-behavior: smooth;
+}
+
+.messages-container {
+  padding: var(--space-24);
+  display: flex;
+  flex-direction: column;
   gap: var(--space-16);
+  min-height: 100%;
+  justify-content: flex-end;
 }
 
 .message {
@@ -739,11 +638,11 @@ body {
    ============================================================================= */
 
 .profile-page {
-  padding: var(--space-48);
+  padding: 0;
 }
 
 .profile-page h2 {
-  font-family: var(--font-heading);
+  font-family: 'Madimi One', sans-serif;
   font-size: 32px;
   letter-spacing: 0.04em;
   color: var(--text-primary);
@@ -772,7 +671,7 @@ body {
 }
 
 .profile-card h3 {
-  font-family: var(--font-heading);
+  font-family: 'Madimi One', sans-serif;
   font-size: 24px;
   letter-spacing: 0.04em;
   color: var(--text-primary);
@@ -780,7 +679,7 @@ body {
 }
 
 .profile-card p {
-  font-family: var(--font-body);
+  font-family: 'Figtree', sans-serif;
   font-size: 16px;
   color: var(--text-secondary);
   margin: 0;
