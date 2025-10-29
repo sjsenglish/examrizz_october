@@ -54,7 +54,10 @@ body {
 
 .study-book-new {
   background: var(--bg-white);
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .navbar {
@@ -146,11 +149,12 @@ body {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   padding: 24px;
-  min-height: calc(100vh - 200px);
+  height: calc(100vh - 180px);
   margin: 0 40px;
   margin-top: -1px;
   box-sizing: border-box;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .loading-container {
@@ -377,6 +381,8 @@ body {
 
 .chat-page {
   padding: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
 .chat-layout-new {
@@ -385,7 +391,8 @@ body {
   gap: var(--space-24);
   max-width: 1600px;
   margin: 0 auto;
-  height: calc(100vh - 200px);
+  height: 100%;
+  overflow: hidden;
 }
 
 .chat-interface-wide {
@@ -395,6 +402,8 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow: hidden;
+  position: relative;
 }
 
 .chat-header {
@@ -413,10 +422,11 @@ body {
 .chat-messages-scrollable {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   min-height: 0;
-  scroll-behavior: smooth;
+  padding-bottom: 120px;
 }
 
 .messages-container {
@@ -424,41 +434,35 @@ body {
   display: flex;
   flex-direction: column;
   gap: var(--space-16);
-  min-height: 100%;
-  justify-content: flex-end;
+  width: 100%;
 }
 
 .message {
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
-}
-
-.message.user {
-  align-items: flex-end;
-}
-
-.message.assistant {
-  align-items: flex-start;
+  width: 100%;
 }
 
 .message-content {
-  max-width: 80%;
+  width: 100%;
   padding: var(--space-16);
-  border-radius: var(--border-radius);
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.5;
 }
 
 .message.user .message-content {
-  background: var(--user-bg);
+  background: #f4f4f4;
   color: var(--text-primary);
+  border-radius: var(--border-radius);
 }
 
 .message.assistant .message-content {
-  background: var(--buddy-bg);
+  background: transparent;
   color: var(--text-primary);
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .message-time {
@@ -468,11 +472,17 @@ body {
 }
 
 .chat-input-area {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   padding: var(--space-24);
+  background: var(--bg-white);
   border-top: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   gap: var(--space-16);
+  z-index: 10;
 }
 
 .chat-input-area textarea {

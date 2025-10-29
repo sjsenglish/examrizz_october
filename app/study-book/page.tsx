@@ -51,7 +51,6 @@ export default function StudyBookPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Draft workspace state
   const [draftContents, setDraftContents] = useState<{[key: number]: string}>({
@@ -121,22 +120,6 @@ export default function StudyBookPage() {
     getCurrentUser();
   }, [user]);
 
-  // Auto-scroll to bottom when new messages arrive
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const scrollToBottom = () => {
-    if (activeTab === 'chat' && messages.length > 0) {
-      setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({ 
-          behavior: 'smooth',
-          block: 'end',
-          inline: 'nearest'
-        });
-      }, 100);
-    }
-  };
 
   const loadConversationHistory = async (currentUserId: string) => {
     try {
@@ -675,7 +658,7 @@ export default function StudyBookPage() {
                 
                 <div className="chat-messages-scrollable">
                   <div className="messages-container">
-                    {messages.map(message => (
+                    {[...messages].reverse().map(message => (
                       <div key={message.id} className={`message ${message.role}`}>
                         <div className="message-content">
                           {message.role === 'assistant' ? (
@@ -689,7 +672,6 @@ export default function StudyBookPage() {
                         </div>
                       </div>
                     ))}
-                    <div ref={messagesEndRef} />
                   </div>
                 </div>
 
