@@ -962,7 +962,7 @@ export async function POST(request: NextRequest) {
     const [filesResponse, notesResponse] = await Promise.all([
       supabase
         .from('user_uploads')
-        .select('file_name, extracted_text')
+        .select('file_name, extracted_text, title, category, description, main_arguments, conclusions, sources, methodology, completion_date')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(5),
@@ -1056,10 +1056,25 @@ export async function POST(request: NextRequest) {
     
     if (filesResponse.data && filesResponse.data.length > 0) {
       contextString += '\n\nCONTEXT - UPLOADED MATERIALS:\n';
+      contextString += 'Reference these materials naturally when relevant. Use specific details to verify accuracy.\n\n';
+      
       filesResponse.data.forEach((file, index) => {
+        contextString += `\n=== MATERIAL ${index + 1}: ${file.file_name} ===\n`;
+        
+        if (file.title) contextString += `Title: ${file.title}\n`;
+        if (file.category) contextString += `Category: ${file.category}\n`;
+        if (file.completion_date) contextString += `Completed: ${file.completion_date}\n`;
+        if (file.description) contextString += `\nDescription:\n${file.description}\n`;
+        if (file.main_arguments) contextString += `\nMain Arguments:\n${file.main_arguments}\n`;
+        if (file.methodology) contextString += `\nMethodology:\n${file.methodology}\n`;
+        if (file.conclusions) contextString += `\nConclusions:\n${file.conclusions}\n`;
+        if (file.sources) contextString += `\nSources Referenced:\n${file.sources}\n`;
+        
         if (file.extracted_text && file.extracted_text.trim()) {
-          contextString += `\n${index + 1}. ${file.file_name}:\n${file.extracted_text.slice(0, 1000)}${file.extracted_text.length > 1000 ? '...' : ''}\n`;
+          contextString += `\nExtracted Content (first 800 chars):\n${file.extracted_text.slice(0, 800)}${file.extracted_text.length > 800 ? '...' : ''}\n`;
         }
+        
+        contextString += '\n';
       });
     }
 

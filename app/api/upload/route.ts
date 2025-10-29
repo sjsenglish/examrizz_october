@@ -84,12 +84,30 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to upload file' }, { status: 500 });
     }
 
+    // Extract metadata from formData
+    const category = formData.get('category') as string || null;
+    const title = formData.get('title') as string || null;
+    const description = formData.get('description') as string || null;
+    const main_arguments = formData.get('main_arguments') as string || null;
+    const conclusions = formData.get('conclusions') as string || null;
+    const sources = formData.get('sources') as string || null;
+    const methodology = formData.get('methodology') as string || null;
+    const completion_date = formData.get('completion_date') as string || null;
+
     const fileRecord = {
       user_id: user.id,
       file_name: file.name,
       file_path: fileName,
       file_type: file.type,
       extracted_text: extractedText,
+      category,
+      title,
+      description,
+      main_arguments,
+      conclusions,
+      sources,
+      methodology,
+      completion_date,
       created_at: new Date().toISOString()
     };
 

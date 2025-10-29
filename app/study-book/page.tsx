@@ -43,7 +43,12 @@ export default function StudyBookPage() {
     title: '',
     description: '',
     tags: '',
-    file: null as File | null
+    file: null as File | null,
+    main_arguments: '',
+    conclusions: '',
+    sources: '',
+    methodology: '',
+    completion_date: ''
   });
 
   // Chat state
@@ -370,11 +375,6 @@ export default function StudyBookPage() {
   };
 
   const handleSaveMaterial = async () => {
-    if (!materialForm.title.trim()) {
-      alert('Please enter a title for the material');
-      return;
-    }
-
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
@@ -382,44 +382,53 @@ export default function StudyBookPage() {
         return;
       }
 
-      // Create a simple material entry (you can expand this based on your database schema)
-      const materialData = {
-        user_id: userId,
-        title: materialForm.title,
-        description: materialForm.description,
-        category: materialForm.category,
-        tags: materialForm.tags,
-        created_at: new Date().toISOString()
-      };
-
-      // If there's a file, you would handle file upload here
-      if (materialForm.file) {
-        // File upload logic would go here
-        console.log('File to upload:', materialForm.file.name);
+      if (!materialForm.file) {
+        alert('Please select a file to upload');
+        return;
       }
 
-      // For now, just add to the uploaded files list
-      const newFile = {
-        id: Date.now().toString(),
-        file_name: materialForm.title,
-        file_type: materialForm.category || 'material',
-        file_path: '',
-        created_at: new Date().toISOString()
-      };
-
-      setUploadedFiles(prev => [...prev, newFile]);
+      // Create FormData with file AND metadata
+      const formData = new FormData();
+      formData.append('file', materialForm.file);
+      formData.append('category', materialForm.category || '');
+      formData.append('title', materialForm.title || '');
+      formData.append('description', materialForm.description || '');
+      formData.append('main_arguments', materialForm.main_arguments || '');
+      formData.append('conclusions', materialForm.conclusions || '');
+      formData.append('sources', materialForm.sources || '');
+      formData.append('methodology', materialForm.methodology || '');
+      formData.append('completion_date', materialForm.completion_date || '');
       
-      // Reset form and close modal
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to upload file');
+      }
+
+      await loadUploadedFiles();
+      
+      // Reset form
       setMaterialForm({
         category: '',
         title: '',
         description: '',
         tags: '',
-        file: null
+        file: null,
+        main_arguments: '',
+        conclusions: '',
+        sources: '',
+        methodology: '',
+        completion_date: ''
       });
       setShowMaterialModal(false);
       
-      alert('Material saved successfully!');
+      alert('Material uploaded successfully!');
     } catch (error) {
       console.error('Error saving material:', error);
       alert('Failed to save material. Please try again.');
@@ -843,20 +852,61 @@ export default function StudyBookPage() {
               </div>
               
               <div className="form-group">
-                <label>Tags</label>
-                <input 
-                  type="text"
-                  value={materialForm.tags}
-                  onChange={(e) => setMaterialForm(prev => ({ ...prev, tags: e.target.value }))}
-                  placeholder="Comma separated tags"
+                <label>Main Arguments</label>
+                <textarea 
+                  value={materialForm.main_arguments}
+                  onChange={(e) => setMaterialForm(prev => ({ ...prev, main_arguments: e.target.value }))}
+                  rows={3}
+                  placeholder="Key arguments or findings from this material"
                 />
               </div>
               
               <div className="form-group">
-                <label>File (Optional)</label>
+                <label>Conclusions</label>
+                <textarea 
+                  value={materialForm.conclusions}
+                  onChange={(e) => setMaterialForm(prev => ({ ...prev, conclusions: e.target.value }))}
+                  rows={3}
+                  placeholder="Main conclusions or outcomes"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>Sources</label>
+                <textarea 
+                  value={materialForm.sources}
+                  onChange={(e) => setMaterialForm(prev => ({ ...prev, sources: e.target.value }))}
+                  rows={3}
+                  placeholder="Sources referenced in this material"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>Methodology</label>
+                <textarea 
+                  value={materialForm.methodology}
+                  onChange={(e) => setMaterialForm(prev => ({ ...prev, methodology: e.target.value }))}
+                  rows={3}
+                  placeholder="Research methodology or approach used"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>Completion Date</label>
+                <input 
+                  type="text"
+                  value={materialForm.completion_date}
+                  onChange={(e) => setMaterialForm(prev => ({ ...prev, completion_date: e.target.value }))}
+                  placeholder="e.g., January 2024"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>File</label>
                 <input 
                   type="file"
                   onChange={(e) => setMaterialForm(prev => ({ ...prev, file: e.target.files?.[0] || null }))}
+                  accept=".pdf,.doc,.docx,.txt"
                 />
               </div>
               

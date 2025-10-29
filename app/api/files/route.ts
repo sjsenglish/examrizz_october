@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
 
     const { data, error } = await supabase
       .from('user_uploads')
-      .select('*')
+      .select('id, file_name, file_type, file_path, category, title, description, created_at')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false });
 
