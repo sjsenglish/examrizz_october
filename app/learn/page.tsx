@@ -48,8 +48,12 @@ export default function LearnPage() {
                       <p className="card-subtitle">with Joe</p>
                     </div>
                     <div className="card-icon">
-                      {/* Ghost icon placeholder */}
-                      <div className="icon-placeholder">👻</div>
+                      <Image 
+                        src="/icons/learn-hub-book.svg"
+                        alt="Maths Taster Course"
+                        width={40}
+                        height={40}
+                      />
                     </div>
                     <Link href="/learn-lesson" className="continue-button">
                       START
@@ -61,13 +65,16 @@ export default function LearnPage() {
 
                   <div className="learning-card">
                     <div className="card-content">
-                      <h3 className="card-title">Study Diary</h3>
-                      <p className="card-subtitle">Last entry - Insights on book X</p>
-                      <p className="card-time">2 hours ago</p>
+                      <h3 className="card-title">Ask Bo</h3>
+                      <p className="card-subtitle">Write the perfect PS</p>
                     </div>
                     <div className="card-icon">
-                      {/* Diary icon placeholder */}
-                      <div className="icon-placeholder">📖</div>
+                      <Image 
+                        src="/icons/flame-streak.svg"
+                        alt="Ask Bo"
+                        width={40}
+                        height={40}
+                      />
                     </div>
                     <Link href="/study-book" className="continue-button">
                       OPEN BOOK

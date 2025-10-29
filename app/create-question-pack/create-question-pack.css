@@ -53,7 +53,7 @@
 }
 
 .main-content {
-  padding-top: 88px; /* Moved down 10% from 80px */
+  padding-top: 120px; /* Increased to prevent navbar overlap */
   display: flex;
   align-items: flex-start;
   justify-content: center;
