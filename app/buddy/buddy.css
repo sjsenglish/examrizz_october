@@ -77,16 +77,10 @@ body {
    ============================================================================= */
 
 .buddy-page {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   background: var(--bg-secondary);
-  overflow: hidden;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
 }
 
 /* =============================================================================
@@ -224,7 +218,6 @@ body {
   margin-top: var(--navbar-height);
   height: calc(100vh - var(--navbar-height));
   position: relative;
-  overflow: hidden;
 }
 
 /* =============================================================================
@@ -363,7 +356,6 @@ body {
   background: var(--bg-primary);
   height: 100%;
   position: relative;
-  overflow: hidden;
 }
 
 /* =============================================================================
@@ -471,7 +463,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  padding: var(--space-4) 0 140px 0;
+  padding-bottom: 140px;
   position: relative;
 }
 
@@ -483,7 +475,7 @@ body {
   max-width: 800px;
   margin: 0 auto;
   width: 100%;
-  min-height: min-content;
+  min-height: 100%;
   padding-top: 60px;
 }
 
