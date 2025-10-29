@@ -26,6 +26,7 @@ export default function StudyBookPage() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('materials');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
 
   // Materials state
@@ -543,29 +544,42 @@ export default function StudyBookPage() {
         Learn Hub
       </Link>
 
-      {/* Tab Navigation */}
-      <div className="tab-navigation">
-        <div className="tab-container">
+      {/* Sidebar */}
+      <div className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+        <div className="sidebar-header">
+          <h3>Navigation</h3>
           <button 
-            className={`tab ${activeTab === 'materials' ? 'active' : ''}`}
-            onClick={() => setActiveTab('materials')}
+            className="close-sidebar"
+            onClick={() => setSidebarOpen(false)}
           >
-            Study Materials
+            ×
+          </button>
+        </div>
+        <div className="sidebar-nav">
+          <button 
+            className={`nav-item ${activeTab === 'materials' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('materials'); setSidebarOpen(false); }}
+          >
+            📚 Study Materials
           </button>
           <button 
-            className={`tab ${activeTab === 'chat' ? 'active' : ''}`}
-            onClick={() => setActiveTab('chat')}
+            className={`nav-item ${activeTab === 'chat' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('chat'); setSidebarOpen(false); }}
           >
-            Buddy Chat
-          </button>
-          <button 
-            className={`tab ${activeTab === 'profile' ? 'active' : ''}`}
-            onClick={() => setActiveTab('profile')}
-          >
-            Profile
+            💬 Ask Bo
           </button>
         </div>
       </div>
+
+      {/* Sidebar Toggle */}
+      <button 
+        className="sidebar-toggle"
+        onClick={() => setSidebarOpen(true)}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+      </button>
 
       {/* User Actions */}
       <div style={{ position: 'absolute', top: '90px', right: '45px', zIndex: 20 }}>
@@ -590,7 +604,7 @@ export default function StudyBookPage() {
       </div>
 
       {/* Main Content Area */}
-      <div className="main-content-container">
+      <div className="main-content-area">
         {activeTab === 'materials' && (
           <div className="materials-page">
             <div className="materials-layout">
@@ -649,35 +663,38 @@ export default function StudyBookPage() {
 
         {activeTab === 'chat' && (
           <div className="chat-page">
-            <div className="chat-layout-new">
-              {/* Chat Interface - Now Wider */}
-              <div className="chat-interface-wide">
-                
-                <div className="chat-messages-scrollable">
-                  <div className="messages-container">
-                    {[...messages].reverse().map(message => (
-                      <div key={message.id} className={`message ${message.role}`}>
-                        <div className="message-content">
-                          {message.role === 'assistant' ? (
-                            <ReactMarkdown>{message.content}</ReactMarkdown>
-                          ) : (
-                            message.content
-                          )}
-                        </div>
-                        <div className="message-time">
-                          {message.timestamp.toLocaleTimeString()}
-                        </div>
-                      </div>
-                    ))}
+            <div className="chat-container">
+              <div className="messages-area">
+                {messages.length === 0 ? (
+                  <div className="welcome-message">
+                    <h2>Ask Bo</h2>
+                    <p>I'm Bo, your personal statement advisor. Ask me anything about your personal statement.</p>
                   </div>
-                </div>
+                ) : (
+                  messages.map(message => (
+                    <div key={message.id} className={`message ${message.role}`}>
+                      <div className="message-content">
+                        {message.role === 'assistant' ? (
+                          <ReactMarkdown>{message.content}</ReactMarkdown>
+                        ) : (
+                          message.content
+                        )}
+                      </div>
+                      <div className="message-time">
+                        {message.timestamp.toLocaleTimeString()}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
 
-                <div className="chat-input-area">
+              <div className="chat-input-fixed">
+                <div className="input-container">
                   <textarea
                     value={currentMessage}
                     onChange={(e) => setCurrentMessage(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    placeholder="Ask Buddy anything..."
+                    placeholder="Ask Bo anything..."
                     disabled={isLoading}
                     rows={3}
                   />
@@ -690,76 +707,10 @@ export default function StudyBookPage() {
                   </button>
                 </div>
               </div>
-
-              {/* Right Draft Workspace */}
-              <div className="draft-workspace">
-                <h3>Draft Workspace</h3>
-                
-                {[1, 2, 3].map(questionNum => (
-                  <div key={questionNum} className="draft-section">
-                    <div 
-                      className="draft-header"
-                      onClick={() => setExpandedSections(prev => ({
-                        ...prev,
-                        [questionNum]: !prev[questionNum]
-                      }))}
-                    >
-                      <h4>Question {questionNum}</h4>
-                      <span className={`expand-icon ${expandedSections[questionNum] ? 'expanded' : ''}`}>
-                        ▼
-                      </span>
-                    </div>
-                    
-                    {expandedSections[questionNum] && (
-                      <div className="draft-content">
-                        <textarea
-                          value={draftContents[questionNum]}
-                          onChange={(e) => setDraftContents(prev => ({
-                            ...prev,
-                            [questionNum]: e.target.value
-                          }))}
-                          placeholder={`Enter your response for Question ${questionNum}...`}
-                          rows={6}
-                        />
-                        
-                        <div className="draft-actions">
-                          <button 
-                            onClick={() => saveDraftVersion(questionNum)}
-                            disabled={savingDraft[questionNum] || !draftContents[questionNum]?.trim()}
-                            className="save-version-btn"
-                          >
-                            {savingDraft[questionNum] ? 'Saving...' : 'Save Version'}
-                          </button>
-                          
-                          <button 
-                            onClick={() => setShowVersionHistory({ question: questionNum, show: true })}
-                            disabled={draftVersions[questionNum]?.length === 0}
-                            className="view-history-btn"
-                          >
-                            View History ({draftVersions[questionNum]?.length || 0})
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         )}
 
-        {activeTab === 'profile' && (
-          <div className="profile-page">
-            <h2>User Profile</h2>
-            <div className="profile-content">
-              <div className="profile-card">
-                <img src="/svg/ghost.svg" alt="Profile" className="profile-avatar" />
-                <h3>Welcome back!</h3>
-                <p>Email: {user?.email}</p>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Version History Modal */}
