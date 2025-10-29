@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -11,6 +12,11 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 });
 
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY!,
+});
+
+// ADD YOUR BO_SYSTEM_PROMPT HERE
 const BO_SYSTEM_PROMPT = `COMPLETE PERSONAL STATEMENT ADVISOR PROMPT
 
 SECTION 1: IDENTITY & ROLE
@@ -970,6 +976,81 @@ export async function POST(request: NextRequest) {
         .limit(10)
     ]);
 
+    // ⭐ NEW: Get user's subject for filtering feedback
+    const { data: userProfile } = await supabase
+      .from('user_profiles')
+      .select('subject')
+      .eq('id', userId)
+      .single();
+
+    const userSubject = userProfile?.subject;
+
+    // ⭐ NEW: Generate embedding for current message and search for similar feedback
+    let similarFeedback: any[] = [];
+    
+    try {
+      // Generate embedding for the user's message
+      const embeddingResponse = await openai.embeddings.create({
+        model: 'text-embedding-3-small',
+        input: message,
+      });
+
+      const messageEmbedding = embeddingResponse.data[0].embedding;
+
+      // Search for similar feedback - prioritize same subject
+      if (userSubject) {
+        // First try: Get feedback from same subject
+        const { data: sameSubjectFeedback, error: sameSubjectError } = await supabase.rpc('match_personal_statement_feedback', {
+          query_embedding: messageEmbedding,
+          match_threshold: 0.70,
+          match_count: 5,
+          filter_subject: userSubject
+        });
+
+        if (sameSubjectError) {
+          console.error('Error fetching same-subject feedback:', sameSubjectError);
+        }
+
+        similarFeedback = sameSubjectFeedback || [];
+
+        // If we don't have enough same-subject results, get any subject
+        if (similarFeedback.length < 3) {
+          const { data: anySubjectFeedback, error: anySubjectError } = await supabase.rpc('match_personal_statement_feedback', {
+            query_embedding: messageEmbedding,
+            match_threshold: 0.65,
+            match_count: 5,
+            filter_subject: null
+          });
+
+          if (anySubjectError) {
+            console.error('Error fetching any-subject feedback:', anySubjectError);
+          }
+
+          // Combine results - same-subject first, then fill with others (no duplicates)
+          const existingIds = new Set(similarFeedback.map((f: any) => f.id));
+          const additionalFeedback = anySubjectFeedback?.filter((f: any) => !existingIds.has(f.id)) || [];
+          similarFeedback = [...similarFeedback, ...additionalFeedback].slice(0, 5);
+        }
+      } else {
+        // No subject info - just get most similar feedback
+        const { data: anySubjectFeedback, error: anySubjectError } = await supabase.rpc('match_personal_statement_feedback', {
+          query_embedding: messageEmbedding,
+          match_threshold: 0.65,
+          match_count: 5,
+          filter_subject: null
+        });
+
+        if (anySubjectError) {
+          console.error('Error fetching feedback:', anySubjectError);
+        }
+
+        similarFeedback = anySubjectFeedback || [];
+      }
+    } catch (error) {
+      console.error('Error in feedback search:', error);
+      // Continue without similar feedback if there's an error
+    }
+
     // Build context string for the system prompt
     let contextString = '';
     
@@ -987,6 +1068,52 @@ export async function POST(request: NextRequest) {
       notesResponse.data.forEach((note, index) => {
         contextString += `\n${index + 1}. ${note.section_type?.toUpperCase()} NOTES:\n${note.content}\n`;
       });
+    }
+
+    // ⭐ NEW: Add similar feedback examples to context
+    if (similarFeedback && similarFeedback.length > 0) {
+      contextString += '\n\nSIMILAR PAST FEEDBACK EXAMPLES:\n';
+      contextString += 'Use these examples to inform your feedback style. When you recognize similar patterns in the student\'s writing, you can reference them naturally with phrases like:\n';
+      contextString += '- "I\'ve seen this before..."\n';
+      contextString += '- "This is a common issue..."\n';
+      contextString += '- "Strong statements usually..."\n';
+      contextString += '- "The best examples I\'ve seen..."\n\n';
+      
+      similarFeedback.forEach((feedback, index) => {
+        contextString += `Example ${index + 1}:\n`;
+        
+        if (feedback.weak_passage) {
+          contextString += `Weak passage: "${feedback.weak_passage}"\n`;
+        }
+        
+        if (feedback.issue_type) {
+          contextString += `Issue: ${feedback.issue_type}\n`;
+        }
+        
+        if (feedback.your_feedback) {
+          contextString += `Feedback given: "${feedback.your_feedback}"\n`;
+        }
+        
+        if (feedback.improvement_suggested) {
+          contextString += `Improvement: "${feedback.improvement_suggested}"\n`;
+        }
+        
+        if (feedback.subject) {
+          contextString += `Subject: ${feedback.subject}\n`;
+        }
+        
+        if (feedback.tags && Array.isArray(feedback.tags)) {
+          contextString += `Tags: ${feedback.tags.join(', ')}\n`;
+        }
+        
+        if (feedback.similarity) {
+          contextString += `Similarity score: ${(feedback.similarity * 100).toFixed(1)}%\n`;
+        }
+        
+        contextString += '\n';
+      });
+
+      contextString += 'Remember: Never quote exact passages from these examples to students. Use them to recognize patterns and inform your feedback approach in your own conversational voice.\n';
     }
 
     // Enhanced system prompt with user context
