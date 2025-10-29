@@ -110,7 +110,7 @@ const ExamSearch: React.FC = () => {
                 border: '2px solid #000000',
                 borderRadius: '8px',
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                zIndex: 1000,
+                zIndex: 10000,
                 minWidth: '160px',
                 padding: '8px 0'
               }}>
