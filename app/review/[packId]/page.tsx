@@ -77,7 +77,7 @@ function TSAReviewRenderer({
 }: { 
   question: Question; 
   questionNumber: number; 
-  userAnswer: string;
+  userAnswer: string | undefined;
   correctAnswer: string;
 }) {
   const data = question.rawData || question;
@@ -187,7 +187,7 @@ function BMATReviewRenderer({
 }: { 
   question: Question; 
   questionNumber: number; 
-  userAnswer: string;
+  userAnswer: string | undefined;
   correctAnswer: string;
 }) {
   // TODO: Implement BMAT-specific review rendering when BMAT data structure is available
@@ -210,7 +210,7 @@ function UCATReviewRenderer({
 }: { 
   question: Question; 
   questionNumber: number; 
-  userAnswer: string;
+  userAnswer: string | undefined;
   correctAnswer: string;
 }) {
   // TODO: Implement UCAT-specific review rendering when UCAT data structure is available
@@ -233,7 +233,7 @@ function DefaultReviewRenderer({
 }: { 
   question: Question; 
   questionNumber: number; 
-  userAnswer: string;
+  userAnswer: string | undefined;
   correctAnswer: string;
 }) {
   return (
@@ -292,7 +292,7 @@ function ReviewQuestionRenderer({
   question: Question; 
   questionNumber: number; 
   subject: string; 
-  userAnswer: string;
+  userAnswer: string | undefined;
   correctAnswer: string;
 }) {
   // Subject-specific rendering logic
@@ -622,7 +622,7 @@ export default function ReviewPage({ params }: { params: Promise<{ packId: strin
               question={currentQuestion}
               questionNumber={currentQuestionIndex + 1}
               subject={pack.subject}
-              userAnswer={displayUserAnswer || ''}
+              userAnswer={displayUserAnswer}
               correctAnswer={correctAnswer}
             />
           )}
