@@ -120,40 +120,35 @@ export default function CreatePracticePackPage() {
         </button>
       </nav>
 
-      {/* Close Button */}
-      <Link href="/practice" className="close-button">
-        ×
-      </Link>
 
       {/* Main Content */}
       <div className="main-content">
         {/* Back Button */}
-        <Link href="/practice" style={{
-          position: 'absolute',
-          top: '20px',
-          left: '20px',
-          width: '40px',
-          height: '40px',
-          borderRadius: '50%',
-          backgroundColor: '#FFFFFF',
-          border: '2px solid #000000',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          textDecoration: 'none',
-          fontSize: '24px',
-          color: '#000000',
-          cursor: 'pointer',
-          zIndex: 200,
-          transition: 'all 0.2s ease'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = '#F0F0F0';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = '#FFFFFF';
-        }}>
-          ←
+        <Link 
+          href="/practice" 
+          style={{
+            position: 'absolute',
+            top: '30px',
+            left: '45px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '9px 18px',
+            backgroundColor: '#FFFFFF',
+            borderRadius: '8px',
+            textDecoration: 'none',
+            color: '#333333',
+            fontFamily: "'Madimi One', cursive",
+            fontSize: '13px',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+            transition: 'all 0.3s ease',
+            zIndex: 20
+          }}
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          Back
         </Link>
 
         {/* Header */}
@@ -162,14 +157,20 @@ export default function CreatePracticePackPage() {
           fontSize: '32px',
           fontWeight: '400',
           color: '#000000',
-          margin: '0 0 40px 0',
+          margin: '60px 0 20px 0',
           textAlign: 'left'
         }}>
           Create Your Practice Pack
         </h1>
 
         {/* Step indicator */}
-        <div className="step-indicator">
+        <div style={{
+          fontFamily: "'Madimi One', cursive",
+          fontSize: '16px',
+          color: '#666666',
+          marginBottom: '20px',
+          textAlign: 'left'
+        }}>
           Step 1 of 2
         </div>
 

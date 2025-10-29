@@ -636,7 +636,10 @@ export default function PracticePage() {
                     <div style={{
                       display: 'flex',
                       gap: '8px',
-                      alignItems: 'center'
+                      alignItems: 'center',
+                      position: 'relative',
+                      top: '15%',
+                      left: '-10%'
                     }}>
                       <Link 
                         href={`/view-pack/${pack.id}`}
@@ -838,7 +841,10 @@ export default function PracticePage() {
                     <div style={{
                       display: 'flex',
                       gap: '8px',
-                      alignItems: 'center'
+                      alignItems: 'center',
+                      position: 'relative',
+                      top: '15%',
+                      left: '-10%'
                     }}>
                       <Link 
                         href={`/view-pack/${pack.id}`}
