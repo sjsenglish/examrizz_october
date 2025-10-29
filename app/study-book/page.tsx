@@ -652,9 +652,6 @@ export default function StudyBookPage() {
             <div className="chat-layout-new">
               {/* Chat Interface - Now Wider */}
               <div className="chat-interface-wide">
-                <div className="chat-header">
-                  <h2>Buddy Chat</h2>
-                </div>
                 
                 <div className="chat-messages-scrollable">
                   <div className="messages-container">

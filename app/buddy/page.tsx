@@ -451,8 +451,8 @@ export default function BuddyPage() {
 
         {/* Chat Area */}
         <div className="chat-area">
-          {/* Chat Header */}
-          <div className="chat-header">
+          {/* Chat Actions - Moved to top right */}
+          <div className="chat-actions-bar">
             <button 
               className="sessions-toggle"
               onClick={() => setShowSessionsSidebar(true)}
@@ -461,16 +461,13 @@ export default function BuddyPage() {
                 <path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
               </svg>
             </button>
-            <h1>Buddy Chat</h1>
-            <div className="chat-actions">
-              <button 
-                className="ticket-btn"
-                onClick={handleCreateTicket}
-                disabled={isCreatingTicket}
-              >
-                {isCreatingTicket ? 'Creating...' : 'Create Support Ticket'}
-              </button>
-            </div>
+            <button 
+              className="ticket-btn"
+              onClick={handleCreateTicket}
+              disabled={isCreatingTicket}
+            >
+              {isCreatingTicket ? 'Creating...' : 'Create Support Ticket'}
+            </button>
           </div>
 
           {/* Ticket Message */}
