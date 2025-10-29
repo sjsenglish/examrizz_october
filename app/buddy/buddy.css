@@ -355,6 +355,7 @@ body {
   flex-direction: column;
   background: var(--bg-primary);
   height: 100%;
+  position: relative;
 }
 
 /* =============================================================================
@@ -459,19 +460,20 @@ body {
   flex: 1;
   overflow-y: auto;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   min-height: 0;
+  padding-bottom: 140px;
 }
 
 .messages-wrapper {
-  flex: 1;
   padding: var(--space-6);
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   gap: var(--space-6);
   max-width: 800px;
   margin: 0 auto;
   width: 100%;
+  min-height: min-content;
 }
 
 .welcome-message {
@@ -501,38 +503,40 @@ body {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  max-width: 100%;
+  width: 100%;
 }
 
 .message.user {
-  align-items: flex-end;
+  align-items: stretch;
 }
 
 .message.assistant {
-  align-items: flex-start;
+  align-items: stretch;
 }
 
 .message-content {
   padding: var(--space-4) var(--space-5);
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--border-radius);
   font-size: 15px;
   line-height: 1.6;
-  max-width: 85%;
+  width: 100%;
   word-wrap: break-word;
   position: relative;
 }
 
 .message.user .message-content {
-  background: var(--user-message);
-  color: var(--user-message-text);
-  border-bottom-right-radius: var(--border-radius-sm);
+  background: #9333ea;
+  color: white;
+  border-radius: var(--border-radius);
+  margin: 0;
 }
 
 .message.assistant .message-content {
-  background: var(--assistant-message);
-  color: var(--assistant-message-text);
-  border-bottom-left-radius: var(--border-radius-sm);
-  border: 1px solid var(--border-primary);
+  background: transparent;
+  color: var(--text-primary);
+  border: none;
+  padding: var(--space-4) 0;
+  margin: 0;
 }
 
 .message-content h1,
@@ -596,9 +600,14 @@ body {
    ============================================================================= */
 
 .chat-input-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   padding: var(--space-4) var(--space-6) var(--space-6);
   border-top: 1px solid var(--border-primary);
   background: var(--bg-primary);
+  z-index: 100;
 }
 
 .input-wrapper {
@@ -731,7 +740,7 @@ body {
   }
   
   .messages-wrapper {
-    padding: var(--space-4);
+    padding: var(--space-4) var(--space-4) 140px;
     gap: var(--space-4);
   }
   
@@ -741,6 +750,8 @@ body {
   
   .chat-input-area {
     padding: var(--space-4);
+    left: 0;
+    right: 0;
   }
   
   .welcome-message {

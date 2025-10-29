@@ -39,7 +39,6 @@ export default function BuddyPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   
   // Session management state
   const [sessions, setSessions] = useState<ChatSession[]>([]);
@@ -71,22 +70,6 @@ export default function BuddyPage() {
     loadCurrentSession();
   }, [userId]);
 
-  // Auto-scroll to bottom when new messages arrive
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const scrollToBottom = () => {
-    if (messages.length > 0) {
-      setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({ 
-          behavior: 'smooth',
-          block: 'end',
-          inline: 'nearest'
-        });
-      }, 100);
-    }
-  };
 
   const loadSessions = async () => {
     if (!userId) return;
@@ -522,7 +505,6 @@ export default function BuddyPage() {
                   </div>
                 ))
               )}
-              <div ref={messagesEndRef} />
             </div>
           </div>
 
