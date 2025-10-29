@@ -25,8 +25,13 @@ export default function CreatePracticePackPage() {
   const [criticalThinking, setCriticalThinking] = useState(true);
   const [problemSolving, setProblemSolving] = useState(false);
   
-  // Order questions state
-  const [orderMode, setOrderMode] = useState('automatic'); // 'automatic' or 'custom'
+  // Number of questions and font size states
+  const [numberOfQuestions, setNumberOfQuestions] = useState(1);
+  const [fontSize, setFontSize] = useState(12);
+  
+  // Mouse drag states for sliders
+  const [isDraggingQuestions, setIsDraggingQuestions] = useState(false);
+  const [isDraggingFont, setIsDraggingFont] = useState(false);
 
   const subjects = ['Maths', 'Physics', 'Chemistry', 'Biology', 'Economics', 'TSA'];
 
@@ -41,13 +46,50 @@ export default function CreatePracticePackPage() {
     setProblemSolving(false);
   };
 
+  // Handle question slider drag
+  const handleQuestionSliderDrag = (e: React.MouseEvent) => {
+    if (!isDraggingQuestions) return;
+    
+    const slider = e.currentTarget.parentElement;
+    if (!slider) return;
+    const rect = slider.getBoundingClientRect();
+    const percentage = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const value = Math.round(1 + percentage * 49); // 1 to 50
+    setNumberOfQuestions(value);
+  };
+
+  // Handle font size slider drag
+  const handleFontSliderDrag = (e: React.MouseEvent) => {
+    if (!isDraggingFont) return;
+    
+    const slider = e.currentTarget.parentElement;
+    if (!slider) return;
+    const rect = slider.getBoundingClientRect();
+    const percentage = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const value = Math.round(8 + percentage * 16); // 8pt to 24pt
+    setFontSize(value);
+  };
+
+  // Mouse event handlers
+  const handleMouseUp = () => {
+    setIsDraggingQuestions(false);
+    setIsDraggingFont(false);
+  };
+
+  React.useEffect(() => {
+    if (isDraggingQuestions || isDraggingFont) {
+      document.addEventListener('mouseup', handleMouseUp);
+      return () => document.removeEventListener('mouseup', handleMouseUp);
+    }
+  }, [isDraggingQuestions, isDraggingFont]);
+
   const handleSelectQuestions = () => {
     // Store pack data in sessionStorage to pass to next step
     const packData = {
       packName,
       subject: selectedSubject,
-      numberOfQuestions: 1, // Default value
-      fontSize: 12, // Default value
+      numberOfQuestions,
+      fontSize,
       filters: {
         questionType,
         subType,
@@ -57,8 +99,7 @@ export default function CreatePracticePackPage() {
         filter6,
         criticalThinking,
         problemSolving
-      },
-      orderMode
+      }
     };
     
     sessionStorage.setItem('packData', JSON.stringify(packData));
@@ -86,8 +127,44 @@ export default function CreatePracticePackPage() {
 
       {/* Main Content */}
       <div className="main-content">
+        {/* Back Button */}
+        <Link href="/practice" style={{
+          position: 'absolute',
+          top: '20px',
+          left: '20px',
+          width: '40px',
+          height: '40px',
+          borderRadius: '50%',
+          backgroundColor: '#FFFFFF',
+          border: '2px solid #000000',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textDecoration: 'none',
+          fontSize: '24px',
+          color: '#000000',
+          cursor: 'pointer',
+          zIndex: 200,
+          transition: 'all 0.2s ease'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = '#F0F0F0';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = '#FFFFFF';
+        }}>
+          ←
+        </Link>
+
         {/* Header */}
-        <h1 className="header-title">
+        <h1 style={{
+          fontFamily: "'Madimi One', cursive",
+          fontSize: '32px',
+          fontWeight: '400',
+          color: '#000000',
+          margin: '0 0 40px 0',
+          textAlign: 'left'
+        }}>
           Create Your Practice Pack
         </h1>
 
@@ -266,7 +343,11 @@ export default function CreatePracticePackPage() {
                     readOnly
                     className="slider-input"
                   />
-                  <div className="slider-track">
+                  <div 
+                    className="slider-track"
+                    style={{ height: '20px' }}
+                    onMouseMove={handleQuestionSliderDrag}
+                  >
                     <Image 
                       src="/icons/speech-bubble-ghost.svg" 
                       alt="Question counter" 
@@ -274,11 +355,13 @@ export default function CreatePracticePackPage() {
                       height={40}
                       style={{
                         position: 'absolute',
-                        left: '30%',
+                        left: `${((numberOfQuestions - 1) / 49) * 100}%`,
                         top: '50%',
                         transform: 'translate(-50%, -50%)',
-                        cursor: 'pointer'
+                        cursor: 'grab'
                       }}
+                      onMouseDown={() => setIsDraggingQuestions(true)}
+                      draggable={false}
                     />
                   </div>
                   <input
@@ -287,6 +370,15 @@ export default function CreatePracticePackPage() {
                     readOnly
                     className="slider-input"
                   />
+                </div>
+                <div style={{
+                  textAlign: 'center',
+                  marginTop: '10px',
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  color: '#000000'
+                }}>
+                  {numberOfQuestions} questions selected
                 </div>
                 <p className="availability-text">
                   Questions available with current filters
@@ -310,12 +402,16 @@ export default function CreatePracticePackPage() {
                     fontWeight: 400,
                     color: '#000000'
                   }}>
-                    12pt
+                    {fontSize}pt
                   </span>
                 </div>
                 <div className="font-size-controls">
                   <span className="font-size-text">small</span>
-                  <div className="font-slider-track">
+                  <div 
+                    className="font-slider-track"
+                    style={{ height: '20px' }}
+                    onMouseMove={handleFontSliderDrag}
+                  >
                     <Image 
                       src="/icons/speech-bubble-ghost.svg" 
                       alt="Font size slider" 
@@ -323,86 +419,19 @@ export default function CreatePracticePackPage() {
                       height={40}
                       style={{
                         position: 'absolute',
-                        left: '30%',
+                        left: `${((fontSize - 8) / 16) * 100}%`,
                         top: '50%',
                         transform: 'translate(-50%, -50%)',
-                        cursor: 'pointer'
+                        cursor: 'grab'
                       }}
+                      onMouseDown={() => setIsDraggingFont(true)}
+                      draggable={false}
                     />
                   </div>
                   <span className="font-size-text">large</span>
                 </div>
               </div>
 
-              {/* Order Questions By Section */}
-              <div style={{ marginBottom: '25px' }}>
-                <h3 className="card-title" style={{ margin: '0 0 15px 0' }}>
-                  Order questions by
-                </h3>
-                <div className="order-buttons">
-                  <div 
-                    className={orderMode === 'automatic' ? 'order-button-active' : 'order-button-inactive'}
-                    onClick={() => setOrderMode('automatic')}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <span className="order-button-text">
-                      Automatic
-                    </span>
-                  </div>
-                  <div 
-                    className={orderMode === 'custom' ? 'order-button-active' : 'order-button-inactive'}
-                    onClick={() => setOrderMode('custom')}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <span className="order-button-text">
-                      Custom
-                    </span>
-                  </div>
-                </div>
-                {orderMode === 'custom' && (
-                  <p className="order-description">
-                    You'll arrange questions manually in the next step
-                  </p>
-                )}
-
-                {/* Conditional Filters - Show when Automatic is selected */}
-                {orderMode === 'automatic' && (
-                  <div style={{ marginTop: '20px' }}>
-                    {/* Filter checkboxes in grid - same as left panel */}
-                    <div className="filter-grid">
-                      <div className="filter-item">
-                        <input type="checkbox" checked={questionType} onChange={(e) => setQuestionType(e.target.checked)} className="filter-checkbox" />
-                        <span className="filter-label">Question Type</span>
-                      </div>
-                      
-                      <div className="filter-item">
-                        <input type="checkbox" checked={subType} onChange={(e) => setSubType(e.target.checked)} className="filter-checkbox" />
-                        <span className="filter-label">Sub Type</span>
-                      </div>
-                      
-                      <div className="filter-item">
-                        <input type="checkbox" checked={year} onChange={(e) => setYear(e.target.checked)} className="filter-checkbox" />
-                        <span className="filter-label">Year</span>
-                      </div>
-                      
-                      <div className="filter-item">
-                        <input type="checkbox" checked={difficulty} onChange={(e) => setDifficulty(e.target.checked)} className="filter-checkbox" />
-                        <span className="filter-label">Difficulty</span>
-                      </div>
-                      
-                      <div className="filter-item">
-                        <input type="checkbox" checked={examSession} onChange={(e) => setExamSession(e.target.checked)} className="filter-checkbox" />
-                        <span className="filter-label">Exam Session</span>
-                      </div>
-                      
-                      <div className="filter-item">
-                        <input type="checkbox" checked={filter6} onChange={(e) => setFilter6(e.target.checked)} className="filter-checkbox" />
-                        <span className="filter-label">Filter 6</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
 
             </div>
             
