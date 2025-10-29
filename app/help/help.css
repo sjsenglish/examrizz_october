@@ -1,0 +1,320 @@
+/* Help Page Styles */
+@import url('https://fonts.googleapis.com/css2?family=Madimi+One&family=Figtree:wght@400;500;600;700&display=swap');
+
+body {
+  font-family: 'Madimi One', sans-serif;
+}
+
+.page-background {
+  background-color: #FFFFFF;
+  min-height: 100vh;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #F8F8F5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar h1 {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #000000;
+  margin: 0;
+  cursor: pointer;
+}
+
+.hamburger-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hamburger-line {
+  width: 20px;
+  height: 2px;
+  background-color: #000000;
+  border-radius: 1px;
+}
+
+.main-content {
+  padding: 140px 40px 40px 40px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.help-container {
+  max-width: 1200px;
+  width: 100%;
+}
+
+.help-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  color: #000000;
+  text-align: center;
+  margin: 0 0 16px 0;
+}
+
+.help-subtitle {
+  font-family: 'Figtree', sans-serif;
+  font-size: 18px;
+  color: #666666;
+  text-align: center;
+  margin: 0 0 60px 0;
+  line-height: 1.5;
+}
+
+.help-content {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.help-section {
+  width: 100%;
+}
+
+.help-section h2 {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 24px;
+  color: #000000;
+  margin: 0 0 30px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #F8F8F5;
+}
+
+/* Quick Help Grid */
+.quick-help-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.help-card {
+  background: #FFFFFF;
+  border: 2px solid #000000;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.help-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.help-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.help-card h3 {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 20px;
+  color: #000000;
+  margin: 0 0 12px 0;
+}
+
+.help-card p {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  color: #666666;
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+.help-button {
+  background: #E7E6FF;
+  border: 2px solid #000000;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000000;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.help-button:hover {
+  background: #ddd9ff;
+  transform: translateY(-2px);
+}
+
+/* FAQ Section */
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.faq-item {
+  background: #F8F8F5;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.faq-item h4 {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 16px;
+  color: #000000;
+  margin: 0 0 12px 0;
+}
+
+.faq-item p {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  color: #333333;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Contact Options */
+.contact-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.contact-card {
+  background: #FFFFFF;
+  border: 2px solid #000000;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.contact-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.contact-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.contact-card h3 {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 20px;
+  color: #000000;
+  margin: 0 0 12px 0;
+}
+
+.contact-card p {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  color: #666666;
+  margin: 0 0 8px 0;
+  line-height: 1.5;
+}
+
+.contact-info {
+  font-family: 'Figtree', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000000 !important;
+  margin: 12px 0 !important;
+}
+
+.response-time {
+  font-family: 'Figtree', sans-serif;
+  font-size: 12px;
+  color: #00CED1 !important;
+  font-weight: 500;
+  margin: 8px 0 0 0 !important;
+}
+
+.contact-button {
+  background: #00CED1;
+  border: 2px solid #000000;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000000;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 12px 0;
+}
+
+.contact-button:hover {
+  background: #00B8C1;
+  transform: translateY(-2px);
+}
+
+/* Resources Section */
+.resources-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.resource-item {
+  background: #F0F9FF;
+  border: 1px solid #B3E5FC;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.resource-item h4 {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 16px;
+  color: #000000;
+  margin: 0 0 12px 0;
+}
+
+.resource-item p {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  color: #333333;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 100px 20px 40px 20px;
+  }
+  
+  .help-title {
+    font-size: 28px;
+  }
+  
+  .quick-help-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .contact-options {
+    grid-template-columns: 1fr;
+  }
+  
+  .resources-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .help-content {
+    gap: 40px;
+  }
+}

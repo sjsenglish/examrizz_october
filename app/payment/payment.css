@@ -1,0 +1,327 @@
+/* Payment Page Styles */
+@import url('https://fonts.googleapis.com/css2?family=Madimi+One&family=Figtree:wght@400;500;600;700&display=swap');
+
+body {
+  font-family: 'Madimi One', sans-serif;
+}
+
+.page-background {
+  background-color: #FFFFFF;
+  min-height: 100vh;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #F8F8F5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar h1 {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #000000;
+  margin: 0;
+  cursor: pointer;
+}
+
+.hamburger-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hamburger-line {
+  width: 20px;
+  height: 2px;
+  background-color: #000000;
+  border-radius: 1px;
+}
+
+.main-content {
+  padding: 140px 40px 40px 40px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.payment-container {
+  max-width: 1200px;
+  width: 100%;
+}
+
+.payment-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.payment-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  color: #000000;
+  margin: 0 0 16px 0;
+}
+
+.payment-subtitle {
+  font-family: 'Figtree', sans-serif;
+  font-size: 18px;
+  color: #666666;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.pricing-card {
+  background: #FFFFFF;
+  border: 2px solid #000000;
+  border-radius: 12px;
+  padding: 30px;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.pricing-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.pricing-card.featured {
+  border-color: #00CED1;
+  box-shadow: 0 4px 0 0 #00CED1, 4px 4px 0 0 #00CED1, 4px 0 0 0 #00CED1;
+}
+
+.popular-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #00CED1;
+  color: #000000;
+  padding: 6px 20px;
+  border-radius: 20px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.plan-name {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 24px;
+  color: #000000;
+  margin: 0 0 16px 0;
+}
+
+.price-display {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.currency {
+  font-family: 'Figtree', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #000000;
+}
+
+.price {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 48px;
+  font-weight: 400;
+  color: #000000;
+}
+
+.period {
+  font-family: 'Figtree', sans-serif;
+  font-size: 16px;
+  color: #666666;
+}
+
+.savings {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  color: #00CED1;
+  font-weight: 600;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px 0;
+}
+
+.features-list li {
+  font-family: 'Figtree', sans-serif;
+  font-size: 16px;
+  color: #333333;
+  padding: 8px 0;
+  border-bottom: 1px solid #F0F0F0;
+}
+
+.features-list li:last-child {
+  border-bottom: none;
+}
+
+.plan-button {
+  width: 100%;
+  padding: 16px 24px;
+  border: 2px solid #000000;
+  border-radius: 8px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.plan-button.monthly {
+  background: #E7E6FF;
+  color: #000000;
+}
+
+.plan-button.monthly:hover {
+  background: #ddd9ff;
+  transform: translateY(-2px);
+}
+
+.plan-button.annual {
+  background: #00CED1;
+  color: #000000;
+}
+
+.plan-button.annual:hover {
+  background: #00B8C1;
+  transform: translateY(-2px);
+}
+
+.plan-button.trial {
+  background: #FFFFFF;
+  color: #000000;
+}
+
+.plan-button.trial:hover {
+  background: #F8F8F5;
+  transform: translateY(-2px);
+}
+
+.payment-methods {
+  margin-bottom: 40px;
+}
+
+.methods-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 20px;
+  color: #000000;
+  text-align: center;
+  margin: 0 0 20px 0;
+}
+
+.methods-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.method-card {
+  background: #F8F8F5;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333333;
+}
+
+.security-notice {
+  background: #F0F9FF;
+  border: 1px solid #B3E5FC;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.notice-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.security-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.notice-text h4 {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 16px;
+  color: #000000;
+  margin: 0 0 4px 0;
+}
+
+.notice-text p {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  color: #666666;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 100px 20px 40px 20px;
+  }
+  
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .payment-title {
+    font-size: 28px;
+  }
+  
+  .price {
+    font-size: 36px;
+  }
+  
+  .methods-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .notice-content {
+    flex-direction: column;
+    text-align: center;
+  }
+}
