@@ -10,6 +10,7 @@ import './video.css';
 export default function VideoPage() {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -108,34 +109,125 @@ export default function VideoPage() {
             examrizzsearch
           </h1>
         </Link>
-        <button style={{
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          padding: '8px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '4px'
-        }}>
-          <div style={{
-            width: '20px',
-            height: '2px',
-            backgroundColor: '#000000',
-            borderRadius: '1px'
-          }}></div>
-          <div style={{
-            width: '20px',
-            height: '2px',
-            backgroundColor: '#000000',
-            borderRadius: '1px'
-          }}></div>
-          <div style={{
-            width: '20px',
-            height: '2px',
-            backgroundColor: '#000000',
-            borderRadius: '1px'
-          }}></div>
-        </button>
+        <div style={{ position: 'relative' }}>
+          <button 
+            onClick={() => setShowDropdown(!showDropdown)}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '8px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px'
+            }}
+          >
+            <div style={{
+              width: '20px',
+              height: '2px',
+              backgroundColor: '#000000',
+              borderRadius: '1px'
+            }}></div>
+            <div style={{
+              width: '20px',
+              height: '2px',
+              backgroundColor: '#000000',
+              borderRadius: '1px'
+            }}></div>
+            <div style={{
+              width: '20px',
+              height: '2px',
+              backgroundColor: '#000000',
+              borderRadius: '1px'
+            }}></div>
+          </button>
+          
+          {showDropdown && (
+            <div style={{
+              position: 'absolute',
+              top: '100%',
+              right: '0',
+              marginTop: '8px',
+              backgroundColor: '#FFFFFF',
+              border: '2px solid #000000',
+              borderRadius: '8px',
+              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+              zIndex: 1000,
+              minWidth: '160px',
+              padding: '8px 0'
+            }}>
+              <Link 
+                href="/terms-and-conditions"
+                style={{
+                  display: 'block',
+                  padding: '12px 20px',
+                  color: '#000000',
+                  textDecoration: 'none',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  letterSpacing: '0.04em',
+                  transition: 'background-color 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#F8F8F5';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
+                onClick={() => setShowDropdown(false)}
+              >
+                Terms & Conditions
+              </Link>
+              <Link 
+                href="/payment"
+                style={{
+                  display: 'block',
+                  padding: '12px 20px',
+                  color: '#000000',
+                  textDecoration: 'none',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  letterSpacing: '0.04em',
+                  transition: 'background-color 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#F8F8F5';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
+                onClick={() => setShowDropdown(false)}
+              >
+                Payment
+              </Link>
+              <Link 
+                href="/help"
+                style={{
+                  display: 'block',
+                  padding: '12px 20px',
+                  color: '#000000',
+                  textDecoration: 'none',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  letterSpacing: '0.04em',
+                  transition: 'background-color 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#F8F8F5';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
+                onClick={() => setShowDropdown(false)}
+              >
+                Help
+              </Link>
+            </div>
+          )}
+        </div>
       </nav>
 
       {/* Featured Video Section - Full Width */}

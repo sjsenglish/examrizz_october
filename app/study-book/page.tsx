@@ -23,6 +23,7 @@ export default function StudyBookPage() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('profile');
+  const [showDropdown, setShowDropdown] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [userSubject, setUserSubject] = useState('');
   const [uploadedFiles, setUploadedFiles] = useState<{id: string, file_name: string, file_type: string, file_path: string, created_at: string}[]>([]);
@@ -2177,6 +2178,125 @@ export default function StudyBookPage() {
         <div className="nav-center">
         </div>
         <div className="nav-right">
+          <div style={{ position: 'relative', marginRight: '16px' }}>
+            <button 
+              onClick={() => setShowDropdown(!showDropdown)}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '8px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px'
+              }}
+            >
+              <div style={{
+                width: '20px',
+                height: '2px',
+                backgroundColor: '#000000',
+                borderRadius: '1px'
+              }}></div>
+              <div style={{
+                width: '20px',
+                height: '2px',
+                backgroundColor: '#000000',
+                borderRadius: '1px'
+              }}></div>
+              <div style={{
+                width: '20px',
+                height: '2px',
+                backgroundColor: '#000000',
+                borderRadius: '1px'
+              }}></div>
+            </button>
+            
+            {showDropdown && (
+              <div style={{
+                position: 'absolute',
+                top: '100%',
+                right: '0',
+                marginTop: '8px',
+                backgroundColor: '#FFFFFF',
+                border: '2px solid #000000',
+                borderRadius: '8px',
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                zIndex: 1000,
+                minWidth: '160px',
+                padding: '8px 0'
+              }}>
+                <Link 
+                  href="/terms-and-conditions"
+                  style={{
+                    display: 'block',
+                    padding: '12px 20px',
+                    color: '#000000',
+                    textDecoration: 'none',
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    letterSpacing: '0.04em',
+                    transition: 'background-color 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#F8F8F5';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
+                  onClick={() => setShowDropdown(false)}
+                >
+                  Terms & Conditions
+                </Link>
+                <Link 
+                  href="/payment"
+                  style={{
+                    display: 'block',
+                    padding: '12px 20px',
+                    color: '#000000',
+                    textDecoration: 'none',
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    letterSpacing: '0.04em',
+                    transition: 'background-color 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#F8F8F5';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
+                  onClick={() => setShowDropdown(false)}
+                >
+                  Payment
+                </Link>
+                <Link 
+                  href="/help"
+                  style={{
+                    display: 'block',
+                    padding: '12px 20px',
+                    color: '#000000',
+                    textDecoration: 'none',
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    letterSpacing: '0.04em',
+                    transition: 'background-color 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#F8F8F5';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
+                  onClick={() => setShowDropdown(false)}
+                >
+                  Help
+                </Link>
+              </div>
+            )}
+          </div>
           <button 
             onClick={handleLogout}
             className="logout-button"
