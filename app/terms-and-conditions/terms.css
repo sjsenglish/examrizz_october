@@ -1,0 +1,164 @@
+/* Terms & Conditions Page Styles */
+@import url('https://fonts.googleapis.com/css2?family=Madimi+One&family=Figtree:wght@400;500;600;700&display=swap');
+
+body {
+  font-family: 'Madimi One', sans-serif;
+}
+
+.page-background {
+  background-color: #FFFFFF;
+  min-height: 100vh;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #F8F8F5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar h1 {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #000000;
+  margin: 0;
+  cursor: pointer;
+}
+
+.hamburger-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hamburger-line {
+  width: 20px;
+  height: 2px;
+  background-color: #000000;
+  border-radius: 1px;
+}
+
+.main-content {
+  padding: 140px 40px 40px 40px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.terms-container {
+  max-width: 800px;
+  width: 100%;
+}
+
+.terms-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  color: #000000;
+  text-align: center;
+  margin: 0 0 16px 0;
+}
+
+.last-updated {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  color: #666666;
+  text-align: center;
+  margin: 0 0 60px 0;
+}
+
+.terms-content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.terms-section {
+  background: #FFFFFF;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  padding: 30px;
+}
+
+.terms-section h2 {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 20px;
+  color: #000000;
+  margin: 0 0 16px 0;
+}
+
+.terms-section p {
+  font-family: 'Figtree', sans-serif;
+  font-size: 16px;
+  color: #333333;
+  line-height: 1.6;
+  margin: 0 0 16px 0;
+}
+
+.terms-section p:last-child {
+  margin-bottom: 0;
+}
+
+.terms-section ul {
+  font-family: 'Figtree', sans-serif;
+  font-size: 16px;
+  color: #333333;
+  line-height: 1.6;
+  margin: 0 0 16px 0;
+  padding-left: 20px;
+}
+
+.terms-section li {
+  margin-bottom: 8px;
+}
+
+.contact-info {
+  background: #F8F8F5;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 16px;
+}
+
+.contact-info p {
+  margin: 0 0 8px 0;
+}
+
+.contact-info p:last-child {
+  margin-bottom: 0;
+}
+
+.contact-info strong {
+  color: #000000;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 100px 20px 40px 20px;
+  }
+  
+  .terms-title {
+    font-size: 28px;
+  }
+  
+  .terms-section {
+    padding: 20px;
+  }
+  
+  .terms-content {
+    gap: 30px;
+  }
+}
