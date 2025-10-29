@@ -500,8 +500,8 @@ export default function ReviewPage({ params }: { params: Promise<{ packId: strin
     ? attemptData.user_answers[currentQuestion.objectID] 
     : undefined;
     
-  // Use the actual userAnswer from the database
-  const displayUserAnswer = userAnswer || '';
+  // Use the actual userAnswer from the database (don't convert to empty string)
+  const displayUserAnswer = userAnswer;
     
   const correctAnswer = currentQuestion.answer_letter;
   const correctCount = (attemptData?.user_answers && pack?.questions) 
@@ -622,7 +622,7 @@ export default function ReviewPage({ params }: { params: Promise<{ packId: strin
               question={currentQuestion}
               questionNumber={currentQuestionIndex + 1}
               subject={pack.subject}
-              userAnswer={displayUserAnswer}
+              userAnswer={displayUserAnswer || ''}
               correctAnswer={correctAnswer}
             />
           )}
@@ -653,7 +653,7 @@ export default function ReviewPage({ params }: { params: Promise<{ packId: strin
 
             <div className="review-answer-indicators">
               <div className={`review-answer-indicator ${displayUserAnswer === correctAnswer ? 'correct' : 'incorrect'}`}>
-                Your Answer: {displayUserAnswer || 'Not answered'}
+                Your Answer: {userAnswer || 'Not answered'}
               </div>
               <div className="review-answer-indicator correct">
                 Correct Answer: {correctAnswer}
