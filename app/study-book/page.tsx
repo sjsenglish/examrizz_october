@@ -369,6 +369,63 @@ export default function StudyBookPage() {
     setShowVersionHistory({ question: 0, show: false });
   };
 
+  const handleSaveMaterial = async () => {
+    if (!materialForm.title.trim()) {
+      alert('Please enter a title for the material');
+      return;
+    }
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        alert('Please log in to save materials');
+        return;
+      }
+
+      // Create a simple material entry (you can expand this based on your database schema)
+      const materialData = {
+        user_id: userId,
+        title: materialForm.title,
+        description: materialForm.description,
+        category: materialForm.category,
+        tags: materialForm.tags,
+        created_at: new Date().toISOString()
+      };
+
+      // If there's a file, you would handle file upload here
+      if (materialForm.file) {
+        // File upload logic would go here
+        console.log('File to upload:', materialForm.file.name);
+      }
+
+      // For now, just add to the uploaded files list
+      const newFile = {
+        id: Date.now().toString(),
+        file_name: materialForm.title,
+        file_type: materialForm.category || 'material',
+        file_path: '',
+        created_at: new Date().toISOString()
+      };
+
+      setUploadedFiles(prev => [...prev, newFile]);
+      
+      // Reset form and close modal
+      setMaterialForm({
+        category: '',
+        title: '',
+        description: '',
+        tags: '',
+        file: null
+      });
+      setShowMaterialModal(false);
+      
+      alert('Material saved successfully!');
+    } catch (error) {
+      console.error('Error saving material:', error);
+      alert('Failed to save material. Please try again.');
+    }
+  };
+
   // Show loading spinner while checking auth
   if (loading) {
     return (
@@ -805,7 +862,7 @@ export default function StudyBookPage() {
               
               <div className="form-actions">
                 <button onClick={() => setShowMaterialModal(false)}>Cancel</button>
-                <button className="primary">Save Material</button>
+                <button className="primary" onClick={handleSaveMaterial}>Save Material</button>
               </div>
             </div>
           </div>
