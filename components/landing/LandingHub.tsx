@@ -138,11 +138,11 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
           </div>
         </div>
 
-        {/* ASK BO - moved left and up (22% from left, 25% from top) */}
+        {/* ASK BO - moved further left (18% from left, 25% from top) */}
         <div 
           className="absolute"
           style={{
-            left: '22%',
+            left: '18%',
             top: '25%',
             transform: 'translate(-50%, -50%)'
           }}

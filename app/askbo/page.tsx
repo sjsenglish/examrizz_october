@@ -26,7 +26,8 @@ export default function StudyBookPage() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('materials');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
 
   // Materials state
@@ -461,7 +462,26 @@ export default function StudyBookPage() {
             examrizzsearch
           </h1>
         </Link>
-        <div style={{ position: 'relative' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          {/* Login/Logout Pill */}
+          <button 
+            onClick={handleLogout}
+            style={{
+              background: '#E7E6FF',
+              border: '1px solid #4338CA',
+              borderRadius: '20px',
+              padding: '8px 16px',
+              fontFamily: "'Figtree', sans-serif",
+              fontSize: '13px',
+              fontWeight: '500',
+              color: '#4338CA',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            Logout
+          </button>
+          
           <button 
             onClick={() => setShowDropdown(!showDropdown)}
             style={{
@@ -584,11 +604,11 @@ export default function StudyBookPage() {
 
       {/* Back Button */}
       <Link 
-        href="/learn" 
+        href="/" 
         style={{
           position: 'absolute',
-          top: '90px',
-          left: '45px',
+          top: '20px',
+          left: '20px',
           display: 'flex',
           alignItems: 'center',
           gap: '6px',
@@ -599,9 +619,9 @@ export default function StudyBookPage() {
           color: '#333333',
           fontFamily: "'Madimi One', cursive",
           fontSize: '13px',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #ddd',
           transition: 'all 0.3s ease',
-          zIndex: 20
+          zIndex: 100
         }}
       >
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -611,7 +631,13 @@ export default function StudyBookPage() {
       </Link>
 
       {/* Sidebar - Always Visible */}
-      <div className="sidebar open">
+      <div className={`sidebar open ${sidebarCollapsed ? 'collapsed' : ''}`}>
+        <button 
+          className="collapse-arrow"
+          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+        >
+          {sidebarCollapsed ? '→' : '←'}
+        </button>
         <div className="sidebar-nav">
           <button 
             className={`nav-item ${activeTab === 'materials' ? 'active' : ''}`}
@@ -628,27 +654,6 @@ export default function StudyBookPage() {
         </div>
       </div>
 
-      {/* User Actions */}
-      <div style={{ position: 'absolute', top: '90px', right: '45px', zIndex: 20 }}>
-        <button 
-          onClick={handleLogout}
-          style={{
-            padding: '9px 18px',
-            backgroundColor: '#FFFFFF',
-            borderRadius: '8px',
-            border: '1px solid #000000',
-            fontFamily: "'Figtree', sans-serif",
-            fontSize: '13px',
-            fontWeight: '500',
-            color: '#333333',
-            cursor: 'pointer',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-            transition: 'all 0.3s ease'
-          }}
-        >
-          Logout
-        </button>
-      </div>
 
       {/* Main Content Area */}
       <div className="main-content-area">
@@ -803,17 +808,18 @@ export default function StudyBookPage() {
       {/* Material Modal */}
       {showMaterialModal && (
         <div className="modal-backdrop" onClick={() => setShowMaterialModal(false)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal" onClick={(e) => e.stopPropagation()} style={{ width: '75%', maxWidth: '900px' }}>
             <div className="modal-header">
-              <h3>Add Study Material</h3>
+              <h3 style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>Add Study Material</h3>
               <button onClick={() => setShowMaterialModal(false)}>×</button>
             </div>
             <div className="modal-content">
               <div className="form-group">
-                <label>Category</label>
+                <label style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>Category</label>
                 <select 
                   value={materialForm.category}
                   onChange={(e) => setMaterialForm(prev => ({ ...prev, category: e.target.value }))}
+                  style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}
                 >
                   <option value="">Select category</option>
                   {categories.map(cat => (
@@ -823,75 +829,82 @@ export default function StudyBookPage() {
               </div>
               
               <div className="form-group">
-                <label>Title</label>
+                <label style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>Title</label>
                 <input 
                   type="text"
                   value={materialForm.title}
                   onChange={(e) => setMaterialForm(prev => ({ ...prev, title: e.target.value }))}
+                  style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}
                 />
               </div>
               
               <div className="form-group">
-                <label>Description</label>
+                <label style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>Description</label>
                 <textarea 
                   value={materialForm.description}
                   onChange={(e) => setMaterialForm(prev => ({ ...prev, description: e.target.value }))}
                   rows={4}
+                  style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}
                 />
               </div>
               
               <div className="form-group">
-                <label>Main Arguments</label>
+                <label style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>Main Arguments</label>
                 <textarea 
                   value={materialForm.main_arguments}
                   onChange={(e) => setMaterialForm(prev => ({ ...prev, main_arguments: e.target.value }))}
                   rows={3}
                   placeholder="Key arguments or findings from this material"
+                  style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}
                 />
               </div>
               
               <div className="form-group">
-                <label>Conclusions</label>
+                <label style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>Conclusions</label>
                 <textarea 
                   value={materialForm.conclusions}
                   onChange={(e) => setMaterialForm(prev => ({ ...prev, conclusions: e.target.value }))}
                   rows={3}
                   placeholder="Main conclusions or outcomes"
+                  style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}
                 />
               </div>
               
               <div className="form-group">
-                <label>Sources</label>
+                <label style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>Sources</label>
                 <textarea 
                   value={materialForm.sources}
                   onChange={(e) => setMaterialForm(prev => ({ ...prev, sources: e.target.value }))}
                   rows={3}
                   placeholder="Sources referenced in this material"
+                  style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}
                 />
               </div>
               
               <div className="form-group">
-                <label>Methodology</label>
+                <label style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>Methodology</label>
                 <textarea 
                   value={materialForm.methodology}
                   onChange={(e) => setMaterialForm(prev => ({ ...prev, methodology: e.target.value }))}
                   rows={3}
                   placeholder="Research methodology or approach used"
+                  style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}
                 />
               </div>
               
               <div className="form-group">
-                <label>Completion Date</label>
+                <label style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>Completion Date</label>
                 <input 
                   type="text"
                   value={materialForm.completion_date}
                   onChange={(e) => setMaterialForm(prev => ({ ...prev, completion_date: e.target.value }))}
                   placeholder="e.g., January 2024"
+                  style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}
                 />
               </div>
               
               <div className="form-group">
-                <label>File</label>
+                <label style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>File</label>
                 <input 
                   type="file"
                   onChange={(e) => setMaterialForm(prev => ({ ...prev, file: e.target.files?.[0] || null }))}
@@ -900,8 +913,23 @@ export default function StudyBookPage() {
               </div>
               
               <div className="form-actions">
-                <button onClick={() => setShowMaterialModal(false)}>Cancel</button>
-                <button className="primary" onClick={handleSaveMaterial}>Save Material</button>
+                <button 
+                  onClick={() => setShowMaterialModal(false)}
+                  style={{ 
+                    backgroundColor: '#D3F6F7', 
+                    fontFamily: "'Figtree', sans-serif", 
+                    letterSpacing: '0.04em' 
+                  }}
+                >Cancel</button>
+                <button 
+                  className="primary" 
+                  onClick={handleSaveMaterial}
+                  style={{ 
+                    backgroundColor: '#E7E6FF', 
+                    fontFamily: "'Figtree', sans-serif", 
+                    letterSpacing: '0.04em' 
+                  }}
+                >Save Material</button>
               </div>
             </div>
           </div>
