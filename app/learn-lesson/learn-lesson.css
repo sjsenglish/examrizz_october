@@ -928,43 +928,41 @@
 }
 
 /* =============================================================================
-   LESSON PRACTICE TAB STYLES (embedded lesson practice questions)
-   Different from main /practice page which handles question pack management
+   PRACTICE TAB - Questions and Interactive Elements
    ============================================================================= */
 
-/* Lesson Practice Tab Content */
-.lesson-practice-tab-content {
-  padding: 20px 0;
+.practice-tab-content {
+  padding: 24px;
+  margin-left: 15%;
 }
 
-/* Practice Header */
 .practice-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
-  padding: 20px;
-  background-color: #F9F9FF;
-  border-radius: 12px;
+  margin-bottom: 24px;
+  padding: 16px 20px;
+  background: #F9F9FF;
   border: 1px solid #E0E0E0;
+  border-radius: 8px;
 }
 
 .practice-info h1 {
-  font-size: 24px;
-  font-weight: 700;
+  font-family: 'Madimi One', sans-serif;
+  font-size: 20px;
   color: #000;
   margin: 0;
 }
 
 .practice-info p {
-  font-size: 14px;
+  font-size: 12px;
   color: #666;
   margin: 4px 0 0 0;
 }
 
 .practice-stats {
   display: flex;
-  gap: 20px;
+  gap: 16px;
   align-items: center;
 }
 
@@ -973,79 +971,80 @@
 }
 
 .stat-value {
-  font-size: 20px;
-  font-weight: 700;
+  font-family: 'Madimi One', sans-serif;
+  font-size: 16px;
   color: #00CED1;
   display: block;
 }
 
 .stat-label {
-  font-size: 12px;
+  font-size: 10px;
   color: #666;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .timer {
-  background-color: #F5F5F5;
-  padding: 8px 16px;
-  border-radius: 20px;
+  background: #F5F5F5;
+  padding: 6px 12px;
+  border-radius: 16px;
   font-family: 'Figtree', monospace;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: #333;
 }
 
 /* Question Container */
 .question-container {
-  background-color: #F9F9FF;
+  background: #F9F9FF;
   border: 1px solid #E0E0E0;
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 24px;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  width: 70%;
 }
 
 .question-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .question-title {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
   color: #333;
 }
 
 .question-difficulty {
-  background-color: #FF6B6B;
+  background: #FF6B6B;
   color: white;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 10px;
   font-weight: 600;
 }
 
 .practice-question-content {
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
 .practice-question-text {
-  font-size: 16px;
+  font-size: 14px;
   color: #333;
-  margin-bottom: 12px;
-  line-height: 1.5;
+  margin-bottom: 10px;
+  line-height: 1.4;
 }
 
 .practice-math-expression {
-  font-size: 18px;
+  font-size: 16px;
   color: #333;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   text-align: center;
-  padding: 12px;
-  background-color: #FFFFFF;
-  border-radius: 8px;
+  padding: 10px;
+  background: #FFFFFF;
+  border-radius: 6px;
   border: 1px solid #DDD;
 }
 
@@ -1053,89 +1052,89 @@
 .practice-answer-options {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 16px;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .practice-answer-option {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
+  padding: 10px 12px;
   border: 2px solid transparent;
-  border-radius: 8px;
-  background-color: #FFFFFF;
+  border-radius: 6px;
+  background: #FFFFFF;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s;
 }
 
 .practice-answer-option:hover {
   border-color: #00CED1;
-  background-color: #F0FFFE;
+  background: #F0FFFE;
 }
 
 .practice-answer-option.selected {
   border-color: #00CED1;
-  background-color: #E6FFFE;
+  background: #E6FFFE;
 }
 
 .practice-answer-option.correct {
   border-color: #4CAF50;
-  background-color: #E8F5E8;
+  background: #E8F5E8;
 }
 
 .practice-answer-option.incorrect {
   border-color: #F44336;
-  background-color: #FFEBEE;
+  background: #FFEBEE;
 }
 
 .practice-answer-letter {
-  background-color: #666;
+  background: #666;
   color: white;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 600;
-  margin-right: 12px;
-  transition: background-color 0.3s;
+  margin-right: 10px;
+  transition: background-color 0.2s;
 }
 
 .practice-answer-option.selected .practice-answer-letter {
-  background-color: #00CED1;
+  background: #00CED1;
 }
 
 .practice-answer-option.correct .practice-answer-letter {
-  background-color: #4CAF50;
+  background: #4CAF50;
 }
 
 .practice-answer-option.incorrect .practice-answer-letter {
-  background-color: #F44336;
+  background: #F44336;
 }
 
 .practice-answer-text {
-  font-size: 14px;
+  font-size: 12px;
   color: #333;
 }
 
 /* Video Explanation Button */
 .video-explanation-btn {
-  background-color: #9C27B0;
+  background: #9C27B0;
   color: white;
   border: none;
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  margin-top: 16px;
-  transition: background-color 0.3s;
+  margin-top: 12px;
+  transition: background-color 0.2s;
 }
 
 .video-explanation-btn:hover {
-  background-color: #7B1FA2;
+  background: #7B1FA2;
 }
 
 /* Video Modal */
@@ -1145,7 +1144,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1153,12 +1152,12 @@
 }
 
 .video-modal-content {
-  background-color: white;
-  border-radius: 12px;
-  padding: 24px;
-  max-width: 600px;
-  width: 90%;
-  max-height: 80%;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 500px;
+  width: 85%;
+  max-height: 75%;
   overflow-y: auto;
 }
 
@@ -1166,58 +1165,155 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .video-modal-title {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 600;
   color: #333;
 }
 
 .video-modal-close {
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 20px;
   cursor: pointer;
   color: #666;
 }
 
 .video-placeholder {
-  background-color: #F5F5F5;
+  background: #F5F5F5;
   border: 2px dashed #CCC;
-  border-radius: 8px;
-  padding: 40px;
+  border-radius: 6px;
+  padding: 32px;
   text-align: center;
   color: #666;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .video-placeholder .video-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
+  font-size: 40px;
+  margin-bottom: 12px;
   display: block;
 }
 
-/* End of Topic Test Button */
-.end-topic-test {
-  margin-top: 40px;
+/* =============================================================================
+   TEST TAB CONTENT
+   ============================================================================= */
+
+.test-tab-content {
+  padding: 24px;
+  margin-left: 15%;
+}
+
+.test-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.test-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 24px;
+  color: #000;
+  margin: 0 0 8px 0;
+}
+
+.test-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.test-info {
+  background: #F9F9FF;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+  text-align: center;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.test-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 16px;
+}
+
+.test-stat {
   text-align: center;
 }
 
-.end-topic-test-btn {
-  background-color: #9C27B0;
-  color: white;
-  border: none;
-  padding: 16px 32px;
-  border-radius: 8px;
+.test-stat-value {
   font-family: 'Madimi One', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  font-size: 20px;
+  color: #000;
+  display: block;
 }
 
-.end-topic-test-btn:hover {
-  background-color: #7B1FA2;
+.test-stat-label {
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.start-test-btn {
+  background: #00CED1;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.start-test-btn:hover {
+  background: #00B4B7;
+}
+
+/* Test Instructions */
+.test-instructions {
+  background: white;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  padding: 20px;
+  width: 70%;
+  margin: 0 auto;
+}
+
+.instructions-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  margin: 0 0 12px 0;
+}
+
+.instructions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.instructions-list li {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.instructions-list li:before {
+  content: '•';
+  color: #00CED1;
+  font-weight: 600;
+  position: absolute;
+  left: 0;
 }
