@@ -78,15 +78,18 @@ export async function createPackAssignment(
       });
     }
 
-    // TODO: Temporarily disabled due to Supabase type generation issues
-    console.log('Assignment creation temporarily disabled pending schema setup');
-    
-    // Return mock data for now
-    return assignments.map((assignment, index) => ({
-      ...assignment,
-      id: `mock-${index}`,
-      assigned_at: new Date().toISOString()
-    }));
+    const assignmentsData: any = assignments;
+    const { data, error } = await (supabase as any)
+      .from('pack_assignments')
+      .insert(assignmentsData)
+      .select();
+
+    if (error) {
+      console.error('Error creating pack assignments:', error);
+      return [];
+    }
+
+    return data || [];
   } catch (error) {
     console.error('Error in createPackAssignment:', error);
     return [];
@@ -121,8 +124,8 @@ export async function getTeacherPacksWithAssignments(teacherId: string): Promise
 
     // Get assignment counts for each pack
     const packsWithCounts = await Promise.all(
-      packs.map(async (pack) => {
-        const { count, error: countError } = await supabase
+      packs.map(async (pack: any) => {
+        const { count, error: countError } = await (supabase as any)
           .from('pack_assignments')
           .select('*', { count: 'exact', head: true })
           .eq('pack_id', pack.id)
@@ -173,9 +176,9 @@ export async function getPackAssignmentHistory(packId: string, teacherId: string
 
     // Get attempts and additional details for each assignment
     const assignmentsWithDetails = await Promise.all(
-      assignments.map(async (assignment) => {
+      assignments.map(async (assignment: any) => {
         // Get attempts for this assignment
-        const { data: attempts, error: attemptsError } = await supabase
+        const { data: attempts, error: attemptsError } = await (supabase as any)
           .from('pack_attempts')
           .select('*')
           .eq('assignment_id', assignment.id);
@@ -189,7 +192,7 @@ export async function getPackAssignmentHistory(packId: string, teacherId: string
         let className = '';
 
         if (assignment.assigned_to_user_id) {
-          const { data: student } = await supabase
+          const { data: student } = await (supabase as any)
             .from('user_profiles')
             .select('full_name')
             .eq('id', assignment.assigned_to_user_id)
@@ -199,7 +202,7 @@ export async function getPackAssignmentHistory(packId: string, teacherId: string
         }
 
         if (assignment.assigned_to_class_id) {
-          const { data: classData } = await supabase
+          const { data: classData } = await (supabase as any)
             .from('classes')
             .select('name')
             .eq('id', assignment.assigned_to_class_id)
@@ -234,14 +237,14 @@ export async function getTeacherOngoingAssignments(teacherId: string): Promise<A
 }>> {
   try {
     // Check if database tables exist
-    const { error: tableError } = await supabase.from('pack_assignments').select('count', { count: 'exact', head: true });
+    const { error: tableError } = await (supabase as any).from('pack_assignments').select('count', { count: 'exact', head: true });
     if (tableError) {
       console.warn('Pack assignments table not available, returning empty array:', tableError.message);
       return [];
     }
 
     // Get all active assignments by this teacher
-    const { data: assignments, error } = await supabase
+    const { data: assignments, error } = await (supabase as any)
       .from('pack_assignments')
       .select(`
         *,
@@ -273,7 +276,7 @@ export async function getTeacherOngoingAssignments(teacherId: string): Promise<A
     }>();
 
     // Collect all assignments by pack
-    assignments.forEach(assignment => {
+    assignments.forEach((assignment: any) => {
       if (assignment.question_packs) {
         const packId = assignment.pack_id;
         if (!packMap.has(packId)) {
@@ -289,10 +292,10 @@ export async function getTeacherOngoingAssignments(teacherId: string): Promise<A
 
     // Get attempts for each pack
     for (const [packId, packData] of packMap.entries()) {
-      const assignmentIds = packData.assignments.map(a => a.id);
+      const assignmentIds = packData.assignments.map((a: any) => a.id);
       
       if (assignmentIds.length > 0) {
-        const { data: attempts } = await supabase
+        const { data: attempts } = await (supabase as any)
           .from('pack_attempts')
           .select('*')
           .in('assignment_id', assignmentIds);
@@ -343,7 +346,7 @@ export async function getTeacherOngoingAssignments(teacherId: string): Promise<A
 
       // Get earliest due date for this pack
       const dueDates = assignments
-        .map(a => a.due_date)
+        .map((a: any) => a.due_date)
         .filter(Boolean)
         .sort();
       

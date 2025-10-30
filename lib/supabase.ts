@@ -156,23 +156,65 @@ export async function createOrUpdateUserProfile(
     const existingProfile = await getUserProfile(userId);
     
     if (existingProfile) {
-      // Update existing profile if needed - temporarily disabled due to type issues
-      console.log('Profile update temporarily disabled pending schema setup');
-      return existingProfile;
+      // Update existing profile if needed
+      try {
+        const updateData: any = {
+          email,
+          full_name: fullName || existingProfile.full_name,
+          role: role
+        };
+        
+        const { data, error } = await (supabase as any)
+          .from('user_profiles')
+          .update(updateData)
+          .eq('id', userId)
+          .select()
+          .single();
+
+        if (error) {
+          console.error('Error updating user profile:', error.message || error);
+          return existingProfile;
+        }
+
+        return data;
+      } catch (updateError) {
+        console.error('Unexpected error updating profile:', updateError);
+        return existingProfile;
+      }
     }
 
-    // Create new profile - temporarily disabled due to type issues
-    console.log('Profile creation temporarily disabled pending schema setup');
-    
-    // Return mock profile for now
-    return {
-      id: userId,
-      email,
-      full_name: fullName || email.split('@')[0],
-      role: role,
-      school_id: null,
-      created_at: new Date().toISOString()
-    };
+    // Create new profile
+    try {
+      const insertData: any = {
+        id: userId,
+        email,
+        full_name: fullName || email.split('@')[0],
+        role: role,
+        school_id: null // Will be set when user joins a school
+      };
+      
+      const { data, error } = await (supabase as any)
+        .from('user_profiles')
+        .insert(insertData)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating user profile:', error.message || error);
+        // Check if the table exists by testing a simple query
+        const { error: tableError } = await supabase.from('user_profiles').select('count', { count: 'exact', head: true });
+        if (tableError) {
+          console.error('user_profiles table may not exist:', tableError.message);
+        }
+        return null;
+      }
+
+      console.log('Successfully created user profile:', data);
+      return data;
+    } catch (insertError) {
+      console.error('Unexpected error creating profile:', insertError);
+      return null;
+    }
   } catch (error) {
     console.error('Error in createOrUpdateUserProfile:', error);
     return null;

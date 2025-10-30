@@ -13,14 +13,14 @@ export interface Student extends UserProfile {
 export async function getTeacherClasses(teacherId: string): Promise<ClassWithStudents[]> {
   try {
     // Check if database tables exist
-    const { error: tableError } = await supabase.from('classes').select('count', { count: 'exact', head: true });
+    const { error: tableError } = await (supabase as any).from('classes').select('count', { count: 'exact', head: true });
     if (tableError) {
       console.warn('Classes table not available, returning empty array:', tableError.message);
       return [];
     }
 
     // First get the classes
-    const { data: classes, error: classError } = await supabase
+    const { data: classes, error: classError } = await (supabase as any)
       .from('classes')
       .select('*')
       .eq('teacher_id', teacherId)
@@ -37,8 +37,8 @@ export async function getTeacherClasses(teacherId: string): Promise<ClassWithStu
 
     // Get student counts for each class
     const classesWithStudents = await Promise.all(
-      classes.map(async (classItem) => {
-        const { data: memberships, error: membershipError } = await supabase
+      classes.map(async (classItem: any) => {
+        const { data: memberships, error: membershipError } = await (supabase as any)
           .from('class_memberships')
           .select(`
             student_id,
@@ -62,7 +62,7 @@ export async function getTeacherClasses(teacherId: string): Promise<ClassWithStu
           };
         }
 
-        const students = (memberships?.map(m => m.user_profiles).filter(Boolean) || []) as unknown as UserProfile[];
+        const students = (memberships?.map((m: any) => m.user_profiles).filter(Boolean) || []) as unknown as UserProfile[];
         
         return {
           ...classItem,
@@ -82,7 +82,7 @@ export async function getTeacherClasses(teacherId: string): Promise<ClassWithStu
 // Get students in a specific class
 export async function getClassStudents(classId: string): Promise<Student[]> {
   try {
-    const { data: memberships, error } = await supabase
+    const { data: memberships, error } = await (supabase as any)
       .from('class_memberships')
       .select(`
         student_id,
@@ -102,7 +102,7 @@ export async function getClassStudents(classId: string): Promise<Student[]> {
       return [];
     }
 
-    return (memberships?.map(m => m.user_profiles).filter(Boolean) || []) as unknown as Student[];
+    return (memberships?.map((m: any) => m.user_profiles).filter(Boolean) || []) as unknown as Student[];
   } catch (error) {
     console.error('Error in getClassStudents:', error);
     return [];
@@ -113,14 +113,14 @@ export async function getClassStudents(classId: string): Promise<Student[]> {
 export async function getAllTeacherStudents(teacherId: string): Promise<Student[]> {
   try {
     // Check if database tables exist
-    const { error: tableError } = await supabase.from('classes').select('count', { count: 'exact', head: true });
+    const { error: tableError } = await (supabase as any).from('classes').select('count', { count: 'exact', head: true });
     if (tableError) {
       console.warn('Classes table not available, returning empty array:', tableError.message);
       return [];
     }
 
     // First get all teacher's classes
-    const { data: classes, error: classError } = await supabase
+    const { data: classes, error: classError } = await (supabase as any)
       .from('classes')
       .select('id, name')
       .eq('teacher_id', teacherId);
@@ -130,14 +130,14 @@ export async function getAllTeacherStudents(teacherId: string): Promise<Student[
       return [];
     }
 
-    const classIds = classes.map(c => c.id);
+    const classIds = classes.map((c: any) => c.id);
     
     if (classIds.length === 0) {
       return [];
     }
 
     // Get all students from these classes
-    const { data: memberships, error: membershipError } = await supabase
+    const { data: memberships, error: membershipError } = await (supabase as any)
       .from('class_memberships')
       .select(`
         class_id,
@@ -161,9 +161,9 @@ export async function getAllTeacherStudents(teacherId: string): Promise<Student[
     // Map students with their class names and remove duplicates
     const studentsMap = new Map<string, Student>();
     
-    memberships?.forEach(membership => {
+    memberships?.forEach((membership: any) => {
       if (membership.user_profiles) {
-        const classInfo = classes.find(c => c.id === membership.class_id);
+        const classInfo = classes.find((c: any) => c.id === membership.class_id);
         const student: Student = {
           ...(membership.user_profiles as unknown as UserProfile),
           class_name: classInfo?.name
@@ -182,7 +182,7 @@ export async function getAllTeacherStudents(teacherId: string): Promise<Student[
 // Create a new class
 export async function createClass(teacherId: string, schoolId: string, name: string, description?: string): Promise<Class | null> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('classes')
       .insert({
         teacher_id: teacherId,
@@ -208,7 +208,7 @@ export async function createClass(teacherId: string, schoolId: string, name: str
 // Add student to class
 export async function addStudentToClass(classId: string, studentId: string): Promise<boolean> {
   try {
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('class_memberships')
       .insert({
         class_id: classId,
@@ -230,7 +230,7 @@ export async function addStudentToClass(classId: string, studentId: string): Pro
 // Remove student from class
 export async function removeStudentFromClass(classId: string, studentId: string): Promise<boolean> {
   try {
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('class_memberships')
       .delete()
       .eq('class_id', classId)

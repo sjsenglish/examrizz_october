@@ -121,15 +121,21 @@ export async function joinSchool(userId: string, schoolCode: string): Promise<{
     }
 
     // Update user profile with school_id
-    // TODO: Temporarily commented out due to Supabase type generation issues
-    // This will be fixed when proper database schema is established
     try {
-      // const { error: updateError } = await supabase
-      //   .from('user_profiles')
-      //   .update({ school_id: validation.school.id })
-      //   .eq('id', userId);
-      
-      console.log('School joining functionality temporarily disabled pending schema setup');
+      const updateData: any = { school_id: validation.school.id };
+      const { error: updateError } = await (supabase as any)
+        .from('user_profiles')
+        .update(updateData)
+        .eq('id', userId);
+
+      if (updateError) {
+        console.error('Error joining school:', updateError);
+        return {
+          success: false,
+          school: null,
+          error: 'Failed to join school'
+        };
+      }
     } catch (updateError) {
       console.error('Error joining school:', updateError);
       return {
@@ -156,16 +162,23 @@ export async function joinSchool(userId: string, schoolCode: string): Promise<{
 // Create a new school (admin function)
 export async function createSchool(name: string, schoolCode: string): Promise<School | null> {
   try {
-    // TODO: Temporarily disabled due to Supabase type generation issues
-    console.log('School creation functionality temporarily disabled pending schema setup');
-    
-    // Mock return for now
-    return {
-      id: 'mock-id',
+    const insertData: any = {
       name: name.trim(),
-      school_code: schoolCode.trim().toUpperCase(),
-      created_at: new Date().toISOString()
+      school_code: schoolCode.trim().toUpperCase()
     };
+    
+    const { data, error } = await (supabase as any)
+      .from('schools')
+      .insert(insertData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating school:', error);
+      return null;
+    }
+
+    return data;
   } catch (error) {
     console.error('Error in createSchool:', error);
     return null;
