@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import './learn-lesson.css';
 
@@ -9,10 +9,6 @@ export default function LearnLesson() {
   const [expandedTopics, setExpandedTopics] = useState<{[key: string]: boolean}>({
     'proof': true
   });
-  const [workedSolutions, setWorkedSolutions] = useState<{[key: string]: boolean}>({});
-  const [selectedAnswers, setSelectedAnswers] = useState<{[key: string]: string}>({});
-  const [showVideoModal, setShowVideoModal] = useState(false);
-  const [elapsedTime, setElapsedTime] = useState(0);
 
   const toggleTopic = (topicId: string) => {
     setExpandedTopics(prev => ({
@@ -20,54 +16,6 @@ export default function LearnLesson() {
       [topicId]: !prev[topicId]
     }));
   };
-
-  const toggleWorkedSolution = (exampleId: string) => {
-    setWorkedSolutions(prev => ({
-      ...prev,
-      [exampleId]: !prev[exampleId]
-    }));
-  };
-
-  const handleAnswerSelect = (questionId: string, answer: string) => {
-    setSelectedAnswers(prev => ({
-      ...prev,
-      [questionId]: answer
-    }));
-  };
-
-  const getAnswerStyle = (questionId: string, answer: string) => {
-    const selected = selectedAnswers[questionId];
-    if (!selected) return '';
-    
-    if (selected === answer) {
-      // Show correct answer as green, incorrect as red
-      if (answer === 'A') return 'correct';
-      return 'selected';
-    }
-    
-    // Show correct answer when another is selected
-    if (answer === 'A' && selected && selected !== 'A') return 'correct';
-    if (selected !== answer) return '';
-    
-    return 'incorrect';
-  };
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  // Timer for practice tab
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (activeTab === 'practice') {
-      interval = setInterval(() => {
-        setElapsedTime(prev => prev + 1);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [activeTab]);
 
   return (
     <div className="learn-lesson-page">
@@ -146,11 +94,11 @@ export default function LearnLesson() {
             </div>
 
             {/* Additional Topics */}
-            {[2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
+            {Array.from({length: 9}, (_, i) => i + 2).map(num => (
               <div key={num} className="topic-item">
                 <div className="topic-header">
                   <span className="topic-number">{num}</span>
-                  <span className="topic-title">Algebra and functions</span>
+                  <span className="topic-title">Spec topic</span>
                   <span className="topic-grade">A*</span>
                   <span className="topic-arrow">▼</span>
                 </div>
@@ -169,12 +117,15 @@ export default function LearnLesson() {
                 <span className="stat-title">WORKING GRADE</span>
               </div>
               <div className="stat-content">
-                <span className="grade-letter">A</span>
-                <div className="grade-progress">
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{width: '73%'}}></div>
+                <div className="grade-display">
+                  <span className="grade-letter">A</span>
+                  <div className="grade-progress">
+                    <div className="progress-bar">
+                      <div className="progress-fill" style={{width: '73%'}}></div>
+                    </div>
+                    <span className="progress-text">73%</span>
+                    <span className="progress-label">accuracy</span>
                   </div>
-                  <span className="progress-text">73% accuracy</span>
                 </div>
               </div>
             </div>
@@ -213,7 +164,7 @@ export default function LearnLesson() {
               <div className="stat-content">
                 <span className="readiness-score">74/100</span>
                 <div className="readiness-details">
-                  <span>• Exam pace on track</span>
+                  <span>Exam pace on track</span>
                 </div>
               </div>
             </div>
@@ -224,10 +175,10 @@ export default function LearnLesson() {
               </div>
               <div className="chart-container">
                 <div className="pie-chart">
-                  <svg width="50" height="50" viewBox="0 0 80 80">
-                    <circle cx="40" cy="40" r="35" fill="#E3F2FD" stroke="#1976D2" strokeWidth="10" strokeDasharray="110 220" strokeDashoffset="0"/>
-                    <circle cx="40" cy="40" r="35" fill="none" stroke="#4CAF50" strokeWidth="10" strokeDasharray="55 275" strokeDashoffset="-110"/>
-                    <circle cx="40" cy="40" r="35" fill="none" stroke="#FF9800" strokeWidth="10" strokeDasharray="55 275" strokeDashoffset="-165"/>
+                  <svg width="60" height="60" viewBox="0 0 80 80">
+                    <circle cx="40" cy="40" r="35" fill="none" stroke="#1976D2" strokeWidth="8" strokeDasharray="110 220" strokeDashoffset="0"/>
+                    <circle cx="40" cy="40" r="35" fill="none" stroke="#4CAF50" strokeWidth="8" strokeDasharray="55 275" strokeDashoffset="-110"/>
+                    <circle cx="40" cy="40" r="35" fill="none" stroke="#FF9800" strokeWidth="8" strokeDasharray="55 275" strokeDashoffset="-165"/>
                   </svg>
                 </div>
                 <div className="chart-legend">
@@ -324,7 +275,7 @@ export default function LearnLesson() {
                     <button className="bookmark-btn">📑</button>
                   </div>
                   <p className="video-description">
-                    Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10 is positive for all values of x, for example. differentiation from first principles for nax^n and positive integer powers. Q4 of proving results for arithmetic and geometric series. This is the most commonly used method of proof throughout this specification.
+                    Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10 is positive for all values of x, for example. differentiation from first principles for nax^n and positive integer powers of x for completing the square. Using the discriminant. Proof by deduction. e.g. using completion of the square, prove that x² - 6x + 10 is positive for all values of x, for example. differentiation from first principles for nasn results for arithmetic and geometric series.
                   </p>
                 </div>
 
@@ -351,6 +302,35 @@ export default function LearnLesson() {
                     <div className="example-buttons">
                       <button className="btn-worked-solution">Worked Solution</button>
                       <button className="btn-question-walkthrough">Question Walkthrough</button>
+                    </div>
+                    
+                    {/* Simplify section */}
+                    <div className="simplify-section">
+                      <h4>Simplify</h4>
+                      <p className="simplify-text">Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10 is positive for all</p>
+                      
+                      <h4>Apply the law</h4>
+                      <div className="math-steps">
+                        <div className="step">
+                          <span className="step-math">3x = 3 = 3x</span>
+                          <span className="step-description">Multiply the numerator</span>
+                        </div>
+                        <div className="step">
+                          <span className="step-math">4y = 3x = 4y</span>
+                          <span className="step-description">Multiply the numerator</span>
+                        </div>
+                        <div className="step">
+                          <span className="step-math">1/2 = x = 1/2</span>
+                          <span className="step-description">Multiply the numerator</span>
+                        </div>
+                        <div className="step">
+                          <span className="step-math">x = 3x</span>
+                          <span className="step-description">Multiply the numerator</span>
+                        </div>
+                      </div>
+                      
+                      <h4>Simplify</h4>
+                      <p className="simplify-text">Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10 is positive for all Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10 is positive for all Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10.</p>
                     </div>
                   </div>
 
@@ -387,7 +367,8 @@ export default function LearnLesson() {
                     <p>Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10 is positive for all Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10 is positive for all Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10.</p>
                     
                     <div className="summary-formula">
-                      <span>1/(B - C) = A - D/(B - C)</span>
+                      <span className="formula">1 = A - D</span>
+                      <span className="formula">B - C    B - C</span>
                     </div>
                   </div>
                   
@@ -400,187 +381,7 @@ export default function LearnLesson() {
 
             {activeTab === 'practice' && (
               <div className="practice-tab-content">
-                {/* Practice Header */}
-                <div className="practice-header">
-                  <div className="practice-info">
-                    <h1 className="practice-title">1.1 Mathematical Proof</h1>
-                    <p className="practice-subtitle">How to proof by exhaustion</p>
-                  </div>
-                  <div className="practice-stats">
-                    <div className="practice-stat">
-                      <span className="stat-label">Best time</span>
-                      <span className="stat-value">47%</span>
-                    </div>
-                    <div className="practice-stat">
-                      <span className="stat-label">Usual time</span>
-                      <span className="stat-value">47%</span>
-                    </div>
-                    <div className="practice-timer">
-                      <span className="timer-icon">⏱</span>
-                      <span className="timer-value">{formatTime(elapsedTime)}</span>
-                    </div>
-                    <div className="practice-controls">
-                      <button className="btn-hint">💡 HINT HELP</button>
-                      <button className="btn-solution">✓ GET SOLUTION</button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Practice Questions */}
-                <div className="practice-questions">
-                  {/* Question 1 */}
-                  <div className="practice-question">
-                    <div className="question-header">
-                      <h3>Question 1</h3>
-                      <button className="bookmark-question">📑</button>
-                    </div>
-                    
-                    <div className="question-content">
-                      <div className="question-text">
-                        <p>Simplify the following: 3x/y</p>
-                        <div className="math-expression">
-                          3x/y - 4y/3 = 3x/y
-                        </div>
-                      </div>
-                      
-                      <div className="answer-options">
-                        <div 
-                          className={`answer-option ${getAnswerStyle('q1', 'A')}`}
-                          onClick={() => handleAnswerSelect('q1', 'A')}
-                        >
-                          <span className="answer-letter">A</span>
-                          <span className="answer-text">3/2</span>
-                        </div>
-                        <div 
-                          className={`answer-option ${getAnswerStyle('q1', 'B')}`}
-                          onClick={() => handleAnswerSelect('q1', 'B')}
-                        >
-                          <span className="answer-letter">B</span>
-                          <span className="answer-text">1/2</span>
-                        </div>
-                        <div 
-                          className={`answer-option ${getAnswerStyle('q1', 'C')}`}
-                          onClick={() => handleAnswerSelect('q1', 'C')}
-                        >
-                          <span className="answer-letter">C</span>
-                          <span className="answer-text">4/3</span>
-                        </div>
-                        <div 
-                          className={`answer-option ${getAnswerStyle('q1', 'D')}`}
-                          onClick={() => handleAnswerSelect('q1', 'D')}
-                        >
-                          <span className="answer-letter">D</span>
-                          <span className="answer-text">3/2</span>
-                        </div>
-                      </div>
-                      
-                      <div className="question-actions">
-                        <button className="btn-correct-answer">Correct Answer</button>
-                        <button className="btn-video-walkthrough">Video Walkthrough</button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Question 2 */}
-                  <div className="practice-question">
-                    <div className="question-header">
-                      <h3>Question 2</h3>
-                      <button className="bookmark-question">📑</button>
-                    </div>
-                    
-                    <div className="question-content">
-                      <div className="question-text">
-                        <p>Simplify the following: 3x/y</p>
-                        <div className="math-expression">
-                          3x/y - 4y/3 = 3x/y
-                        </div>
-                      </div>
-                      
-                      <div className="answer-options">
-                        <div 
-                          className={`answer-option ${getAnswerStyle('q2', 'A')}`}
-                          onClick={() => handleAnswerSelect('q2', 'A')}
-                        >
-                          <span className="answer-letter">A</span>
-                          <span className="answer-text">3/2</span>
-                        </div>
-                        <div 
-                          className={`answer-option correct ${getAnswerStyle('q2', 'B')}`}
-                          onClick={() => handleAnswerSelect('q2', 'B')}
-                        >
-                          <span className="answer-letter">B</span>
-                          <span className="answer-text">1/2</span>
-                        </div>
-                        <div 
-                          className={`answer-option selected ${getAnswerStyle('q2', 'C')}`}
-                          onClick={() => handleAnswerSelect('q2', 'C')}
-                        >
-                          <span className="answer-letter">C</span>
-                          <span className="answer-text">4/3</span>
-                        </div>
-                        <div 
-                          className={`answer-option ${getAnswerStyle('q2', 'D')}`}
-                          onClick={() => handleAnswerSelect('q2', 'D')}
-                        >
-                          <span className="answer-letter">D</span>
-                          <span className="answer-text">3/2</span>
-                        </div>
-                      </div>
-                      
-                      <div className="question-actions">
-                        <button className="btn-correct-answer active">Correct Answer</button>
-                        <button className="btn-video-walkthrough">Video Walkthrough</button>
-                      </div>
-                      
-                      {/* Show answer feedback */}
-                      <div className="answer-feedback">
-                        <div className="feedback-icon">✗</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Question 3 with Video Modal */}
-                  <div className="practice-question">
-                    <div className="question-header">
-                      <h3>Question 3</h3>
-                      <button className="question-close">✕</button>
-                    </div>
-                    
-                    {/* Video Modal */}
-                    <div className="video-modal-overlay">
-                      <div className="video-modal">
-                        <div className="video-placeholder large">
-                          <div className="video-icon">▶</div>
-                          <div className="video-text">
-                            <span>VIDEO</span>
-                            <span>MODAL</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="question-content">
-                      <div className="answer-options">
-                        <div className="answer-option">
-                          <span className="answer-letter">D</span>
-                          <span className="answer-text">3/2</span>
-                        </div>
-                      </div>
-                      
-                      <div className="question-actions">
-                        <button className="btn-correct-answer">Correct Answer</button>
-                        <button className="btn-video-walkthrough">Video Walkthrough</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* End of Topic Test Button */}
-                <div className="topic-test-section">
-                  <button className="btn-end-topic-test">
-                    END OF TOPIC TEST →
-                  </button>
-                </div>
+                <p>Practice content coming soon...</p>
               </div>
             )}
 
