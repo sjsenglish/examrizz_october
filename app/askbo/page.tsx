@@ -84,7 +84,7 @@ export default function StudyBookPage() {
     { id: 'moocs', label: 'MOOCs', icon: '/icons/moocs.svg', count: 0 },
     { id: 'lectures', label: 'Lectures', icon: '/icons/lectures.svg', count: 0 },
     { id: 'textbooks', label: 'Textbooks', icon: '/icons/learn-hub-book.svg', count: 0 },
-    { id: 'societies', label: 'Societies', icon: '/icons/love-letter.svg', count: 0 },
+    { id: 'societies', label: 'Societies', icon: '/icons/societies.svg', count: 0 },
     { id: 'challenges', label: 'Challenges', icon: '/icons/academic-challenges.svg', count: 0 },
     { id: 'internships', label: 'Internships', icon: '/icons/internships.svg', count: 0 },
     { id: 'academic-papers', label: 'Academic Papers', icon: '/icons/academic-paper.svg', count: 0 }
@@ -607,7 +607,7 @@ export default function StudyBookPage() {
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
-        Learn Hub
+        Back
       </Link>
 
       {/* Sidebar */}

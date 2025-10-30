@@ -241,67 +241,76 @@ body {
 }
 
 .categories-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-16);
   margin-bottom: var(--space-32);
 }
 
 .category-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: var(--space-16);
-  padding: var(--space-16);
+  text-align: center;
+  gap: var(--space-12);
+  padding: var(--space-20);
   border: 1px solid var(--border);
-  border-radius: var(--border-radius-sm);
+  border-radius: var(--border-radius);
   cursor: pointer;
   transition: all 0.2s ease;
+  background: var(--bg-white);
+  min-height: 120px;
+  justify-content: center;
 }
 
 .category-item:hover {
   background: var(--bg-gray);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .category-item img {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
+  margin-bottom: var(--space-8);
 }
 
 .category-item span {
-  flex: 1;
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--text-primary);
+  line-height: 1.2;
 }
 
 .category-item .count {
-  font-size: 14px;
+  font-size: 12px;
   color: var(--text-secondary);
   background: var(--bg-gray);
-  padding: 4px var(--space-8);
-  border-radius: 12px;
-  min-width: 24px;
+  padding: 2px var(--space-8);
+  border-radius: 10px;
+  min-width: 20px;
   text-align: center;
+  margin-top: var(--space-4);
 }
 
 .add-material-btn {
   width: 100%;
   padding: var(--space-16);
-  background: var(--primary);
-  color: white;
-  border: none;
+  background: #E7E6FF;
+  color: #4338CA;
+  border: 1px solid #D1D5DB;
   border-radius: var(--border-radius-sm);
   font-family: var(--font-body);
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .add-material-btn:hover {
-  background: #4338CA;
+  background: #DDD6FE;
+  border-color: #4338CA;
 }
 
 .materials-grid {
