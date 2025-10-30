@@ -489,11 +489,14 @@ export default function SignupPage() {
 
   // Step 2 - Profile Setup
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#FFFFFF',
-      fontFamily: "'Figtree', sans-serif"
-    }}>
+    <>
+      <Navbar />
+      <div style={{
+        minHeight: '100vh',
+        background: '#FFFFFF',
+        fontFamily: "'Figtree', sans-serif",
+        paddingTop: '60px'
+      }}>
       {/* Header */}
       <div style={{
         display: 'flex',
