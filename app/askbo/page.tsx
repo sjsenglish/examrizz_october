@@ -1019,53 +1019,14 @@ export default function StudyBookPage() {
 
               <div className="chat-input-fixed">
                 <div className="input-container">
-                  <div style={{ position: 'relative' }}>
-                    <textarea
-                      value={currentMessage}
-                      onChange={(e) => setCurrentMessage(e.target.value)}
-                      onKeyPress={handleKeyPress}
-                      placeholder="Ask Bo anything..."
-                      disabled={isLoading}
-                      rows={3}
-                    />
-                    <button
-                      onClick={() => {
-                        if (!showDraftPopout) {
-                          loadDraftForPopup();
-                        }
-                        setShowDraftPopout(!showDraftPopout);
-                      }}
-                      style={{
-                        position: 'absolute',
-                        bottom: '10px',
-                        right: '10px',
-                        background: '#F4F3FF',
-                        border: '1px solid #E5E3FF',
-                        borderRadius: '6px',
-                        padding: '6px',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = '#E5E3FF';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = '#F4F3FF';
-                      }}
-                    >
-                      <img 
-                        src="/icons/learn-hub-book.svg" 
-                        alt="Quick Draft" 
-                        style={{
-                          width: '18px',
-                          height: '18px'
-                        }}
-                      />
-                    </button>
-                  </div>
+                  <textarea
+                    value={currentMessage}
+                    onChange={(e) => setCurrentMessage(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder="Ask Bo anything..."
+                    disabled={isLoading}
+                    rows={3}
+                  />
                   <div className="button-group">
                     <button 
                       onClick={() => {/* TODO: Add teacher functionality */}}
@@ -1699,6 +1660,23 @@ export default function StudyBookPage() {
           </div>
         </div>
       )}
+
+      {/* Floating Draft Button */}
+      <button
+        onClick={() => {
+          if (!showDraftPopout) {
+            loadDraftForPopup();
+          }
+          setShowDraftPopout(!showDraftPopout);
+        }}
+        className="floating-draft-button"
+        title="Quick Draft"
+      >
+        <img 
+          src="/icons/learn-hub-book.svg" 
+          alt="Quick Draft" 
+        />
+      </button>
     </div>
   );
 }

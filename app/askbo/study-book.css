@@ -79,7 +79,7 @@ body {
 
 .sidebar {
   position: fixed;
-  top: 80px;
+  top: calc(80px + 15vh);
   left: 20px;
   width: 200px;
   background: #F4F3FF;
@@ -993,6 +993,45 @@ body {
 
 .form-actions button:not(.primary):hover {
   background: var(--bg-gray);
+}
+
+/* =============================================================================
+   FLOATING DRAFT BUTTON
+   ============================================================================= */
+
+.floating-draft-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: #F4F3FF;
+  border: 2px solid #E5E3FF;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.floating-draft-button:hover {
+  background: #E5E3FF;
+  border-color: #4338CA;
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.floating-draft-button img {
+  width: 32px;
+  height: 32px;
+  filter: opacity(0.8);
+}
+
+.floating-draft-button:hover img {
+  filter: opacity(1);
 }
 
 /* =============================================================================
