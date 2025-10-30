@@ -422,8 +422,8 @@ body {
 }
 
 .chat-container {
-  width: calc(100% - 240px);
-  max-width: 1200px;
+  width: calc(90% - 240px);
+  max-width: 1080px;
   margin-left: 240px;
   margin-right: auto;
   padding: 0 40px;
@@ -489,8 +489,8 @@ body {
   bottom: 0;
   left: 240px;
   right: 0;
-  width: calc(100% - 240px);
-  max-width: 1200px;
+  width: calc(90% - 240px);
+  max-width: 1080px;
   background: var(--bg-white);
   border-top: 1px solid var(--border);
   padding: var(--space-24) 40px;
@@ -1048,11 +1048,11 @@ body {
   }
   
   .chat-container {
-    max-width: 95%;
+    max-width: 85%;
   }
   
   .chat-input-fixed {
-    width: 95%;
+    width: 85%;
   }
   
   .sidebar {

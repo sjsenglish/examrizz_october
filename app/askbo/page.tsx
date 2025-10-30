@@ -83,6 +83,10 @@ export default function StudyBookPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+  
+  // Teacher help state
+  const [isCreatingTicket, setIsCreatingTicket] = useState(false);
+  const [ticketResult, setTicketResult] = useState<{success: boolean, message: string, ticketId?: string} | null>(null);
 
   // Draft workspace state
   const [draftContents, setDraftContents] = useState<{[key: number]: string}>({
@@ -171,6 +175,16 @@ export default function StudyBookPage() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  // Auto-hide success ticket results after 10 seconds
+  useEffect(() => {
+    if (ticketResult?.success) {
+      const timer = setTimeout(() => {
+        setTicketResult(null);
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [ticketResult]);
 
   const loadConversationHistory = async (currentUserId: string) => {
     try {
@@ -557,6 +571,116 @@ export default function StudyBookPage() {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
+    }
+  };
+
+  const checkDiscordAuth = async () => {
+    // Check if user has Discord linked in their Supabase auth
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return false;
+
+    // Check if user has Discord identity linked
+    const discordIdentity = user.identities?.find(identity => identity.provider === 'discord');
+    return !!discordIdentity;
+  };
+
+  const handleAskTeacher = async () => {
+    try {
+      setIsCreatingTicket(true);
+      setTicketResult(null);
+
+      // Check if user is authenticated
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setTicketResult({
+          success: false,
+          message: 'Please log in to create a teacher help request.'
+        });
+        return;
+      }
+
+      // Check if user has Discord authentication
+      const hasDiscordAuth = await checkDiscordAuth();
+      if (!hasDiscordAuth) {
+        // Redirect to Discord OAuth
+        const { data, error } = await supabase.auth.signInWithOAuth({
+          provider: 'discord',
+          options: {
+            redirectTo: `${window.location.origin}/askbo`,
+            queryParams: {
+              prompt: 'consent'
+            }
+          }
+        });
+
+        if (error) {
+          setTicketResult({
+            success: false,
+            message: 'Failed to connect Discord. Please try again.'
+          });
+        } else {
+          setTicketResult({
+            success: false,
+            message: 'Please complete Discord authentication to create a teacher help request.'
+          });
+        }
+        return;
+      }
+
+      // Check if there are enough messages for context
+      if (messages.length === 0) {
+        setTicketResult({
+          success: false,
+          message: 'Please have a conversation with Bo first before requesting teacher help.'
+        });
+        return;
+      }
+
+      // Extract last 5 messages for context
+      const recentMessages = messages.slice(-5);
+      const conversationContext = recentMessages.map(msg => 
+        `**${msg.role.toUpperCase()}**: ${msg.content}`
+      ).join('\n\n');
+
+      // Generate unique ticket ID
+      const ticketId = `TEACH-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+      // Create ticket via API
+      const response = await fetch('/api/discord-webhook', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: conversationContext,
+          ticketId: ticketId,
+          userEmail: user.email
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setTicketResult({
+          success: true,
+          message: `Teacher help request created successfully! Ticket ID: ${result.ticketId}`,
+          ticketId: result.ticketId
+        });
+      } else {
+        setTicketResult({
+          success: false,
+          message: result.error || 'Failed to create teacher help request. Please try again.'
+        });
+      }
+
+    } catch (error) {
+      console.error('Error creating teacher ticket:', error);
+      setTicketResult({
+        success: false,
+        message: 'An unexpected error occurred. Please try again.'
+      });
+    } finally {
+      setIsCreatingTicket(false);
     }
   };
 
@@ -966,6 +1090,42 @@ export default function StudyBookPage() {
                 )}
               </div>
 
+              {/* Teacher Ticket Feedback */}
+              {ticketResult && (
+                <div style={{
+                  margin: '16px 40px',
+                  padding: '12px 16px',
+                  borderRadius: '8px',
+                  backgroundColor: ticketResult.success ? '#D1FAE5' : '#FEE2E2',
+                  border: `1px solid ${ticketResult.success ? '#10B981' : '#EF4444'}`,
+                  color: ticketResult.success ? '#065F46' : '#B91C1C',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}>
+                  <div>
+                    <strong>{ticketResult.success ? '✅ Success!' : '❌ Error'}</strong>
+                    <br />
+                    {ticketResult.message}
+                  </div>
+                  <button
+                    onClick={() => setTicketResult(null)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      fontSize: '18px',
+                      cursor: 'pointer',
+                      color: 'inherit',
+                      marginLeft: '16px'
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+
               <div className="chat-input-fixed">
                 <div className="input-container">
                   <textarea
@@ -978,10 +1138,15 @@ export default function StudyBookPage() {
                   />
                   <div className="button-group">
                     <button 
-                      onClick={() => {/* TODO: Add teacher functionality */}}
+                      onClick={handleAskTeacher}
+                      disabled={isCreatingTicket}
                       className="ask-teacher-btn"
+                      style={{
+                        opacity: isCreatingTicket ? 0.6 : 1,
+                        cursor: isCreatingTicket ? 'not-allowed' : 'pointer'
+                      }}
                     >
-                      Ask a teacher
+                      {isCreatingTicket ? 'Creating Ticket...' : 'Ask a teacher'}
                     </button>
                     <button 
                       onClick={sendMessage}
@@ -1465,24 +1630,6 @@ export default function StudyBookPage() {
                   }}
                 >
                   Save Draft
-                </button>
-                <button 
-                  onClick={() => {
-                    setShowDraftPopout(false);
-                    setActiveTab('drafts');
-                  }}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: '#D3F6F7',
-                    color: '#000000',
-                    border: '1px solid #00CED1',
-                    borderRadius: '6px',
-                    fontFamily: "'Figtree', sans-serif",
-                    fontSize: '12px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Open Full Editor
                 </button>
               </div>
             </div>
