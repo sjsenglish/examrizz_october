@@ -6,7 +6,13 @@ import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import { getUserPracticePacks } from '../../lib/supabaseQuestionPacks';
 import { getAllSubjects, getAvailableSubjects } from '../../lib/subjectConfig';
+import { createClient } from '@supabase/supabase-js';
 import './practice.css';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 /**
  * MAIN PRACTICE PAGE - Question Pack Management
@@ -30,10 +36,91 @@ export default function PracticePage() {
   const [showAdmissionDropdown, setShowAdmissionDropdown] = useState(false);
   const [questionPacks, setQuestionPacks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [savedPackIds, setSavedPackIds] = useState<Set<string>>(new Set());
+  const [savingPack, setSavingPack] = useState<string | null>(null);
 
   // Available subjects for admissions dropdown
   const availableSubjects = getAvailableSubjects(); // This will include TSA
   const allSubjects = getAllSubjects(); // For A Level dropdown
+
+  // Load saved packs for current user
+  const loadSavedPacks = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: savedPacks, error } = await supabase
+        .from('saved_question_packs')
+        .select('pack_id')
+        .eq('user_id', user.id);
+
+      if (error) {
+        console.error('Error loading saved packs:', error);
+        return;
+      }
+
+      const savedIds = new Set(savedPacks.map(sp => sp.pack_id));
+      setSavedPackIds(savedIds);
+    } catch (error) {
+      console.error('Error loading saved packs:', error);
+    }
+  };
+
+  // Toggle save state for a pack
+  const toggleSavePack = async (packId: string) => {
+    try {
+      setSavingPack(packId);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        alert('Please log in to save packs');
+        return;
+      }
+
+      const isSaved = savedPackIds.has(packId);
+
+      if (isSaved) {
+        // Unsave the pack
+        const { error } = await supabase
+          .from('saved_question_packs')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('pack_id', packId);
+
+        if (error) {
+          console.error('Error unsaving pack:', error);
+          alert('Failed to unsave pack');
+          return;
+        }
+
+        const newSavedIds = new Set(savedPackIds);
+        newSavedIds.delete(packId);
+        setSavedPackIds(newSavedIds);
+      } else {
+        // Save the pack
+        const { error } = await supabase
+          .from('saved_question_packs')
+          .insert({
+            user_id: user.id,
+            pack_id: packId
+          });
+
+        if (error) {
+          console.error('Error saving pack:', error);
+          alert('Failed to save pack');
+          return;
+        }
+
+        const newSavedIds = new Set(savedPackIds);
+        newSavedIds.add(packId);
+        setSavedPackIds(newSavedIds);
+      }
+    } catch (error) {
+      console.error('Error toggling save state:', error);
+      alert('An error occurred');
+    } finally {
+      setSavingPack(null);
+    }
+  };
 
   // Fetch question packs from Supabase
   useEffect(() => {
@@ -46,6 +133,9 @@ export default function PracticePage() {
           console.error('Failed to fetch packs:', result.error);
           setQuestionPacks([] as any[]);
         }
+        
+        // Load saved packs
+        await loadSavedPacks();
       } catch (error) {
         console.error('Error fetching packs:', error);
         setQuestionPacks([] as any[]);
@@ -65,8 +155,7 @@ export default function PracticePage() {
       } else if (category === 'Admissions') {
         return availableSubjects.includes(pack.subject || '');
       } else if (category === 'Saved') {
-        // For now, show all packs as saved - this can be enhanced with favorites functionality
-        return true;
+        return savedPackIds.has(pack.id);
       }
       return false;
     });
@@ -484,7 +573,7 @@ export default function PracticePage() {
                 position: 'relative',
                 marginBottom: '60px'
               }}>
-                {/* Share and Send options above each pack */}
+                {/* Share, Send, and Save options above each pack */}
                 <div style={{
                   position: 'absolute',
                   top: '-40px',
@@ -495,6 +584,29 @@ export default function PracticePage() {
                   alignItems: 'center',
                   zIndex: 10
                 }}>
+                  {/* Bookmark/Save icon */}
+                  <div
+                    onClick={() => toggleSavePack(pack.id)}
+                    style={{
+                      cursor: savingPack === pack.id ? 'not-allowed' : 'pointer',
+                      transition: 'transform 0.2s',
+                      opacity: savingPack === pack.id ? 0.6 : 1
+                    }}
+                    onMouseEnter={(e) => {
+                      if (savingPack !== pack.id) {
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  >
+                    {savedPackIds.has(pack.id) ? (
+                      <span style={{ fontSize: '20px', color: '#FFA500' }}>🔖</span>
+                    ) : (
+                      <span style={{ fontSize: '20px', color: '#CCCCCC' }}>🔖</span>
+                    )}
+                  </div>
                   <Image 
                     src="/icons/share-question-pack.svg"
                     alt="Share question pack"
@@ -560,7 +672,11 @@ export default function PracticePage() {
                     justifyContent: 'space-between',
                     alignItems: 'center'
                   }}>
-                    <div>
+                    <div style={{
+                      position: 'relative',
+                      left: '10px',
+                      top: '-5px'
+                    }}>
                       <div style={{
                         fontFamily: "'Madimi One', sans-serif",
                         fontSize: '16px',
@@ -584,8 +700,8 @@ export default function PracticePage() {
                       gap: '8px',
                       alignItems: 'center',
                       position: 'relative',
-                      top: '15%',
-                      left: '-10%'
+                      top: '25%',
+                      left: '-5%'
                     }}>
                       <Link 
                         href={`/view-pack/${pack.id}`}
@@ -689,7 +805,7 @@ export default function PracticePage() {
                 position: 'relative',
                 marginBottom: '60px'
               }}>
-                {/* Share and Send options above each pack */}
+                {/* Share, Send, and Save options above each pack */}
                 <div style={{
                   position: 'absolute',
                   top: '-40px',
@@ -700,6 +816,29 @@ export default function PracticePage() {
                   alignItems: 'center',
                   zIndex: 10
                 }}>
+                  {/* Bookmark/Save icon */}
+                  <div
+                    onClick={() => toggleSavePack(pack.id)}
+                    style={{
+                      cursor: savingPack === pack.id ? 'not-allowed' : 'pointer',
+                      transition: 'transform 0.2s',
+                      opacity: savingPack === pack.id ? 0.6 : 1
+                    }}
+                    onMouseEnter={(e) => {
+                      if (savingPack !== pack.id) {
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  >
+                    {savedPackIds.has(pack.id) ? (
+                      <span style={{ fontSize: '20px', color: '#FFA500' }}>🔖</span>
+                    ) : (
+                      <span style={{ fontSize: '20px', color: '#CCCCCC' }}>🔖</span>
+                    )}
+                  </div>
                   <Image 
                     src="/icons/share-question-pack.svg"
                     alt="Share question pack"
@@ -765,7 +904,11 @@ export default function PracticePage() {
                     justifyContent: 'space-between',
                     alignItems: 'center'
                   }}>
-                    <div>
+                    <div style={{
+                      position: 'relative',
+                      left: '10px',
+                      top: '-5px'
+                    }}>
                       <div style={{
                         fontFamily: "'Madimi One', sans-serif",
                         fontSize: '16px',
@@ -789,8 +932,8 @@ export default function PracticePage() {
                       gap: '8px',
                       alignItems: 'center',
                       position: 'relative',
-                      top: '15%',
-                      left: '-10%'
+                      top: '25%',
+                      left: '-5%'
                     }}>
                       <Link 
                         href={`/view-pack/${pack.id}`}
