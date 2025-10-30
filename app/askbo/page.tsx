@@ -1035,33 +1035,6 @@ export default function StudyBookPage() {
                       Ask a teacher
                     </button>
                     <button 
-                      onClick={() => {
-                        if (currentMessage.trim()) {
-                          setDraftToSave(currentMessage);
-                          setShowSaveDraftModal(true);
-                        }
-                      }}
-                      disabled={!currentMessage.trim()}
-                      style={{
-                        padding: 'var(--space-16) var(--space-24)',
-                        background: '#E7E6FF',
-                        color: '#4338CA',
-                        border: '1px solid #4338CA',
-                        borderRadius: 'var(--border-radius-sm)',
-                        fontFamily: 'var(--font-body)',
-                        fontSize: '14px',
-                        fontWeight: '600',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease',
-                        height: 'fit-content',
-                        minWidth: '120px',
-                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                        marginBottom: 'var(--space-8)'
-                      }}
-                    >
-                      Save as Draft
-                    </button>
-                    <button 
                       onClick={sendMessage}
                       disabled={isLoading || !currentMessage.trim()}
                       className="send-btn"
