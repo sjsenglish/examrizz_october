@@ -610,42 +610,23 @@ export default function StudyBookPage() {
         Back
       </Link>
 
-      {/* Sidebar */}
-      <div className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
-        <div className="sidebar-header">
-          <h3>Navigation</h3>
-          <button 
-            className="close-sidebar"
-            onClick={() => setSidebarOpen(false)}
-          >
-            ×
-          </button>
-        </div>
+      {/* Sidebar - Always Visible */}
+      <div className="sidebar open">
         <div className="sidebar-nav">
           <button 
             className={`nav-item ${activeTab === 'materials' ? 'active' : ''}`}
-            onClick={() => { setActiveTab('materials'); setSidebarOpen(false); }}
+            onClick={() => setActiveTab('materials')}
           >
-            📚 Study Materials
+            Study Materials
           </button>
           <button 
             className={`nav-item ${activeTab === 'chat' ? 'active' : ''}`}
-            onClick={() => { setActiveTab('chat'); setSidebarOpen(false); }}
+            onClick={() => setActiveTab('chat')}
           >
-            💬 Ask Bo
+            Ask Bo
           </button>
         </div>
       </div>
-
-      {/* Sidebar Toggle */}
-      <button 
-        className="sidebar-toggle"
-        onClick={() => setSidebarOpen(true)}
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        </svg>
-      </button>
 
       {/* User Actions */}
       <div style={{ position: 'absolute', top: '90px', right: '45px', zIndex: 20 }}>
@@ -764,13 +745,21 @@ export default function StudyBookPage() {
                     disabled={isLoading}
                     rows={3}
                   />
-                  <button 
-                    onClick={sendMessage}
-                    disabled={isLoading || !currentMessage.trim()}
-                    className="send-btn"
-                  >
-                    {isLoading ? 'Sending...' : 'Send'}
-                  </button>
+                  <div className="button-group">
+                    <button 
+                      onClick={() => {/* TODO: Add teacher functionality */}}
+                      className="ask-teacher-btn"
+                    >
+                      Ask a teacher
+                    </button>
+                    <button 
+                      onClick={sendMessage}
+                      disabled={isLoading || !currentMessage.trim()}
+                      className="send-btn"
+                    >
+                      {isLoading ? 'Sending...' : 'Send'}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

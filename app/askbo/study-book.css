@@ -79,18 +79,18 @@ body {
 
 .sidebar {
   position: fixed;
-  top: 60px;
-  left: 0;
-  width: var(--sidebar-width);
-  height: calc(100vh - 60px);
-  background: var(--bg-white);
-  border-right: 1px solid var(--border);
+  top: 80px;
+  left: 20px;
+  width: 280px;
+  background: #F4F3FF;
+  border-radius: 16px;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
   z-index: 90;
   display: flex;
   flex-direction: column;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+  padding: 20px;
 }
 
 .sidebar.open {
@@ -133,26 +133,29 @@ body {
 }
 
 .nav-item {
-  background: none;
-  border: none;
-  padding: var(--space-16);
+  background: #FAF9FF;
+  border: 1px solid #E5E5E5;
+  border-radius: 0;
+  padding: 16px;
   text-align: left;
-  font-family: var(--font-body);
+  font-family: 'Madimi One', cursive;
   font-size: 16px;
-  font-weight: 500;
-  color: var(--text-primary);
+  font-weight: 400;
+  color: #333333;
   cursor: pointer;
-  border-radius: var(--border-radius-sm);
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
+  margin-bottom: 8px;
 }
 
 .nav-item:hover {
-  background: var(--bg-gray);
+  background: #F0EFFF;
+  border-color: #C4C4FF;
 }
 
 .nav-item.active {
-  background: var(--primary);
-  color: white;
+  background: #E5E3FF;
+  color: #4338CA;
+  border-color: #4338CA;
 }
 
 .sidebar-toggle {
@@ -500,25 +503,27 @@ body {
 .input-container textarea {
   flex: 1;
   resize: none;
-  border: 1px solid var(--border);
+  border: 1px solid #00CED1;
   border-radius: var(--border-radius-sm);
   padding: var(--space-16);
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.5;
   min-height: var(--input-height);
+  background: #D3F6F7;
 }
 
 .input-container textarea:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: #00CED1;
+  box-shadow: 0 0 0 2px rgba(0, 206, 209, 0.2);
 }
 
 .send-btn {
-  padding: var(--space-16) var(--space-24);
-  background: var(--primary);
-  color: white;
-  border: none;
+  padding: var(--space-12) var(--space-16);
+  background: #B3F0F2;
+  color: #000000;
+  border: 1px solid #00CED1;
   border-radius: var(--border-radius-sm);
   font-family: var(--font-body);
   font-size: 14px;
@@ -526,15 +531,44 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   height: fit-content;
+  min-width: 80px;
 }
 
 .send-btn:hover:not(:disabled) {
-  background: #4338CA;
+  background: #9AEBED;
+  border-color: #00B8C1;
 }
 
 .send-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.ask-teacher-btn {
+  padding: var(--space-12) var(--space-16);
+  background: #B3F0F2;
+  color: #000000;
+  border: 1px solid #00CED1;
+  border-radius: var(--border-radius-sm);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: fit-content;
+  min-width: 120px;
+  margin-bottom: var(--space-8);
+}
+
+.ask-teacher-btn:hover {
+  background: #9AEBED;
+  border-color: #00B8C1;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
 }
 
 /* =============================================================================
