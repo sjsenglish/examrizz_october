@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@supabase/supabase-js';
 import { InstantSearch, useSearchBox, Hits, useStats, Configure } from 'react-instantsearch';
 import { searchClient, INDEX_NAME } from '../../lib/algolia';
 import { SettingsButton } from '../SettingsButton';
@@ -13,6 +15,11 @@ import { FilterBox } from './FilterBox';
 import '../../styles/globals.css';
 import '../../styles/pages/exam-search.css';
 import './ExamSearch.css';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 const SearchBar: React.FC = () => {
   const { query, refine } = useSearchBox();
@@ -35,6 +42,7 @@ const ResultsCount: React.FC = () => {
 };
 
 const ExamSearch: React.FC = () => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('');
   const [selectedAdmissionsTest, setSelectedAdmissionsTest] = useState('');
@@ -42,6 +50,36 @@ const ExamSearch: React.FC = () => {
   const [showAdmissionsDropdown, setShowAdmissionsDropdown] = useState(false);
   const [showFilters, setShowFilters] = useState(true);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Check if user is logged in
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsLoggedIn(!!session);
+      setUserEmail(session?.user?.email || null);
+    };
+
+    checkAuth();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session);
+      setUserEmail(session?.user?.email || null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push('/');
+  };
+
+  const handleLogin = () => {
+    router.push('/login');
+  };
 
   const aLevelSubjects = ['Maths', 'Physics', 'English Lit', 'Biology', 'Chemistry'];
   const admissionsTests = ['BMAT', 'TSA', 'Interview'];
@@ -81,26 +119,79 @@ const ExamSearch: React.FC = () => {
               cursor: 'pointer'
             }}>examrizzsearch</h1>
           </Link>
-          <div style={{ position: 'relative' }}>
-            <button 
-              className="hamburger-button" 
-              onClick={() => setShowDropdown(!showDropdown)}
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '8px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '4px'
-              }}
-            >
-              <div style={{ width: '20px', height: '2px', backgroundColor: '#000', borderRadius: '1px' }}></div>
-              <div style={{ width: '20px', height: '2px', backgroundColor: '#000', borderRadius: '1px' }}></div>
-              <div style={{ width: '20px', height: '2px', backgroundColor: '#000', borderRadius: '1px' }}></div>
-            </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            {/* Login/Logout Button */}
+            {isLoggedIn ? (
+              <button 
+                onClick={handleLogout}
+                style={{
+                  background: '#E7E6FF',
+                  border: '1px solid #4338CA',
+                  borderRadius: '20px',
+                  padding: '8px 16px',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '13px',
+                  fontWeight: '500',
+                  color: '#4338CA',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#DDD6FE';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#E7E6FF';
+                }}
+              >
+                Logout
+              </button>
+            ) : (
+              <button 
+                onClick={handleLogin}
+                style={{
+                  background: '#4338CA',
+                  border: '1px solid #4338CA',
+                  borderRadius: '20px',
+                  padding: '8px 16px',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '13px',
+                  fontWeight: '500',
+                  color: '#FFFFFF',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#3730A3';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#4338CA';
+                }}
+              >
+                Login
+              </button>
+            )}
             
-            {showDropdown && (
+            {/* Menu Button */}
+            <div style={{ position: 'relative' }}>
+              <button 
+                className="hamburger-button" 
+                onClick={() => setShowDropdown(!showDropdown)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px'
+                }}
+              >
+                <div style={{ width: '20px', height: '2px', backgroundColor: '#000', borderRadius: '1px' }}></div>
+                <div style={{ width: '20px', height: '2px', backgroundColor: '#000', borderRadius: '1px' }}></div>
+                <div style={{ width: '20px', height: '2px', backgroundColor: '#000', borderRadius: '1px' }}></div>
+              </button>
+              
+              {showDropdown && (
               <div style={{
                 position: 'absolute',
                 top: '100%',
@@ -185,6 +276,7 @@ const ExamSearch: React.FC = () => {
                 </Link>
               </div>
             )}
+            </div>
           </div>
         </nav>
 

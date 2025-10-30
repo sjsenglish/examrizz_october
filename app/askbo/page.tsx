@@ -964,8 +964,8 @@ export default function StudyBookPage() {
       <Link 
         href="/" 
         style={{
-          position: 'absolute',
-          top: '20px',
+          position: 'fixed',
+          top: '80px',
           left: '20px',
           display: 'flex',
           alignItems: 'center',
@@ -979,7 +979,8 @@ export default function StudyBookPage() {
           fontSize: '13px',
           border: '1px solid #ddd',
           transition: 'all 0.3s ease',
-          zIndex: 100
+          zIndex: 100,
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
         }}
       >
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
