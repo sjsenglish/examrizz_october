@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -59,14 +60,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#FFFFFF',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '20px'
-    }}>
+    <>
+      <Navbar />
+      <div style={{
+        minHeight: '100vh',
+        background: '#FFFFFF',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px',
+        paddingTop: '80px'
+      }}>
       {/* Login Modal */}
       <div style={{
         background: '#FFFFFF',
@@ -162,6 +166,27 @@ export default function LoginPage() {
               }}
             />
           </div>
+
+          {/* Login Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            style={{
+              width: '100%',
+              padding: '12px 16px',
+              background: loading ? '#9CA3AF' : '#4338CA',
+              color: '#FFFFFF',
+              border: 'none',
+              borderRadius: '6px',
+              fontFamily: "'Figtree', sans-serif",
+              fontSize: '16px',
+              fontWeight: '600',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              marginBottom: '24px'
+            }}
+          >
+            {loading ? 'Signing In...' : 'Log In'}
+          </button>
 
           {/* Or divider */}
           <div style={{
@@ -276,5 +301,6 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

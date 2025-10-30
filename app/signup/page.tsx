@@ -95,7 +95,7 @@ export default function SignupPage() {
         const { error: profileError } = await supabase
           .from('user_profiles')
           .insert({
-            user_id: data.user.id,
+            id: data.user.id,
             email: data.user.email,
             full_name: fullName,
             username: username,
@@ -105,6 +105,50 @@ export default function SignupPage() {
 
         if (profileError) {
           console.error('Profile creation error:', profileError);
+          setError('Failed to create profile: ' + profileError.message);
+          return;
+        }
+
+        // Store GCSE grades if any
+        if (gcseSubjects.length > 0) {
+          const gcseGrades = gcseSubjects
+            .filter(g => g.subject && g.grade)
+            .map(g => ({
+              user_id: data.user.id,
+              subject: g.subject,
+              grade: g.grade
+            }));
+
+          if (gcseGrades.length > 0) {
+            const { error: gcseError } = await supabase
+              .from('user_gcse_grades')
+              .insert(gcseGrades);
+
+            if (gcseError) {
+              console.error('GCSE grades error:', gcseError);
+            }
+          }
+        }
+
+        // Store A Level grades if any
+        if (aLevelSubjects.length > 0) {
+          const aLevelGrades = aLevelSubjects
+            .filter(g => g.subject && g.grade)
+            .map(g => ({
+              user_id: data.user.id,
+              subject: g.subject,
+              grade: g.grade
+            }));
+
+          if (aLevelGrades.length > 0) {
+            const { error: aLevelError } = await supabase
+              .from('user_alevel_grades')
+              .insert(aLevelGrades);
+
+            if (aLevelError) {
+              console.error('A Level grades error:', aLevelError);
+            }
+          }
         }
 
         router.push('/');
@@ -157,8 +201,8 @@ export default function SignupPage() {
                 width: '40px',
                 height: '40px',
                 borderRadius: '50%',
-                background: '#7DD3FC',
-                color: '#FFFFFF',
+                background: '#E7E6FF',
+                color: '#4338CA',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -328,14 +372,14 @@ export default function SignupPage() {
             {/* Interview Practice */}
             <div style={{
               background: '#E0F7FA',
-              borderRadius: '16px',
-              padding: '40px 30px',
+              borderRadius: '12px',
+              padding: '25px 20px',
               textAlign: 'center'
             }}>
               <div style={{
-                width: '80px',
-                height: '80px',
-                margin: '0 auto 20px',
+                width: '60px',
+                height: '60px',
+                margin: '0 auto 15px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
@@ -352,19 +396,19 @@ export default function SignupPage() {
               </div>
               <h3 style={{
                 fontFamily: "'Figtree', sans-serif",
-                fontSize: '20px',
+                fontSize: '16px',
                 fontWeight: '700',
                 color: '#000000',
-                margin: '0 0 10px 0'
+                margin: '0 0 8px 0'
               }}>
                 Interview Practice<br />& PS Reviews
               </h3>
               <p style={{
                 fontFamily: "'Figtree', sans-serif",
-                fontSize: '14px',
+                fontSize: '12px',
                 color: '#666666',
                 margin: '0',
-                lineHeight: '1.5'
+                lineHeight: '1.4'
               }}>
                 Submit video/audio answers to our interview question bank or submit your personal statement for teacher feedback.
               </p>
@@ -373,14 +417,14 @@ export default function SignupPage() {
             {/* Live Workshops */}
             <div style={{
               background: '#E0F7FA',
-              borderRadius: '16px',
-              padding: '40px 30px',
+              borderRadius: '12px',
+              padding: '25px 20px',
               textAlign: 'center'
             }}>
               <div style={{
-                width: '80px',
-                height: '80px',
-                margin: '0 auto 20px',
+                width: '60px',
+                height: '60px',
+                margin: '0 auto 15px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
@@ -397,19 +441,19 @@ export default function SignupPage() {
               </div>
               <h3 style={{
                 fontFamily: "'Figtree', sans-serif",
-                fontSize: '20px',
+                fontSize: '16px',
                 fontWeight: '700',
                 color: '#000000',
-                margin: '0 0 10px 0'
+                margin: '0 0 8px 0'
               }}>
                 Live Workshops &<br />PS Reviews
               </h3>
               <p style={{
                 fontFamily: "'Figtree', sans-serif",
-                fontSize: '14px',
+                fontSize: '12px',
                 color: '#666666',
                 margin: '0',
-                lineHeight: '1.5'
+                lineHeight: '1.4'
               }}>
                 Join workshops for applications and subject prep.
               </p>
@@ -736,11 +780,11 @@ export default function SignupPage() {
                     onChange={(e) => updateALevelSubject(index, 'subject', e.target.value)}
                     style={{
                       flex: '1',
-                      padding: '12px',
+                      padding: '8px',
                       border: '1px solid #D1D5DB',
                       borderRadius: '6px',
                       background: '#FFFFFF',
-                      fontSize: '16px'
+                      fontSize: '14px'
                     }}
                   >
                     <option value="">Select Subject</option>
@@ -754,12 +798,12 @@ export default function SignupPage() {
                     value={subject.grade}
                     onChange={(e) => updateALevelSubject(index, 'grade', e.target.value)}
                     style={{
-                      width: '100px',
-                      padding: '12px',
+                      width: '80px',
+                      padding: '8px',
                       border: '1px solid #D1D5DB',
                       borderRadius: '6px',
                       background: '#FFFFFF',
-                      fontSize: '16px'
+                      fontSize: '14px'
                     }}
                   >
                     <option value="">Grade</option>
@@ -777,11 +821,11 @@ export default function SignupPage() {
                 onClick={addALevelSubject}
                 style={{
                   width: '100%',
-                  padding: '12px',
+                  padding: '8px',
                   background: '#FFFFFF',
                   border: '2px dashed #D1D5DB',
                   borderRadius: '6px',
-                  fontSize: '16px',
+                  fontSize: '14px',
                   color: '#666666',
                   cursor: 'pointer'
                 }}
@@ -796,10 +840,10 @@ export default function SignupPage() {
         <div>
           <h2 style={{
             fontFamily: "'Figtree', sans-serif",
-            fontSize: '32px',
+            fontSize: '24px',
             fontWeight: '700',
             color: '#000000',
-            margin: '0 0 30px 0'
+            margin: '0 0 20px 0'
           }}>
             Login Setup
           </h2>
@@ -974,30 +1018,33 @@ export default function SignupPage() {
             </div>
           )}
 
-          {/* Confirm button */}
+          {/* Confirm button - positioned bottom right */}
           <button
             onClick={handleSignup}
             disabled={loading}
             style={{
-              padding: '16px 40px',
-              background: loading ? '#9CA3AF' : '#7DD3FC',
-              color: '#FFFFFF',
-              border: 'none',
+              position: 'absolute',
+              bottom: '20px',
+              right: '40px',
+              padding: '12px 30px',
+              background: loading ? '#9CA3AF' : '#E7E6FF',
+              color: loading ? '#FFFFFF' : '#4338CA',
+              border: loading ? 'none' : '1px solid #4338CA',
               borderRadius: '8px',
-              fontSize: '18px',
+              fontSize: '16px',
               fontWeight: '600',
               cursor: loading ? 'not-allowed' : 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '10px',
-              float: 'right'
+              gap: '8px'
             }}
           >
-            <span style={{ fontSize: '20px' }}>✓</span>
+            <span style={{ fontSize: '18px' }}>✓</span>
             {loading ? 'Creating...' : 'Confirm'}
           </button>
         </div>
       </div>
     </div>
+    </>
   );
 }
