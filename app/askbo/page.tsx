@@ -19,6 +19,10 @@ interface DraftVersion {
   content: string;
   word_count: number;
   created_at: string;
+  updated_at: string;
+  title?: string;
+  last_edited?: string;
+  is_current: boolean;
 }
 
 export default function StudyBookPage() {
@@ -31,6 +35,10 @@ export default function StudyBookPage() {
   const [showDraftPopout, setShowDraftPopout] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const categoryDropdownRef = useRef<HTMLDivElement>(null);
+  const [showSaveDraftModal, setShowSaveDraftModal] = useState(false);
+  const [draftToSave, setDraftToSave] = useState('');
+  const [currentPopupDraft, setCurrentPopupDraft] = useState<DraftVersion | null>(null);
+  const [popupDraftContent, setPopupDraftContent] = useState('');
 
   // Materials state
   const [uploadedFiles, setUploadedFiles] = useState<{id: string, file_name: string, file_type: string, file_path: string, created_at: string}[]>([]);
@@ -72,6 +80,7 @@ export default function StudyBookPage() {
     2: [],
     3: []
   });
+  const [allUserDrafts, setAllUserDrafts] = useState<DraftVersion[]>([]);
   const [savingDraft, setSavingDraft] = useState<{[key: number]: boolean}>({});
   const [expandedSections, setExpandedSections] = useState<{[key: number]: boolean}>({
     1: true,
@@ -80,17 +89,21 @@ export default function StudyBookPage() {
   });
   const [showVersionHistory, setShowVersionHistory] = useState<{question: number, show: boolean}>({ question: 0, show: false });
 
-  // Categories for materials
+  // Categories for materials with real counts
+  const getCategoryCount = (categoryId: string) => {
+    return uploadedFiles.filter(file => file.category === categoryId).length;
+  };
+
   const categories = [
-    { id: 'books', label: 'Books', icon: '/icons/books.svg', count: 0 },
-    { id: 'essays', label: 'Essays', icon: '/icons/essays.svg', count: 0 },
-    { id: 'moocs', label: 'MOOCs', icon: '/icons/moocs.svg', count: 0 },
-    { id: 'lectures', label: 'Lectures', icon: '/icons/lectures.svg', count: 0 },
-    { id: 'textbooks', label: 'Textbooks', icon: '/icons/textbooks.svg', count: 0 },
-    { id: 'societies', label: 'Societies', icon: '/icons/societies.svg', count: 0 },
-    { id: 'challenges', label: 'Challenges', icon: '/icons/academic-challenges.svg', count: 0 },
-    { id: 'internships', label: 'Internships', icon: '/icons/internships.svg', count: 0 },
-    { id: 'academic-papers', label: 'Academic Papers', icon: '/icons/academic-paper.svg', count: 0 }
+    { id: 'books', label: 'Books', icon: '/icons/books.svg', count: getCategoryCount('books') },
+    { id: 'essays', label: 'Essays', icon: '/icons/essays.svg', count: getCategoryCount('essays') },
+    { id: 'moocs', label: 'MOOCs', icon: '/icons/moocs.svg', count: getCategoryCount('moocs') },
+    { id: 'lectures', label: 'Lectures', icon: '/icons/lectures.svg', count: getCategoryCount('lectures') },
+    { id: 'textbooks', label: 'Textbooks', icon: '/icons/textbooks.svg', count: getCategoryCount('textbooks') },
+    { id: 'societies', label: 'Societies', icon: '/icons/societies.svg', count: getCategoryCount('societies') },
+    { id: 'challenges', label: 'Challenges', icon: '/icons/academic-challenges.svg', count: getCategoryCount('challenges') },
+    { id: 'internships', label: 'Internships', icon: '/icons/internships.svg', count: getCategoryCount('internships') },
+    { id: 'academic-papers', label: 'Academic Papers', icon: '/icons/academic-paper.svg', count: getCategoryCount('academic-papers') }
   ];
 
   // Auth protection - check if user is logged in
@@ -122,6 +135,7 @@ export default function StudyBookPage() {
         loadConversationHistory(profile.id);
         loadUploadedFiles();
         loadDraftVersions(profile.id);
+        loadAllUserDrafts();
       } else {
         console.error('No user profile found for user:', user.id);
       }
@@ -210,6 +224,224 @@ export default function StudyBookPage() {
     } catch (error) {
       console.error('Error loading draft versions:', error);
     }
+  };
+
+  const loadAllUserDrafts = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Load all drafts for the drafts page, grouped by latest version
+      const { data: drafts, error } = await supabase
+        .from('draft_versions')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('is_current', true)
+        .order('last_edited', { ascending: false });
+
+      if (error) {
+        console.error('Error loading all user drafts:', error);
+        return;
+      }
+
+      setAllUserDrafts(drafts || []);
+    } catch (error) {
+      console.error('Error loading all user drafts:', error);
+    }
+  };
+
+  const saveDraftFromChat = async (title: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user || !draftToSave.trim()) return;
+
+      // Get the next version number for new drafts
+      const { data: existingDrafts } = await supabase
+        .from('draft_versions')
+        .select('version_number')
+        .eq('user_id', user.id)
+        .order('version_number', { ascending: false })
+        .limit(1);
+
+      const nextVersionNumber = existingDrafts && existingDrafts.length > 0 
+        ? existingDrafts[0].version_number + 1 
+        : 1;
+
+      // Mark all existing drafts as not current
+      await supabase
+        .from('draft_versions')
+        .update({ is_current: false })
+        .eq('user_id', user.id);
+
+      // Save new draft
+      const { data, error } = await supabase
+        .from('draft_versions')
+        .insert({
+          user_id: user.id,
+          question_number: 1, // Default to question 1 for chat drafts
+          version_number: nextVersionNumber,
+          content: draftToSave,
+          title: title || 'Chat Draft',
+          word_count: draftToSave.split(' ').length,
+          is_current: true
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error saving draft:', error);
+        alert('Failed to save draft. Please try again.');
+        return;
+      }
+
+      // Clear the chat message and close modal
+      setCurrentMessage('');
+      setDraftToSave('');
+      setShowSaveDraftModal(false);
+      
+      // Refresh drafts
+      await loadAllUserDrafts();
+      
+      alert('Draft saved successfully!');
+    } catch (error) {
+      console.error('Error saving draft from chat:', error);
+      alert('Failed to save draft. Please try again.');
+    }
+  };
+
+  const loadDraftForPopup = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Load the most recent draft for the popup
+      const { data: draft, error } = await supabase
+        .from('draft_versions')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('is_current', true)
+        .order('last_edited', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (draft) {
+        setCurrentPopupDraft(draft);
+        setPopupDraftContent(draft.content);
+      } else {
+        // No existing draft, start with empty content
+        setCurrentPopupDraft(null);
+        setPopupDraftContent('');
+      }
+    } catch (error) {
+      console.error('Error loading draft for popup:', error);
+      setCurrentPopupDraft(null);
+      setPopupDraftContent('');
+    }
+  };
+
+  const saveDraftFromPopup = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user || !popupDraftContent.trim()) return;
+
+      if (currentPopupDraft) {
+        // Update existing draft
+        const { error } = await supabase
+          .from('draft_versions')
+          .update({
+            content: popupDraftContent,
+            word_count: popupDraftContent.split(' ').length,
+            last_edited: new Date().toISOString()
+          })
+          .eq('id', currentPopupDraft.id);
+
+        if (error) {
+          console.error('Error updating draft:', error);
+          alert('Failed to save draft. Please try again.');
+          return;
+        }
+      } else {
+        // Create new draft
+        const { data: existingDrafts } = await supabase
+          .from('draft_versions')
+          .select('version_number')
+          .eq('user_id', user.id)
+          .order('version_number', { ascending: false })
+          .limit(1);
+
+        const nextVersionNumber = existingDrafts && existingDrafts.length > 0 
+          ? existingDrafts[0].version_number + 1 
+          : 1;
+
+        // Mark all existing drafts as not current
+        await supabase
+          .from('draft_versions')
+          .update({ is_current: false })
+          .eq('user_id', user.id);
+
+        const { data, error } = await supabase
+          .from('draft_versions')
+          .insert({
+            user_id: user.id,
+            question_number: 1,
+            version_number: nextVersionNumber,
+            content: popupDraftContent,
+            title: 'Quick Draft',
+            word_count: popupDraftContent.split(' ').length,
+            is_current: true
+          })
+          .select()
+          .single();
+
+        if (error) {
+          console.error('Error saving new draft:', error);
+          alert('Failed to save draft. Please try again.');
+          return;
+        }
+
+        setCurrentPopupDraft(data);
+      }
+
+      // Refresh drafts
+      await loadAllUserDrafts();
+      alert('Draft saved successfully!');
+    } catch (error) {
+      console.error('Error saving draft from popup:', error);
+      alert('Failed to save draft. Please try again.');
+    }
+  };
+
+  const deleteDraft = async (draftId: string) => {
+    if (!confirm('Are you sure you want to delete this draft? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('draft_versions')
+        .delete()
+        .eq('id', draftId);
+
+      if (error) {
+        console.error('Error deleting draft:', error);
+        alert('Failed to delete draft. Please try again.');
+        return;
+      }
+
+      // Refresh drafts
+      await loadAllUserDrafts();
+      alert('Draft deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting draft:', error);
+      alert('Failed to delete draft. Please try again.');
+    }
+  };
+
+  const editDraft = (draft: DraftVersion) => {
+    // Load the draft into the popup for editing
+    setCurrentPopupDraft(draft);
+    setPopupDraftContent(draft.content);
+    setShowDraftPopout(true);
   };
 
   const sendMessage = async () => {
@@ -320,19 +552,22 @@ export default function StudyBookPage() {
 
   const loadUploadedFiles = async () => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
 
-      const response = await fetch('/api/files', {
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`
-        }
-      });
+      // Load files directly from Supabase with all metadata
+      const { data: files, error } = await supabase
+        .from('user_uploads')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
 
-      if (response.ok) {
-        const result = await response.json();
-        setUploadedFiles(result.files || []);
+      if (error) {
+        console.error('Error loading files:', error);
+        return;
       }
+
+      setUploadedFiles(files || []);
     } catch (error) {
       console.error('Load files error:', error);
     }
@@ -699,22 +934,35 @@ export default function StudyBookPage() {
               <div className="materials-grid">
                 <h2>Your Materials</h2>
                 <div className="materials-cards">
-                  {uploadedFiles.map(file => (
-                    <div key={file.id} className="material-card">
-                      <div className="card-header">
-                        <img src="/icons/essays.svg" alt="File" />
-                        <div className="card-actions">
-                          <button>Edit</button>
-                          <button>Delete</button>
+                  {uploadedFiles.map(file => {
+                    const categoryIcon = categories.find(cat => cat.id === file.category)?.icon || '/icons/essays.svg';
+                    return (
+                      <div key={file.id} className="material-card">
+                        <div className="card-header">
+                          <img src={categoryIcon} alt={file.category || 'File'} style={{ width: '24px', height: '24px' }} />
+                          <div className="card-actions">
+                            <button style={{ fontSize: '11px', padding: '4px 8px' }}>Edit</button>
+                            <button style={{ fontSize: '11px', padding: '4px 8px' }}>Delete</button>
+                          </div>
                         </div>
+                        <h3 style={{ fontSize: '14px', margin: '8px 0 4px 0' }}>
+                          {file.title || file.file_name}
+                        </h3>
+                        <p style={{ fontSize: '12px', color: '#666', margin: '0 0 8px 0', lineHeight: '1.3' }}>
+                          {file.description || 'No description provided'}
+                        </p>
+                        <div className="file-meta" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: '#888' }}>
+                          <span>{file.category ? categories.find(cat => cat.id === file.category)?.label : 'Uncategorized'}</span>
+                          <span>📎 {file.file_type.split('/').pop()?.toUpperCase()}</span>
+                        </div>
+                        {file.completion_date && (
+                          <div style={{ fontSize: '11px', color: '#888', marginTop: '4px' }}>
+                            Completed: {file.completion_date}
+                          </div>
+                        )}
                       </div>
-                      <h3>{file.file_name}</h3>
-                      <p>Uploaded file</p>
-                      <div className="file-indicator">
-                        📎 {file.file_type}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                   
                   {/* Placeholder cards if no files */}
                   {uploadedFiles.length === 0 && (
@@ -767,7 +1015,12 @@ export default function StudyBookPage() {
                       rows={3}
                     />
                     <button
-                      onClick={() => setShowDraftPopout(!showDraftPopout)}
+                      onClick={() => {
+                        if (!showDraftPopout) {
+                          loadDraftForPopup();
+                        }
+                        setShowDraftPopout(!showDraftPopout);
+                      }}
                       style={{
                         position: 'absolute',
                         bottom: '10px',
@@ -807,6 +1060,33 @@ export default function StudyBookPage() {
                       Ask a teacher
                     </button>
                     <button 
+                      onClick={() => {
+                        if (currentMessage.trim()) {
+                          setDraftToSave(currentMessage);
+                          setShowSaveDraftModal(true);
+                        }
+                      }}
+                      disabled={!currentMessage.trim()}
+                      style={{
+                        padding: 'var(--space-16) var(--space-24)',
+                        background: '#E7E6FF',
+                        color: '#4338CA',
+                        border: '1px solid #4338CA',
+                        borderRadius: 'var(--border-radius-sm)',
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '14px',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                        height: 'fit-content',
+                        minWidth: '120px',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                        marginBottom: 'var(--space-8)'
+                      }}
+                    >
+                      Save as Draft
+                    </button>
+                    <button 
                       onClick={sendMessage}
                       disabled={isLoading || !currentMessage.trim()}
                       className="send-btn"
@@ -834,43 +1114,60 @@ export default function StudyBookPage() {
               </h2>
               
               <div className="drafts-grid">
-                <div className="draft-card">
-                  <div className="draft-header">
-                    <h3>Draft 1</h3>
-                    <span className="draft-date">Last edited: Today</span>
-                  </div>
-                  <div className="draft-preview">
-                    <p>From a young age, I have been fascinated by the intersection of technology and human behavior...</p>
-                  </div>
-                  <div className="draft-stats">
-                    <span>Word count: 247</span>
-                    <span>Character limit: 4,000</span>
-                  </div>
-                  <div className="draft-actions">
-                    <button className="edit-btn">Edit</button>
-                    <button className="delete-btn">Delete</button>
-                  </div>
-                </div>
+                {allUserDrafts.map((draft, index) => {
+                  const formatDate = (dateString: string) => {
+                    const date = new Date(dateString);
+                    const now = new Date();
+                    const diffTime = Math.abs(now.getTime() - date.getTime());
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    if (diffDays === 1) return 'Today';
+                    if (diffDays === 2) return 'Yesterday';
+                    if (diffDays <= 7) return `${diffDays} days ago`;
+                    return date.toLocaleDateString();
+                  };
 
-                <div className="draft-card">
-                  <div className="draft-header">
-                    <h3>Draft 2</h3>
-                    <span className="draft-date">Last edited: Yesterday</span>
-                  </div>
-                  <div className="draft-preview">
-                    <p>My passion for computer science began when I first encountered programming in high school...</p>
-                  </div>
-                  <div className="draft-stats">
-                    <span>Word count: 389</span>
-                    <span>Character limit: 4,000</span>
-                  </div>
-                  <div className="draft-actions">
-                    <button className="edit-btn">Edit</button>
-                    <button className="delete-btn">Delete</button>
-                  </div>
-                </div>
+                  return (
+                    <div key={draft.id} className="draft-card">
+                      <div className="draft-header">
+                        <h3>{draft.title || `Draft ${index + 1}`}</h3>
+                        <span className="draft-date">
+                          Last edited: {formatDate(draft.last_edited || draft.updated_at)}
+                        </span>
+                      </div>
+                      <div className="draft-preview">
+                        <p>{draft.content.substring(0, 150)}...</p>
+                      </div>
+                      <div className="draft-stats">
+                        <span>Word count: {draft.word_count || draft.content.split(' ').length}</span>
+                        <span>Character limit: 4,000</span>
+                      </div>
+                      <div className="draft-actions">
+                        <button 
+                          className="edit-btn"
+                          onClick={() => editDraft(draft)}
+                        >
+                          Edit
+                        </button>
+                        <button 
+                          className="delete-btn"
+                          onClick={() => deleteDraft(draft.id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
 
-                <div className="new-draft-card">
+                <div 
+                  className="new-draft-card"
+                  onClick={() => {
+                    setCurrentPopupDraft(null);
+                    setPopupDraftContent('');
+                    setShowDraftPopout(true);
+                  }}
+                >
                   <div className="new-draft-content">
                     <div className="plus-icon">+</div>
                     <h3>Create New Draft</h3>
@@ -1204,18 +1501,23 @@ export default function StudyBookPage() {
               <div className="draft-meta">
                 <div className="draft-info">
                   <span style={{ fontFamily: "'Figtree', sans-serif", fontSize: '12px', color: '#666666' }}>
-                    Draft 1 • Auto-saved 2 min ago
+                    {currentPopupDraft ? 
+                      `${currentPopupDraft.title} • Version ${currentPopupDraft.version_number}` : 
+                      'New Draft'
+                    }
                   </span>
                 </div>
                 <div className="word-count">
                   <span style={{ fontFamily: "'Figtree', sans-serif", fontSize: '12px', color: '#666666' }}>
-                    247 / 4,000 characters
+                    {popupDraftContent.length} / 4,000 characters
                   </span>
                 </div>
               </div>
               
               <textarea
                 placeholder="Start writing your personal statement here..."
+                value={popupDraftContent}
+                onChange={(e) => setPopupDraftContent(e.target.value)}
                 style={{
                   width: '100%',
                   height: '300px',
@@ -1229,11 +1531,11 @@ export default function StudyBookPage() {
                   outline: 'none',
                   backgroundColor: '#FAFAFA'
                 }}
-                defaultValue="From a young age, I have been fascinated by the intersection of technology and human behavior. This curiosity led me to pursue computer science, where I discovered my passion for creating solutions that make a meaningful impact on people's lives..."
               />
               
               <div className="draft-actions-row">
                 <button 
+                  onClick={saveDraftFromPopup}
                   style={{
                     padding: '8px 16px',
                     backgroundColor: '#E7E6FF',
@@ -1248,6 +1550,10 @@ export default function StudyBookPage() {
                   Save Draft
                 </button>
                 <button 
+                  onClick={() => {
+                    setShowDraftPopout(false);
+                    setActiveTab('drafts');
+                  }}
                   style={{
                     padding: '8px 16px',
                     backgroundColor: '#D3F6F7',
@@ -1260,6 +1566,119 @@ export default function StudyBookPage() {
                   }}
                 >
                   Open Full Editor
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Save Draft Modal */}
+      {showSaveDraftModal && (
+        <div 
+          className="modal-backdrop" 
+          onClick={() => setShowSaveDraftModal(false)}
+        >
+          <div 
+            className="modal" 
+            onClick={(e) => e.stopPropagation()}
+            style={{ width: '400px', maxWidth: '90vw' }}
+          >
+            <div className="modal-header">
+              <h3 style={{ fontFamily: "'Madimi One', cursive", fontSize: '18px', margin: '0' }}>
+                Save as Draft
+              </h3>
+              <button onClick={() => setShowSaveDraftModal(false)}>×</button>
+            </div>
+            
+            <div className="modal-content">
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ 
+                  fontFamily: "'Figtree', sans-serif", 
+                  fontSize: '14px', 
+                  fontWeight: '500',
+                  display: 'block',
+                  marginBottom: '8px'
+                }}>
+                  Draft Title
+                </label>
+                <input 
+                  type="text"
+                  placeholder="Enter a title for your draft"
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #E5E7EB',
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '14px',
+                    outline: 'none'
+                  }}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      const title = (e.target as HTMLInputElement).value;
+                      saveDraftFromChat(title);
+                    }
+                  }}
+                />
+              </div>
+              
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ 
+                  fontFamily: "'Figtree', sans-serif", 
+                  fontSize: '14px', 
+                  fontWeight: '500',
+                  display: 'block',
+                  marginBottom: '8px'
+                }}>
+                  Preview
+                </label>
+                <div style={{
+                  padding: '10px',
+                  border: '1px solid #E5E7EB',
+                  backgroundColor: '#F9FAFB',
+                  maxHeight: '150px',
+                  overflowY: 'auto',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '13px',
+                  lineHeight: '1.4'
+                }}>
+                  {draftToSave.substring(0, 300)}
+                  {draftToSave.length > 300 && '...'}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                <button 
+                  onClick={() => setShowSaveDraftModal(false)}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: '#D3F6F7',
+                    color: '#000000',
+                    border: '1px solid #00CED1',
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '12px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={() => {
+                    const titleInput = document.querySelector('input[placeholder="Enter a title for your draft"]') as HTMLInputElement;
+                    const title = titleInput?.value || 'Chat Draft';
+                    saveDraftFromChat(title);
+                  }}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: '#E7E6FF',
+                    color: '#000000',
+                    border: '1px solid #4338CA',
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '12px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Save Draft
                 </button>
               </div>
             </div>
