@@ -35,13 +35,10 @@ export default function CreatePracticePackPage() {
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [availableQuestions, setAvailableQuestions] = useState(0);
   const [numberOfQuestions, setNumberOfQuestions] = useState(10);
-  const [fontSize, setFontSize] = useState(12);
   
   // Mouse drag states for sliders
   const [isDraggingQuestions, setIsDraggingQuestions] = useState(false);
-  const [isDraggingFont, setIsDraggingFont] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
-  const fontSliderRef = useRef<HTMLDivElement>(null);
 
   const subjects = getAvailableSubjects();
 
@@ -169,29 +166,18 @@ export default function CreatePracticePackPage() {
     setNumberOfQuestions(value);
   }, [isDraggingQuestions, availableQuestions]);
 
-  // Handle font slider
-  const handleFontSliderMove = useCallback((clientX: number) => {
-    if (!isDraggingFont || !fontSliderRef.current) return;
-    
-    const rect = fontSliderRef.current.getBoundingClientRect();
-    const percentage = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-    const value = Math.round(8 + percentage * 16); // 8pt to 24pt
-    setFontSize(value);
-  }, [isDraggingFont]);
 
   // Mouse event handlers
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       handleQuestionSliderMove(e.clientX);
-      handleFontSliderMove(e.clientX);
     };
 
     const handleMouseUp = () => {
       setIsDraggingQuestions(false);
-      setIsDraggingFont(false);
     };
 
-    if (isDraggingQuestions || isDraggingFont) {
+    if (isDraggingQuestions) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
       return () => {
@@ -199,7 +185,7 @@ export default function CreatePracticePackPage() {
         document.removeEventListener('mouseup', handleMouseUp);
       };
     }
-  }, [isDraggingQuestions, isDraggingFont, handleQuestionSliderMove, handleFontSliderMove]);
+  }, [isDraggingQuestions, handleQuestionSliderMove]);
 
   const handleSelectQuestions = () => {
     // Store pack data in sessionStorage to pass to next step
@@ -207,7 +193,6 @@ export default function CreatePracticePackPage() {
       packName,
       subject: selectedSubject,
       numberOfQuestions,
-      fontSize,
       filters: activeFilters,
       availableQuestions
     };
@@ -482,61 +467,6 @@ export default function CreatePracticePackPage() {
                 </p>
               </div>
 
-              {/* Font Size Section */}
-              <div style={{ marginBottom: '25px' }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  marginBottom: '15px'
-                }}>
-                  <span className="card-title">
-                    Font Size 
-                  </span>
-                  <span style={{
-                    fontFamily: "'Madimi One', sans-serif",
-                    fontSize: '16px',
-                    fontWeight: 400,
-                    color: '#000000'
-                  }}>
-                    {fontSize}pt
-                  </span>
-                </div>
-                <div className="font-size-controls">
-                  <span className="font-size-text">small</span>
-                  <div 
-                    ref={fontSliderRef}
-                    className="font-slider-track"
-                    style={{ height: '20px' }}
-                    onClick={(e) => {
-                      const rect = e.currentTarget.getBoundingClientRect();
-                      const percentage = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-                      const value = Math.round(8 + percentage * 16);
-                      setFontSize(value);
-                    }}
-                  >
-                    <Image 
-                      src="/icons/speech-bubble-ghost.svg" 
-                      alt="Font size slider" 
-                      width={40} 
-                      height={40}
-                      style={{
-                        position: 'absolute',
-                        left: `${((fontSize - 8) / 16) * 100}%`,
-                        top: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        cursor: 'grab'
-                      }}
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        setIsDraggingFont(true);
-                      }}
-                      draggable={false}
-                    />
-                  </div>
-                  <span className="font-size-text">large</span>
-                </div>
-              </div>
             </div>
             
             {/* Select Questions Button - Bottom Right */}
