@@ -905,11 +905,32 @@ export default function StudyBookPage() {
               
               <div className="form-group">
                 <label style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>File</label>
-                <input 
-                  type="file"
-                  onChange={(e) => setMaterialForm(prev => ({ ...prev, file: e.target.files?.[0] || null }))}
-                  accept=".pdf,.doc,.docx,.txt"
-                />
+                <div style={{ position: 'relative' }}>
+                  <input 
+                    type="file"
+                    onChange={(e) => setMaterialForm(prev => ({ ...prev, file: e.target.files?.[0] || null }))}
+                    accept=".pdf,.doc,.docx,.txt"
+                    style={{ 
+                      opacity: 0, 
+                      position: 'absolute', 
+                      width: '100%', 
+                      height: '100%',
+                      cursor: 'pointer'
+                    }}
+                  />
+                  <div style={{
+                    padding: '10px 12px',
+                    border: '1px solid #00CED1',
+                    background: '#DFF8F9',
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '14px',
+                    letterSpacing: '0.04em',
+                    cursor: 'pointer',
+                    color: materialForm.file ? '#000000' : '#666666'
+                  }}>
+                    {materialForm.file ? materialForm.file.name : 'Add your material here'}
+                  </div>
+                </div>
               </div>
               
               <div className="form-actions">
@@ -926,6 +947,7 @@ export default function StudyBookPage() {
                   onClick={handleSaveMaterial}
                   style={{ 
                     backgroundColor: '#E7E6FF', 
+                    color: '#000000',
                     fontFamily: "'Figtree', sans-serif", 
                     letterSpacing: '0.04em' 
                   }}

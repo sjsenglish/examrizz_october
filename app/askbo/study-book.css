@@ -79,9 +79,9 @@ body {
 
 .sidebar {
   position: fixed;
-  top: 80px;
+  top: 120px;
   left: 20px;
-  width: 220px;
+  width: 180px;
   background: #F4F3FF;
   border-radius: 16px;
   transform: translateX(-100%);
@@ -90,7 +90,7 @@ body {
   display: flex;
   flex-direction: column;
   box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding: 12px;
 }
 
 .sidebar.collapsed {
@@ -158,15 +158,15 @@ body {
   background: #FAF9FF;
   border: 1px solid #E5E5E5;
   border-radius: 0;
-  padding: 16px;
+  padding: 12px;
   text-align: left;
   font-family: 'Madimi One', cursive;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   color: #333333;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .nav-item:hover {
@@ -270,10 +270,11 @@ body {
 
 .materials-layout {
   display: grid;
-  grid-template-columns: 40% 60%;
-  gap: var(--space-48);
-  max-width: 1400px;
+  grid-template-columns: 35% 65%;
+  gap: var(--space-32);
+  max-width: 1200px;
   margin: 0 auto;
+  margin-left: 220px;
 }
 
 .categories-panel {
@@ -568,7 +569,7 @@ body {
 }
 
 .send-btn {
-  padding: var(--space-12) var(--space-24);
+  padding: var(--space-16) var(--space-24);
   background: #B3F0F2;
   color: #000000;
   border: 1px solid #00CED1;
@@ -594,7 +595,7 @@ body {
 }
 
 .ask-teacher-btn {
-  padding: var(--space-12) var(--space-24);
+  padding: var(--space-16) var(--space-24);
   background: #B3F0F2;
   color: #000000;
   border: 1px solid #00CED1;
@@ -607,7 +608,6 @@ body {
   min-width: 120px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   height: fit-content;
-  min-width: 120px;
   margin-bottom: var(--space-8);
 }
 
@@ -625,6 +625,45 @@ body {
 /* =============================================================================
    MODALS
    ============================================================================= */
+
+/* Modal container overrides for sharp edges */
+.modal {
+  border-radius: 0 !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Custom dropdown styling */
+.modal select {
+  border-radius: 0 !important;
+  background: #DFF8F9;
+  border: 1px solid #00CED1;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  padding-right: 40px;
+}
+
+.modal select option {
+  background: #DFF8F9;
+  color: #000000;
+  padding: 8px 12px;
+}
+
+.modal select option:hover {
+  background: #95EAEC !important;
+}
+
+/* All form elements sharp edges */
+.modal input,
+.modal textarea {
+  border-radius: 0 !important;
+}
+
+.modal button {
+  border-radius: 0 !important;
+}
 
 .modal-backdrop {
   position: fixed;
