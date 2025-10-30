@@ -156,26 +156,6 @@ export default function LearnPage() {
                     </Link>
                   </div>
 
-                  <div className="learning-card">
-                    <div className="card-content">
-                      <h3 className="card-title">Ask Bo</h3>
-                      <p className="card-subtitle">Write the perfect PS</p>
-                    </div>
-                    <div className="card-icon">
-                      <Image 
-                        src="/icons/flame-streak.svg"
-                        alt="Ask Bo"
-                        width={40}
-                        height={40}
-                      />
-                    </div>
-                    <Link href="/study-book" className="continue-button">
-                      OPEN BOOK
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </Link>
-                  </div>
                 </div>
               </div>
             </div>

@@ -138,6 +138,26 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
           </div>
         </div>
 
+        {/* ASK BO - between teacher and arena (28.5% from left, 35% from top) */}
+        <div 
+          className="absolute"
+          style={{
+            left: '28.5%',
+            top: '35%',
+            transform: 'translate(-50%, -50%)'
+          }}
+        >
+          <Link href="/askbo" className="block">
+            <Image 
+              src="/icons/island-ask-bo.svg"
+              alt="ASK BO"
+              width={207}
+              height={207}
+              className="drop-shadow-lg"
+            />
+          </Link>
+        </div>
+
         {/* LEARN - bottom-right (70% from left, 45% from top) - MOVED UP */}
         <div 
           className="absolute"
