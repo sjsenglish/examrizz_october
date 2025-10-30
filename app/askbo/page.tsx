@@ -28,6 +28,7 @@ export default function StudyBookPage() {
   const [activeTab, setActiveTab] = useState('materials');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showDraftPopout, setShowDraftPopout] = useState(false);
 
   // Materials state
   const [uploadedFiles, setUploadedFiles] = useState<{id: string, file_name: string, file_type: string, file_path: string, created_at: string}[]>([]);
@@ -83,7 +84,7 @@ export default function StudyBookPage() {
     { id: 'essays', label: 'Essays', icon: '/icons/essays.svg', count: 0 },
     { id: 'moocs', label: 'MOOCs', icon: '/icons/moocs.svg', count: 0 },
     { id: 'lectures', label: 'Lectures', icon: '/icons/lectures.svg', count: 0 },
-    { id: 'textbooks', label: 'Textbooks', icon: '/icons/learn-hub-book.svg', count: 0 },
+    { id: 'textbooks', label: 'Textbooks', icon: '/icons/textbooks.svg', count: 0 },
     { id: 'societies', label: 'Societies', icon: '/icons/societies.svg', count: 0 },
     { id: 'challenges', label: 'Challenges', icon: '/icons/academic-challenges.svg', count: 0 },
     { id: 'internships', label: 'Internships', icon: '/icons/internships.svg', count: 0 },
@@ -633,6 +634,12 @@ export default function StudyBookPage() {
       <div className="sidebar open">
         <div className="sidebar-nav">
           <button 
+            className={`nav-item ${activeTab === 'drafts' ? 'active' : ''}`}
+            onClick={() => setActiveTab('drafts')}
+          >
+            Statement Drafts
+          </button>
+          <button 
             className={`nav-item ${activeTab === 'materials' ? 'active' : ''}`}
             onClick={() => setActiveTab('materials')}
           >
@@ -643,12 +650,23 @@ export default function StudyBookPage() {
             onClick={() => setActiveTab('chat')}
           >
             Ask Bo
-          </button>
-          <button 
-            className={`nav-item ${activeTab === 'drafts' ? 'active' : ''}`}
-            onClick={() => setActiveTab('drafts')}
-          >
-            Statement Drafts
+            <img 
+              src="/icons/learn-hub-book.svg" 
+              alt="Draft Icon" 
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowDraftPopout(!showDraftPopout);
+              }}
+              style={{
+                width: '16px',
+                height: '16px',
+                marginLeft: '8px',
+                position: 'absolute',
+                bottom: '4px',
+                right: '4px',
+                cursor: 'pointer'
+              }}
+            />
           </button>
         </div>
       </div>
@@ -1013,6 +1031,106 @@ export default function StudyBookPage() {
                     letterSpacing: '0.04em' 
                   }}
                 >Save Material</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Draft Popout Container */}
+      {showDraftPopout && (
+        <div 
+          className="draft-popout-backdrop" 
+          onClick={() => setShowDraftPopout(false)}
+        >
+          <div 
+            className="draft-popout" 
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="draft-popout-header">
+              <h3 style={{ 
+                fontFamily: "'Madimi One', cursive", 
+                fontSize: '18px', 
+                margin: '0',
+                color: '#000000'
+              }}>
+                Quick Draft
+              </h3>
+              <button 
+                onClick={() => setShowDraftPopout(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '20px',
+                  cursor: 'pointer',
+                  color: '#666666'
+                }}
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="draft-popout-content">
+              <div className="draft-meta">
+                <div className="draft-info">
+                  <span style={{ fontFamily: "'Figtree', sans-serif", fontSize: '12px', color: '#666666' }}>
+                    Draft 1 • Auto-saved 2 min ago
+                  </span>
+                </div>
+                <div className="word-count">
+                  <span style={{ fontFamily: "'Figtree', sans-serif", fontSize: '12px', color: '#666666' }}>
+                    247 / 4,000 characters
+                  </span>
+                </div>
+              </div>
+              
+              <textarea
+                placeholder="Start writing your personal statement here..."
+                style={{
+                  width: '100%',
+                  height: '300px',
+                  border: '1px solid #E5E7EB',
+                  borderRadius: '8px',
+                  padding: '16px',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  lineHeight: '1.5',
+                  resize: 'none',
+                  outline: 'none',
+                  backgroundColor: '#FAFAFA'
+                }}
+                defaultValue="From a young age, I have been fascinated by the intersection of technology and human behavior. This curiosity led me to pursue computer science, where I discovered my passion for creating solutions that make a meaningful impact on people's lives..."
+              />
+              
+              <div className="draft-actions-row">
+                <button 
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: '#E7E6FF',
+                    color: '#4338CA',
+                    border: '1px solid #4338CA',
+                    borderRadius: '6px',
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '12px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Save Draft
+                </button>
+                <button 
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: '#D3F6F7',
+                    color: '#000000',
+                    border: '1px solid #00CED1',
+                    borderRadius: '6px',
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '12px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Open Full Editor
+                </button>
               </div>
             </div>
           </div>
