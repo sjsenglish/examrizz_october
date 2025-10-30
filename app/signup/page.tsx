@@ -91,12 +91,14 @@ export default function SignupPage() {
       }
 
       if (data.user) {
+        const user = data.user; // Store in a const to help TypeScript
+        
         // Create user profile with additional data
         const { error: profileError } = await supabase
           .from('user_profiles')
           .insert({
-            id: data.user.id,
-            email: data.user.email,
+            id: user.id,
+            email: user.email,
             full_name: fullName,
             username: username,
             school: school,
@@ -114,7 +116,7 @@ export default function SignupPage() {
           const gcseGrades = gcseSubjects
             .filter(g => g.subject && g.grade)
             .map(g => ({
-              user_id: data.user.id,
+              user_id: user.id,
               subject: g.subject,
               grade: g.grade
             }));
@@ -135,7 +137,7 @@ export default function SignupPage() {
           const aLevelGrades = aLevelSubjects
             .filter(g => g.subject && g.grade)
             .map(g => ({
-              user_id: data.user.id,
+              user_id: user.id,
               subject: g.subject,
               grade: g.grade
             }));
