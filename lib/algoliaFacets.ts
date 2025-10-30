@@ -26,7 +26,8 @@ export async function getTotalQuestionCount(subjectName: string): Promise<number
       }
     }]);
 
-    return results.results[0].nbHits || 0;
+    const result = results.results[0] as any;
+    return result.nbHits || 0;
   } catch (error) {
     console.error(`Error getting total count for ${subjectName}:`, error);
     return 0;
@@ -54,7 +55,8 @@ export async function getSubjectFacets(
       }
     }]);
 
-    const facets = results.results[0].facets || {};
+    const result = results.results[0] as any;
+    const facets = result.facets || {};
     const facetResults: FacetResults = {};
 
     // Convert facets to our format
@@ -129,7 +131,8 @@ export async function getFilteredQuestionCount(
       }
     }]);
 
-    return results.results[0].nbHits || 0;
+    const result = results.results[0] as any;
+    return result.nbHits || 0;
   } catch (error) {
     console.error(`Error getting filtered count for ${subjectName}:`, error);
     return 0;
