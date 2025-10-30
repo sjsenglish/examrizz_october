@@ -331,14 +331,14 @@ export default function SignupPage() {
             {/* Subject Communities */}
             <div style={{
               background: '#E0F7FA',
-              borderRadius: '16px',
-              padding: '40px 30px',
+              borderRadius: '12px',
+              padding: '25px 20px',
               textAlign: 'center'
             }}>
               <div style={{
-                width: '80px',
-                height: '80px',
-                margin: '0 auto 20px',
+                width: '60px',
+                height: '60px',
+                margin: '0 auto 15px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
@@ -355,19 +355,19 @@ export default function SignupPage() {
               </div>
               <h3 style={{
                 fontFamily: "'Figtree', sans-serif",
-                fontSize: '20px',
+                fontSize: '16px',
                 fontWeight: '700',
                 color: '#000000',
-                margin: '0 0 10px 0'
+                margin: '0 0 8px 0'
               }}>
                 Subject<br />Communities
               </h3>
               <p style={{
                 fontFamily: "'Figtree', sans-serif",
-                fontSize: '14px',
+                fontSize: '12px',
                 color: '#666666',
                 margin: '0',
-                lineHeight: '1.5'
+                lineHeight: '1.4'
               }}>
                 Find students with the same subjects and target unis
               </p>
@@ -469,7 +469,7 @@ export default function SignupPage() {
             onClick={handleNextStep}
             style={{
               position: 'absolute',
-              bottom: '20px',
+              bottom: '40px',
               right: '40px',
               padding: '12px 30px',
               background: '#E7E6FF',
@@ -536,8 +536,8 @@ export default function SignupPage() {
               width: '40px',
               height: '40px',
               borderRadius: '50%',
-              background: '#E5E7EB',
-              color: '#666666',
+              background: '#00CED1',
+              color: '#FFFFFF',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -549,13 +549,13 @@ export default function SignupPage() {
             <div style={{
               width: '40px',
               height: '2px',
-              background: '#7DD3FC'
+              background: '#00CED1'
             }}></div>
             <div style={{
               width: '40px',
               height: '40px',
               borderRadius: '50%',
-              background: '#7DD3FC',
+              background: '#00CED1',
               color: '#FFFFFF',
               display: 'flex',
               alignItems: 'center',
@@ -582,19 +582,20 @@ export default function SignupPage() {
       <div style={{
         maxWidth: '1200px',
         margin: '0 auto',
-        padding: '40px',
+        padding: '20px',
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
-        gap: '60px'
+        gap: '40px',
+        minHeight: 'calc(100vh - 140px)'
       }}>
         {/* Left column - Profile */}
         <div>
           <h2 style={{
             fontFamily: "'Figtree', sans-serif",
-            fontSize: '32px',
+            fontSize: '24px',
             fontWeight: '700',
             color: '#000000',
-            margin: '0 0 30px 0'
+            margin: '0 0 20px 0'
           }}>
             Profile
           </h2>
@@ -614,7 +615,7 @@ export default function SignupPage() {
           )}
 
           <form onSubmit={handleSignup}>
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '15px' }}>
               <input
                 type="text"
                 value={fullName}
@@ -623,7 +624,7 @@ export default function SignupPage() {
                 placeholder="Full Name"
                 style={{
                   width: '100%',
-                  padding: '16px',
+                  padding: '12px',
                   border: '1px solid #D1D5DB',
                   borderRadius: '6px',
                   background: '#E0F7FA',
@@ -643,7 +644,7 @@ export default function SignupPage() {
                 placeholder="Username"
                 style={{
                   width: '100%',
-                  padding: '16px',
+                  padding: '12px',
                   border: '1px solid #D1D5DB',
                   borderRadius: '6px',
                   background: '#E0F7FA',
@@ -662,7 +663,7 @@ export default function SignupPage() {
                 placeholder="School"
                 style={{
                   width: '100%',
-                  padding: '16px',
+                  padding: '12px',
                   border: '1px solid #D1D5DB',
                   borderRadius: '6px',
                   background: '#E0F7FA',
@@ -673,7 +674,7 @@ export default function SignupPage() {
               />
             </div>
 
-            <div style={{ marginBottom: '30px' }}>
+            <div style={{ marginBottom: '20px' }}>
               <input
                 type="text"
                 value={rankInSchool}
@@ -681,7 +682,7 @@ export default function SignupPage() {
                 placeholder="Your rank in your school"
                 style={{
                   width: '100%',
-                  padding: '16px',
+                  padding: '12px',
                   border: '1px solid #D1D5DB',
                   borderRadius: '6px',
                   background: '#E0F7FA',
@@ -693,17 +694,18 @@ export default function SignupPage() {
             </div>
 
             {/* GCSE Grades */}
-            <div style={{ marginBottom: '30px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <div style={{ marginBottom: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
                 <h3 style={{
-                  fontSize: '20px',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '16px',
                   fontWeight: '700',
                   margin: '0',
                   color: '#000000'
                 }}>
                   GCSE GRADES
                 </h3>
-                <span style={{ fontSize: '14px', color: '#666666' }}>Optional</span>
+                <span style={{ fontSize: '12px', color: '#666666' }}>Optional</span>
               </div>
 
               {gcseSubjects.map((subject, index) => (
@@ -713,11 +715,11 @@ export default function SignupPage() {
                     onChange={(e) => updateGcseSubject(index, 'subject', e.target.value)}
                     style={{
                       flex: '1',
-                      padding: '12px',
+                      padding: '8px',
                       border: '1px solid #D1D5DB',
                       borderRadius: '6px',
                       background: '#FFFFFF',
-                      fontSize: '16px'
+                      fontSize: '14px'
                     }}
                   >
                     <option value="">Select Subject</option>
@@ -731,12 +733,12 @@ export default function SignupPage() {
                     value={subject.grade}
                     onChange={(e) => updateGcseSubject(index, 'grade', e.target.value)}
                     style={{
-                      width: '100px',
-                      padding: '12px',
+                      width: '80px',
+                      padding: '8px',
                       border: '1px solid #D1D5DB',
                       borderRadius: '6px',
                       background: '#FFFFFF',
-                      fontSize: '16px'
+                      fontSize: '14px'
                     }}
                   >
                     <option value="">Grade</option>
@@ -755,11 +757,11 @@ export default function SignupPage() {
                 onClick={addGcseSubject}
                 style={{
                   width: '100%',
-                  padding: '12px',
+                  padding: '8px',
                   background: '#FFFFFF',
                   border: '2px dashed #D1D5DB',
                   borderRadius: '6px',
-                  fontSize: '16px',
+                  fontSize: '14px',
                   color: '#666666',
                   cursor: 'pointer'
                 }}
@@ -769,17 +771,18 @@ export default function SignupPage() {
             </div>
 
             {/* A Level Grades */}
-            <div style={{ marginBottom: '30px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <div style={{ marginBottom: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
                 <h3 style={{
-                  fontSize: '20px',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '16px',
                   fontWeight: '700',
                   margin: '0',
                   color: '#000000'
                 }}>
                   A LEVEL GRADES
                 </h3>
-                <span style={{ fontSize: '14px', color: '#666666' }}>Optional</span>
+                <span style={{ fontSize: '12px', color: '#666666' }}>Optional</span>
               </div>
 
               {aLevelSubjects.map((subject, index) => (
@@ -845,19 +848,19 @@ export default function SignupPage() {
           </form>
         </div>
 
-        {/* Right column - Login Setup */}
+        {/* Right column - Sign-up Details */}
         <div>
           <h2 style={{
             fontFamily: "'Figtree', sans-serif",
-            fontSize: '24px',
+            fontSize: '20px',
             fontWeight: '700',
             color: '#000000',
-            margin: '0 0 20px 0'
+            margin: '0 0 15px 0'
           }}>
-            Login Setup
+            Sign-up Details
           </h2>
 
-          <div style={{ marginBottom: '20px' }}>
+          <div style={{ marginBottom: '15px' }}>
             <input
               type="email"
               value={email}
@@ -877,7 +880,7 @@ export default function SignupPage() {
             />
           </div>
 
-          <div style={{ marginBottom: '20px' }}>
+          <div style={{ marginBottom: '15px' }}>
             <input
               type="password"
               value={password}
@@ -897,7 +900,7 @@ export default function SignupPage() {
             />
           </div>
 
-          <div style={{ marginBottom: '30px' }}>
+          <div style={{ marginBottom: '20px' }}>
             <input
               type="password"
               value={confirmPassword}
@@ -920,8 +923,8 @@ export default function SignupPage() {
           {/* Or divider */}
           <div style={{
             textAlign: 'center',
-            margin: '30px 0',
-            fontSize: '18px',
+            margin: '15px 0',
+            fontSize: '16px',
             fontWeight: '600',
             color: '#000000'
           }}>
@@ -929,7 +932,7 @@ export default function SignupPage() {
           </div>
 
           {/* Social Login Buttons */}
-          <div style={{ marginBottom: '30px' }}>
+          <div style={{ marginBottom: '20px' }}>
             <button
               type="button"
               style={{
@@ -952,7 +955,7 @@ export default function SignupPage() {
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 0 0-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 0 0-5.487 0 12.36 12.36 0 0 0-.617-1.23A.077.077 0 0 0 8.562 3c-1.714.29-3.354.8-4.885 1.491a.07.07 0 0 0-.032.027C.533 9.093-.32 13.555.099 17.961a.08.08 0 0 0 .031.055 20.03 20.03 0 0 0 5.993 2.98.078.078 0 0 0 .084-.026 13.83 13.83 0 0 0 1.226-1.963.074.074 0 0 0-.041-.104 13.201 13.201 0 0 1-1.872-.878.075.075 0 0 1-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 0 1 .078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 0 1 .079.009c.12.098.246.195.372.288a.075.075 0 0 1-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 0 0-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 0 0 .084.028 19.963 19.963 0 0 0 6.002-2.981.076.076 0 0 0 .032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 0 0-.031-.028zM8.02 15.278c-1.182 0-2.157-1.069-2.157-2.38 0-1.312.956-2.38 2.157-2.38 1.201 0 2.176 1.068 2.157 2.38 0 1.311-.956 2.38-2.157 2.38zm7.975 0c-1.183 0-2.157-1.069-2.157-2.38 0-1.312.955-2.38 2.157-2.38 1.2 0 2.176 1.068 2.157 2.38 0 1.311-.956 2.38-2.157 2.38z"/>
               </svg>
-              Discord Login
+              Discord Sign Up
             </button>
 
             <button
@@ -979,7 +982,7 @@ export default function SignupPage() {
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              Gmail Login
+              Gmail Sign Up
             </button>
           </div>
 
@@ -987,30 +990,31 @@ export default function SignupPage() {
           <div style={{
             background: '#F3E8FF',
             borderRadius: '8px',
-            padding: '20px',
-            marginBottom: '30px'
+            padding: '15px',
+            marginBottom: '20px'
           }}>
             <h3 style={{
-              fontSize: '18px',
+              fontFamily: "'Figtree', sans-serif",
+              fontSize: '16px',
               fontWeight: '700',
-              margin: '0 0 10px 0',
+              margin: '0 0 8px 0',
               color: '#000000'
             }}>
               Why do we ask for your grades?
             </h3>
             <p style={{
-              fontSize: '14px',
+              fontSize: '12px',
               color: '#666666',
-              margin: '0 0 15px 0',
-              lineHeight: '1.5'
+              margin: '0 0 10px 0',
+              lineHeight: '1.4'
             }}>
               We use your GCSE and predicted A Level grades to personalize your learning experience, recommend suitable content, and track your progress toward your target grades.
             </p>
             <p style={{
-              fontSize: '14px',
+              fontSize: '12px',
               color: '#666666',
               margin: '0',
-              lineHeight: '1.5'
+              lineHeight: '1.4'
             }}>
               You can skip this and add them later in your profile.
             </p>

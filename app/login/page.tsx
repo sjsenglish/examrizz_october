@@ -174,8 +174,8 @@ export default function LoginPage() {
             style={{
               width: '100%',
               padding: '12px 16px',
-              background: loading ? '#9CA3AF' : '#4338CA',
-              color: '#FFFFFF',
+              background: loading ? '#9CA3AF' : '#E7E6FF',
+              color: '#000000',
               border: 'none',
               borderRadius: '6px',
               fontFamily: "'Figtree', sans-serif",
