@@ -32,15 +32,66 @@ export default function SignupPage() {
     setCurrentStep(2);
   };
 
-  const handleDiscordConnect = () => {
-    // TODO: Implement Discord OAuth later
-    console.log('Discord connection clicked');
-    handleNextStep();
+  const handleDiscordConnect = async () => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'discord',
+        options: {
+          redirectTo: `${window.location.origin}/signup`
+        }
+      });
+      
+      if (error) {
+        console.error('Discord OAuth error:', error);
+        setError('Failed to connect with Discord');
+      }
+    } catch (err) {
+      console.error('Discord connection error:', err);
+      setError('Failed to connect with Discord');
+    }
   };
 
   const handleJoinNow = () => {
     // Skip Discord connection and go to step 2
     handleNextStep();
+  };
+
+  const handleDiscordLogin = async () => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'discord',
+        options: {
+          redirectTo: `${window.location.origin}/`
+        }
+      });
+      
+      if (error) {
+        console.error('Discord login error:', error);
+        setError('Failed to sign in with Discord');
+      }
+    } catch (err) {
+      console.error('Discord login error:', err);
+      setError('Failed to sign in with Discord');
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/`
+        }
+      });
+      
+      if (error) {
+        console.error('Google login error:', error);
+        setError('Failed to sign in with Google');
+      }
+    } catch (err) {
+      console.error('Google login error:', err);
+      setError('Failed to sign in with Google');
+    }
   };
 
   const addGcseSubject = () => {
@@ -166,12 +217,15 @@ export default function SignupPage() {
 
   if (currentStep === 1) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        background: '#FFFFFF',
-        fontFamily: "'Figtree', sans-serif"
-      }}>
-        {/* Header */}
+      <>
+        <Navbar />
+        <div style={{
+          minHeight: '100vh',
+          background: '#FFFFFF',
+          fontFamily: "'Figtree', sans-serif",
+          paddingTop: '60px'
+        }}>
+          {/* Header */}
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -490,6 +544,7 @@ export default function SignupPage() {
           </button>
         </div>
       </div>
+      </>
     );
   }
 
@@ -935,6 +990,7 @@ export default function SignupPage() {
           <div style={{ marginBottom: '20px' }}>
             <button
               type="button"
+              onClick={handleDiscordLogin}
               style={{
                 width: '100%',
                 padding: '12px',
@@ -960,6 +1016,7 @@ export default function SignupPage() {
 
             <button
               type="button"
+              onClick={handleGoogleLogin}
               style={{
                 width: '100%',
                 padding: '12px',

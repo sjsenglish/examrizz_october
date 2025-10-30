@@ -18,6 +18,46 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const router = useRouter();
 
+  const handleDiscordLogin = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'discord',
+        options: {
+          redirectTo: `${window.location.origin}/`
+        }
+      });
+      
+      if (error) {
+        setError(error.message);
+      }
+    } catch (err) {
+      setError('An unexpected error occurred with Discord login');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/`
+        }
+      });
+      
+      if (error) {
+        setError(error.message);
+      }
+    } catch (err) {
+      setError('An unexpected error occurred with Google login');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     // Check if user is already logged in
     const checkUser = async () => {
@@ -203,17 +243,19 @@ export default function LoginPage() {
           <div style={{ marginBottom: '24px' }}>
             <button
               type="button"
+              onClick={handleDiscordLogin}
+              disabled={loading}
               style={{
                 width: '100%',
                 padding: '12px',
-                background: '#5865F2',
+                background: loading ? '#9CA3AF' : '#5865F2',
                 color: '#FFFFFF',
                 border: 'none',
                 borderRadius: '6px',
                 fontFamily: "'Figtree', sans-serif",
                 fontSize: '16px',
                 fontWeight: '500',
-                cursor: 'pointer',
+                cursor: loading ? 'not-allowed' : 'pointer',
                 marginBottom: '12px',
                 display: 'flex',
                 alignItems: 'center',
@@ -229,17 +271,19 @@ export default function LoginPage() {
 
             <button
               type="button"
+              onClick={handleGoogleLogin}
+              disabled={loading}
               style={{
                 width: '100%',
                 padding: '12px',
-                background: '#E5E7EB',
+                background: loading ? '#9CA3AF' : '#E5E7EB',
                 color: '#374151',
                 border: 'none',
                 borderRadius: '6px',
                 fontFamily: "'Figtree', sans-serif",
                 fontSize: '16px',
                 fontWeight: '500',
-                cursor: 'pointer',
+                cursor: loading ? 'not-allowed' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
