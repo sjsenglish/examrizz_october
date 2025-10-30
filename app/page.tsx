@@ -1,9 +1,9 @@
 'use client';
 
-import ExamSearch from '@/components/ExamSearch';
+import { NewSwipeableContainer } from '@/components/NewSwipeableContainer';
 import './home.css';
 
 export default function Home() {
-  // Always default to search page - no landing page restrictions
-  return <ExamSearch />;
+  // Use NewSwipeableContainer which includes arrow navigation between search and island
+  return <NewSwipeableContainer />;
 }

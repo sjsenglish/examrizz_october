@@ -250,26 +250,27 @@ export default function SignupPage() {
         <div style={{
           maxWidth: '1000px',
           margin: '0 auto',
-          padding: '60px 40px',
-          textAlign: 'center'
+          padding: '30px 40px',
+          textAlign: 'center',
+          position: 'relative'
         }}>
           <h2 style={{
             fontFamily: "'Figtree', sans-serif",
-            fontSize: '36px',
+            fontSize: '28px',
             fontWeight: '700',
             color: '#000000',
-            margin: '0 0 20px 0'
+            margin: '0 0 15px 0'
           }}>
             Join the Community!
           </h2>
           
           <p style={{
             fontFamily: "'Figtree', sans-serif",
-            fontSize: '18px',
+            fontSize: '16px',
             color: '#666666',
-            margin: '0 0 50px 0',
-            lineHeight: '1.6',
-            maxWidth: '800px',
+            margin: '0 0 30px 0',
+            lineHeight: '1.5',
+            maxWidth: '700px',
             marginLeft: 'auto',
             marginRight: 'auto'
           }}>
@@ -280,20 +281,20 @@ export default function SignupPage() {
           {/* Discord connection buttons */}
           <div style={{
             display: 'flex',
-            gap: '20px',
+            gap: '15px',
             justifyContent: 'center',
-            marginBottom: '60px'
+            marginBottom: '30px'
           }}>
             <button
               onClick={handleDiscordConnect}
               style={{
-                padding: '16px 32px',
-                background: '#7DD3FC',
+                padding: '12px 24px',
+                background: '#00CED1',
                 color: '#FFFFFF',
                 border: 'none',
                 borderRadius: '8px',
                 fontFamily: "'Figtree', sans-serif",
-                fontSize: '16px',
+                fontSize: '14px',
                 fontWeight: '600',
                 cursor: 'pointer'
               }}
@@ -304,13 +305,13 @@ export default function SignupPage() {
             <button
               onClick={handleJoinNow}
               style={{
-                padding: '16px 32px',
-                background: '#FFFFFF',
-                color: '#666666',
-                border: '2px solid #E5E7EB',
+                padding: '12px 24px',
+                background: '#E7E6FF',
+                color: '#4338CA',
+                border: '1px solid #4338CA',
                 borderRadius: '8px',
                 fontFamily: "'Figtree', sans-serif",
-                fontSize: '16px',
+                fontSize: '14px',
                 fontWeight: '600',
                 cursor: 'pointer'
               }}
@@ -323,9 +324,9 @@ export default function SignupPage() {
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '40px',
-            maxWidth: '1000px',
-            margin: '0 auto 60px'
+            gap: '20px',
+            maxWidth: '900px',
+            margin: '0 auto 30px'
           }}>
             {/* Subject Communities */}
             <div style={{
@@ -463,27 +464,29 @@ export default function SignupPage() {
             </div>
           </div>
 
-          {/* Next Step button */}
+          {/* Next Step button - positioned bottom right */}
           <button
             onClick={handleNextStep}
             style={{
-              padding: '16px 40px',
-              background: '#7DD3FC',
-              color: '#FFFFFF',
-              border: 'none',
+              position: 'absolute',
+              bottom: '20px',
+              right: '40px',
+              padding: '12px 30px',
+              background: '#E7E6FF',
+              color: '#4338CA',
+              border: '1px solid #4338CA',
               borderRadius: '8px',
               fontFamily: "'Figtree', sans-serif",
-              fontSize: '18px',
+              fontSize: '16px',
               fontWeight: '600',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '10px',
-              margin: '0 auto'
+              gap: '8px'
             }}
           >
             Next Step
-            <span style={{ fontSize: '20px' }}>→</span>
+            <span style={{ fontSize: '18px' }}>→</span>
           </button>
         </div>
       </div>

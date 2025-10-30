@@ -9,7 +9,7 @@ import Link from 'next/link';
 import './NewSwipeableContainer.css';
 
 export const NewSwipeableContainer: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<'island' | 'search'>('island');
+  const [currentPage, setCurrentPage] = useState<'island' | 'search'>('search');
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showGhost, setShowGhost] = useState(true);
   const [showDropdown, setShowDropdown] = useState(false);
