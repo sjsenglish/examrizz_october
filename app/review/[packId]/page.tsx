@@ -37,7 +37,8 @@ interface Pack {
 }
 
 interface AttemptData {
-  user_answers: Record<string, string>;
+  answers: Record<string, string>;
+  user_answers?: Record<string, string>; // For backward compatibility
   score: number;
   total_questions: number;
   time_taken: number;
@@ -495,20 +496,19 @@ export default function ReviewPage({ params }: { params: Promise<{ packId: strin
     );
   }
   
-  // Safely access user answer with fallback
-  const userAnswer = (currentQuestion?.objectID && attemptData?.user_answers) 
-    ? attemptData.user_answers[currentQuestion.objectID] 
-    : undefined;
+  // Safely access user answer with fallback - check both 'answers' and 'user_answers' for compatibility
+  const userAnswers = attemptData?.answers || attemptData?.user_answers || {};
+  const userAnswer = currentQuestion?.objectID ? userAnswers[currentQuestion.objectID] : undefined;
     
   // Use the actual userAnswer from the database (don't convert to empty string)
   const displayUserAnswer = userAnswer;
     
   const correctAnswer = currentQuestion.answer_letter;
-  const correctCount = (attemptData?.user_answers && pack?.questions) 
-    ? Object.keys(attemptData.user_answers).filter(
+  const correctCount = (userAnswers && pack?.questions) 
+    ? Object.keys(userAnswers).filter(
         (questionId) => {
           const question = pack.questions.find(q => q.objectID === questionId);
-          return question && attemptData.user_answers[questionId] === question.answer_letter;
+          return question && userAnswers[questionId] === question.answer_letter;
         }
       ).length
     : 0;
@@ -589,9 +589,7 @@ export default function ReviewPage({ params }: { params: Promise<{ packId: strin
           <div className="review-header-right">
             <div className="review-question-numbers">
               {pack.questions.map((question, index) => {
-                const userAns = (question?.objectID && attemptData?.user_answers) 
-                  ? attemptData.user_answers[question.objectID] 
-                  : undefined;
+                const userAns = question?.objectID ? userAnswers[question.objectID] : undefined;
                 const isCorrect = userAns === question.answer_letter;
                 const isAnswered = userAns !== undefined;
                 
@@ -653,7 +651,7 @@ export default function ReviewPage({ params }: { params: Promise<{ packId: strin
 
             <div className="review-answer-indicators">
               <div className={`review-answer-indicator ${displayUserAnswer === correctAnswer ? 'correct' : 'incorrect'}`}>
-                Your Answer: {userAnswer || 'Not answered'}
+                Your Answer: {displayUserAnswer || 'Not answered'}
               </div>
               <div className="review-answer-indicator correct">
                 Correct Answer: {correctAnswer}

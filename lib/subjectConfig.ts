@@ -31,6 +31,13 @@ export const SUBJECT_CONFIGS: SubjectConfig[] = [
     available: true,
     filters: [
       {
+        id: 'year',
+        label: 'Year',
+        field: 'year',
+        type: 'checkbox',
+        fetchFromIndex: true // Will fetch available years from the index
+      },
+      {
         id: 'questionType',
         label: 'Question Type',
         field: 'question_type',
@@ -46,13 +53,6 @@ export const SUBJECT_CONFIGS: SubjectConfig[] = [
         field: 'sub_types',
         type: 'checkbox',
         fetchFromIndex: true // Will fetch available sub_types from the index
-      },
-      {
-        id: 'yearNumber',
-        label: 'Year',
-        field: 'yearNumber',
-        type: 'checkbox',
-        fetchFromIndex: true // Will fetch available years from the index
       }
     ]
   },

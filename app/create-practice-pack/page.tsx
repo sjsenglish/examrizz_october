@@ -1,10 +1,22 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { getSubjectConfig, getAvailableSubjects } from '../../lib/subjectConfig';
+import { getTotalQuestionCount, getSubjectFacets, getFilteredQuestionCount, FacetValue } from '../../lib/algoliaFacets';
 import './create-practice-pack.css';
+
+interface ActiveFilters {
+  [field: string]: string[];
+}
+
+interface FilterOption {
+  value: string;
+  label: string;
+  count?: number;
+}
 
 export default function CreatePracticePackPage() {
   const router = useRouter();
@@ -13,75 +25,180 @@ export default function CreatePracticePackPage() {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [showSubjectDropdown, setShowSubjectDropdown] = useState(false);
   
-  // Filter states
-  const [questionType, setQuestionType] = useState(true);
-  const [subType, setSubType] = useState(false);
-  const [year, setYear] = useState(false);
-  const [difficulty, setDifficulty] = useState(false);
-  const [examSession, setExamSession] = useState(false);
-  const [filter6, setFilter6] = useState(false);
+  // Dynamic filter states
+  const [activeFilters, setActiveFilters] = useState<ActiveFilters>({});
+  const [expandedFilters, setExpandedFilters] = useState<Set<string>>(new Set());
+  const [availableFilterOptions, setAvailableFilterOptions] = useState<Record<string, FilterOption[]>>({});
   
-  // Additional filter states for left panel
-  const [criticalThinking, setCriticalThinking] = useState(true);
-  const [problemSolving, setProblemSolving] = useState(false);
-  
-  // Number of questions and font size states
-  const [numberOfQuestions, setNumberOfQuestions] = useState(1);
+  // Question count states
+  const [totalQuestions, setTotalQuestions] = useState(0);
+  const [availableQuestions, setAvailableQuestions] = useState(0);
+  const [numberOfQuestions, setNumberOfQuestions] = useState(10);
   const [fontSize, setFontSize] = useState(12);
   
   // Mouse drag states for sliders
   const [isDraggingQuestions, setIsDraggingQuestions] = useState(false);
   const [isDraggingFont, setIsDraggingFont] = useState(false);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const fontSliderRef = useRef<HTMLDivElement>(null);
 
-  const subjects = ['Maths', 'Physics', 'Chemistry', 'Biology', 'Economics', 'TSA'];
+  const subjects = getAvailableSubjects();
+
+  // Fetch total questions when subject changes
+  useEffect(() => {
+    const fetchTotalQuestions = async () => {
+      if (!selectedSubject) {
+        setTotalQuestions(0);
+        setAvailableQuestions(0);
+        return;
+      }
+
+      const total = await getTotalQuestionCount(selectedSubject);
+      setTotalQuestions(total);
+      setAvailableQuestions(total);
+      
+      // Reset number of questions to 10 or max available
+      setNumberOfQuestions(Math.min(10, total));
+    };
+
+    fetchTotalQuestions();
+    // Reset filters when subject changes
+    setActiveFilters({});
+    setExpandedFilters(new Set());
+    setAvailableFilterOptions({});
+  }, [selectedSubject]);
+
+  // Fetch facets and update available questions when filters change
+  useEffect(() => {
+    const fetchFacetsAndCount = async () => {
+      if (!selectedSubject) return;
+
+      const config = getSubjectConfig(selectedSubject);
+      if (!config?.filters) return;
+
+      // Build filter string for Algolia
+      const filterStrings: string[] = [];
+      for (const [field, values] of Object.entries(activeFilters)) {
+        if (values && values.length > 0) {
+          if (field === 'sub_types') {
+            const subTypeFilters = values.map(v => `sub_types:"${v}"`).join(' OR ');
+            if (subTypeFilters) filterStrings.push(`(${subTypeFilters})`);
+          } else {
+            const fieldFilters = values.map(v => `${field}:"${v}"`).join(' OR ');
+            if (fieldFilters) filterStrings.push(`(${fieldFilters})`);
+          }
+        }
+      }
+
+      // Fetch facets for filters that need dynamic options
+      const facetsToFetch = config.filters
+        .filter(f => f.fetchFromIndex)
+        .map(f => f.field);
+
+      if (facetsToFetch.length > 0) {
+        const facetResults = await getSubjectFacets(
+          selectedSubject,
+          facetsToFetch,
+          filterStrings.join(' AND ')
+        );
+
+        // Update available filter options
+        const newOptions: Record<string, FilterOption[]> = {};
+        for (const filter of config.filters) {
+          if (filter.fetchFromIndex && facetResults[filter.field]) {
+            newOptions[filter.field] = facetResults[filter.field].map((fv: FacetValue) => ({
+              value: fv.value,
+              label: fv.value,
+              count: fv.count
+            }));
+          } else if (filter.options) {
+            newOptions[filter.field] = filter.options;
+          }
+        }
+        setAvailableFilterOptions(newOptions);
+      }
+
+      // Get filtered question count
+      const count = await getFilteredQuestionCount(selectedSubject, activeFilters);
+      setAvailableQuestions(count);
+      
+      // Adjust numberOfQuestions if it exceeds available
+      if (numberOfQuestions > count) {
+        setNumberOfQuestions(Math.max(1, Math.min(10, count)));
+      }
+    };
+
+    fetchFacetsAndCount();
+  }, [selectedSubject, activeFilters, numberOfQuestions]);
 
   const handleClearFilters = () => {
-    setQuestionType(false);
-    setSubType(false);
-    setYear(false);
-    setDifficulty(false);
-    setExamSession(false);
-    setFilter6(false);
-    setCriticalThinking(false);
-    setProblemSolving(false);
+    setActiveFilters({});
+    setExpandedFilters(new Set());
   };
 
-  // Handle question slider drag
-  const handleQuestionSliderDrag = (e: React.MouseEvent) => {
-    if (!isDraggingQuestions) return;
+  const toggleFilter = (field: string) => {
+    const newExpanded = new Set(expandedFilters);
+    if (newExpanded.has(field)) {
+      newExpanded.delete(field);
+    } else {
+      newExpanded.add(field);
+    }
+    setExpandedFilters(newExpanded);
+  };
+
+  const toggleFilterOption = (field: string, value: string) => {
+    const currentValues = activeFilters[field] || [];
+    const newValues = currentValues.includes(value)
+      ? currentValues.filter(v => v !== value)
+      : [...currentValues, value];
     
-    const slider = e.currentTarget.parentElement;
-    if (!slider) return;
-    const rect = slider.getBoundingClientRect();
-    const percentage = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    const value = Math.round(1 + percentage * 49); // 1 to 50
+    setActiveFilters({
+      ...activeFilters,
+      [field]: newValues.length > 0 ? newValues : []
+    });
+  };
+
+  // Handle question slider with better precision
+  const handleQuestionSliderMove = useCallback((clientX: number) => {
+    if (!isDraggingQuestions || !sliderRef.current || availableQuestions === 0) return;
+    
+    const rect = sliderRef.current.getBoundingClientRect();
+    const percentage = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    const value = Math.max(1, Math.min(availableQuestions, Math.round(1 + percentage * (availableQuestions - 1))));
     setNumberOfQuestions(value);
-  };
+  }, [isDraggingQuestions, availableQuestions]);
 
-  // Handle font size slider drag
-  const handleFontSliderDrag = (e: React.MouseEvent) => {
-    if (!isDraggingFont) return;
+  // Handle font slider
+  const handleFontSliderMove = useCallback((clientX: number) => {
+    if (!isDraggingFont || !fontSliderRef.current) return;
     
-    const slider = e.currentTarget.parentElement;
-    if (!slider) return;
-    const rect = slider.getBoundingClientRect();
-    const percentage = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const rect = fontSliderRef.current.getBoundingClientRect();
+    const percentage = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
     const value = Math.round(8 + percentage * 16); // 8pt to 24pt
     setFontSize(value);
-  };
+  }, [isDraggingFont]);
 
   // Mouse event handlers
-  const handleMouseUp = () => {
-    setIsDraggingQuestions(false);
-    setIsDraggingFont(false);
-  };
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      handleQuestionSliderMove(e.clientX);
+      handleFontSliderMove(e.clientX);
+    };
 
-  React.useEffect(() => {
+    const handleMouseUp = () => {
+      setIsDraggingQuestions(false);
+      setIsDraggingFont(false);
+    };
+
     if (isDraggingQuestions || isDraggingFont) {
+      document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
-      return () => document.removeEventListener('mouseup', handleMouseUp);
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
     }
-  }, [isDraggingQuestions, isDraggingFont]);
+  }, [isDraggingQuestions, isDraggingFont, handleQuestionSliderMove, handleFontSliderMove]);
 
   const handleSelectQuestions = () => {
     // Store pack data in sessionStorage to pass to next step
@@ -90,21 +207,15 @@ export default function CreatePracticePackPage() {
       subject: selectedSubject,
       numberOfQuestions,
       fontSize,
-      filters: {
-        questionType,
-        subType,
-        year,
-        difficulty,
-        examSession,
-        filter6,
-        criticalThinking,
-        problemSolving
-      }
+      filters: activeFilters,
+      availableQuestions
     };
     
     sessionStorage.setItem('packData', JSON.stringify(packData));
     router.push('/select-practice-questions');
   };
+
+  const subjectConfig = selectedSubject ? getSubjectConfig(selectedSubject) : null;
 
   return (
     <div className="page-background">
@@ -120,7 +231,6 @@ export default function CreatePracticePackPage() {
         </button>
       </nav>
 
-
       {/* Main Content */}
       <div className="main-content">
         {/* Back Button */}
@@ -128,19 +238,19 @@ export default function CreatePracticePackPage() {
           href="/practice" 
           style={{
             position: 'absolute',
-            top: '30px',
-            left: '45px',
+            top: '80px',
+            left: '40px',
             display: 'flex',
             alignItems: 'center',
             gap: '6px',
-            padding: '9px 18px',
+            padding: '8px 16px',
             backgroundColor: '#FFFFFF',
-            borderRadius: '8px',
+            borderRadius: '6px',
             textDecoration: 'none',
             color: '#333333',
             fontFamily: "'Madimi One', cursive",
-            fontSize: '13px',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+            fontSize: '12px',
+            border: '1px solid #ddd',
             transition: 'all 0.3s ease',
             zIndex: 20
           }}
@@ -154,10 +264,10 @@ export default function CreatePracticePackPage() {
         {/* Header */}
         <h1 style={{
           fontFamily: "'Madimi One', cursive",
-          fontSize: '32px',
+          fontSize: '24px',
           fontWeight: '400',
           color: '#000000',
-          margin: '60px 0 20px 0',
+          margin: '40px 0 10px 0',
           textAlign: 'left'
         }}>
           Create Your Practice Pack
@@ -166,9 +276,9 @@ export default function CreatePracticePackPage() {
         {/* Step indicator */}
         <div style={{
           fontFamily: "'Madimi One', cursive",
-          fontSize: '16px',
+          fontSize: '14px',
           color: '#666666',
-          marginBottom: '20px',
+          marginBottom: '15px',
           textAlign: 'left'
         }}>
           Step 1 of 2
@@ -234,86 +344,65 @@ export default function CreatePracticePackPage() {
                 </div>
               </div>
 
-              {/* Question Filters */}
-              <div style={{ marginBottom: '30px' }}>
-                <h3 className="card-title" style={{ margin: '0 0 15px 0' }}>
-                  Question Filters
-                </h3>
-                
-                {/* Filter checkboxes in grid */}
-                <div className="filter-grid">
-                  <div className="filter-item">
-                    <input type="checkbox" checked={questionType} onChange={(e) => setQuestionType(e.target.checked)} className="filter-checkbox" />
-                    <span className="filter-label">Question Type</span>
-                  </div>
+              {/* Dynamic Question Filters */}
+              {selectedSubject && subjectConfig?.filters && (
+                <div style={{ marginBottom: '30px' }}>
+                  <h3 className="card-title" style={{ margin: '0 0 15px 0' }}>
+                    Question Filters
+                  </h3>
                   
-                  <div className="filter-item">
-                    <input type="checkbox" checked={subType} onChange={(e) => setSubType(e.target.checked)} className="filter-checkbox" />
-                    <span className="filter-label">Sub Type</span>
+                  <div className="filter-sections">
+                    {subjectConfig.filters.map((filter) => (
+                      <div key={filter.id} className="filter-section">
+                        <button
+                          className={`filter-header ${expandedFilters.has(filter.field) ? 'expanded' : ''}`}
+                          onClick={() => toggleFilter(filter.field)}
+                        >
+                          <span>{filter.label}</span>
+                          <span className="filter-arrow">
+                            {expandedFilters.has(filter.field) ? '▼' : '▶'}
+                          </span>
+                        </button>
+                        
+                        {expandedFilters.has(filter.field) && (
+                          <div className="filter-options">
+                            {(availableFilterOptions[filter.field] || filter.options || []).map((option) => (
+                              <label key={option.value} className="filter-option">
+                                <input
+                                  type="checkbox"
+                                  checked={(activeFilters[filter.field] || []).includes(option.value)}
+                                  onChange={() => toggleFilterOption(filter.field, option.value)}
+                                  className="filter-checkbox"
+                                />
+                                <span className="filter-option-label">
+                                  {option.label}
+                                  {option.count !== undefined && (
+                                    <span className="filter-count"> ({option.count})</span>
+                                  )}
+                                </span>
+                              </label>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                  
-                  <div className="filter-item">
-                    <input type="checkbox" checked={year} onChange={(e) => setYear(e.target.checked)} className="filter-checkbox" />
-                    <span className="filter-label">Year</span>
-                  </div>
-                  
-                  <div className="filter-item">
-                    <input type="checkbox" checked={difficulty} onChange={(e) => setDifficulty(e.target.checked)} className="filter-checkbox" />
-                    <span className="filter-label">Difficulty</span>
-                  </div>
-                  
-                  <div className="filter-item">
-                    <input type="checkbox" checked={examSession} onChange={(e) => setExamSession(e.target.checked)} className="filter-checkbox" />
-                    <span className="filter-label">Exam Session</span>
-                  </div>
-                  
-                  <div className="filter-item">
-                    <input type="checkbox" checked={filter6} onChange={(e) => setFilter6(e.target.checked)} className="filter-checkbox" />
-                    <span className="filter-label">Filter 6</span>
-                  </div>
-                </div>
 
-                {/* Critical Thinking / Problem Solving section */}
-                <div className="critical-thinking-section">
-                  <div className="thinking-options">
-                    <label className="thinking-label">
-                      <input 
-                        type="checkbox" 
-                        checked={criticalThinking} 
-                        onChange={(e) => setCriticalThinking(e.target.checked)} 
-                        className="filter-checkbox"
-                      />
-                      <span className="thinking-text">
-                        Critical Thinking
-                      </span>
-                    </label>
-                    <label className="thinking-label">
-                      <input 
-                        type="checkbox" 
-                        checked={problemSolving} 
-                        onChange={(e) => setProblemSolving(e.target.checked)} 
-                        className="filter-checkbox"
-                      />
-                      <span className="thinking-text">
-                        Problem Solving
-                      </span>
-                    </label>
+                  {/* Clear filters button */}
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    marginTop: '15px'
+                  }}>
+                    <button 
+                      className="clear-filters-button"
+                      onClick={handleClearFilters}
+                    >
+                      clear filters
+                    </button>
                   </div>
                 </div>
-
-                {/* Clear filters button */}
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'flex-end'
-                }}>
-                  <button 
-                    className="clear-filters-button"
-                    onClick={handleClearFilters}
-                  >
-                    clear filters
-                  </button>
-                </div>
-              </div>
+              )}
             </div>
           </article>
 
@@ -345,9 +434,15 @@ export default function CreatePracticePackPage() {
                     className="slider-input"
                   />
                   <div 
+                    ref={sliderRef}
                     className="slider-track"
                     style={{ height: '20px' }}
-                    onMouseMove={handleQuestionSliderDrag}
+                    onClick={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const percentage = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                      const value = Math.max(1, Math.min(availableQuestions, Math.round(1 + percentage * (availableQuestions - 1))));
+                      setNumberOfQuestions(value);
+                    }}
                   >
                     <Image 
                       src="/icons/speech-bubble-ghost.svg" 
@@ -356,18 +451,23 @@ export default function CreatePracticePackPage() {
                       height={40}
                       style={{
                         position: 'absolute',
-                        left: `${((numberOfQuestions - 1) / 49) * 100}%`,
+                        left: availableQuestions > 1 
+                          ? `${((numberOfQuestions - 1) / (availableQuestions - 1)) * 100}%`
+                          : '0%',
                         top: '50%',
                         transform: 'translate(-50%, -50%)',
                         cursor: 'grab'
                       }}
-                      onMouseDown={() => setIsDraggingQuestions(true)}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        setIsDraggingQuestions(true);
+                      }}
                       draggable={false}
                     />
                   </div>
                   <input
                     type="text"
-                    value="50"
+                    value={availableQuestions || '0'}
                     readOnly
                     className="slider-input"
                   />
@@ -382,7 +482,12 @@ export default function CreatePracticePackPage() {
                   {numberOfQuestions} questions selected
                 </div>
                 <p className="availability-text">
-                  Questions available with current filters
+                  {availableQuestions} questions available with current filters
+                  {selectedSubject && totalQuestions > 0 && (
+                    <span style={{ display: 'block', fontSize: '12px', marginTop: '5px', color: '#666' }}>
+                      (Total {totalQuestions} questions in {selectedSubject})
+                    </span>
+                  )}
                 </p>
               </div>
 
@@ -409,9 +514,15 @@ export default function CreatePracticePackPage() {
                 <div className="font-size-controls">
                   <span className="font-size-text">small</span>
                   <div 
+                    ref={fontSliderRef}
                     className="font-slider-track"
                     style={{ height: '20px' }}
-                    onMouseMove={handleFontSliderDrag}
+                    onClick={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const percentage = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                      const value = Math.round(8 + percentage * 16);
+                      setFontSize(value);
+                    }}
                   >
                     <Image 
                       src="/icons/speech-bubble-ghost.svg" 
@@ -425,25 +536,26 @@ export default function CreatePracticePackPage() {
                         transform: 'translate(-50%, -50%)',
                         cursor: 'grab'
                       }}
-                      onMouseDown={() => setIsDraggingFont(true)}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        setIsDraggingFont(true);
+                      }}
                       draggable={false}
                     />
                   </div>
                   <span className="font-size-text">large</span>
                 </div>
               </div>
-
-
             </div>
             
             {/* Select Questions Button - Bottom Right */}
             <button 
               onClick={handleSelectQuestions}
               className="select-questions-button"
-              disabled={!packName || !selectedSubject}
+              disabled={!packName || !selectedSubject || availableQuestions === 0}
               style={{ 
-                opacity: (!packName || !selectedSubject) ? 0.5 : 1,
-                cursor: (!packName || !selectedSubject) ? 'not-allowed' : 'pointer'
+                opacity: (!packName || !selectedSubject || availableQuestions === 0) ? 0.5 : 1,
+                cursor: (!packName || !selectedSubject || availableQuestions === 0) ? 'not-allowed' : 'pointer'
               }}
             >
               Select Questions

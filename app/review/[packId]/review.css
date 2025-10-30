@@ -363,15 +363,11 @@
   border-color: #00CED1;
 }
 
-.review-option-item.incorrect-answer {
-  background: #FADEE8;
-  border-color: #FF4D6A;
-}
-
 /* User's incorrect answer */
 .review-option-item.user-incorrect {
   background: #FADEE8;
   border-color: #FF4D6A;
+  border-width: 2px;
 }
 
 .review-option-letter {

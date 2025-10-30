@@ -178,15 +178,6 @@ export default function SelectPracticeQuestionsPage() {
               ×
             </Link>
 
-            {/* Header */}
-            <h1 className="header-title">
-              Create Your Practice Pack: {packData.packName}
-            </h1>
-
-            {/* Step indicator */}
-            <div className="step-indicator">
-              Step 2 of 2 - {packData.subject} Questions
-            </div>
 
             {/* Inner Container */}
             <div className="inner-container">
@@ -229,10 +220,9 @@ export default function SelectPracticeQuestionsPage() {
                             fontWeight: '400',
                             padding: '12px 20px',
                             backgroundColor: 'white',
-                            border: '2px solid black',
+                            border: '1px solid black',
                             borderRadius: '8px',
                             cursor: 'pointer',
-                            boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
                             minWidth: '50px',
                             textAlign: 'center',
                             transition: 'all 0.2s ease'
