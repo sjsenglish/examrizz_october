@@ -29,6 +29,8 @@ export default function StudyBookPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDraftPopout, setShowDraftPopout] = useState(false);
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const categoryDropdownRef = useRef<HTMLDivElement>(null);
 
   // Materials state
   const [uploadedFiles, setUploadedFiles] = useState<{id: string, file_name: string, file_type: string, file_path: string, created_at: string}[]>([]);
@@ -127,6 +129,19 @@ export default function StudyBookPage() {
     getCurrentUser();
   }, [user]);
 
+  // Handle clicking outside of category dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (categoryDropdownRef.current && event.target instanceof Node && !categoryDropdownRef.current.contains(event.target)) {
+        setIsCategoryDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const loadConversationHistory = async (currentUserId: string) => {
     try {
@@ -650,23 +665,6 @@ export default function StudyBookPage() {
             onClick={() => setActiveTab('chat')}
           >
             Ask Bo
-            <img 
-              src="/icons/learn-hub-book.svg" 
-              alt="Draft Icon" 
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowDraftPopout(!showDraftPopout);
-              }}
-              style={{
-                width: '16px',
-                height: '16px',
-                marginLeft: '8px',
-                position: 'absolute',
-                bottom: '4px',
-                right: '4px',
-                cursor: 'pointer'
-              }}
-            />
           </button>
         </div>
       </div>
@@ -759,14 +757,48 @@ export default function StudyBookPage() {
 
               <div className="chat-input-fixed">
                 <div className="input-container">
-                  <textarea
-                    value={currentMessage}
-                    onChange={(e) => setCurrentMessage(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    placeholder="Ask Bo anything..."
-                    disabled={isLoading}
-                    rows={3}
-                  />
+                  <div style={{ position: 'relative' }}>
+                    <textarea
+                      value={currentMessage}
+                      onChange={(e) => setCurrentMessage(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      placeholder="Ask Bo anything..."
+                      disabled={isLoading}
+                      rows={3}
+                    />
+                    <button
+                      onClick={() => setShowDraftPopout(!showDraftPopout)}
+                      style={{
+                        position: 'absolute',
+                        bottom: '10px',
+                        right: '10px',
+                        background: '#F4F3FF',
+                        border: '1px solid #E5E3FF',
+                        borderRadius: '6px',
+                        padding: '6px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = '#E5E3FF';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = '#F4F3FF';
+                      }}
+                    >
+                      <img 
+                        src="/icons/learn-hub-book.svg" 
+                        alt="Quick Draft" 
+                        style={{
+                          width: '18px',
+                          height: '18px'
+                        }}
+                      />
+                    </button>
+                  </div>
                   <div className="button-group">
                     <button 
                       onClick={() => {/* TODO: Add teacher functionality */}}
@@ -895,16 +927,114 @@ export default function StudyBookPage() {
             <div className="modal-content">
               <div className="form-group">
                 <label style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>Category</label>
-                <select 
-                  value={materialForm.category}
-                  onChange={(e) => setMaterialForm(prev => ({ ...prev, category: e.target.value }))}
-                  style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}
-                >
-                  <option value="">Select category</option>
-                  {categories.map(cat => (
-                    <option key={cat.id} value={cat.id}>{cat.label}</option>
-                  ))}
-                </select>
+                <div ref={categoryDropdownRef} style={{ position: 'relative' }}>
+                  <button
+                    type="button"
+                    onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+                    style={{
+                      padding: '10px 40px 10px 12px',
+                      fontSize: '14px',
+                      border: '1px solid #00CED1',
+                      backgroundColor: '#DFF8F9',
+                      fontFamily: "'Figtree', sans-serif",
+                      fontWeight: '400',
+                      width: '100%',
+                      outline: 'none',
+                      letterSpacing: '0.04em',
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      borderRadius: '0'
+                    }}
+                  >
+                    {materialForm.category ? categories.find(cat => cat.id === materialForm.category)?.label : 'Select category'}
+                    <svg 
+                      width="12" 
+                      height="12" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      style={{ 
+                        transform: isCategoryDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.2s ease'
+                      }}
+                    >
+                      <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                  
+                  {isCategoryDropdownOpen && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '100%',
+                      left: 0,
+                      width: '100%',
+                      backgroundColor: '#DFF8F9',
+                      border: '1px solid #00CED1',
+                      borderTop: 'none',
+                      zIndex: 1000,
+                      maxHeight: '200px',
+                      overflowY: 'auto'
+                    }}>
+                      <div
+                        onClick={() => {
+                          setMaterialForm(prev => ({ ...prev, category: '' }));
+                          setIsCategoryDropdownOpen(false);
+                        }}
+                        style={{
+                          padding: '10px 12px',
+                          fontSize: '14px',
+                          fontFamily: "'Figtree', sans-serif",
+                          fontWeight: '400',
+                          letterSpacing: '0.04em',
+                          cursor: 'pointer',
+                          backgroundColor: '#DFF8F9',
+                          transition: 'background-color 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.target as HTMLElement).style.backgroundColor = '#95EAEC';
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.target as HTMLElement).style.backgroundColor = '#DFF8F9';
+                        }}
+                      >
+                        Select category
+                      </div>
+                      {categories.map((cat) => (
+                        <div
+                          key={cat.id}
+                          onClick={() => {
+                            setMaterialForm(prev => ({ ...prev, category: cat.id }));
+                            setIsCategoryDropdownOpen(false);
+                          }}
+                          style={{
+                            padding: '10px 12px',
+                            fontSize: '14px',
+                            fontFamily: "'Figtree', sans-serif",
+                            fontWeight: '400',
+                            letterSpacing: '0.04em',
+                            cursor: 'pointer',
+                            backgroundColor: materialForm.category === cat.id ? '#95EAEC' : '#DFF8F9',
+                            transition: 'background-color 0.2s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (materialForm.category !== cat.id) {
+                              (e.target as HTMLElement).style.backgroundColor = '#95EAEC';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (materialForm.category !== cat.id) {
+                              (e.target as HTMLElement).style.backgroundColor = '#DFF8F9';
+                            }
+                          }}
+                        >
+                          {cat.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
               
               <div className="form-group">

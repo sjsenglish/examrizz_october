@@ -79,17 +79,17 @@ body {
 
 .sidebar {
   position: fixed;
-  bottom: 20px;
+  top: 80px;
   left: 20px;
-  width: 280px;
+  width: 200px;
   background: #F4F3FF;
   border-radius: 16px;
   z-index: 90;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
   padding: 16px;
-  gap: 12px;
+  gap: 8px;
 }
 
 
@@ -123,8 +123,8 @@ body {
 
 .sidebar-nav {
   display: flex;
-  flex-direction: row;
-  gap: 12px;
+  flex-direction: column;
+  gap: 8px;
   width: 100%;
 }
 
@@ -132,16 +132,14 @@ body {
   background: #FAF9FF;
   border: 1px solid #E5E5E5;
   border-radius: 8px;
-  padding: 12px 16px;
-  text-align: center;
+  padding: 12px;
+  text-align: left;
   font-family: 'Madimi One', cursive;
   font-size: 13px;
   font-weight: 400;
   color: #333333;
   cursor: pointer;
   transition: all 0.2s ease;
-  flex: 1;
-  white-space: nowrap;
   position: relative;
 }
 
@@ -222,10 +220,11 @@ body {
 
 .materials-layout {
   display: grid;
-  grid-template-columns: 40% 60%;
-  gap: var(--space-48);
-  max-width: 1400px;
+  grid-template-columns: 35% 65%;
+  gap: var(--space-32);
+  max-width: 1200px;
   margin: 0 auto;
+  margin-left: 240px;
   padding-right: var(--space-24);
 }
 
@@ -425,6 +424,7 @@ body {
 .chat-container {
   max-width: 60%;
   margin: 0 auto;
+  margin-left: 240px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -585,6 +585,7 @@ body {
 .drafts-container {
   max-width: 1200px;
   margin: 0 auto;
+  margin-left: 240px;
   padding: var(--space-32);
 }
 
