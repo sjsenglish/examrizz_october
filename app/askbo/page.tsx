@@ -41,7 +41,21 @@ export default function StudyBookPage() {
   const [popupDraftContent, setPopupDraftContent] = useState('');
 
   // Materials state
-  const [uploadedFiles, setUploadedFiles] = useState<{id: string, file_name: string, file_type: string, file_path: string, created_at: string}[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<{
+    id: string;
+    file_name: string;
+    file_type: string;
+    file_path: string;
+    created_at: string;
+    category?: string;
+    title?: string;
+    description?: string;
+    main_arguments?: string;
+    conclusions?: string;
+    sources?: string;
+    methodology?: string;
+    completion_date?: string;
+  }[]>([]);
   const [uploadProgress, setUploadProgress] = useState<{[key: string]: number}>({});
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [editingSections, setEditingSections] = useState<{[key: string]: boolean}>({});
