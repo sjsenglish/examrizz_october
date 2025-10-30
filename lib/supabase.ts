@@ -4,12 +4,34 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 // Single Supabase client instance to avoid multiple GoTrueClient warnings
-export const supabase = createClient(supabaseUrl, supabaseKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
+// Singleton pattern to ensure only one client exists
+let supabaseInstance: ReturnType<typeof createClient> | null = null;
+
+function getSupabaseInstance() {
+  if (!supabaseInstance) {
+    supabaseInstance = createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        flowType: 'pkce'
+      },
+      global: {
+        headers: {
+          'x-application-name': 'examrizz'
+        }
+      },
+      realtime: {
+        params: {
+          eventsPerSecond: 10
+        }
+      }
+    });
   }
-});
+  return supabaseInstance;
+}
+
+export const supabase = getSupabaseInstance();
 
 // Types for database schema
 export interface School {

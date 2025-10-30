@@ -121,9 +121,11 @@ export async function joinSchool(userId: string, schoolCode: string): Promise<{
     }
 
     // Update user profile with school_id
+    const updateData = { school_id: validation.school.id };
+    // @ts-expect-error - Supabase types may not be fully defined for this table
     const { error: updateError } = await supabase
       .from('user_profiles')
-      .update({ school_id: validation.school.id })
+      .update(updateData)
       .eq('id', userId);
 
     if (updateError) {

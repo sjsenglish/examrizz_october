@@ -111,6 +111,7 @@ export default function LearnLesson() {
         <div className="main-content">
           {/* Stats Dashboard */}
           <div className="stats-dashboard">
+            {/* Working Grade Card */}
             <div className="stat-card working-grade">
               <div className="stat-header">
                 <span className="stat-icon">📊</span>
@@ -119,17 +120,19 @@ export default function LearnLesson() {
               <div className="stat-content">
                 <div className="grade-display">
                   <span className="grade-letter">A</span>
-                  <div className="grade-progress">
-                    <div className="progress-bar">
-                      <div className="progress-fill" style={{width: '73%'}}></div>
+                  <div className="grade-metrics">
+                    <div className="grade-numbers">
+                      <span className="grade-primary">67</span>
+                      <span className="grade-secondary">73%</span>
+                      <span className="grade-label">accuracy</span>
                     </div>
-                    <span className="progress-text">73%</span>
-                    <span className="progress-label">accuracy</span>
+                    <div className="grade-time">3h 24m</div>
                   </div>
                 </div>
               </div>
             </div>
 
+            {/* Predicted Grade Card */}
             <div className="stat-card predicted-grade">
               <div className="stat-header">
                 <span className="stat-title">PREDICTED GRADE</span>
@@ -143,6 +146,7 @@ export default function LearnLesson() {
               </div>
             </div>
 
+            {/* Learning Streak Card */}
             <div className="stat-card learning-streak">
               <div className="stat-header">
                 <span className="stat-icon">🔥</span>
@@ -157,6 +161,7 @@ export default function LearnLesson() {
               </div>
             </div>
 
+            {/* Exam Readiness Card */}
             <div className="stat-card exam-readiness">
               <div className="stat-header">
                 <span className="stat-title">EXAM READINESS</span>
@@ -164,11 +169,12 @@ export default function LearnLesson() {
               <div className="stat-content">
                 <span className="readiness-score">74/100</span>
                 <div className="readiness-details">
-                  <span>Exam pace on track</span>
+                  <span>• Exam pace on track</span>
                 </div>
               </div>
             </div>
 
+            {/* Grade Shift Card */}
             <div className="stat-card grade-shift">
               <div className="stat-header">
                 <span className="stat-title">GRADE SHIFT BY TOPIC</span>
@@ -283,6 +289,7 @@ export default function LearnLesson() {
                 <div className="examples-section">
                   <h2 className="section-title">Examples</h2>
                   
+                  {/* Example 1 */}
                   <div className="example-item">
                     <div className="example-header">
                       <h3>Example 1</h3>
@@ -294,6 +301,7 @@ export default function LearnLesson() {
                     </div>
                   </div>
 
+                  {/* Example 2 - With expanded content */}
                   <div className="example-item">
                     <div className="example-header">
                       <h3>Example 2</h3>
@@ -304,36 +312,37 @@ export default function LearnLesson() {
                       <button className="btn-question-walkthrough">Question Walkthrough</button>
                     </div>
                     
-                    {/* Simplify section */}
-                    <div className="simplify-section">
+                    {/* Expanded Mathematical Working */}
+                    <div className="mathematical-working">
                       <h4>Simplify</h4>
-                      <p className="simplify-text">Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10 is positive for all</p>
+                      <p className="working-text">Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10 is positive for all</p>
                       
                       <h4>Apply the law</h4>
                       <div className="math-steps">
-                        <div className="step">
-                          <span className="step-math">3x = 3 = 3x</span>
+                        <div className="math-step">
+                          <span className="step-equation">3x/y = 3 = 3x</span>
                           <span className="step-description">Multiply the numerator</span>
                         </div>
-                        <div className="step">
-                          <span className="step-math">4y = 3x = 4y</span>
+                        <div className="math-step">
+                          <span className="step-equation">4y/3 = 3x = 4y</span>
                           <span className="step-description">Multiply the numerator</span>
                         </div>
-                        <div className="step">
-                          <span className="step-math">1/2 = x = 1/2</span>
+                        <div className="math-step">
+                          <span className="step-equation">1/2 = x = 1/2</span>
                           <span className="step-description">Multiply the numerator</span>
                         </div>
-                        <div className="step">
-                          <span className="step-math">x = 3x</span>
+                        <div className="math-step">
+                          <span className="step-equation">x = 3x</span>
                           <span className="step-description">Multiply the numerator</span>
                         </div>
                       </div>
                       
                       <h4>Simplify</h4>
-                      <p className="simplify-text">Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10 is positive for all Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10 is positive for all Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10.</p>
+                      <p className="working-text">Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10 is positive for all Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10 is positive for all Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10.</p>
                     </div>
                   </div>
 
+                  {/* Example 3 - With video toggle */}
                   <div className="example-item">
                     <div className="example-header">
                       <h3>Example 3</h3>
@@ -344,8 +353,8 @@ export default function LearnLesson() {
                       <button className="btn-question-walkthrough">Question Walkthrough</button>
                     </div>
                     
-                    {/* Video appears below when walkthrough clicked */}
-                    <div className="walkthrough-video">
+                    {/* Toggle Video */}
+                    <div className="toggle-video">
                       <div className="video-placeholder small">
                         <div className="video-icon">▶</div>
                         <div className="video-text">
@@ -367,14 +376,23 @@ export default function LearnLesson() {
                     <p>Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10 is positive for all Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10 is positive for all Proof by deduction e.g. using completion of the square, prove that x² - 6x + 10.</p>
                     
                     <div className="summary-formula">
-                      <span className="formula">1 = A - D</span>
-                      <span className="formula">B - C    B - C</span>
+                      <div className="formula-display">
+                        <span className="formula-numerator">1</span>
+                        <span className="formula-line">―――</span>
+                        <span className="formula-denominator">B - C</span>
+                        <span className="formula-equals">=</span>
+                        <span className="formula-numerator">A - D</span>
+                        <span className="formula-line">―――――</span>
+                        <span className="formula-denominator">B - C</span>
+                      </div>
                     </div>
                   </div>
                   
-                  <button className="practice-button">
-                    PRACTICE →
-                  </button>
+                  <div className="practice-section">
+                    <button className="practice-button">
+                      PRACTICE →
+                    </button>
+                  </div>
                 </div>
               </div>
             )}

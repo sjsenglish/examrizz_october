@@ -1,8 +1,19 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Figtree } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+// Optimize font loading with proper fallbacks
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap',
+  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif']
+});
+
+const figtree = Figtree({ 
+  subsets: ['latin'],
+  display: 'swap',
+  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif']
+});
 
 export const metadata: Metadata = {
   title: 'examrizz - Gamified Learning Platform',
@@ -19,7 +30,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>
+      <head>
+        {/* Font preloading handled by Next.js font optimization */}
+      </head>
+      <body className={`${inter.className} ${figtree.className} antialiased`}>
         {children}
       </body>
     </html>
