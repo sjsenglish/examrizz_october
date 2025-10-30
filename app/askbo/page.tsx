@@ -63,6 +63,7 @@ export default function StudyBookPage() {
   const [savingNotes, setSavingNotes] = useState<{[key: string]: boolean}>({});
   const [viewingFile, setViewingFile] = useState<string | null>(null);
   const [showMaterialModal, setShowMaterialModal] = useState(false);
+  const [editingMaterialId, setEditingMaterialId] = useState<string | null>(null);
   const [materialForm, setMaterialForm] = useState({
     category: '',
     title: '',
@@ -639,6 +640,55 @@ export default function StudyBookPage() {
     setShowVersionHistory({ question: 0, show: false });
   };
 
+  const deleteMaterial = async (materialId: string, fileName: string) => {
+    try {
+      const confirmed = confirm(`Are you sure you want to delete "${fileName}"?`);
+      if (!confirmed) return;
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      // Delete from database
+      const { error } = await supabase
+        .from('user_uploads')
+        .delete()
+        .eq('id', materialId);
+
+      if (error) {
+        console.error('Error deleting material:', error);
+        alert('Failed to delete material');
+        return;
+      }
+
+      // Refresh the materials list
+      await loadUploadedFiles();
+      alert('Material deleted successfully');
+    } catch (error) {
+      console.error('Error deleting material:', error);
+      alert('Failed to delete material');
+    }
+  };
+
+  const editMaterial = (material: any) => {
+    // Pre-fill the form with existing material data
+    setMaterialForm({
+      category: material.category || '',
+      title: material.title || '',
+      description: material.description || '',
+      tags: '',
+      file: null,
+      main_arguments: material.main_arguments || '',
+      conclusions: material.conclusions || '',
+      sources: material.sources || '',
+      methodology: material.methodology || '',
+      completion_date: material.completion_date || ''
+    });
+    
+    // Store the material ID for updating
+    setEditingMaterialId(material.id);
+    setShowMaterialModal(true);
+  };
+
   const handleSaveMaterial = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -647,6 +697,50 @@ export default function StudyBookPage() {
         return;
       }
 
+      // If editing, update existing material
+      if (editingMaterialId) {
+        const { error } = await supabase
+          .from('user_uploads')
+          .update({
+            category: materialForm.category,
+            title: materialForm.title,
+            description: materialForm.description,
+            main_arguments: materialForm.main_arguments,
+            conclusions: materialForm.conclusions,
+            sources: materialForm.sources,
+            methodology: materialForm.methodology,
+            completion_date: materialForm.completion_date
+          })
+          .eq('id', editingMaterialId);
+
+        if (error) {
+          console.error('Error updating material:', error);
+          alert('Failed to update material');
+          return;
+        }
+
+        alert('Material updated successfully');
+        setEditingMaterialId(null);
+        setShowMaterialModal(false);
+        await loadUploadedFiles();
+        
+        // Reset form
+        setMaterialForm({
+          category: '',
+          title: '',
+          description: '',
+          tags: '',
+          file: null,
+          main_arguments: '',
+          conclusions: '',
+          sources: '',
+          methodology: '',
+          completion_date: ''
+        });
+        return;
+      }
+
+      // Original upload logic for new materials
       if (!materialForm.file) {
         alert('Please select a file to upload');
         return;
@@ -955,8 +1049,18 @@ export default function StudyBookPage() {
                         <div className="card-header">
                           <img src={categoryIcon} alt={file.category || 'File'} style={{ width: '24px', height: '24px' }} />
                           <div className="card-actions">
-                            <button style={{ fontSize: '11px', padding: '4px 8px' }}>Edit</button>
-                            <button style={{ fontSize: '11px', padding: '4px 8px' }}>Delete</button>
+                            <button 
+                              onClick={() => editMaterial(file)}
+                              style={{ fontSize: '11px', padding: '4px 8px', cursor: 'pointer' }}
+                            >
+                              Edit
+                            </button>
+                            <button 
+                              onClick={() => deleteMaterial(file.id, file.file_name)}
+                              style={{ fontSize: '11px', padding: '4px 8px', cursor: 'pointer' }}
+                            >
+                              Delete
+                            </button>
                           </div>
                         </div>
                         <h3 style={{ fontSize: '14px', margin: '8px 0 4px 0' }}>
@@ -1166,8 +1270,26 @@ export default function StudyBookPage() {
         <div className="modal-backdrop" onClick={() => setShowMaterialModal(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()} style={{ width: '75%', maxWidth: '900px' }}>
             <div className="modal-header">
-              <h3 style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>Add Study Material</h3>
-              <button onClick={() => setShowMaterialModal(false)}>×</button>
+              <h3 style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>
+                {editingMaterialId ? 'Edit Study Material' : 'Add Study Material'}
+              </h3>
+              <button onClick={() => {
+                setShowMaterialModal(false);
+                setEditingMaterialId(null);
+                // Reset form
+                setMaterialForm({
+                  category: '',
+                  title: '',
+                  description: '',
+                  tags: '',
+                  file: null,
+                  main_arguments: '',
+                  conclusions: '',
+                  sources: '',
+                  methodology: '',
+                  completion_date: ''
+                });
+              }}>×</button>
             </div>
             <div className="modal-content">
               <div className="form-group">
@@ -1357,35 +1479,37 @@ export default function StudyBookPage() {
                 />
               </div>
               
-              <div className="form-group">
-                <label style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>File</label>
-                <div style={{ position: 'relative' }}>
-                  <input 
-                    type="file"
-                    onChange={(e) => setMaterialForm(prev => ({ ...prev, file: e.target.files?.[0] || null }))}
-                    accept=".pdf,.doc,.docx,.txt"
-                    style={{ 
-                      opacity: 0, 
-                      position: 'absolute', 
-                      width: '100%', 
-                      height: '100%',
-                      cursor: 'pointer'
-                    }}
-                  />
-                  <div style={{
-                    padding: '10px 12px',
-                    border: '1px solid #00CED1',
-                    background: '#DFF8F9',
-                    fontFamily: "'Figtree', sans-serif",
-                    fontSize: '14px',
-                    letterSpacing: '0.04em',
-                    cursor: 'pointer',
-                    color: materialForm.file ? '#000000' : '#666666'
-                  }}>
-                    {materialForm.file ? materialForm.file.name : 'Add your material here'}
+              {!editingMaterialId && (
+                <div className="form-group">
+                  <label style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>File</label>
+                  <div style={{ position: 'relative' }}>
+                    <input 
+                      type="file"
+                      onChange={(e) => setMaterialForm(prev => ({ ...prev, file: e.target.files?.[0] || null }))}
+                      accept=".pdf,.doc,.docx,.txt"
+                      style={{ 
+                        opacity: 0, 
+                        position: 'absolute', 
+                        width: '100%', 
+                        height: '100%',
+                        cursor: 'pointer'
+                      }}
+                    />
+                    <div style={{
+                      padding: '10px 12px',
+                      border: '1px solid #00CED1',
+                      background: '#DFF8F9',
+                      fontFamily: "'Figtree', sans-serif",
+                      fontSize: '14px',
+                      letterSpacing: '0.04em',
+                      cursor: 'pointer',
+                      color: materialForm.file ? '#000000' : '#666666'
+                    }}>
+                      {materialForm.file ? materialForm.file.name : 'Add your material here'}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
               
               <div className="form-actions">
                 <button 
