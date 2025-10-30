@@ -29,10 +29,9 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters }) => {
         <div className="filter-grid">
           {/* Column 1 - Question Types */}
           <div className="filter-column">
-            <label className="filter-option">
-              <input type="checkbox" className="filter-checkbox primary" disabled />
+            <div className="filter-category-title">
               <span>Question Type</span>
-            </label>
+            </div>
             
             {questionTypeRefinement.items.map((item) => (
               <label key={item.value} className="filter-option">
@@ -49,10 +48,9 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters }) => {
 
           {/* Column 2 - Sub Types */}
           <div className="filter-column">
-            <label className="filter-option">
-              <input type="checkbox" className="filter-checkbox primary" disabled />
+            <div className="filter-category-title">
               <span>Sub Type</span>
-            </label>
+            </div>
             
             {subTypesRefinement.items.map((item) => (
               <label key={item.value} className="filter-option">
@@ -69,10 +67,9 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters }) => {
 
           {/* Column 3 - Placeholder for Year */}
           <div className="filter-column">
-            <label className="filter-option">
-              <input type="checkbox" className="filter-checkbox primary" disabled />
+            <div className="filter-category-title">
               <span>Year</span>
-            </label>
+            </div>
           </div>
         </div>
 

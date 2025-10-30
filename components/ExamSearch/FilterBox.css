@@ -8,24 +8,23 @@
 
 .filter-box {
   background-color: var(--color-white);
-  border: var(--border-thick);
-  border-radius: var(--radius-xl);
+  border: var(--border-thin);
+  border-radius: 0;
   padding: var(--space-xl);
-  box-shadow: var(--shadow-primary-lg),
-              8px 8px 16px rgba(0, 206, 209, 0.2);
+  box-shadow: var(--shadow-lg);
   position: relative;
 }
 
 .filter-box-header {
-  background-color: var(--color-primary-light);
+  background-color: var(--color-white);
   margin: calc(-1 * var(--space-xl)) calc(-1 * var(--space-xl)) var(--space-lg) calc(-1 * var(--space-xl));
   padding: 15px var(--space-xl);
-  border-bottom: var(--border-medium);
-  border-radius: 13px 13px 0 0;
+  border-bottom: var(--border-thin);
+  border-radius: 0;
 }
 
 .filter-box-header h3 {
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   font-size: var(--text-xl);
   font-weight: 400;
   color: var(--color-black);
@@ -43,6 +42,17 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
+}
+
+.filter-category-title {
+  margin-bottom: var(--space-sm);
+}
+
+.filter-category-title span {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-black);
 }
 
 .filter-option {
@@ -67,7 +77,7 @@
 }
 
 .filter-option span {
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   font-size: var(--text-base);
   font-weight: 400;
   color: var(--color-black);
