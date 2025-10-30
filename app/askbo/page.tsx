@@ -27,7 +27,6 @@ export default function StudyBookPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('materials');
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
 
   // Materials state
@@ -631,13 +630,7 @@ export default function StudyBookPage() {
       </Link>
 
       {/* Sidebar - Always Visible */}
-      <div className={`sidebar open ${sidebarCollapsed ? 'collapsed' : ''}`}>
-        <button 
-          className="collapse-arrow"
-          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-        >
-          {sidebarCollapsed ? '→' : '←'}
-        </button>
+      <div className="sidebar open">
         <div className="sidebar-nav">
           <button 
             className={`nav-item ${activeTab === 'materials' ? 'active' : ''}`}
@@ -650,6 +643,12 @@ export default function StudyBookPage() {
             onClick={() => setActiveTab('chat')}
           >
             Ask Bo
+          </button>
+          <button 
+            className={`nav-item ${activeTab === 'drafts' ? 'active' : ''}`}
+            onClick={() => setActiveTab('drafts')}
+          >
+            Statement Drafts
           </button>
         </div>
       </div>
@@ -764,6 +763,68 @@ export default function StudyBookPage() {
                     >
                       {isLoading ? 'Sending...' : 'Send'}
                     </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'drafts' && (
+          <div className="drafts-page">
+            <div className="drafts-container">
+              <h2 style={{ 
+                fontFamily: "'Madimi One', cursive", 
+                fontSize: '28px', 
+                letterSpacing: '0.04em', 
+                marginBottom: '24px',
+                color: '#000000'
+              }}>
+                Personal Statement Drafts
+              </h2>
+              
+              <div className="drafts-grid">
+                <div className="draft-card">
+                  <div className="draft-header">
+                    <h3>Draft 1</h3>
+                    <span className="draft-date">Last edited: Today</span>
+                  </div>
+                  <div className="draft-preview">
+                    <p>From a young age, I have been fascinated by the intersection of technology and human behavior...</p>
+                  </div>
+                  <div className="draft-stats">
+                    <span>Word count: 247</span>
+                    <span>Character limit: 4,000</span>
+                  </div>
+                  <div className="draft-actions">
+                    <button className="edit-btn">Edit</button>
+                    <button className="delete-btn">Delete</button>
+                  </div>
+                </div>
+
+                <div className="draft-card">
+                  <div className="draft-header">
+                    <h3>Draft 2</h3>
+                    <span className="draft-date">Last edited: Yesterday</span>
+                  </div>
+                  <div className="draft-preview">
+                    <p>My passion for computer science began when I first encountered programming in high school...</p>
+                  </div>
+                  <div className="draft-stats">
+                    <span>Word count: 389</span>
+                    <span>Character limit: 4,000</span>
+                  </div>
+                  <div className="draft-actions">
+                    <button className="edit-btn">Edit</button>
+                    <button className="delete-btn">Delete</button>
+                  </div>
+                </div>
+
+                <div className="new-draft-card">
+                  <div className="new-draft-content">
+                    <div className="plus-icon">+</div>
+                    <h3>Create New Draft</h3>
+                    <p>Start writing your personal statement</p>
                   </div>
                 </div>
               </div>

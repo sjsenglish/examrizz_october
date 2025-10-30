@@ -79,45 +79,19 @@ body {
 
 .sidebar {
   position: fixed;
-  top: 120px;
+  bottom: 20px;
   left: 20px;
-  width: 180px;
+  width: 280px;
   background: #F4F3FF;
   border-radius: 16px;
-  transform: translateX(-100%);
-  transition: transform 0.3s ease, width 0.3s ease;
   z-index: 90;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
-  padding: 12px;
+  padding: 16px;
+  gap: 12px;
 }
 
-.sidebar.collapsed {
-  width: 60px;
-  padding: 10px;
-}
-
-.sidebar.collapsed .nav-item {
-  font-size: 0;
-  padding: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.sidebar.collapsed .nav-item::before {
-  content: "📚";
-  font-size: 16px;
-}
-
-.sidebar.collapsed .nav-item:nth-child(2)::before {
-  content: "💬";
-}
-
-.sidebar.open {
-  transform: translateX(0);
-}
 
 .sidebar-header {
   padding: var(--space-24);
@@ -148,25 +122,26 @@ body {
 }
 
 .sidebar-nav {
-  padding: var(--space-16);
   display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
+  flex-direction: row;
+  gap: 12px;
+  width: 100%;
 }
 
 .nav-item {
   background: #FAF9FF;
   border: 1px solid #E5E5E5;
-  border-radius: 0;
-  padding: 12px;
-  text-align: left;
+  border-radius: 8px;
+  padding: 12px 16px;
+  text-align: center;
   font-family: 'Madimi One', cursive;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
   color: #333333;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-bottom: 6px;
+  flex: 1;
+  white-space: nowrap;
 }
 
 .nav-item:hover {
@@ -199,31 +174,6 @@ body {
   color: var(--text-primary);
 }
 
-.collapse-arrow {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: #F4F3FF;
-  border: 1px solid #E5E3FF;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 12px;
-  transition: all 0.3s ease;
-  z-index: 100;
-}
-
-.collapse-arrow:hover {
-  background: #E5E3FF;
-}
-
-.sidebar.collapsed .collapse-arrow {
-  right: 8px;
-}
 
 /* =============================================================================
    MAIN CONTENT
@@ -270,11 +220,10 @@ body {
 
 .materials-layout {
   display: grid;
-  grid-template-columns: 35% 65%;
-  gap: var(--space-32);
-  max-width: 1200px;
+  grid-template-columns: 40% 60%;
+  gap: var(--space-48);
+  max-width: 1400px;
   margin: 0 auto;
-  margin-left: 220px;
 }
 
 .categories-panel {
@@ -623,6 +572,163 @@ body {
 }
 
 /* =============================================================================
+   DRAFTS PAGE
+   ============================================================================= */
+
+.drafts-page {
+  padding: 0;
+}
+
+.drafts-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-32);
+}
+
+.drafts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: var(--space-24);
+  margin-top: var(--space-32);
+}
+
+.draft-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  padding: var(--space-24);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.draft-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.draft-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-16);
+}
+
+.draft-header h3 {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.draft-date {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.draft-preview {
+  margin-bottom: var(--space-16);
+}
+
+.draft-preview p {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.draft-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--space-16);
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.draft-actions {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.edit-btn, .delete-btn {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-sm);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-btn {
+  background: #E7E6FF;
+  color: #4338CA;
+  border-color: #4338CA;
+}
+
+.edit-btn:hover {
+  background: #DDD6FE;
+}
+
+.delete-btn {
+  background: #FEE2E2;
+  color: #DC2626;
+  border-color: #DC2626;
+}
+
+.delete-btn:hover {
+  background: #FECACA;
+}
+
+.new-draft-card {
+  background: var(--bg-gray);
+  border: 2px dashed var(--border);
+  border-radius: var(--border-radius);
+  padding: var(--space-48);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.new-draft-card:hover {
+  background: #F3F4F6;
+  border-color: var(--primary);
+}
+
+.new-draft-content {
+  text-align: center;
+}
+
+.plus-icon {
+  font-size: 48px;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-16);
+}
+
+.new-draft-content h3 {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  margin: 0 0 var(--space-8) 0;
+  color: var(--text-primary);
+}
+
+.new-draft-content p {
+  font-family: var(--font-body);
+  font-size: 14px;
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+/* =============================================================================
    MODALS
    ============================================================================= */
 
@@ -642,17 +748,24 @@ body {
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 12px;
-  padding-right: 40px;
+  padding: 10px 40px 10px 12px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .modal select option {
-  background: #DFF8F9;
-  color: #000000;
-  padding: 8px 12px;
+  background: #DFF8F9 !important;
+  color: #000000 !important;
+  padding: 8px 12px !important;
+  border: none !important;
+  outline: none !important;
 }
 
-.modal select option:hover {
+.modal select option:hover,
+.modal select option:focus,
+.modal select option:checked {
   background: #95EAEC !important;
+  color: #000000 !important;
 }
 
 /* All form elements sharp edges */
