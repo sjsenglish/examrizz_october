@@ -129,12 +129,23 @@ export default function SelectPracticeQuestionsPage() {
     
     if (subjectConfig.filters && packData.filters) {
       for (const filterConfig of subjectConfig.filters) {
-        const selectedValues = packData.filters[filterConfig.id] || [];
+        // Check both the field name and the id for backward compatibility
+        const selectedValues = packData.filters[filterConfig.field] || packData.filters[filterConfig.id] || [];
         if (selectedValues.length > 0) {
-          const clause = selectedValues
-            .map(value => `${filterConfig.field}:"${value}"`)
-            .join(' OR ');
-          filterClauses.push(`(${clause})`);
+          // Handle array fields differently
+          if (filterConfig.field === 'sub_types') {
+            // For array fields, we need to use OR logic
+            const subTypeFilters = selectedValues.map(v => `sub_types:"${v}"`).join(' OR ');
+            if (subTypeFilters) {
+              filterClauses.push(`(${subTypeFilters})`);
+            }
+          } else {
+            // For non-array fields, use OR logic
+            const clause = selectedValues
+              .map(value => `${filterConfig.field}:"${value}"`)
+              .join(' OR ');
+            filterClauses.push(`(${clause})`);
+          }
         }
       }
     }

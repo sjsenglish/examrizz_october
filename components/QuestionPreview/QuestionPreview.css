@@ -3,7 +3,7 @@
 
 .question-preview-card {
   background-color: var(--color-white);
-  border-radius: var(--radius-xl);
+  border-radius: 0;
   border: 1px solid #000000;
   padding: calc(var(--space-xl) * 1.1);
   position: relative;
@@ -17,7 +17,6 @@
 
 .question-preview-card.selected {
   border-color: var(--color-primary);
-  background-color: var(--color-primary-light);
 }
 
 /* Checkbox styling within question header */

@@ -103,8 +103,7 @@
 
 .inner-container {
   background-color: #FFFFFF;
-  border-radius: 13px; /* Reduced by 17% from 16px */
-  border: 1px solid #000000;
+  border-radius: 0;
   padding: 17px; /* Reduced by 17% from 20px */
   position: relative;
   min-height: 15vh; /* Further reduced to eliminate scrolling and prevent bottom cutoff */
@@ -195,7 +194,7 @@
   position: relative;
   background-color: #D3F6F7; /* Container background color */
   border: 1px solid black; /* Thinner outline */
-  border-radius: 16px; /* Rounded container */
+  border-radius: 0; /* Straight edges */
   padding: 20px; /* Increased padding to contain question packs */
   width: 75%; /* Take up only 75% of horizontal space to match search bar */
   min-height: 400px; /* Increased height to properly contain question packs, 30% longer */
