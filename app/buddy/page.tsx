@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
+import Navbar from '@/components/Navbar';
 import './buddy.css';
 
 const supabase = createClient(
@@ -31,7 +32,6 @@ export default function BuddyPage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [showDropdown, setShowDropdown] = useState(false);
   
   // Chat state
   const [messages, setMessages] = useState<Message[]>([]);
@@ -274,10 +274,6 @@ export default function BuddyPage() {
     }
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push('/login');
-  };
 
   const handleCreateTicket = async () => {
     if (!userId || !currentSessionId) {
@@ -365,38 +361,8 @@ export default function BuddyPage() {
   }
 
   return (
-    <div className="buddy-page">
-      {/* Navbar */}
-      <nav className="buddy-navbar">
-        <Link href="/" className="buddy-logo">
-          <h1>examrizzsearch</h1>
-        </Link>
-        <div className="navbar-actions">
-          <button 
-            onClick={() => setShowDropdown(!showDropdown)}
-            className="hamburger-button"
-          >
-            <div className="hamburger-line"></div>
-            <div className="hamburger-line"></div>
-            <div className="hamburger-line"></div>
-          </button>
-          
-          {showDropdown && (
-            <div className="dropdown-menu">
-              <Link href="/terms-and-conditions" onClick={() => setShowDropdown(false)}>
-                Terms & Conditions
-              </Link>
-              <Link href="/payment" onClick={() => setShowDropdown(false)}>
-                Payment
-              </Link>
-              <Link href="/help" onClick={() => setShowDropdown(false)}>
-                Help
-              </Link>
-              <button onClick={handleLogout}>Logout</button>
-            </div>
-          )}
-        </div>
-      </nav>
+    <div className="buddy-page" style={{ paddingTop: '60px' }}>
+      <Navbar />
 
       {/* Back Button */}
       <Link href="/learn" className="back-button">

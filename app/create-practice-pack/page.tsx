@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import Navbar from '@/components/Navbar';
 import { getSubjectConfig, getAvailableSubjects } from '../../lib/subjectConfig';
 import { getTotalQuestionCount, getSubjectFacets, getFilteredQuestionCount, FacetValue } from '../../lib/algoliaFacets';
 import './create-practice-pack.css';
@@ -218,18 +219,8 @@ export default function CreatePracticePackPage() {
   const subjectConfig = selectedSubject ? getSubjectConfig(selectedSubject) : null;
 
   return (
-    <div className="page-background">
-      {/* Navbar */}
-      <nav className="navbar">
-        <Link href="/" style={{ textDecoration: 'none' }}>
-          <h1>examrizzsearch</h1>
-        </Link>
-        <button className="hamburger-button">
-          <div className="hamburger-line"></div>
-          <div className="hamburger-line"></div>
-          <div className="hamburger-line"></div>
-        </button>
-      </nav>
+    <div className="page-background" style={{ paddingTop: '60px' }}>
+      <Navbar />
 
       {/* Main Content */}
       <div className="main-content">

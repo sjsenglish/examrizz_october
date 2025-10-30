@@ -9,6 +9,7 @@ import { createPracticePack } from '../../lib/supabaseQuestionPacks.js';
 import { useRouter } from 'next/navigation';
 import { QuestionPreview } from '../../components/QuestionPreview/QuestionPreview';
 import { QuestionModal } from '../../components/QuestionModal/QuestionModal';
+import Navbar from '@/components/Navbar';
 import './select-practice-questions.css';
 
 interface PackData {
@@ -164,18 +165,8 @@ export default function SelectPracticeQuestionsPage() {
   }
 
   return (
-    <div className="page-background">
-      {/* Navbar */}
-      <nav className="navbar">
-        <Link href="/" style={{ textDecoration: 'none' }}>
-          <h1>examrizzsearch</h1>
-        </Link>
-        <button className="hamburger-button">
-          <div className="hamburger-line"></div>
-          <div className="hamburger-line"></div>
-          <div className="hamburger-line"></div>
-        </button>
-      </nav>
+    <div className="page-background" style={{ paddingTop: '60px' }}>
+      <Navbar />
 
       {/* Main Content */}
       <div className="main-content">

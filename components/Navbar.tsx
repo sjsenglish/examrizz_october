@@ -114,22 +114,22 @@ export default function Navbar() {
           <button 
             onClick={handleLogin}
             style={{
-              background: '#4338CA',
-              border: '1px solid #4338CA',
+              background: '#E7E6FF',
+              border: '1px solid #D8C6FF',
               borderRadius: '20px',
               padding: '8px 16px',
               fontFamily: "'Figtree', sans-serif",
               fontSize: '13px',
               fontWeight: '500',
-              color: '#FFFFFF',
+              color: '#000000',
               cursor: 'pointer',
               transition: 'all 0.3s ease'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#3730A3';
+              e.currentTarget.style.background = '#DDD6FE';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = '#4338CA';
+              e.currentTarget.style.background = '#E7E6FF';
             }}
           >
             Login
@@ -221,6 +221,29 @@ export default function Navbar() {
                 onClick={() => setShowDropdown(false)}
               >
                 Help
+              </Link>
+              <Link 
+                href="/terms"
+                style={{
+                  display: 'block',
+                  padding: '12px 20px',
+                  color: '#000000',
+                  textDecoration: 'none',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  letterSpacing: '0.04em',
+                  transition: 'background-color 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#F8F8F5';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
+                onClick={() => setShowDropdown(false)}
+              >
+                T's & C's
               </Link>
             </div>
           )}

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { LandingHub } from '@/components/landing/LandingHub';
 import ExamSearch from '@/components/ExamSearch';
 import { SettingsButton } from '@/components/SettingsButton';
+import Navbar from '@/components/Navbar';
 import Image from 'next/image';
 import Link from 'next/link';
 import './NewSwipeableContainer.css';
@@ -12,7 +13,6 @@ export const NewSwipeableContainer: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<'island' | 'search'>('search');
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showGhost, setShowGhost] = useState(true);
-  const [showDropdown, setShowDropdown] = useState(false);
   
   // Speech bubble states
   const [islandSpeechText, setIslandSpeechText] = useState(
@@ -78,108 +78,7 @@ export const NewSwipeableContainer: React.FC = () => {
 
   return (
     <div className="swipeable-container">
-      {/* Navbar */}
-      <nav className="navbar">
-        <Link href="/" className="navbar-logo">
-          <h1 className="navbar-title">examrizzsearch</h1>
-        </Link>
-        <div style={{ position: 'relative' }}>
-          <button 
-            className="navbar-menu"
-            onClick={() => setShowDropdown(!showDropdown)}
-          >
-            <div className="hamburger-line"></div>
-            <div className="hamburger-line"></div>
-            <div className="hamburger-line"></div>
-          </button>
-          
-          {showDropdown && (
-            <div style={{
-              position: 'absolute',
-              top: '100%',
-              right: '0',
-              marginTop: '8px',
-              backgroundColor: '#FFFFFF',
-              border: '2px solid #000000',
-              borderRadius: '8px',
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-              zIndex: 10000,
-              minWidth: '160px',
-              padding: '8px 0'
-            }}>
-              <Link 
-                href="/terms-and-conditions"
-                style={{
-                  display: 'block',
-                  padding: '12px 20px',
-                  color: '#000000',
-                  textDecoration: 'none',
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  letterSpacing: '0.04em',
-                  transition: 'background-color 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#F8F8F5';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-                onClick={() => setShowDropdown(false)}
-              >
-                Terms & Conditions
-              </Link>
-              <Link 
-                href="/payment"
-                style={{
-                  display: 'block',
-                  padding: '12px 20px',
-                  color: '#000000',
-                  textDecoration: 'none',
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  letterSpacing: '0.04em',
-                  transition: 'background-color 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#F8F8F5';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-                onClick={() => setShowDropdown(false)}
-              >
-                Payment
-              </Link>
-              <Link 
-                href="/help"
-                style={{
-                  display: 'block',
-                  padding: '12px 20px',
-                  color: '#000000',
-                  textDecoration: 'none',
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  letterSpacing: '0.04em',
-                  transition: 'background-color 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#F8F8F5';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-                onClick={() => setShowDropdown(false)}
-              >
-                Help
-              </Link>
-            </div>
-          )}
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Settings Button - only on island page */}
       {currentPage === 'island' && <SettingsButton />}

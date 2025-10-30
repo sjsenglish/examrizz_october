@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import Navbar from '@/components/Navbar';
 import './create-question-pack.css';
 
 export default function CreateQuestionPackPage() {
@@ -28,18 +29,8 @@ export default function CreateQuestionPackPage() {
   const subjects = ['Maths', 'Physics', 'Chemistry', 'Biology', 'Economics'];
 
   return (
-    <div className="page-background">
-      {/* Navbar */}
-      <nav className="navbar">
-        <Link href="/" style={{ textDecoration: 'none' }}>
-          <h1>examrizzsearch</h1>
-        </Link>
-        <button className="hamburger-button">
-          <div className="hamburger-line"></div>
-          <div className="hamburger-line"></div>
-          <div className="hamburger-line"></div>
-        </button>
-      </nav>
+    <div className="page-background" style={{ paddingTop: '60px' }}>
+      <Navbar />
 
       {/* Back Button */}
       <Link 

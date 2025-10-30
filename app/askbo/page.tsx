@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
+import Navbar from '@/components/Navbar';
 import './study-book.css';
 
 const supabase = createClient(
@@ -31,7 +32,6 @@ export default function StudyBookPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('materials');
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [showDropdown, setShowDropdown] = useState(false);
   const [showDraftPopout, setShowDraftPopout] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const categoryDropdownRef = useRef<HTMLDivElement>(null);
@@ -560,10 +560,6 @@ export default function StudyBookPage() {
     }
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push('/login');
-  };
 
   const loadUploadedFiles = async () => {
     try {
@@ -806,159 +802,7 @@ export default function StudyBookPage() {
 
   return (
     <div className="study-book-new">
-      {/* Navbar */}
-      <nav className="navbar">
-        <Link href="/" style={{ textDecoration: 'none' }}>
-          <h1 style={{
-            fontFamily: "'Madimi One', cursive",
-            fontSize: '24px',
-            fontWeight: '400',
-            color: '#000000',
-            margin: '0',
-            cursor: 'pointer'
-          }}>
-            examrizzsearch
-          </h1>
-        </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          {/* Login/Logout Pill */}
-          <button 
-            onClick={handleLogout}
-            style={{
-              background: '#E7E6FF',
-              border: '1px solid #4338CA',
-              borderRadius: '20px',
-              padding: '8px 16px',
-              fontFamily: "'Figtree', sans-serif",
-              fontSize: '13px',
-              fontWeight: '500',
-              color: '#4338CA',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease'
-            }}
-          >
-            Logout
-          </button>
-          
-          <button 
-            onClick={() => setShowDropdown(!showDropdown)}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '8px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4px'
-            }}
-          >
-            <div style={{
-              width: '20px',
-              height: '2px',
-              backgroundColor: '#000000',
-              borderRadius: '1px'
-            }}></div>
-            <div style={{
-              width: '20px',
-              height: '2px',
-              backgroundColor: '#000000',
-              borderRadius: '1px'
-            }}></div>
-            <div style={{
-              width: '20px',
-              height: '2px',
-              backgroundColor: '#000000',
-              borderRadius: '1px'
-            }}></div>
-          </button>
-          
-          {showDropdown && (
-            <div style={{
-              position: 'absolute',
-              top: '100%',
-              right: '0',
-              marginTop: '8px',
-              backgroundColor: '#FFFFFF',
-              border: '2px solid #000000',
-              borderRadius: '8px',
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-              zIndex: 10000,
-              minWidth: '160px',
-              padding: '8px 0'
-            }}>
-              <Link 
-                href="/terms-and-conditions"
-                style={{
-                  display: 'block',
-                  padding: '12px 20px',
-                  color: '#000000',
-                  textDecoration: 'none',
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  letterSpacing: '0.04em',
-                  transition: 'background-color 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#F8F8F5';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-                onClick={() => setShowDropdown(false)}
-              >
-                Terms & Conditions
-              </Link>
-              <Link 
-                href="/payment"
-                style={{
-                  display: 'block',
-                  padding: '12px 20px',
-                  color: '#000000',
-                  textDecoration: 'none',
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  letterSpacing: '0.04em',
-                  transition: 'background-color 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#F8F8F5';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-                onClick={() => setShowDropdown(false)}
-              >
-                Payment
-              </Link>
-              <Link 
-                href="/help"
-                style={{
-                  display: 'block',
-                  padding: '12px 20px',
-                  color: '#000000',
-                  textDecoration: 'none',
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  letterSpacing: '0.04em',
-                  transition: 'background-color 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#F8F8F5';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-                onClick={() => setShowDropdown(false)}
-              >
-                Help
-              </Link>
-            </div>
-          )}
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Back Button */}
       <Link 

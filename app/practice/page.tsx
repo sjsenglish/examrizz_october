@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import Navbar from '@/components/Navbar';
 import { getUserPracticePacks } from '../../lib/supabaseQuestionPacks';
 import { getAllSubjects, getAvailableSubjects } from '../../lib/subjectConfig';
 import './practice.css';
@@ -29,7 +30,6 @@ export default function PracticePage() {
   const [showAdmissionDropdown, setShowAdmissionDropdown] = useState(false);
   const [questionPacks, setQuestionPacks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showDropdown, setShowDropdown] = useState(false);
 
   // Available subjects for admissions dropdown
   const availableSubjects = getAvailableSubjects(); // This will include TSA
@@ -73,157 +73,11 @@ export default function PracticePage() {
   };
 
   return (
-    <div style={{ backgroundColor: '#FFFFFF', minHeight: '100vh' }}>
-      {/* Navbar */}
-      <nav style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: '60px',
-        backgroundColor: '#F8F8F5',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 40px',
-        zIndex: 100,
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
-      }}>
-        <Link href="/" style={{ textDecoration: 'none' }}>
-          <h1 style={{
-            fontFamily: "'Madimi One', sans-serif",
-            fontSize: '24px',
-            fontWeight: '400',
-            color: '#000000',
-            margin: '0',
-            cursor: 'pointer'
-          }}>
-            examrizzsearch
-          </h1>
-        </Link>
-        <div style={{ position: 'relative' }}>
-          <button 
-            onClick={() => setShowDropdown(!showDropdown)}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '8px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4px'
-            }}
-          >
-            <div style={{
-              width: '20px',
-              height: '2px',
-              backgroundColor: '#000000',
-              borderRadius: '1px'
-            }}></div>
-            <div style={{
-              width: '20px',
-              height: '2px',
-              backgroundColor: '#000000',
-              borderRadius: '1px'
-            }}></div>
-            <div style={{
-              width: '20px',
-              height: '2px',
-              backgroundColor: '#000000',
-              borderRadius: '1px'
-            }}></div>
-          </button>
-          
-          {showDropdown && (
-            <div style={{
-              position: 'absolute',
-              top: '100%',
-              right: '0',
-              marginTop: '8px',
-              backgroundColor: '#FFFFFF',
-              border: '2px solid #000000',
-              borderRadius: '8px',
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-              zIndex: 1000,
-              minWidth: '160px',
-              padding: '8px 0'
-            }}>
-              <Link 
-                href="/terms-and-conditions"
-                style={{
-                  display: 'block',
-                  padding: '12px 20px',
-                  color: '#000000',
-                  textDecoration: 'none',
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  letterSpacing: '0.04em',
-                  transition: 'background-color 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#F8F8F5';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-                onClick={() => setShowDropdown(false)}
-              >
-                Terms & Conditions
-              </Link>
-              <Link 
-                href="/payment"
-                style={{
-                  display: 'block',
-                  padding: '12px 20px',
-                  color: '#000000',
-                  textDecoration: 'none',
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  letterSpacing: '0.04em',
-                  transition: 'background-color 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#F8F8F5';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-                onClick={() => setShowDropdown(false)}
-              >
-                Payment
-              </Link>
-              <Link 
-                href="/help"
-                style={{
-                  display: 'block',
-                  padding: '12px 20px',
-                  color: '#000000',
-                  textDecoration: 'none',
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  letterSpacing: '0.04em',
-                  transition: 'background-color 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#F8F8F5';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-                onClick={() => setShowDropdown(false)}
-              >
-                Help
-              </Link>
-            </div>
-          )}
-        </div>
-      </nav>
+    <div style={{ backgroundColor: '#FFFFFF', minHeight: '100vh', paddingTop: '60px' }}>
+      <Navbar />
 
-      {/* Content with navbar padding */}
-      <div style={{ paddingTop: '60px' }}>
+      {/* Content */}
+      <div>
         {/* Main Content */}
         <div style={{ 
           padding: '60px',
