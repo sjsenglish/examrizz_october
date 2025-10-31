@@ -19,8 +19,6 @@ const getFirebaseImageUrl = (gsUrl: string): string => {
   
   const firebaseUrl = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodedPath}?alt=media`;
   
-  // Debug log to verify URL conversion
-  console.log('Converting Firebase URL:', gsUrl, '→', firebaseUrl);
   
   return firebaseUrl;
 };
@@ -31,10 +29,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
 
-  // Detect question type based on data structure
-  const isMathsQuestion = hit?.paper_info && hit?.spec_topic;
-  const isEnglishLitQuestion = hit?.QualificationLevel === 'A Level' && hit?.Subject === 'English Literature';
-  const isInterviewQuestion = hit?.QuestionID && hit?.Time && hit?.QuestionPromptText;
+  // Detect question type based on data structure - memoized to prevent re-renders
+  const isMathsQuestion = useMemo(() => hit?.paper_info && hit?.spec_topic, [hit]);
+  const isEnglishLitQuestion = useMemo(() => hit?.QualificationLevel === 'A Level' && hit?.Subject === 'English Literature', [hit]);
+  const isInterviewQuestion = useMemo(() => hit?.QuestionID && hit?.Time && hit?.QuestionPromptText, [hit]);
 
   const handleAnswerClick = (letter: string) => {
     setSelectedAnswer(letter);
@@ -129,7 +127,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     return `${baseClass} ${answerClass} ${noHoverClass}`.trim();
   };
 
-  const isALevelQuestion = hit?.paper_info && hit?.qualification_level === 'A Level';
+  const isALevelQuestion = useMemo(() => hit?.paper_info && hit?.qualification_level === 'A Level', [hit]);
   
   // Get normalized data based on question type - memoized to prevent re-renders
   const normalizedData = useMemo(() => ({

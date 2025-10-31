@@ -500,7 +500,6 @@ const ExamSearch: React.FC = () => {
         {showResults && showFilters && currentSubject && (
           <FilterBox 
             onHideFilters={() => {
-              console.log('Hiding filters, current state:', { activeTab, selectedSubject, selectedAdmissionsTest, currentSubject });
               setShowFilters(false);
             }} 
             currentSubject={currentSubject} 
@@ -514,7 +513,6 @@ const ExamSearch: React.FC = () => {
               <ResultsCount />
               {!showFilters && (
                 <Button variant="ghost" size="sm" onClick={() => {
-                  console.log('Showing filters, current state:', { activeTab, selectedSubject, selectedAdmissionsTest, currentSubject });
                   setShowFilters(true);
                 }}>
                   show filters
