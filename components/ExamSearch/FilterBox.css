@@ -1,7 +1,7 @@
 /* FilterBox Component Styles */
 
 .filter-box-container {
-  max-width: 630px; /* Reduced by 30% from 900px */
+  max-width: 787px; /* Increased by 25% from 630px */
   margin: calc(var(--space-xl) * 0.7) auto; /* Reduced by 30% */
   padding: 0 calc(var(--space-lg) * 0.7); /* Reduced by 30% */
 }

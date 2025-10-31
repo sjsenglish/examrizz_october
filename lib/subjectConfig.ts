@@ -57,30 +57,141 @@ export const SUBJECT_CONFIGS: SubjectConfig[] = [
     ]
   },
   {
-    id: 'bmat',
-    name: 'BMAT',
-    indexName: 'bmat_questions', // Update this when BMAT index is created
-    available: true, // Set to true when index is ready
+    id: 'interview',
+    name: 'Interview',
+    indexName: 'v2_interview_questions',
+    available: true,
     filters: [
-      // Add BMAT-specific filters here when needed
+      {
+        id: 'questionType',
+        label: 'Question Type',
+        field: 'question_type',
+        type: 'checkbox',
+        fetchFromIndex: true
+      },
+      {
+        id: 'subTypes',
+        label: 'Categories',
+        field: 'sub_types',
+        type: 'checkbox',
+        fetchFromIndex: true
+      }
     ]
   },
   {
-    id: 'interview',
-    name: 'Interview',
-    indexName: 'interview_questions', // Update this when Interview index is created
-    available: true, // Set to true when index is ready
+    id: 'english-lit',
+    name: 'English Lit',
+    indexName: 'v2_edexcel_alevel_english_literature',
+    available: true,
     filters: [
-      // Add Interview-specific filters here when needed
+      {
+        id: 'year',
+        label: 'Year',
+        field: 'year',
+        type: 'checkbox',
+        fetchFromIndex: true
+      },
+      {
+        id: 'questionType',
+        label: 'Question Type',
+        field: 'question_type',
+        type: 'checkbox',
+        fetchFromIndex: true
+      },
+      {
+        id: 'subTypes',
+        label: 'Categories',
+        field: 'sub_types',
+        type: 'checkbox',
+        fetchFromIndex: true
+      }
+    ]
+  },
+  {
+    id: 'biology',
+    name: 'Biology',
+    indexName: 'v2_aqa_alevel_biology',
+    available: true,
+    filters: [
+      {
+        id: 'year',
+        label: 'Year',
+        field: 'year',
+        type: 'checkbox',
+        fetchFromIndex: true
+      },
+      {
+        id: 'questionType',
+        label: 'Question Type',
+        field: 'question_type',
+        type: 'checkbox',
+        fetchFromIndex: true
+      },
+      {
+        id: 'subTypes',
+        label: 'Categories',
+        field: 'sub_types',
+        type: 'checkbox',
+        fetchFromIndex: true
+      }
+    ]
+  },
+  {
+    id: 'chemistry',
+    name: 'Chemistry',
+    indexName: 'v2_aqa_alevel_chemistry',
+    available: true,
+    filters: [
+      {
+        id: 'year',
+        label: 'Year',
+        field: 'year',
+        type: 'checkbox',
+        fetchFromIndex: true
+      },
+      {
+        id: 'questionType',
+        label: 'Question Type',
+        field: 'question_type',
+        type: 'checkbox',
+        fetchFromIndex: true
+      },
+      {
+        id: 'subTypes',
+        label: 'Categories',
+        field: 'sub_types',
+        type: 'checkbox',
+        fetchFromIndex: true
+      }
     ]
   },
   {
     id: 'maths',
     name: 'Maths',
-    indexName: 'maths_questions', // Update this when Maths index is created
-    available: false, // Set to true when index is ready
+    indexName: 'v2_edexcel_alevel_maths',
+    available: true,
     filters: [
-      // Add Maths-specific filters here when needed
+      {
+        id: 'year',
+        label: 'Year',
+        field: 'year',
+        type: 'checkbox',
+        fetchFromIndex: true
+      },
+      {
+        id: 'questionType',
+        label: 'Question Type',
+        field: 'question_type',
+        type: 'checkbox',
+        fetchFromIndex: true
+      },
+      {
+        id: 'subTypes',
+        label: 'Categories',
+        field: 'sub_types',
+        type: 'checkbox',
+        fetchFromIndex: true
+      }
     ]
   }
 ];

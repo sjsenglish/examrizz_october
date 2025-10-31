@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 import { InstantSearch, useSearchBox, Hits, useStats, Configure } from 'react-instantsearch';
 import { searchClient, INDEX_NAME } from '../../lib/algolia';
+import { getSubjectConfig, getAvailableSubjects } from '../../lib/subjectConfig';
 import { SettingsButton } from '../SettingsButton';
 import { TabIcon } from '../icons/TabIcon';
 import { Button } from '../ui/Button';
@@ -81,15 +82,34 @@ const ExamSearch: React.FC = () => {
     router.push('/login');
   };
 
-  const aLevelSubjects = ['Maths', 'Physics', 'English Lit', 'Biology', 'Chemistry'];
+  const aLevelSubjects = ['Maths', 'English Lit', 'Biology', 'Chemistry'];
   const admissionsTests = ['BMAT', 'TSA', 'Interview'];
 
   const showTSAResults = activeTab === 'Admissions' && selectedAdmissionsTest === 'TSA';
+  const showALevelResults = activeTab === 'A Level' && selectedSubject;
+  const showInterviewResults = activeTab === 'Admissions' && selectedAdmissionsTest === 'Interview';
+  
+  // Get the appropriate index name based on selection
+  const getCurrentIndexName = () => {
+    if (showTSAResults) return INDEX_NAME; // Keep TSA as default
+    if (showALevelResults) {
+      const config = getSubjectConfig(selectedSubject);
+      return config?.indexName || INDEX_NAME;
+    }
+    if (showInterviewResults) {
+      const config = getSubjectConfig('Interview');
+      return config?.indexName || INDEX_NAME;
+    }
+    return INDEX_NAME;
+  };
+
+  const currentIndexName = getCurrentIndexName();
+  const showResults = showTSAResults || showALevelResults || showInterviewResults;
 
   return (
     <InstantSearch 
       searchClient={searchClient} 
-      indexName={INDEX_NAME}
+      indexName={currentIndexName}
       future={{ preserveSharedStateOnUnmount: true }}
     >
       <Configure hitsPerPage={20} />
@@ -387,13 +407,16 @@ const ExamSearch: React.FC = () => {
           </div>
         </nav>
 
-        {/* Admissions Filter Box */}
-        {showTSAResults && showFilters && (
-          <FilterBox onHideFilters={() => setShowFilters(false)} />
+        {/* Filter Box */}
+        {showResults && showFilters && (
+          <FilterBox 
+            onHideFilters={() => setShowFilters(false)} 
+            currentSubject={selectedAdmissionsTest || selectedSubject || 'TSA'} 
+          />
         )}
 
         {/* Results Section */}
-        {showTSAResults && (
+        {showResults && (
           <section className="results-section">
             <div className="results-header">
               <ResultsCount />

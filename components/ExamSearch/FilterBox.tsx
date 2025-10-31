@@ -3,11 +3,31 @@ import { useRefinementList, useClearRefinements } from 'react-instantsearch';
 import { Button } from '../ui/Button';
 import './FilterBox.css';
 
+const getFilterTitle = (subject: string) => {
+  switch (subject.toLowerCase()) {
+    case 'tsa':
+      return 'TSA Thinking Skills Assessment';
+    case 'interview':
+      return 'Interview Questions';
+    case 'english lit':
+      return 'A Level English Literature';
+    case 'biology':
+      return 'A Level Biology';
+    case 'chemistry':
+      return 'A Level Chemistry';
+    case 'maths':
+      return 'A Level Mathematics';
+    default:
+      return 'Exam Questions';
+  }
+};
+
 interface FilterBoxProps {
   onHideFilters: () => void;
+  currentSubject?: string;
 }
 
-export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters }) => {
+export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubject = 'TSA' }) => {
   const questionTypeRefinement = useRefinementList({
     attribute: 'question_type',
   });
@@ -22,7 +42,7 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters }) => {
       <div className="filter-box">
         {/* Header */}
         <div className="filter-box-header">
-          <h3>TSA Thinking Skills Assessment</h3>
+          <h3>{getFilterTitle(currentSubject)}</h3>
         </div>
 
         {/* Filter Content Grid */}
