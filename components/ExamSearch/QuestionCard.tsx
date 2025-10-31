@@ -258,8 +258,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
           </div>
         )}
 
-        {/* Show question text for all question types */}
-        {normalizedData.questionText && (
+        {/* Show question text for all question types except maths */}
+        {!isMathsQuestion && normalizedData.questionText && (
           <div className={styles.questionText}>
             {isInterviewQuestion ? (
               // Format interview questions with proper line breaks
@@ -268,6 +268,15 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
                   {paragraph.replace(/\\n/g, ' ')}
                 </p>
               ))
+            ) : isBiologyQuestion ? (
+              // Render biology questions with HTML tags properly parsed
+              <div 
+                dangerouslySetInnerHTML={{ 
+                  __html: normalizedData.questionText
+                    .replace(/<br\s*\/?>/gi, '<br />') // Normalize br tags
+                    .replace(/\n/g, '<br />') // Convert newlines to br tags
+                }}
+              />
             ) : (
               normalizedData.questionText
             )}
@@ -286,9 +295,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
                 }}>
                   {part.PartNumber}
                 </div>
-                <div style={{ lineHeight: '1.6' }}>
-                  {part.QuestionText}
-                </div>
+                <div 
+                  style={{ lineHeight: '1.6' }}
+                  dangerouslySetInnerHTML={{ 
+                    __html: part.QuestionText
+                      .replace(/<br\s*\/?>/gi, '<br />') // Normalize br tags
+                      .replace(/\n/g, '<br />') // Convert newlines to br tags
+                  }}
+                />
                 {part.Marks && (
                   <div style={{ 
                     fontSize: '12px', 

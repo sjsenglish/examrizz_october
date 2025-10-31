@@ -10,7 +10,7 @@ import Link from 'next/link';
 import './NewSwipeableContainer.css';
 
 export const NewSwipeableContainer: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<'island' | 'search'>('search');
+  const [currentPage, setCurrentPage] = useState<'island' | 'search'>('island');
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showGhost, setShowGhost] = useState(true);
   
@@ -81,7 +81,8 @@ export const NewSwipeableContainer: React.FC = () => {
       <Navbar />
 
       {/* Settings Button - only on island page */}
-      {currentPage === 'island' && <SettingsButton />}
+      {/* Temporarily hidden - will be made functional later */}
+      {/* {currentPage === 'island' && <SettingsButton />} */}
       
 
       {/* Page Content */}

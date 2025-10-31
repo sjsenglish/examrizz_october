@@ -334,7 +334,7 @@ export default function IndividualVideoPage() {
           backgroundColor: '#FFFFFF'
         }}>
           <Link 
-            href="/video" 
+            href="/" 
             style={{
               display: 'flex',
               alignItems: 'center',

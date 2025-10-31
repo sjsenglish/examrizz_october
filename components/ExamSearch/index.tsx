@@ -408,7 +408,8 @@ const ExamSearch: React.FC = () => {
           minHeight: '100vh', /* Ensure page takes full height */
           overflow: showTSAResults ? 'auto' : 'hidden' /* Prevent scroll until questions load */
         }}>
-        <SettingsButton />
+        {/* Temporarily hidden - will be made functional later */}
+        {/* <SettingsButton /> */}
         
         {/* Cloud Icons */}
         <div className="cloud-icons-container">
