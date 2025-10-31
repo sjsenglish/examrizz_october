@@ -29,6 +29,7 @@ export interface Question {
   marks?: number;
   video_solution_url_1?: string;
   qualification_level?: string;
+  markscheme_pdf?: string;
 }
 
 export interface QuestionCardProps {

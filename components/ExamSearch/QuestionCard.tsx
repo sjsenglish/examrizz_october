@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '../ui/Button';
 import { QuestionCardProps, Question } from '@/types/question';
 import { VideoModal } from '../VideoModal';
+import { PdfModal } from '../PdfModal';
 import styles from './QuestionCard.module.css';
 
 const getFirebaseImageUrl = (gsUrl: string): string => {
@@ -28,6 +29,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isAnswerRevealed, setIsAnswerRevealed] = useState(false);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
+
+  // Detect question type based on data structure
+  const isMathsQuestion = hit?.paper_info && hit?.spec_topic;
 
   const handleAnswerClick = (letter: string) => {
     setSelectedAnswer(letter);
@@ -35,7 +40,11 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   };
 
   const handleShowAnswer = () => {
-    setIsAnswerRevealed(true);
+    if (isMathsQuestion) {
+      setIsPdfModalOpen(true);
+    } else {
+      setIsAnswerRevealed(true);
+    }
   };
 
   const handleVideoSolutionClick = () => {
@@ -44,6 +53,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
 
   const handleCloseVideoModal = () => {
     setIsVideoModalOpen(false);
+  };
+
+  const handleClosePdfModal = () => {
+    setIsPdfModalOpen(false);
   };
 
   const getOptionClass = (letter: string): string => {
@@ -65,8 +78,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     return `${baseClass} ${answerClass} ${noHoverClass}`.trim();
   };
 
-  // Detect question type based on data structure
-  const isMathsQuestion = hit?.paper_info && hit?.spec_topic;
   const isALevelQuestion = hit?.paper_info && hit?.qualification_level === 'A Level';
   
   // Get normalized data based on question type
@@ -81,7 +92,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     questionText: hit?.question || hit?.question_text,
     videoUrl: hit?.videoSolutionLink || hit?.video_solution_url_1,
     marks: hit?.marks,
-    paperInfo: hit?.paper_info
+    paperInfo: hit?.paper_info,
+    pdfUrl: hit?.markscheme_pdf
   };
   return (
     <article className={styles.questionCard}>
@@ -119,7 +131,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       </header>
 
       <div className={styles.questionContent}>
-        {normalizedData.questionContent && (
+        {/* Only show question content and text for non-maths questions */}
+        {!isMathsQuestion && normalizedData.questionContent && (
           <p className={styles.questionPassage}>
             {normalizedData.questionContent}
           </p>
@@ -139,7 +152,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
           </div>
         )}
 
-        {normalizedData.questionText && (
+        {!isMathsQuestion && normalizedData.questionText && (
           <div className={styles.questionText}>
             {normalizedData.questionText}
           </div>
@@ -189,6 +202,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         isOpen={isVideoModalOpen}
         onClose={handleCloseVideoModal}
         videoUrl={normalizedData.videoUrl}
+      />
+
+      {/* PDF Modal */}
+      <PdfModal
+        isOpen={isPdfModalOpen}
+        onClose={handleClosePdfModal}
+        pdfUrl={normalizedData.pdfUrl}
+        questionNumber={String(normalizedData.questionNumber)}
       />
     </article>
   );

@@ -29,7 +29,12 @@ interface FilterBoxProps {
   currentSubject?: string;
 }
 
-export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubject = 'TSA' }) => {
+export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubject }) => {
+  // Guard against undefined currentSubject
+  if (!currentSubject) {
+    return null;
+  }
+
   // Dynamic attribute selection based on subject
   const getAttributes = (subject: string) => {
     const subjectLower = subject.toLowerCase();

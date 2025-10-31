@@ -108,7 +108,17 @@ const ExamSearch: React.FC = () => {
     return INDEX_NAME;
   };
 
+  // Get current subject for filter context
+  const getCurrentSubject = () => {
+    if (showTSAResults) return 'TSA';
+    if (showBMATResults) return 'BMAT';
+    if (showALevelResults) return selectedSubject;
+    if (showInterviewResults) return 'Interview';
+    return null;
+  };
+
   const currentIndexName = getCurrentIndexName();
+  const currentSubject = getCurrentSubject();
   const showResults = showTSAResults || showBMATResults || showALevelResults || showInterviewResults;
 
   return (
@@ -413,10 +423,10 @@ const ExamSearch: React.FC = () => {
         </nav>
 
         {/* Filter Box */}
-        {showResults && showFilters && (
+        {showResults && showFilters && currentSubject && (
           <FilterBox 
             onHideFilters={() => setShowFilters(false)} 
-            currentSubject={selectedAdmissionsTest || selectedSubject || 'TSA'} 
+            currentSubject={currentSubject} 
           />
         )}
 
