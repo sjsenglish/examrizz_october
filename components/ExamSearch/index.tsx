@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
-import { InstantSearch, useSearchBox, Hits, useStats, Configure } from 'react-instantsearch';
+import { InstantSearch, useSearchBox, Hits, useStats, Configure, useInfiniteHits } from 'react-instantsearch';
 import { searchClient, INDEX_NAME } from '../../lib/algolia';
 import { getSubjectConfig, getAvailableSubjects } from '../../lib/subjectConfig';
 import { SettingsButton } from '../SettingsButton';
@@ -16,6 +16,58 @@ import { FilterBox } from './FilterBox';
 import '../../styles/globals.css';
 import '../../styles/pages/exam-search.css';
 import './ExamSearch.css';
+
+// Custom component for interview questions with Show More functionality
+const InterviewQuestionsList = () => {
+  const { hits, isLastPage, showMore } = useInfiniteHits({
+    transformItems: (items) => items,
+  });
+
+  return (
+    <div>
+      {hits.map((hit, index) => (
+        <QuestionCard key={`${hit.objectID}-${index}`} hit={hit as any} />
+      ))}
+      
+      {!isLastPage && (
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          margin: '2rem 0',
+          padding: '0 1rem'
+        }}>
+          <Button 
+            variant="primary" 
+            size="md"
+            onClick={showMore}
+            style={{
+              fontFamily: 'var(--font-primary)',
+              fontSize: 'var(--text-base)',
+              padding: 'var(--space-md) var(--space-xl)',
+              backgroundColor: 'var(--color-primary)',
+              color: 'var(--color-black)',
+              border: 'var(--border-medium)',
+              boxShadow: 'var(--shadow-sm)',
+              borderRadius: '0',
+              transition: 'all var(--transition-base)',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '3px 0 0 0 var(--color-primary-dark), 0 4px 0 0 var(--color-primary-dark), 3px 4px 0 0 var(--color-primary-dark)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+            }}
+          >
+            Show More Questions
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -483,7 +535,12 @@ const ExamSearch: React.FC = () => {
               )}
             </div>
 
-            <Hits hitComponent={({ hit }) => <QuestionCard hit={hit as any} />} />
+            {/* Use custom InterviewQuestionsList for interview questions, regular Hits for others */}
+            {showInterviewResults ? (
+              <InterviewQuestionsList />
+            ) : (
+              <Hits hitComponent={({ hit }) => <QuestionCard hit={hit as any} />} />
+            )}
           </section>
         )}
         </div>

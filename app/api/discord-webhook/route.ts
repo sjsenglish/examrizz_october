@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const { content, ticketId, userEmail } = await request.json();
+    const { content, ticketId, userEmail, type } = await request.json();
 
     if (!content || !ticketId) {
       return NextResponse.json(
@@ -20,12 +20,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Determine embed details based on type
+    const questionTypes = {
+      'interview-question': { title: "📝 Interview Question Submission", color: 0x5865F2, field: "Question Submission" },
+      'english-lit-question': { title: "📚 English Literature Submission", color: 0x8B4513, field: "Question Submission" },
+      'maths-question': { title: "🔢 Maths Question Submission", color: 0x32CD32, field: "Question Submission" },
+      'admission-question': { title: "🎯 Admission Test Submission", color: 0xFF6B6B, field: "Question Submission" }
+    };
+    
+    const questionType = questionTypes[type as keyof typeof questionTypes];
+    const embedTitle = questionType?.title || "🎓 New Teacher Help Request";
+    const embedColor = questionType?.color || 0x00CED1;
+    const contentFieldName = questionType?.field || "Conversation Context";
+    const submissionCategory = questionType ? "Question Practice" : "General Help";
+
     // Format the Discord message with proper embed
     const discordPayload = {
       embeds: [
         {
-          title: "🎓 New Teacher Help Request",
-          color: 0x00CED1, // Teal color to match site theme
+          title: embedTitle,
+          color: embedColor,
           fields: [
             {
               name: "Ticket ID",
@@ -38,18 +52,18 @@ export async function POST(request: NextRequest) {
               inline: true
             },
             {
-              name: "Timestamp",
-              value: new Date().toLocaleString(),
+              name: "Type",
+              value: submissionCategory,
               inline: true
             },
             {
-              name: "Conversation Context",
+              name: contentFieldName,
               value: content.length > 1024 ? content.substring(0, 1021) + '...' : content,
               inline: false
             }
           ],
           footer: {
-            text: "ExamRizz Help Center"
+            text: questionType ? "ExamRizz Question Practice" : "ExamRizz Help Center"
           },
           timestamp: new Date().toISOString()
         }
