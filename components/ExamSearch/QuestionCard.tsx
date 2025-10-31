@@ -135,12 +135,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       const result = await response.json();
       
       if (result.success) {
-        // Open Discord server for user to see their ticket and add their answer
-        setTimeout(() => {
-          window.open('https://discord.gg/examrizzsearch', '_blank');
-        }, 500);
-        
-        alert(`✅ Help ticket created successfully!\n\n📋 WHAT HAPPENS NEXT:\n1. Your ticket has been sent to our Discord help center\n2. Discord will open automatically\n3. Go to the #help-center channel\n4. Find your ticket and add your answer/question\n5. Teachers will provide feedback\n\n🎫 Ticket ID: ${result.ticketId}`);
+        // Open Discord server directly
+        window.open('https://discord.gg/examrizzsearch', '_blank');
       } else {
         alert('Failed to create help ticket. Please try again.');
       }
