@@ -103,10 +103,13 @@
   gap: calc(var(--space-3xl) * 0.8); /* 20% smaller gap */
   justify-content: center;
   transform: translateY(-15%); /* Move up 15% */
+  position: relative;
+  z-index: 1000; /* Ensure tabs appear above other content */
 }
 
 .tab-wrapper {
   position: relative;
+  z-index: 1000; /* Ensure tab wrapper has high z-index */
 }
 
 .tab {
@@ -166,7 +169,7 @@
   position: absolute;
   top: calc(100% - 2px);
   left: 0;
-  z-index: var(--z-dropdown);
+  z-index: 9999; /* Very high z-index to ensure it appears above all other elements */
   background-color: var(--color-primary-light);
   border: var(--border-medium);
   border-top: none;
