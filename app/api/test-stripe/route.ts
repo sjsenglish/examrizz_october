@@ -5,7 +5,7 @@ export async function GET() {
   try {
     // Test if Stripe is properly configured
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: '2024-06-20',
+      apiVersion: '2025-10-29.clover',
     });
 
     // Test API call to verify connection

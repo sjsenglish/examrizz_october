@@ -2,9 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-06-20',
-});
+// Stripe will be initialized in functions to avoid build issues
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -55,6 +53,11 @@ export async function GET(request: NextRequest) {
 // POST: Manage subscription (cancel, update, etc.)
 export async function POST(request: NextRequest) {
   try {
+    // Initialize Stripe here to avoid build issues
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: '2025-10-29.clover',
+    });
+    
     const { action, userId, ...params } = await request.json();
 
     if (!action || !userId) {

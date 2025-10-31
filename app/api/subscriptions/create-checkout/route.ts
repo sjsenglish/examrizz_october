@@ -3,9 +3,7 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { CreateCheckoutSessionRequest, CreateCheckoutSessionResponse } from '@/types/subscription';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-06-20',
-});
+// Stripe will be initialized in function to avoid build issues
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -14,6 +12,11 @@ const supabase = createClient(
 
 export async function POST(request: NextRequest) {
   try {
+    // Initialize Stripe here to avoid build issues
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: '2025-10-29.clover',
+    });
+    
     const {
       priceId,
       successUrl,
@@ -99,7 +102,7 @@ export async function POST(request: NextRequest) {
     const response: CreateCheckoutSessionResponse = {
       success: true,
       sessionId: session.id,
-      url: session.url,
+      url: session.url || undefined,
     };
 
     return NextResponse.json(response);

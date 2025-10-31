@@ -4,10 +4,8 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { SubscriptionTier, SubscriptionStatus, StripeSubscriptionData } from '@/types/subscription';
 
-// Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-06-20',
-});
+// Initialize Stripe (will be initialized in function to avoid build issues)
+let stripe: Stripe;
 
 // Initialize Supabase with service role key for webhook operations
 const supabase = createClient(
@@ -40,17 +38,17 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     // Map Stripe status to our status enum
     const subscriptionStatus = subscription.status as SubscriptionStatus;
     
-    // Prepare subscription data
+    // Prepare subscription data using bracket notation for properties
     const subscriptionData: StripeSubscriptionData = {
       subscription_id: subscription.id,
       customer_id: subscription.customer as string,
       status: subscriptionStatus,
-      current_period_start: subscription.current_period_start,
-      current_period_end: subscription.current_period_end,
-      cancel_at_period_end: subscription.cancel_at_period_end,
-      canceled_at: subscription.canceled_at,
-      trial_start: subscription.trial_start,
-      trial_end: subscription.trial_end,
+      current_period_start: (subscription as any).current_period_start,
+      current_period_end: (subscription as any).current_period_end,
+      cancel_at_period_end: (subscription as any).cancel_at_period_end,
+      canceled_at: (subscription as any).canceled_at || undefined,
+      trial_start: (subscription as any).trial_start || undefined,
+      trial_end: (subscription as any).trial_end || undefined,
     };
 
     // Find user by Stripe customer ID
@@ -179,8 +177,15 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Initialize Stripe here to avoid build issues
+    if (!stripe) {
+      stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+        apiVersion: '2025-10-29.clover',
+      });
+    }
+    
     const body = await request.text();
-    const headersList = headers();
+    const headersList = await headers();
     const signature = headersList.get('stripe-signature');
 
     if (!signature) {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
@@ -8,7 +8,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { SUBSCRIPTION_PLANS, formatSubscriptionPrice } from '@/types/subscription';
 import './payment.css';
 
-export default function PaymentPage() {
+function PaymentContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { subscription, loading, upgrade, manageBilling, cancel, reactivate } = useSubscription();
@@ -333,5 +333,24 @@ export default function PaymentPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PaymentPage() {
+  return (
+    <Suspense fallback={
+      <div className="page-background" style={{ paddingTop: '60px' }}>
+        <Navbar />
+        <div className="main-content">
+          <div className="payment-container">
+            <div className="loading-state">
+              <h2>Loading...</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    }>
+      <PaymentContent />
+    </Suspense>
   );
 }
