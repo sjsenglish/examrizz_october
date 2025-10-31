@@ -65,57 +65,83 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     return `${baseClass} ${answerClass} ${noHoverClass}`.trim();
   };
 
-  const subType = Array.isArray(hit?.sub_types) ? hit.sub_types[0] : hit?.sub_types;
+  // Detect question type based on data structure
+  const isMathsQuestion = hit?.paper_info && hit?.spec_topic;
+  const isALevelQuestion = hit?.paper_info && hit?.qualification_level === 'A Level';
+  
+  // Get normalized data based on question type
+  const normalizedData = {
+    questionNumber: hit?.question_number || '',
+    year: isMathsQuestion ? hit?.paper_info?.year : hit?.year,
+    questionType: isMathsQuestion ? hit?.spec_topic : hit?.question_type,
+    subType: isMathsQuestion ? hit?.question_topic : (Array.isArray(hit?.sub_types) ? hit.sub_types[0] : hit?.sub_types),
+    filters: isMathsQuestion ? hit?.filters : [],
+    questionContent: hit?.question_content || hit?.question_text,
+    imageUrl: hit?.imageFile || hit?.imageUrl,
+    questionText: hit?.question || hit?.question_text,
+    videoUrl: hit?.videoSolutionLink || hit?.video_solution_url_1,
+    marks: hit?.marks,
+    paperInfo: hit?.paper_info
+  };
   return (
     <article className={styles.questionCard}>
       <header className={styles.questionHeader}>
         <div className={styles.questionInfo}>
           <span className={styles.questionNumber}>
-            Question {hit?.question_number || ''}
+            Question {normalizedData.questionNumber}
           </span>
-          {hit?.year && <span className={styles.yearBadge}>{hit.year}</span>}
+          {normalizedData.year && <span className={styles.yearBadge}>{normalizedData.year}</span>}
+          {normalizedData.marks && <span className={styles.marksBadge}>{normalizedData.marks} marks</span>}
         </div>
         <div className={styles.filterButtons}>
-          {hit?.question_type && (
-            <Button variant="filter" size="sm">{hit.question_type}</Button>
+          {normalizedData.questionType && (
+            <Button variant="filter" size="sm">{normalizedData.questionType}</Button>
           )}
-          {subType && (
+          {normalizedData.subType && (
             <Button variant="filter" size="sm" 
               style={{ backgroundColor: 'var(--color-secondary-light)' }}>
-              {subType}
+              {normalizedData.subType}
             </Button>
           )}
-          <Button variant="filter" size="sm" 
-            style={{ backgroundColor: 'transparent' }}>
-            SPEC PT. 4.1
-          </Button>
+          {normalizedData.filters && normalizedData.filters.length > 0 && (
+            <Button variant="filter" size="sm" 
+              style={{ backgroundColor: 'var(--color-primary-lighter)' }}>
+              {normalizedData.filters[0]}
+            </Button>
+          )}
+          {normalizedData.paperInfo && (
+            <Button variant="filter" size="sm" 
+              style={{ backgroundColor: 'transparent' }}>
+              {normalizedData.paperInfo.paper_reference || 'SPEC PT. 4.1'}
+            </Button>
+          )}
         </div>
       </header>
 
       <div className={styles.questionContent}>
-        {hit?.question_content && (
+        {normalizedData.questionContent && (
           <p className={styles.questionPassage}>
-            {hit.question_content}
+            {normalizedData.questionContent}
           </p>
         )}
 
-        {hit?.imageFile && (
+        {normalizedData.imageUrl && (
           <div className={styles.questionImageContainer}>
             <img 
-              src={getFirebaseImageUrl(hit.imageFile)} 
+              src={getFirebaseImageUrl(normalizedData.imageUrl)} 
               alt="Question diagram"
               className={styles.questionImage}
               onError={(e) => {
-                console.warn('Failed to load question image:', hit.imageFile);
+                console.warn('Failed to load question image:', normalizedData.imageUrl);
                 e.currentTarget.style.display = 'none';
               }}
             />
           </div>
         )}
 
-        {hit?.question && (
+        {normalizedData.questionText && (
           <div className={styles.questionText}>
-            {hit.question}
+            {normalizedData.questionText}
           </div>
         )}
 
@@ -151,7 +177,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
             variant="primary" 
             size="md"
             onClick={handleVideoSolutionClick}
-            disabled={!hit?.videoSolutionLink}
+            disabled={!normalizedData.videoUrl}
           >
             Video Solution
           </Button>
@@ -162,7 +188,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       <VideoModal
         isOpen={isVideoModalOpen}
         onClose={handleCloseVideoModal}
-        videoUrl={hit?.videoSolutionLink}
+        videoUrl={normalizedData.videoUrl}
       />
     </article>
   );

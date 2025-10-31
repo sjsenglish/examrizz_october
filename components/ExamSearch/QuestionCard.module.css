@@ -43,6 +43,16 @@
   box-shadow: var(--shadow-sm);
 }
 
+.marksBadge {
+  background-color: var(--color-secondary);
+  color: var(--color-black);
+  padding: 4px var(--space-md);
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
+  font-weight: 400;
+  box-shadow: var(--shadow-sm);
+}
+
 .filterButtons {
   display: flex;
   gap: 10px;

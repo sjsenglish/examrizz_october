@@ -30,12 +30,45 @@ interface FilterBoxProps {
 }
 
 export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubject = 'TSA' }) => {
+  // Dynamic attribute selection based on subject
+  const getAttributes = (subject: string) => {
+    const subjectLower = subject.toLowerCase();
+    
+    if (['maths', 'english lit', 'biology', 'chemistry'].includes(subjectLower)) {
+      // A Level subjects use different attribute structure
+      return {
+        questionType: 'spec_topic',
+        subType: 'question_topic', 
+        filters: 'filters',
+        questionTypeLabel: 'Specification Topic',
+        subTypeLabel: 'Question Topic',
+        filtersLabel: 'Filters'
+      };
+    } else {
+      // TSA, BMAT, Interview use original structure
+      return {
+        questionType: 'question_type',
+        subType: 'sub_types',
+        filters: 'sub_types', // Fallback to sub_types
+        questionTypeLabel: 'Question Type',
+        subTypeLabel: 'Sub Type',
+        filtersLabel: 'Year'
+      };
+    }
+  };
+  
+  const attributes = getAttributes(currentSubject);
+  
   const questionTypeRefinement = useRefinementList({
-    attribute: 'question_type',
+    attribute: attributes.questionType,
   });
   
   const subTypesRefinement = useRefinementList({
-    attribute: 'sub_types',
+    attribute: attributes.subType,
+  });
+  
+  const filtersRefinement = useRefinementList({
+    attribute: attributes.filters,
   });
   
   const { refine: clearAllFilters } = useClearRefinements();
@@ -52,7 +85,7 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubj
           {/* Column 1 - Question Types */}
           <div className="filter-column">
             <div className="filter-category-title">
-              <span>Question Type</span>
+              <span>{attributes.questionTypeLabel}</span>
             </div>
             
             {questionTypeRefinement.items.map((item) => (
@@ -71,7 +104,7 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubj
           {/* Column 2 - Sub Types */}
           <div className="filter-column">
             <div className="filter-category-title">
-              <span>Sub Type</span>
+              <span>{attributes.subTypeLabel}</span>
             </div>
             
             {subTypesRefinement.items.map((item) => (
@@ -87,11 +120,23 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubj
             ))}
           </div>
 
-          {/* Column 3 - Placeholder for Year */}
+          {/* Column 3 - Filters */}
           <div className="filter-column">
             <div className="filter-category-title">
-              <span>Year</span>
+              <span>{attributes.filtersLabel}</span>
             </div>
+            
+            {filtersRefinement.items.map((item) => (
+              <label key={item.value} className="filter-option">
+                <input 
+                  type="checkbox" 
+                  className="filter-checkbox secondary"
+                  checked={item.isRefined}
+                  onChange={() => filtersRefinement.refine(item.value)}
+                />
+                <span>{item.label} ({item.count})</span>
+              </label>
+            ))}
           </div>
         </div>
 
