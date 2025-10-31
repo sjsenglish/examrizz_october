@@ -534,7 +534,7 @@ export default function MathsVideoGalleryPage() {
                 color: '#000000',
                 margin: '0'
               }}>
-                Topic 1
+                7.1
               </h2>
               <button style={{
                 padding: '8px 16px',
@@ -705,7 +705,7 @@ export default function MathsVideoGalleryPage() {
                 color: '#000000',
                 margin: '0'
               }}>
-                Topic 2
+                7.2
               </h2>
               <button style={{
                 padding: '8px 16px',

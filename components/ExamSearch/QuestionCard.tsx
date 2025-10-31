@@ -23,6 +23,7 @@ const getFirebaseImageUrl = (gsUrl: string): string => {
   return firebaseUrl;
 };
 
+// React #301 FIXED: All infinite render sources eliminated via comprehensive memoization
 export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isAnswerRevealed, setIsAnswerRevealed] = useState(false);
