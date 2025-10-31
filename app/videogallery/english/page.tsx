@@ -151,7 +151,7 @@ export default function EnglishVideoGalleryPage() {
                 color: '#000000',
                 margin: '0'
               }}>
-                Topic 1
+                How to read, write, and analyse: The basics
               </h2>
               <button style={{
                 padding: '8px 16px',

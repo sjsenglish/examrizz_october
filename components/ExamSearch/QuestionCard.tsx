@@ -34,6 +34,24 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   const isEnglishLitQuestion = useMemo(() => hit?.QualificationLevel === 'A Level' && hit?.Subject === 'English Literature', [hit]);
   const isInterviewQuestion = useMemo(() => hit?.QuestionID && hit?.Time && hit?.QuestionPromptText, [hit]);
 
+  // Memoize array calculations to prevent re-renders
+  const englishLitFilters = useMemo(() => 
+    isEnglishLitQuestion ? [hit?.Text1?.Author, hit?.Text1?.Age].filter(Boolean) : [],
+    [isEnglishLitQuestion, hit?.Text1?.Author, hit?.Text1?.Age]
+  );
+
+  // Memoize paperInfo object to prevent re-renders
+  const englishLitPaperInfo = useMemo(() => 
+    isEnglishLitQuestion ? {
+      code: hit?.PaperCode, 
+      name: hit?.PaperName, 
+      section: hit?.PaperSection,
+      year: hit?.PaperYear,
+      month: hit?.PaperMonth 
+    } : null,
+    [isEnglishLitQuestion, hit?.PaperCode, hit?.PaperName, hit?.PaperSection, hit?.PaperYear, hit?.PaperMonth]
+  );
+
   const handleAnswerClick = (letter: string) => {
     setSelectedAnswer(letter);
     setIsAnswerRevealed(true);
@@ -135,24 +153,18 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     year: isInterviewQuestion ? null : (isEnglishLitQuestion ? hit?.PaperYear : (isMathsQuestion ? hit?.paper_info?.year : hit?.year)),
     questionType: isInterviewQuestion ? hit?.SubjectId1 : (isEnglishLitQuestion ? hit?.PaperName : (isMathsQuestion ? hit?.spec_topic : hit?.question_type)),
     subType: isInterviewQuestion ? hit?.SubjectId2 : (isEnglishLitQuestion ? hit?.PaperSection : (isMathsQuestion ? hit?.question_topic : (Array.isArray(hit?.sub_types) ? hit.sub_types[0] : hit?.sub_types))),
-    filters: isInterviewQuestion ? hit?.all_subjects || [] : (isEnglishLitQuestion ? [hit?.Text1?.Author, hit?.Text1?.Age].filter(Boolean) : (isMathsQuestion ? hit?.filters : [])),
+    filters: isInterviewQuestion ? (hit?.all_subjects || []) : (isEnglishLitQuestion ? englishLitFilters : (hit?.filters || [])),
     questionContent: hit?.question_content || hit?.question_text,
     imageUrl: hit?.imageFile || hit?.imageUrl,
     questionText: isInterviewQuestion ? hit?.QuestionPromptText : (isEnglishLitQuestion ? hit?.QuestionPrompt : (hit?.question || hit?.question_text)),
     videoUrl: hit?.videoSolutionLink || hit?.video_solution_url_1,
     marks: isInterviewQuestion ? null : (isEnglishLitQuestion ? hit?.QuestionTotalMarks : hit?.marks),
     time: isInterviewQuestion ? hit?.Time : null,
-    paperInfo: isEnglishLitQuestion ? { 
-      code: hit?.PaperCode, 
-      name: hit?.PaperName, 
-      section: hit?.PaperSection,
-      year: hit?.PaperYear,
-      month: hit?.PaperMonth 
-    } : hit?.paper_info,
+    paperInfo: englishLitPaperInfo || hit?.paper_info,
     textInfo: isEnglishLitQuestion ? hit?.Text1 : null,
     subjects: isInterviewQuestion ? hit?.all_subjects : null,
     pdfUrl: isEnglishLitQuestion ? hit?.MS : (hit?.markscheme_pdf || hit?.pdf_url || hit?.markscheme_url || hit?.answer_pdf || hit?.answers_pdf)
-  }), [hit, isInterviewQuestion, isEnglishLitQuestion, isMathsQuestion]);
+  }), [hit, isInterviewQuestion, isEnglishLitQuestion, isMathsQuestion, englishLitFilters, englishLitPaperInfo]);
 
   return (
     <article className={styles.questionCard}>
@@ -184,7 +196,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
           {normalizedData.paperInfo && (
             <Button variant="filter" size="sm" 
               style={{ backgroundColor: 'transparent' }}>
-              {normalizedData.paperInfo.paper_reference || 'SPEC PT. 4.1'}
+              {(normalizedData.paperInfo as any)?.paper_reference || 'SPEC PT. 4.1'}
             </Button>
           )}
         </div>

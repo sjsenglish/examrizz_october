@@ -242,7 +242,7 @@ export default function VideoPage() {
       }}>
         <video
           ref={videoRef}
-          src="https://plewvideos.s3.eu-north-1.amazonaws.com/Lesson+1Final.mp4"
+          src="https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/7.1_L/7_1+Lesson+1+Differentiation.mov"
           muted
           style={{
             width: '100%',
@@ -317,7 +317,7 @@ export default function VideoPage() {
               lineHeight: '1.4',
               marginBottom: '18px'
             }}>
-              Learn A Level Maths with videos and original practice questions!
+              Start learning with bitesized videos!
             </p>
             <Link href="/videogallery/maths" style={{ textDecoration: 'none' }}>
               <button style={{
