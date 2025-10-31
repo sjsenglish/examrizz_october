@@ -95,70 +95,59 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         return;
       }
 
-      // Format question context for Discord
-      let questionHeader = '';
+      // Format question context for Discord help center ticket
+      let questionType = '';
+      let submissionType = '';
       if (isInterviewQuestion) {
-        questionHeader = `📝 **Interview Question Help Request**\n\n`;
+        questionType = 'Interview Question';
+        submissionType = 'interview-question';
       } else if (isEnglishLitQuestion) {
-        questionHeader = `📚 **English Literature Question Help Request**\n\n`;
+        questionType = 'English Literature Question';
+        submissionType = 'english-lit-question';
       } else if (isMathsQuestion) {
-        questionHeader = `🔢 **Maths Question Help Request**\n\n`;
+        questionType = 'Maths Question';
+        submissionType = 'maths-question';
       } else {
-        questionHeader = `🎯 **Question Help Request**\n\n`;
+        questionType = 'Question';
+        submissionType = 'admission-question';
       }
+
+      // Create the question context - question is pre-filled, user needs to add answer
+      const questionContext = `**${questionType} Help Request**\n\n**QUESTION:** ${normalizedData.questionText || 'See question above'}\n\n**STUDENT NEEDS HELP WITH:** [Please add your answer or specific question here for teacher feedback]`;
       
-      // Create the pre-filled message for Discord help center
-      const discordMessage = `${questionHeader}**QUESTION:** ${normalizedData.questionText || 'See question above'}\n\n**MY ANSWER/QUESTION:**\n[Please add your answer or specific question here - teachers will provide feedback]\n\n**USER:** ${user.email}`;
+      // Generate unique ticket ID
+      const ticketId = `QUEST-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+      // Create ticket in Discord help center via webhook (like Ask Bo)
+      const response = await fetch('/api/discord-webhook', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: questionContext,
+          ticketId: ticketId,
+          userEmail: user.email,
+          type: submissionType
+        }),
+      });
       
-      // Copy message to clipboard and open Discord
-      try {
-        await navigator.clipboard.writeText(discordMessage);
-        
-        // Try to open Discord app first, then fallback to web
-        const discordAppUrl = `discord://discord.com/channels/@me`;
-        const discordWebUrl = `https://discord.com/login`;
-        
-        // Open Discord and show instructions
-        window.open(discordAppUrl, '_blank');
-        
-        // Show user instructions
+      const result = await response.json();
+      
+      if (result.success) {
+        // Open Discord server for user to see their ticket and add their answer
         setTimeout(() => {
-          alert(`✅ Message copied to clipboard!\n\n📋 INSTRUCTIONS:\n1. Discord should open automatically\n2. Go to our ExamRizz server\n3. Find the #help-center channel\n4. Paste the message (Ctrl+V or Cmd+V)\n5. Add your answer or specific question\n6. Send to get teacher feedback\n\n🔗 If Discord didn't open, visit: discord.gg/examrizz`);
+          window.open('https://discord.gg/examrizzsearch', '_blank');
         }, 500);
         
-      } catch (clipboardError) {
-        // Fallback if clipboard doesn't work
-        console.error('Clipboard error:', clipboardError);
-        
-        // Show message in a text area for manual copying
-        const messageWindow = window.open('', '_blank', 'width=600,height=400');
-        if (messageWindow) {
-          messageWindow.document.write(`
-            <html>
-              <head><title>ExamRizz - Copy Message for Discord</title></head>
-              <body style="font-family: Arial, sans-serif; padding: 20px;">
-                <h2>📋 Copy this message for Discord:</h2>
-                <textarea style="width: 100%; height: 200px; padding: 10px;" readonly>${discordMessage}</textarea>
-                <p><strong>Instructions:</strong></p>
-                <ol>
-                  <li>Select all text above (Ctrl+A or Cmd+A)</li>
-                  <li>Copy it (Ctrl+C or Cmd+C)</li>
-                  <li>Go to Discord #help-center channel</li>
-                  <li>Paste and add your answer</li>
-                  <li>Send to get teacher feedback</li>
-                </ol>
-                <p><a href="https://discord.gg/examrizz" target="_blank">🔗 Open Discord Server</a></p>
-              </body>
-            </html>
-          `);
-        } else {
-          alert(`Please copy this message and paste it in Discord #help-center:\n\n${discordMessage}\n\nDiscord: discord.gg/examrizz`);
-        }
+        alert(`✅ Help ticket created successfully!\n\n📋 WHAT HAPPENS NEXT:\n1. Your ticket has been sent to our Discord help center\n2. Discord will open automatically\n3. Go to the #help-center channel\n4. Find your ticket and add your answer/question\n5. Teachers will provide feedback\n\n🎫 Ticket ID: ${result.ticketId}`);
+      } else {
+        alert('Failed to create help ticket. Please try again.');
       }
 
     } catch (error) {
       console.error('Submit answer error:', error);
-      alert('Failed to prepare Discord message. Please try again.');
+      alert('Failed to create help ticket. Please try again.');
     }
   };
 
