@@ -134,7 +134,7 @@ export default function HowToVideoGalleryPage() {
           </svg>
           Back
         </Link>
-      </div>
+        </div>
 
         {/* Main Content Area */}
         <div style={{ 
@@ -376,12 +376,11 @@ export default function HowToVideoGalleryPage() {
               height: '1px',
               backgroundColor: '#000000',
               marginTop: '30px',
+              marginBottom: '60px',
               boxShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
             }}></div>
           </div>
         </div>
-
-      </div>
       </div>
     </div>
   );
