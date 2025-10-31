@@ -42,7 +42,7 @@ export default function HelpPage() {
       {/* Main Content */}
       <div className="main-content">
         <div className="help-container">
-          <h1 className="help-title">Discord Support Guide</h1>
+          <h1 className="help-title">How To</h1>
           <p className="help-subtitle">Follow these steps to get help through our Discord server</p>
 
           <div className="help-content">

@@ -77,8 +77,8 @@ export default function Navbar() {
         <Link 
           href="/about"
           style={{
-            background: '#E8F5E8',
-            border: '1px solid #4CAF50',
+            background: '#DBFCFF',
+            border: '1px solid #00CED1',
             borderRadius: '20px',
             padding: '8px 16px',
             fontFamily: "'Figtree', sans-serif",
@@ -91,13 +91,40 @@ export default function Navbar() {
             display: 'inline-block'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = '#C8E6C9';
+            e.currentTarget.style.background = '#B3F0F2';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = '#E8F5E8';
+            e.currentTarget.style.background = '#DBFCFF';
           }}
         >
           About Us
+        </Link>
+
+        {/* How To Button */}
+        <Link 
+          href="/help"
+          style={{
+            background: '#E0FDFF',
+            border: '1px solid #00CED1',
+            borderRadius: '20px',
+            padding: '8px 16px',
+            fontFamily: "'Figtree', sans-serif",
+            fontSize: '13px',
+            fontWeight: '500',
+            color: '#000000',
+            textDecoration: 'none',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            display: 'inline-block'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#B3F0F2';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = '#E0FDFF';
+          }}
+        >
+          How To
         </Link>
 
         {/* Login/Logout Button */}
@@ -227,30 +254,7 @@ export default function Navbar() {
                 Payment
               </Link>
               <Link 
-                href="/help"
-                style={{
-                  display: 'block',
-                  padding: '12px 20px',
-                  color: '#000000',
-                  textDecoration: 'none',
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  letterSpacing: '0.04em',
-                  transition: 'background-color 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#F8F8F5';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-                onClick={() => setShowDropdown(false)}
-              >
-                Help
-              </Link>
-              <Link 
-                href="/terms"
+                href="/terms-and-conditions"
                 style={{
                   display: 'block',
                   padding: '12px 20px',
