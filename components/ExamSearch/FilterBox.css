@@ -1,31 +1,31 @@
 /* FilterBox Component Styles */
 
 .filter-box-container {
-  max-width: 900px;
-  margin: var(--space-xl) auto;
-  padding: 0 var(--space-lg);
+  max-width: 630px; /* Reduced by 30% from 900px */
+  margin: calc(var(--space-xl) * 0.7) auto; /* Reduced by 30% */
+  padding: 0 calc(var(--space-lg) * 0.7); /* Reduced by 30% */
 }
 
 .filter-box {
   background-color: var(--color-white);
   border: var(--border-thin);
   border-radius: 0;
-  padding: var(--space-xl);
-  box-shadow: var(--shadow-lg);
+  padding: calc(var(--space-xl) * 0.7); /* Reduced by 30% */
+  /* box-shadow: var(--shadow-lg); REMOVED */
   position: relative;
 }
 
 .filter-box-header {
   background-color: var(--color-white);
-  margin: calc(-1 * var(--space-xl)) calc(-1 * var(--space-xl)) var(--space-lg) calc(-1 * var(--space-xl));
-  padding: 15px var(--space-xl);
+  margin: calc(-1 * var(--space-xl) * 0.7) calc(-1 * var(--space-xl) * 0.7) calc(var(--space-lg) * 0.7) calc(-1 * var(--space-xl) * 0.7); /* Reduced by 30% */
+  padding: calc(15px * 0.7) calc(var(--space-xl) * 0.7); /* Reduced by 30% */
   border-bottom: var(--border-thin);
   border-radius: 0;
 }
 
 .filter-box-header h3 {
   font-family: var(--font-body);
-  font-size: var(--text-xl);
+  font-size: calc(var(--text-xl) * 0.7); /* Reduced by 30% */
   font-weight: 400;
   color: var(--color-black);
   margin: 0;
@@ -34,23 +34,23 @@
 .filter-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-2xl);
+  gap: calc(var(--space-2xl) * 0.7); /* Reduced by 30% */
   align-items: start;
 }
 
 .filter-column {
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
+  gap: calc(var(--space-lg) * 0.7); /* Reduced by 30% */
 }
 
 .filter-category-title {
-  margin-bottom: var(--space-sm);
+  margin-bottom: calc(var(--space-sm) * 0.7); /* Reduced by 30% */
 }
 
 .filter-category-title span {
   font-family: var(--font-body);
-  font-size: var(--text-base);
+  font-size: calc(var(--text-base) * 0.7); /* Reduced by 30% */
   font-weight: 600;
   color: var(--color-black);
 }
@@ -58,13 +58,13 @@
 .filter-option {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: calc(10px * 0.7); /* Reduced by 30% */
   cursor: pointer;
 }
 
 .filter-checkbox {
-  width: 20px;
-  height: 20px;
+  width: calc(20px * 0.7); /* Reduced by 30% */
+  height: calc(20px * 0.7); /* Reduced by 30% */
   cursor: pointer;
 }
 
@@ -78,7 +78,7 @@
 
 .filter-option span {
   font-family: var(--font-body);
-  font-size: var(--text-base);
+  font-size: calc(var(--text-base) * 0.7); /* Reduced by 30% */
   font-weight: 400;
   color: var(--color-black);
 }
@@ -86,10 +86,10 @@
 .filter-controls {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: calc(var(--space-sm) * 0.7); /* Reduced by 30% */
   position: absolute;
-  bottom: var(--space-xl);
-  right: var(--space-xl);
+  bottom: calc(var(--space-xl) * 0.7); /* Reduced by 30% */
+  right: calc(var(--space-xl) * 0.7); /* Reduced by 30% */
 }
 
 .filter-controls button {
@@ -100,12 +100,12 @@
 @media (max-width: 768px) {
   .filter-grid {
     grid-template-columns: 1fr;
-    gap: var(--space-lg);
+    gap: calc(var(--space-lg) * 0.7); /* Reduced by 30% */
   }
 
   .filter-controls {
     position: static;
-    margin-top: var(--space-lg);
+    margin-top: calc(var(--space-lg) * 0.7); /* Reduced by 30% */
     align-items: flex-end;
   }
 }
