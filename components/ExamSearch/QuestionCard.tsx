@@ -34,6 +34,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   const isMathsQuestion = useMemo(() => hit?.paper_info && hit?.spec_topic, [hit]);
   const isEnglishLitQuestion = useMemo(() => hit?.QualificationLevel === 'A Level' && hit?.Subject === 'English Literature', [hit]);
   const isInterviewQuestion = useMemo(() => hit?.QuestionID && hit?.Time && hit?.QuestionPromptText, [hit]);
+  const isBiologyQuestion = useMemo(() => hit?.Subject === 'Biology' && hit?.Parts && Array.isArray(hit.Parts), [hit]);
 
   // Memoize array calculations to prevent re-renders
   const englishLitFilters = useMemo(() => 
@@ -59,7 +60,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   };
 
   const handleShowAnswer = () => {
-    if (isMathsQuestion || isEnglishLitQuestion) {
+    if (isMathsQuestion || isEnglishLitQuestion || isBiologyQuestion) {
       setIsPdfModalOpen(true);
     } else if (!isInterviewQuestion) {
       setIsAnswerRevealed(true);
@@ -107,6 +108,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       } else if (isMathsQuestion) {
         questionType = 'Maths Question';
         submissionType = 'maths-question';
+      } else if (isBiologyQuestion) {
+        questionType = 'Biology Question';
+        submissionType = 'biology-question';
       } else {
         questionType = 'Question';
         submissionType = 'admission-question';
@@ -170,22 +174,23 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   
   // Get normalized data based on question type - memoized to prevent re-renders
   const normalizedData = useMemo(() => ({
-    questionNumber: isInterviewQuestion ? hit?.QuestionID : (isEnglishLitQuestion ? hit?.QuestionNo : (hit?.question_number || '')),
-    year: isInterviewQuestion ? null : (isEnglishLitQuestion ? hit?.PaperYear : (isMathsQuestion ? hit?.paper_info?.year : hit?.year)),
-    questionType: isInterviewQuestion ? hit?.SubjectId1 : (isEnglishLitQuestion ? hit?.PaperName : (isMathsQuestion ? hit?.spec_topic : hit?.question_type)),
-    subType: isInterviewQuestion ? hit?.SubjectId2 : (isEnglishLitQuestion ? hit?.PaperSection : (isMathsQuestion ? hit?.question_topic : (Array.isArray(hit?.sub_types) ? hit.sub_types[0] : hit?.sub_types))),
-    filters: isInterviewQuestion ? (hit?.all_subjects || []) : (isEnglishLitQuestion ? englishLitFilters : (hit?.filters || [])),
+    questionNumber: isInterviewQuestion ? hit?.QuestionID : (isEnglishLitQuestion ? hit?.QuestionNo : (isBiologyQuestion ? hit?.QuestionNumber : (hit?.question_number || ''))),
+    year: isInterviewQuestion ? null : (isEnglishLitQuestion ? hit?.PaperYear : (isMathsQuestion ? hit?.paper_info?.year : (isBiologyQuestion ? hit?.Year : hit?.year))),
+    questionType: isInterviewQuestion ? hit?.SubjectId1 : (isEnglishLitQuestion ? hit?.PaperName : (isMathsQuestion ? hit?.spec_topic : (isBiologyQuestion ? hit?.Subject : hit?.question_type))),
+    subType: isInterviewQuestion ? hit?.SubjectId2 : (isEnglishLitQuestion ? hit?.PaperSection : (isMathsQuestion ? hit?.question_topic : (isBiologyQuestion ? hit?.QuestionTopics?.[0] : (Array.isArray(hit?.sub_types) ? hit.sub_types[0] : hit?.sub_types)))),
+    filters: isInterviewQuestion ? (hit?.all_subjects || []) : (isEnglishLitQuestion ? englishLitFilters : (isBiologyQuestion ? (hit?.QuestionTopics || []) : (hit?.filters || []))),
     questionContent: hit?.question_content || hit?.question_text,
     imageUrl: hit?.imageFile || hit?.imageUrl,
-    questionText: isInterviewQuestion ? hit?.QuestionPromptText : (isEnglishLitQuestion ? hit?.QuestionPrompt : (hit?.question || hit?.question_text)),
+    questionText: isInterviewQuestion ? hit?.QuestionPromptText : (isEnglishLitQuestion ? hit?.QuestionPrompt : (isBiologyQuestion ? hit?.Parts?.[0]?.QuestionText : (hit?.question || hit?.question_text))),
     videoUrl: hit?.videoSolutionLink || hit?.video_solution_url_1,
-    marks: isInterviewQuestion ? null : (isEnglishLitQuestion ? hit?.QuestionTotalMarks : hit?.marks),
+    marks: isInterviewQuestion ? null : (isEnglishLitQuestion ? hit?.QuestionTotalMarks : (isBiologyQuestion ? hit?.TotalMarks : hit?.marks)),
     time: isInterviewQuestion ? hit?.Time : null,
     paperInfo: englishLitPaperInfo || hit?.paper_info,
     textInfo: isEnglishLitQuestion ? hit?.Text1 : null,
     subjects: isInterviewQuestion ? hit?.all_subjects : null,
-    pdfUrl: isEnglishLitQuestion ? hit?.MS : (hit?.markscheme_pdf || hit?.pdf_url || hit?.markscheme_url || hit?.answer_pdf || hit?.answers_pdf)
-  }), [hit, isInterviewQuestion, isEnglishLitQuestion, isMathsQuestion, englishLitFilters, englishLitPaperInfo]);
+    pdfUrl: isEnglishLitQuestion ? hit?.MS : (isBiologyQuestion ? hit?.MarkScheme : (hit?.markscheme_pdf || hit?.pdf_url || hit?.markscheme_url || hit?.answer_pdf || hit?.answers_pdf)),
+    biologyParts: isBiologyQuestion ? hit?.Parts : null
+  }), [hit, isInterviewQuestion, isEnglishLitQuestion, isMathsQuestion, isBiologyQuestion, englishLitFilters, englishLitPaperInfo]);
 
   return (
     <article className={styles.questionCard}>
@@ -266,6 +271,35 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
             ) : (
               normalizedData.questionText
             )}
+          </div>
+        )}
+
+        {/* Show biology question parts */}
+        {isBiologyQuestion && normalizedData.biologyParts && normalizedData.biologyParts.length > 0 && (
+          <div className={styles.questionText}>
+            {normalizedData.biologyParts.map((part, index) => (
+              <div key={index} style={{ marginBottom: '20px' }}>
+                <div style={{ 
+                  fontWeight: 'bold', 
+                  marginBottom: '8px',
+                  color: '#333'
+                }}>
+                  {part.PartNumber}
+                </div>
+                <div style={{ lineHeight: '1.6' }}>
+                  {part.QuestionText}
+                </div>
+                {part.Marks && (
+                  <div style={{ 
+                    fontSize: '12px', 
+                    color: '#666', 
+                    marginTop: '4px' 
+                  }}>
+                    [{part.Marks} marks]
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         )}
 

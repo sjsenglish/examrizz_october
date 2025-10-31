@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
       'interview-question': { title: "📝 Interview Question Submission", color: 0x5865F2, field: "Question Submission" },
       'english-lit-question': { title: "📚 English Literature Submission", color: 0x8B4513, field: "Question Submission" },
       'maths-question': { title: "🔢 Maths Question Submission", color: 0x32CD32, field: "Question Submission" },
+      'biology-question': { title: "🧬 Biology Question Submission", color: 0x228B22, field: "Question Submission" },
       'admission-question': { title: "🎯 Admission Test Submission", color: 0xFF6B6B, field: "Question Submission" },
       'general-help': { title: "🎓 General Help Request", color: 0x00CED1, field: "Help Request" }
     };
