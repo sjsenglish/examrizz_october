@@ -370,28 +370,6 @@ function PaymentContent() {
               </button>
             </div>
           </div>
-
-          {/* Payment Methods */}
-          <div className="payment-methods">
-            <h3 className="methods-title">Secure Payment Methods</h3>
-            <div className="methods-grid">
-              <div className="method-card">💳 Credit Card</div>
-              <div className="method-card">💳 Debit Card</div>
-              <div className="method-card">📱 Apple Pay</div>
-              <div className="method-card">🔒 Google Pay</div>
-            </div>
-          </div>
-
-          {/* Security Notice */}
-          <div className="security-notice">
-            <div className="notice-content">
-              <div className="security-icon">🔒</div>
-              <div className="notice-text">
-                <h4>Secure & Encrypted</h4>
-                <p>Your payment information is protected with bank-level security. Powered by Stripe. We never store your card details.</p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
