@@ -42,115 +42,115 @@ export default function HelpPage() {
       {/* Main Content */}
       <div className="main-content">
         <div className="help-container">
-          <h1 className="help-title">Help & Support</h1>
-          <p className="help-subtitle">Find answers to your questions or get in touch with our support team</p>
+          <h1 className="help-title">Discord Support Guide</h1>
+          <p className="help-subtitle">Follow these steps to get help through our Discord server</p>
 
           <div className="help-content">
-            {/* Quick Help Section */}
+            {/* Ticket Guide Steps */}
             <section className="help-section">
-              <h2>Quick Help</h2>
-              <div className="quick-help-grid">
-                <div className="help-card">
-                  <div className="help-icon">📚</div>
-                  <h3>Getting Started</h3>
-                  <p>Learn how to use ExamRizz and make the most of your study sessions</p>
-                  <button className="help-button">Learn More</button>
+              <h2>How to Create a Support Ticket</h2>
+              <div className="ticket-guide">
+                <div className="step-card">
+                  <div className="step-number">1</div>
+                  <div className="step-content">
+                    <h3>Preparation</h3>
+                    <p><strong>Requirements:</strong></p>
+                    <ul className="step-list">
+                      <li>You must first have a Discord account</li>
+                      <li>Join our official server</li>
+                      <li>Accept the server rules</li>
+                    </ul>
+                    <div className="tip-box">
+                      <span className="tip-icon">💡</span>
+                      <p><strong>Tip for New Users:</strong> If you haven't done this, you won't be able to see the full list of channels.</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="help-card">
-                  <div className="help-icon">🎥</div>
-                  <h3>Video Solutions</h3>
-                  <p>Watch step-by-step video explanations for practice questions</p>
-                  <button className="help-button">Watch Now</button>
-                </div>
-                <div className="help-card">
-                  <div className="help-icon">📊</div>
-                  <h3>Progress Tracking</h3>
-                  <p>Monitor your performance and identify areas for improvement</p>
-                  <button className="help-button">View Progress</button>
-                </div>
-                <div className="help-card">
-                  <div className="help-icon">💳</div>
-                  <h3>Billing & Payments</h3>
-                  <p>Manage your subscription and payment information</p>
-                  <button className="help-button">Manage Account</button>
-                </div>
-              </div>
-            </section>
 
-            {/* FAQs Section */}
-            <section className="help-section">
-              <h2>Frequently Asked Questions</h2>
-              <div className="faq-list">
-                <div className="faq-item">
-                  <h4>How do I cancel my subscription?</h4>
-                  <p>You can cancel your subscription at any time from your account settings. Go to Account → Subscription → Cancel Subscription.</p>
+                <div className="step-card">
+                  <div className="step-number">2</div>
+                  <div className="step-content">
+                    <h3>Locate the Help Channel</h3>
+                    <p>On the left-hand side of the Discord application, you will see a list of text channels. Scroll near the top and click on the channel named <strong className="channel-highlight">#help-centre</strong></p>
+                    <div className="tip-box">
+                      <span className="tip-icon">📍</span>
+                      <p><strong>This channel is dedicated solely to starting the support process.</strong></p>
+                    </div>
+                  </div>
                 </div>
-                <div className="faq-item">
-                  <h4>Can I download practice questions for offline use?</h4>
-                  <p>Yes, annual subscribers can download practice questions and study materials for offline access through the mobile app.</p>
-                </div>
-                <div className="faq-item">
-                  <h4>How often is new content added?</h4>
-                  <p>We add new practice questions and video solutions weekly. Annual subscribers get early access to new content.</p>
-                </div>
-                <div className="faq-item">
-                  <h4>Do you offer refunds?</h4>
-                  <p>Yes, we offer full refunds within 14 days of purchase if you're not satisfied with our service.</p>
-                </div>
-                <div className="faq-item">
-                  <h4>Is there a mobile app available?</h4>
-                  <p>Yes, our mobile app is available for iOS and Android devices. Download it from the App Store or Google Play.</p>
-                </div>
-              </div>
-            </section>
 
-            {/* Contact Section */}
-            <section className="help-section">
-              <h2>Contact Support</h2>
-              <div className="contact-options">
-                <div className="contact-card">
-                  <div className="contact-icon">📧</div>
-                  <h3>Email Support</h3>
-                  <p>Get help from our support team</p>
-                  <p className="contact-info">support@examrizz.com</p>
-                  <p className="response-time">Response within 24 hours</p>
+                <div className="step-card">
+                  <div className="step-number">3</div>
+                  <div className="step-content">
+                    <h3>Select Your Category</h3>
+                    <p>In the help centre channel, you will see a message with a list of 5 categories for your tickets. Read the descriptions of each option:</p>
+                    <div className="categories-grid">
+                      <div className="category-item">
+                        <span className="category-icon">🎫</span>
+                        <strong>Premium Verification</strong>
+                      </div>
+                      <div className="category-item">
+                        <span className="category-icon">📝</span>
+                        <strong>Personal Statement Application</strong>
+                      </div>
+                      <div className="category-item">
+                        <span className="category-icon">❓</span>
+                        <strong>General Inquiries / Feedbacks</strong>
+                      </div>
+                      <div className="category-item">
+                        <span className="category-icon">🧠</span>
+                        <strong>Thinking Skills Assessment (TSA)</strong>
+                      </div>
+                      <div className="category-item">
+                        <span className="category-icon">📚</span>
+                        <strong>Study Buddy (Website Support)</strong>
+                      </div>
+                    </div>
+                    <div className="warning-box">
+                      <span className="warning-icon">⚠️</span>
+                      <p><strong>Important:</strong> Do not type a message yet. Just click the button to select your issue.</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="contact-card">
-                  <div className="contact-icon">💬</div>
-                  <h3>Live Chat</h3>
-                  <p>Chat with us in real-time</p>
-                  <button className="contact-button">Start Chat</button>
-                  <p className="response-time">Available 9am-6pm GMT</p>
-                </div>
-                <div className="contact-card">
-                  <div className="contact-icon">📞</div>
-                  <h3>Phone Support</h3>
-                  <p>Speak directly with our team</p>
-                  <p className="contact-info">+44 20 1234 5678</p>
-                  <p className="response-time">Mon-Fri 9am-6pm GMT</p>
-                </div>
-              </div>
-            </section>
 
-            {/* Resources Section */}
-            <section className="help-section">
-              <h2>Additional Resources</h2>
-              <div className="resources-list">
-                <div className="resource-item">
-                  <h4>📖 Study Guides</h4>
-                  <p>Comprehensive guides for A-level subjects and university admissions tests</p>
+                <div className="step-card">
+                  <div className="step-number">4</div>
+                  <div className="step-content">
+                    <h3>State Your Issue Clearly</h3>
+                    <p>After you click on an option, a new private ticket channel will instantly appear. In this new channel, a staff member will join the private ticket channel with you.</p>
+                    <div className="guidelines-box">
+                      <h4>📋 Guidelines:</h4>
+                      <ul className="guidelines-list">
+                        <li>Be specific: Include screenshots, error messages, or links if applicable to help the staff member understand your situation</li>
+                        <li>Describe your problem in detail</li>
+                        <li>The channel is visible only to you and staff members</li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
-                <div className="resource-item">
-                  <h4>🎓 Exam Tips</h4>
-                  <p>Expert advice and strategies for exam success</p>
+
+                <div className="step-card">
+                  <div className="step-number">5</div>
+                  <div className="step-content">
+                    <h3>Wait for Staff</h3>
+                    <p>A member of our team will join the private ticket as you quickly as possible.</p>
+                    <div className="tip-box">
+                      <span className="tip-icon">⏰</span>
+                      <p><strong>Please be patient, especially during busy times. Do not open multiple tickets for the same issue.</strong></p>
+                    </div>
+                  </div>
                 </div>
-                <div className="resource-item">
-                  <h4>📱 Mobile App Guide</h4>
-                  <p>Learn how to use our mobile app effectively</p>
-                </div>
-                <div className="resource-item">
-                  <h4>🔐 Account Security</h4>
-                  <p>Keep your account safe and secure</p>
+
+                <div className="step-card">
+                  <div className="step-number">6</div>
+                  <div className="step-content">
+                    <h3>Ticket Closure</h3>
+                    <p>Once your issue is fully resolved and you have been provided with the support, remember of the staff will close the private ticket channel for you.</p>
+                    <div className="info-box">
+                      <span className="info-icon">ℹ️</span>
+                      <p><strong>Note:</strong> You do not need to do anything to close the ticket.</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </section>
