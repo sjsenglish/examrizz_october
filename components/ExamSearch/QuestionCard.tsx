@@ -88,55 +88,77 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
       );
 
-      // Check if user is authenticated - matching Ask Bo pattern
+      // Check if user is authenticated
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         alert('Please log in to submit an answer for review.');
         return;
       }
 
-      // Simple question context extraction - following Ask Bo pattern
-      const questionContext = `**QUESTION:** ${normalizedData.questionText || 'See question above'}\n\n**STUDENT:** [Student submitted this question for review and needs help]`;
-      
-      // Determine question type for Discord webhook
-      let submissionType = 'general-help'; // Default fallback
+      // Format question context for Discord
+      let questionHeader = '';
       if (isInterviewQuestion) {
-        submissionType = 'interview-question';
+        questionHeader = `📝 **Interview Question Help Request**\n\n`;
       } else if (isEnglishLitQuestion) {
-        submissionType = 'english-lit-question';
+        questionHeader = `📚 **English Literature Question Help Request**\n\n`;
       } else if (isMathsQuestion) {
-        submissionType = 'maths-question';
+        questionHeader = `🔢 **Maths Question Help Request**\n\n`;
       } else {
-        submissionType = 'admission-question'; // TSA, BMAT, etc.
+        questionHeader = `🎯 **Question Help Request**\n\n`;
       }
       
-      // Generate unique ticket ID - matching Ask Bo pattern
-      const ticketId = `QUEST-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      // Create the pre-filled message for Discord help center
+      const discordMessage = `${questionHeader}**QUESTION:** ${normalizedData.questionText || 'See question above'}\n\n**MY ANSWER/QUESTION:**\n[Please add your answer or specific question here - teachers will provide feedback]\n\n**USER:** ${user.email}`;
+      
+      // Copy message to clipboard and open Discord
+      try {
+        await navigator.clipboard.writeText(discordMessage);
+        
+        // Try to open Discord app first, then fallback to web
+        const discordAppUrl = `discord://discord.com/channels/@me`;
+        const discordWebUrl = `https://discord.com/login`;
+        
+        // Open Discord and show instructions
+        window.open(discordAppUrl, '_blank');
+        
+        // Show user instructions
+        setTimeout(() => {
+          alert(`✅ Message copied to clipboard!\n\n📋 INSTRUCTIONS:\n1. Discord should open automatically\n2. Go to our ExamRizz server\n3. Find the #help-center channel\n4. Paste the message (Ctrl+V or Cmd+V)\n5. Add your answer or specific question\n6. Send to get teacher feedback\n\n🔗 If Discord didn't open, visit: discord.gg/examrizz`);
+        }, 500);
+        
+      } catch (clipboardError) {
+        // Fallback if clipboard doesn't work
+        console.error('Clipboard error:', clipboardError);
+        
+        // Show message in a text area for manual copying
+        const messageWindow = window.open('', '_blank', 'width=600,height=400');
+        if (messageWindow) {
+          messageWindow.document.write(`
+            <html>
+              <head><title>ExamRizz - Copy Message for Discord</title></head>
+              <body style="font-family: Arial, sans-serif; padding: 20px;">
+                <h2>📋 Copy this message for Discord:</h2>
+                <textarea style="width: 100%; height: 200px; padding: 10px;" readonly>${discordMessage}</textarea>
+                <p><strong>Instructions:</strong></p>
+                <ol>
+                  <li>Select all text above (Ctrl+A or Cmd+A)</li>
+                  <li>Copy it (Ctrl+C or Cmd+C)</li>
+                  <li>Go to Discord #help-center channel</li>
+                  <li>Paste and add your answer</li>
+                  <li>Send to get teacher feedback</li>
+                </ol>
+                <p><a href="https://discord.gg/examrizz" target="_blank">🔗 Open Discord Server</a></p>
+              </body>
+            </html>
+          `);
+        } else {
+          alert(`Please copy this message and paste it in Discord #help-center:\n\n${discordMessage}\n\nDiscord: discord.gg/examrizz`);
+        }
+      }
 
-      // Send to Discord webhook with type parameter
-      const response = await fetch('/api/discord-webhook', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: questionContext,
-          ticketId: ticketId,
-          userEmail: user.email,
-          type: submissionType
-        }),
-      });
-      
-      const result = await response.json();
-      
-      if (result.success) {
-        alert(`Question submitted successfully! Our teachers will review and provide feedback. Ticket ID: ${result.ticketId}`);
-      } else {
-        alert('Failed to submit question. Please try again.');
-      }
     } catch (error) {
-      console.error('Question submission error:', error);
-      alert('Failed to submit question. Please try again.');
+      console.error('Submit answer error:', error);
+      alert('Failed to prepare Discord message. Please try again.');
     }
   };
 
