@@ -49,26 +49,30 @@ function PaymentContent() {
   };
 
   const handleCancelSubscription = async () => {
-    if (!confirm('Are you sure you want to cancel your subscription? You will continue to have access until the end of your current billing period.')) {
+    const endDate = subscription?.current_period_end 
+      ? new Date(subscription.current_period_end).toLocaleDateString()
+      : 'the end of your billing period';
+      
+    if (!confirm(`Are you sure you want to cancel your subscription?\n\nYou will continue to have full access until ${endDate}. After that, your account will be downgraded to the free tier.`)) {
       return;
     }
     
     try {
       await cancel();
-      setMessage('Your subscription has been canceled and will end at the current period.');
+      setMessage(`✅ Your subscription has been canceled. You'll continue to have access until ${endDate}.`);
     } catch (error) {
       console.error('Failed to cancel subscription:', error);
-      setMessage('Failed to cancel subscription. Please try again.');
+      setMessage('❌ Failed to cancel subscription. Please try again or contact support.');
     }
   };
 
   const handleReactivateSubscription = async () => {
     try {
       await reactivate();
-      setMessage('Your subscription has been reactivated successfully.');
+      setMessage('✅ Your subscription has been reactivated successfully! Your billing will continue as normal.');
     } catch (error) {
       console.error('Failed to reactivate subscription:', error);
-      setMessage('Failed to reactivate subscription. Please try again.');
+      setMessage('❌ Failed to reactivate subscription. Please try again or contact support.');
     }
   };
 
@@ -152,9 +156,25 @@ function PaymentContent() {
               <h3 style={{ margin: '0 0 16px 0', fontFamily: "'Madimi One', cursive" }}>
                 Current Plan: {SUBSCRIPTION_PLANS[currentTier].displayName}
               </h3>
-              <p style={{ margin: '0 0 16px 0', color: '#666' }}>
+              <p style={{ 
+                margin: '0 0 16px 0', 
+                color: willCancelAtPeriodEnd ? '#dc3545' : '#666',
+                fontWeight: willCancelAtPeriodEnd ? '600' : 'normal'
+              }}>
                 Status: {isActive ? 'Active' : subscription.subscription_status}
-                {willCancelAtPeriodEnd && ' (Will cancel at period end)'}
+                {willCancelAtPeriodEnd && (
+                  <span style={{ 
+                    backgroundColor: '#fff3cd', 
+                    color: '#856404',
+                    padding: '2px 8px',
+                    borderRadius: '4px',
+                    marginLeft: '8px',
+                    fontSize: '12px',
+                    fontWeight: '500'
+                  }}>
+                    ⚠️ Cancels at period end
+                  </span>
+                )}
               </p>
               
               {subscription.current_period_end && (
@@ -168,16 +188,30 @@ function PaymentContent() {
                   <button
                     onClick={handleManageBilling}
                     style={{
-                      padding: '8px 16px',
+                      padding: '10px 20px',
                       backgroundColor: '#007bff',
                       color: 'white',
-                      border: 'none',
+                      border: '1px solid #0056b3',
                       borderRadius: '6px',
                       cursor: 'pointer',
-                      fontFamily: "'Figtree', sans-serif"
+                      fontFamily: "'Figtree', sans-serif",
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      transition: 'all 0.2s ease',
+                      boxShadow: '0 2px 4px rgba(0, 123, 255, 0.2)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#0056b3';
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 123, 255, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#007bff';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 123, 255, 0.2)';
                     }}
                   >
-                    Manage Billing
+                    💳 Manage Billing
                   </button>
                 )}
                 
@@ -185,16 +219,30 @@ function PaymentContent() {
                   <button
                     onClick={handleCancelSubscription}
                     style={{
-                      padding: '8px 16px',
+                      padding: '10px 20px',
                       backgroundColor: '#dc3545',
                       color: 'white',
-                      border: 'none',
+                      border: '1px solid #c82333',
                       borderRadius: '6px',
                       cursor: 'pointer',
-                      fontFamily: "'Figtree', sans-serif"
+                      fontFamily: "'Figtree', sans-serif",
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      transition: 'all 0.2s ease',
+                      boxShadow: '0 2px 4px rgba(220, 53, 69, 0.2)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#c82333';
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(220, 53, 69, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#dc3545';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 2px 4px rgba(220, 53, 69, 0.2)';
                     }}
                   >
-                    Cancel Subscription
+                    ❌ Cancel Subscription
                   </button>
                 )}
                 
@@ -202,16 +250,30 @@ function PaymentContent() {
                   <button
                     onClick={handleReactivateSubscription}
                     style={{
-                      padding: '8px 16px',
+                      padding: '10px 20px',
                       backgroundColor: '#28a745',
                       color: 'white',
-                      border: 'none',
+                      border: '1px solid #1e7e34',
                       borderRadius: '6px',
                       cursor: 'pointer',
-                      fontFamily: "'Figtree', sans-serif"
+                      fontFamily: "'Figtree', sans-serif",
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      transition: 'all 0.2s ease',
+                      boxShadow: '0 2px 4px rgba(40, 167, 69, 0.2)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#1e7e34';
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(40, 167, 69, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#28a745';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 2px 4px rgba(40, 167, 69, 0.2)';
                     }}
                   >
-                    Reactivate Subscription
+                    ✅ Reactivate Subscription
                   </button>
                 )}
               </div>
