@@ -64,9 +64,9 @@ export const PdfModal: React.FC<PdfModalProps> = ({ isOpen, onClose, pdfUrl, que
 
   const finalPdfUrl = pdfUrl ? getFirebasePdfUrl(pdfUrl) : '';
 
-  // Create PDF URL with search parameter for question number
-  const pdfUrlWithSearch = finalPdfUrl && questionNumber 
-    ? `${finalPdfUrl}#search=${encodeURIComponent(`Question ${questionNumber}`)}`
+  // Create PDF URL with page parameter and search
+  const pdfUrlWithParams = finalPdfUrl && questionNumber 
+    ? `${finalPdfUrl}#toolbar=1&navpanes=1&scrollbar=1&page=1&search=${encodeURIComponent(`Question ${questionNumber}`)}&view=FitH`
     : finalPdfUrl;
 
   const modalContent = (
@@ -83,7 +83,7 @@ export const PdfModal: React.FC<PdfModalProps> = ({ isOpen, onClose, pdfUrl, que
         {finalPdfUrl ? (
           <div className={styles.pdfContainer}>
             <iframe
-              src={pdfUrlWithSearch}
+              src={pdfUrlWithParams}
               title="Mark Scheme PDF"
               className={styles.pdfFrame}
             />

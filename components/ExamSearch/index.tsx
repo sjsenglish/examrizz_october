@@ -92,7 +92,7 @@ const ExamSearch: React.FC = () => {
   
   // Get the appropriate index name based on selection
   const getCurrentIndexName = () => {
-    if (showTSAResults) return INDEX_NAME; // Keep TSA as default
+    if (showTSAResults) return INDEX_NAME;
     if (showBMATResults) {
       const config = getSubjectConfig('BMAT');
       return config?.indexName || INDEX_NAME;
@@ -105,7 +105,18 @@ const ExamSearch: React.FC = () => {
       const config = getSubjectConfig('Interview');
       return config?.indexName || INDEX_NAME;
     }
-    return INDEX_NAME;
+    
+    // Preserve current selection based on state, don't default to TSA
+    if (activeTab === 'A Level' && selectedSubject) {
+      const config = getSubjectConfig(selectedSubject);
+      return config?.indexName || INDEX_NAME;
+    }
+    if (activeTab === 'Admissions' && selectedAdmissionsTest) {
+      const config = getSubjectConfig(selectedAdmissionsTest);
+      return config?.indexName || INDEX_NAME;
+    }
+    
+    return INDEX_NAME; // Only fallback to TSA if nothing is selected
   };
 
   // Get current subject for filter context
@@ -114,6 +125,15 @@ const ExamSearch: React.FC = () => {
     if (showBMATResults) return 'BMAT';
     if (showALevelResults) return selectedSubject;
     if (showInterviewResults) return 'Interview';
+    
+    // Preserve current selection based on state
+    if (activeTab === 'A Level' && selectedSubject) {
+      return selectedSubject;
+    }
+    if (activeTab === 'Admissions' && selectedAdmissionsTest) {
+      return selectedAdmissionsTest;
+    }
+    
     return null;
   };
 
@@ -139,6 +159,7 @@ const ExamSearch: React.FC = () => {
     <InstantSearch 
       searchClient={searchClient} 
       indexName={currentIndexName}
+      key={`${activeTab}-${selectedSubject}-${selectedAdmissionsTest}`}
       future={{ preserveSharedStateOnUnmount: true }}
     >
       <Configure hitsPerPage={20} />

@@ -180,6 +180,7 @@
               0 3px 0 0 #c0b8d8,
               3px 3px 0 0 #c0b8d8,
               4px 4px 6px rgba(0, 0, 0, 0.1) !important;
+  border: var(--border-medium) !important;
 }
 
 .showAnswerBtn:hover {

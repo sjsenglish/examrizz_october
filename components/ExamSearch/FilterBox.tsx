@@ -39,8 +39,28 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubj
   const getAttributes = (subject: string) => {
     const subjectLower = subject.toLowerCase();
     
-    if (['maths', 'english lit', 'biology', 'chemistry'].includes(subjectLower)) {
-      // A Level subjects use different attribute structure
+    if (subjectLower === 'interview') {
+      // Interview questions use specific structure
+      return {
+        questionType: 'SubjectId1',
+        subType: 'SubjectId2',
+        filters: 'Time',
+        questionTypeLabel: 'Primary Subject',
+        subTypeLabel: 'Secondary Subject',
+        filtersLabel: 'Duration (minutes)'
+      };
+    } else if (subjectLower === 'english lit') {
+      // English Literature uses specific structure
+      return {
+        questionType: 'PaperName',
+        subType: 'PaperSection',
+        filters: 'Text1.Author',
+        questionTypeLabel: 'Paper Type',
+        subTypeLabel: 'Section',
+        filtersLabel: 'Author'
+      };
+    } else if (['maths', 'biology', 'chemistry'].includes(subjectLower)) {
+      // Other A Level subjects use different attribute structure
       return {
         questionType: 'spec_topic',
         subType: 'question_topic', 
@@ -50,7 +70,7 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubj
         filtersLabel: 'Filters'
       };
     } else {
-      // TSA, BMAT, Interview use original structure
+      // TSA, BMAT use original structure
       return {
         questionType: 'question_type',
         subType: 'sub_types',

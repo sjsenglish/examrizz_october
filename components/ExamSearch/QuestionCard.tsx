@@ -33,6 +33,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
 
   // Detect question type based on data structure
   const isMathsQuestion = hit?.paper_info && hit?.spec_topic;
+  const isEnglishLitQuestion = hit?.QualificationLevel === 'A Level' && hit?.Subject === 'English Literature';
+  const isInterviewQuestion = hit?.QuestionID && hit?.Time && hit?.QuestionPromptText;
 
   const handleAnswerClick = (letter: string) => {
     setSelectedAnswer(letter);
@@ -40,11 +42,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   };
 
   const handleShowAnswer = () => {
-    if (isMathsQuestion) {
+    if (isMathsQuestion || isEnglishLitQuestion) {
       setIsPdfModalOpen(true);
-    } else {
+    } else if (!isInterviewQuestion) {
       setIsAnswerRevealed(true);
     }
+    // Interview questions don't have answers - they're discussion questions
   };
 
   const handleVideoSolutionClick = () => {
@@ -57,6 +60,40 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
 
   const handleClosePdfModal = () => {
     setIsPdfModalOpen(false);
+  };
+
+  const handleDiscordHelp = async () => {
+    if (!isInterviewQuestion) return;
+    
+    const questionContent = `**Interview Question ${normalizedData.questionNumber}**\n\n` +
+                           `**Time:** ${normalizedData.time} minutes\n` +
+                           `**Subjects:** ${normalizedData.subjects?.join(', ') || 'N/A'}\n\n` +
+                           `**Question:**\n${normalizedData.questionText}\n\n` +
+                           `**User Message:**\n[Please add your question, voice note, or video here]`;
+    
+    try {
+      // Send to Discord webhook
+      const response = await fetch('/api/discord-webhook', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: questionContent,
+          questionId: normalizedData.questionNumber,
+          type: 'interview-help'
+        }),
+      });
+      
+      if (response.ok) {
+        alert('Question sent to Discord help center! Our team will assist you soon.');
+      } else {
+        alert('Failed to send to Discord. Please try again.');
+      }
+    } catch (error) {
+      console.error('Discord webhook error:', error);
+      alert('Failed to send to Discord. Please try again.');
+    }
   };
 
   const getOptionClass = (letter: string): string => {
@@ -82,18 +119,27 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   
   // Get normalized data based on question type
   const normalizedData = {
-    questionNumber: hit?.question_number || '',
-    year: isMathsQuestion ? hit?.paper_info?.year : hit?.year,
-    questionType: isMathsQuestion ? hit?.spec_topic : hit?.question_type,
-    subType: isMathsQuestion ? hit?.question_topic : (Array.isArray(hit?.sub_types) ? hit.sub_types[0] : hit?.sub_types),
-    filters: isMathsQuestion ? hit?.filters : [],
+    questionNumber: isInterviewQuestion ? hit?.QuestionID : (isEnglishLitQuestion ? hit?.QuestionNo : (hit?.question_number || '')),
+    year: isInterviewQuestion ? null : (isEnglishLitQuestion ? hit?.PaperYear : (isMathsQuestion ? hit?.paper_info?.year : hit?.year)),
+    questionType: isInterviewQuestion ? hit?.SubjectId1 : (isEnglishLitQuestion ? hit?.PaperName : (isMathsQuestion ? hit?.spec_topic : hit?.question_type)),
+    subType: isInterviewQuestion ? hit?.SubjectId2 : (isEnglishLitQuestion ? hit?.PaperSection : (isMathsQuestion ? hit?.question_topic : (Array.isArray(hit?.sub_types) ? hit.sub_types[0] : hit?.sub_types))),
+    filters: isInterviewQuestion ? hit?.all_subjects || [] : (isEnglishLitQuestion ? [hit?.Text1?.Author, hit?.Text1?.Age].filter(Boolean) : (isMathsQuestion ? hit?.filters : [])),
     questionContent: hit?.question_content || hit?.question_text,
     imageUrl: hit?.imageFile || hit?.imageUrl,
-    questionText: hit?.question || hit?.question_text,
+    questionText: isInterviewQuestion ? hit?.QuestionPromptText : (isEnglishLitQuestion ? hit?.QuestionPrompt : (hit?.question || hit?.question_text)),
     videoUrl: hit?.videoSolutionLink || hit?.video_solution_url_1,
-    marks: hit?.marks,
-    paperInfo: hit?.paper_info,
-    pdfUrl: hit?.markscheme_pdf || hit?.pdf_url || hit?.markscheme_url || hit?.answer_pdf || hit?.answers_pdf
+    marks: isInterviewQuestion ? null : (isEnglishLitQuestion ? hit?.QuestionTotalMarks : hit?.marks),
+    time: isInterviewQuestion ? hit?.Time : null,
+    paperInfo: isEnglishLitQuestion ? { 
+      code: hit?.PaperCode, 
+      name: hit?.PaperName, 
+      section: hit?.PaperSection,
+      year: hit?.PaperYear,
+      month: hit?.PaperMonth 
+    } : hit?.paper_info,
+    textInfo: isEnglishLitQuestion ? hit?.Text1 : null,
+    subjects: isInterviewQuestion ? hit?.all_subjects : null,
+    pdfUrl: isEnglishLitQuestion ? hit?.MS : (hit?.markscheme_pdf || hit?.pdf_url || hit?.markscheme_url || hit?.answer_pdf || hit?.answers_pdf)
   };
 
   // Debug: Log available fields for maths questions
@@ -107,15 +153,46 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       allFields: Object.keys(hit || {})
     });
   }
+
+  // Debug: Log available fields for English Literature questions
+  if (isEnglishLitQuestion) {
+    console.log('English Lit question data:', {
+      QuestionNo: hit?.QuestionNo,
+      PaperYear: hit?.PaperYear,
+      QuestionPrompt: hit?.QuestionPrompt,
+      QuestionTotalMarks: hit?.QuestionTotalMarks,
+      PaperName: hit?.PaperName,
+      PaperSection: hit?.PaperSection,
+      Text1: hit?.Text1,
+      MS: hit?.MS,
+      QP: hit?.QP,
+      ER: hit?.ER,
+      allFields: Object.keys(hit || {})
+    });
+  }
+
+  // Debug: Log available fields for interview questions
+  if (isInterviewQuestion) {
+    console.log('Interview question data:', {
+      QuestionID: hit?.QuestionID,
+      Time: hit?.Time,
+      QuestionPromptText: hit?.QuestionPromptText,
+      SubjectId1: hit?.SubjectId1,
+      SubjectId2: hit?.SubjectId2,
+      all_subjects: hit?.all_subjects,
+      allFields: Object.keys(hit || {})
+    });
+  }
   return (
     <article className={styles.questionCard}>
       <header className={styles.questionHeader}>
         <div className={styles.questionInfo}>
           <span className={styles.questionNumber}>
-            Question {normalizedData.questionNumber}
+            {isInterviewQuestion ? normalizedData.questionNumber : `Question ${normalizedData.questionNumber}`}
           </span>
           {normalizedData.year && <span className={styles.yearBadge}>{normalizedData.year}</span>}
           {normalizedData.marks && <span className={styles.marksBadge}>{normalizedData.marks} marks</span>}
+          {normalizedData.time && <span className={styles.marksBadge}>{normalizedData.time} minutes</span>}
         </div>
         <div className={styles.filterButtons}>
           {normalizedData.questionType && (
@@ -143,11 +220,19 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       </header>
 
       <div className={styles.questionContent}>
-        {/* Only show question content and text for non-maths questions */}
+        {/* Show question content for non-maths questions */}
         {!isMathsQuestion && normalizedData.questionContent && (
           <p className={styles.questionPassage}>
             {normalizedData.questionContent}
           </p>
+        )}
+
+        {/* Show text information for English Literature */}
+        {isEnglishLitQuestion && normalizedData.textInfo && (
+          <div className={styles.questionText}>
+            <strong>{normalizedData.textInfo.Title}</strong> by {normalizedData.textInfo.Author}
+            {normalizedData.textInfo.Theme && <span> ({normalizedData.textInfo.Theme})</span>}
+          </div>
         )}
 
         {normalizedData.imageUrl && (
@@ -164,7 +249,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
           </div>
         )}
 
-        {!isMathsQuestion && normalizedData.questionText && (
+        {/* Show question text for all question types */}
+        {normalizedData.questionText && (
           <div className={styles.questionText}>
             {normalizedData.questionText}
           </div>
@@ -190,14 +276,18 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         )}
 
         <div className={styles.actionButtons}>
-          <Button 
-            variant="secondary" 
-            size="md" 
-            className={styles.showAnswerBtn}
-            onClick={handleShowAnswer}
-          >
-            Show Answer
-          </Button>
+          {/* Show Answer button - hidden for interview questions */}
+          {!isInterviewQuestion && (
+            <Button 
+              variant="secondary" 
+              size="md" 
+              className={styles.showAnswerBtn}
+              onClick={handleShowAnswer}
+            >
+              Show Answer
+            </Button>
+          )}
+          
           <Button 
             variant="primary" 
             size="md"
@@ -206,6 +296,18 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
           >
             Video Solution
           </Button>
+          
+          {/* Discord Help button - only for interview questions */}
+          {isInterviewQuestion && (
+            <Button 
+              variant="secondary" 
+              size="md"
+              onClick={handleDiscordHelp}
+              style={{ backgroundColor: '#5865F2', color: 'white' }}
+            >
+              🎙️ Discord Help
+            </Button>
+          )}
         </div>
       </div>
 
