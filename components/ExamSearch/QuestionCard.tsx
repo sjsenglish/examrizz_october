@@ -71,90 +71,42 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
       );
 
-      // Check if user is authenticated
+      // Check if user is authenticated - matching Ask Bo pattern
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         alert('Please log in to submit an answer for review.');
         return;
       }
 
-      // Determine question type and format content accordingly
-      let questionContent = '';
-      let ticketPrefix = '';
-      let submissionType = '';
-
-      if (isInterviewQuestion) {
-        questionContent = `**Interview Question Submission**\n\n` +
-                         `**Question ID:** ${normalizedData.questionNumber}\n` +
-                         `**Duration:** ${normalizedData.time} minutes\n` +
-                         `**Subjects:** ${normalizedData.subjects?.join(', ') || 'N/A'}\n\n` +
-                         `**Question:**\n${normalizedData.questionText?.replace(/\\n\\n/g, '\n\n').replace(/\\n/g, '\n')}\n\n` +
-                         `**Student's Answer:**\n[Student submitted this question for review]`;
-        ticketPrefix = 'INTERVIEW';
-        submissionType = 'interview-question';
-      } else if (isEnglishLitQuestion) {
-        questionContent = `**English Literature Question Submission**\n\n` +
-                         `**Question:** ${normalizedData.questionNumber}\n` +
-                         `**Year:** ${normalizedData.year}\n` +
-                         `**Paper:** ${normalizedData.questionType} - ${normalizedData.subType}\n` +
-                         `**Text:** ${normalizedData.textInfo?.Title} by ${normalizedData.textInfo?.Author}\n` +
-                         `**Marks:** ${normalizedData.marks}\n\n` +
-                         `**Question:**\n${normalizedData.questionText}\n\n` +
-                         `**Student's Answer:**\n[Student submitted this question for review]`;
-        ticketPrefix = 'ENGLIT';
-        submissionType = 'english-lit-question';
-      } else if (isMathsQuestion) {
-        questionContent = `**Maths Question Submission**\n\n` +
-                         `**Question:** ${normalizedData.questionNumber}\n` +
-                         `**Year:** ${normalizedData.year}\n` +
-                         `**Topic:** ${normalizedData.questionType}\n` +
-                         `**Subtopic:** ${normalizedData.subType}\n` +
-                         `**Marks:** ${normalizedData.marks}\n\n` +
-                         `**Question:**\n${normalizedData.questionText || 'See image'}\n\n` +
-                         `**Student's Answer:**\n[Student submitted this question for review]`;
-        ticketPrefix = 'MATHS';
-        submissionType = 'maths-question';
-      } else {
-        // TSA, BMAT, other admission tests
-        const subjectName = normalizedData.questionType || 'Admission Test';
-        questionContent = `**${subjectName} Question Submission**\n\n` +
-                         `**Question:** ${normalizedData.questionNumber}\n` +
-                         `**Year:** ${normalizedData.year}\n` +
-                         `**Type:** ${normalizedData.questionType}\n` +
-                         `**Category:** ${normalizedData.subType}\n\n` +
-                         `**Question:**\n${normalizedData.questionText}\n\n` +
-                         `**Student's Answer:**\n[Student submitted this question for review]`;
-        ticketPrefix = 'ADMISSION';
-        submissionType = 'admission-question';
-      }
+      // Simple question context extraction - following Ask Bo pattern
+      const questionContext = `**QUESTION:** ${normalizedData.questionText || 'See question above'}\n\n**STUDENT:** [Student submitted this question for review and needs help]`;
       
-      // Generate unique ticket ID
-      const ticketId = `${ticketPrefix}-${normalizedData.questionNumber}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      // Generate unique ticket ID - matching Ask Bo pattern
+      const ticketId = `QUEST-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-      // Send to Discord webhook
+      // Send to Discord webhook - same as Ask Bo
       const response = await fetch('/api/discord-webhook', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          content: questionContent,
+          content: questionContext,
           ticketId: ticketId,
-          userEmail: user.email,
-          type: submissionType
+          userEmail: user.email
         }),
       });
       
       const result = await response.json();
       
       if (result.success) {
-        alert(`Answer submitted successfully! Our teachers will review your response and provide feedback. Ticket ID: ${result.ticketId}`);
+        alert(`Question submitted successfully! Our teachers will review and provide feedback. Ticket ID: ${result.ticketId}`);
       } else {
-        alert('Failed to submit answer. Please try again.');
+        alert('Failed to submit question. Please try again.');
       }
     } catch (error) {
-      console.error('Discord submission error:', error);
-      alert('Failed to submit answer. Please try again.');
+      console.error('Question submission error:', error);
+      alert('Failed to submit question. Please try again.');
     }
   };
 

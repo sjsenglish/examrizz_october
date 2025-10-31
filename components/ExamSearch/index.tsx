@@ -193,19 +193,6 @@ const ExamSearch: React.FC = () => {
   const currentSubject = getCurrentSubject();
   const showResults = showTSAResults || showBMATResults || showALevelResults || showInterviewResults;
 
-  // Debug logging
-  console.log('ExamSearch render:', {
-    activeTab,
-    selectedSubject,
-    selectedAdmissionsTest,
-    showFilters,
-    currentSubject,
-    currentIndexName,
-    showTSAResults,
-    showBMATResults,
-    showALevelResults,
-    showInterviewResults
-  });
 
   return (
     <InstantSearch 
