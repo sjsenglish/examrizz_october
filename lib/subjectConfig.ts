@@ -57,6 +57,35 @@ export const SUBJECT_CONFIGS: SubjectConfig[] = [
     ]
   },
   {
+    id: 'bmat',
+    name: 'BMAT',
+    indexName: 'bmat_search_backup',
+    available: true,
+    filters: [
+      {
+        id: 'year',
+        label: 'Year',
+        field: 'year',
+        type: 'checkbox',
+        fetchFromIndex: true
+      },
+      {
+        id: 'questionType',
+        label: 'Question Type',
+        field: 'question_type',
+        type: 'checkbox',
+        fetchFromIndex: true
+      },
+      {
+        id: 'subTypes',
+        label: 'Categories',
+        field: 'sub_types',
+        type: 'checkbox',
+        fetchFromIndex: true
+      }
+    ]
+  },
+  {
     id: 'interview',
     name: 'Interview',
     indexName: 'v2_interview_questions',

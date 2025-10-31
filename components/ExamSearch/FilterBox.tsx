@@ -7,6 +7,8 @@ const getFilterTitle = (subject: string) => {
   switch (subject.toLowerCase()) {
     case 'tsa':
       return 'TSA Thinking Skills Assessment';
+    case 'bmat':
+      return 'BMAT BioMedical Admissions Test';
     case 'interview':
       return 'Interview Questions';
     case 'english lit':

@@ -86,12 +86,17 @@ const ExamSearch: React.FC = () => {
   const admissionsTests = ['BMAT', 'TSA', 'Interview'];
 
   const showTSAResults = activeTab === 'Admissions' && selectedAdmissionsTest === 'TSA';
+  const showBMATResults = activeTab === 'Admissions' && selectedAdmissionsTest === 'BMAT';
   const showALevelResults = activeTab === 'A Level' && selectedSubject;
   const showInterviewResults = activeTab === 'Admissions' && selectedAdmissionsTest === 'Interview';
   
   // Get the appropriate index name based on selection
   const getCurrentIndexName = () => {
     if (showTSAResults) return INDEX_NAME; // Keep TSA as default
+    if (showBMATResults) {
+      const config = getSubjectConfig('BMAT');
+      return config?.indexName || INDEX_NAME;
+    }
     if (showALevelResults) {
       const config = getSubjectConfig(selectedSubject);
       return config?.indexName || INDEX_NAME;
@@ -104,7 +109,7 @@ const ExamSearch: React.FC = () => {
   };
 
   const currentIndexName = getCurrentIndexName();
-  const showResults = showTSAResults || showALevelResults || showInterviewResults;
+  const showResults = showTSAResults || showBMATResults || showALevelResults || showInterviewResults;
 
   return (
     <InstantSearch 
