@@ -98,10 +98,22 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       // Simple question context extraction - following Ask Bo pattern
       const questionContext = `**QUESTION:** ${normalizedData.questionText || 'See question above'}\n\n**STUDENT:** [Student submitted this question for review and needs help]`;
       
+      // Determine question type for Discord webhook
+      let submissionType = 'general-help'; // Default fallback
+      if (isInterviewQuestion) {
+        submissionType = 'interview-question';
+      } else if (isEnglishLitQuestion) {
+        submissionType = 'english-lit-question';
+      } else if (isMathsQuestion) {
+        submissionType = 'maths-question';
+      } else {
+        submissionType = 'admission-question'; // TSA, BMAT, etc.
+      }
+      
       // Generate unique ticket ID - matching Ask Bo pattern
       const ticketId = `QUEST-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-      // Send to Discord webhook - same as Ask Bo
+      // Send to Discord webhook with type parameter
       const response = await fetch('/api/discord-webhook', {
         method: 'POST',
         headers: {
@@ -110,7 +122,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         body: JSON.stringify({
           content: questionContext,
           ticketId: ticketId,
-          userEmail: user.email
+          userEmail: user.email,
+          type: submissionType
         }),
       });
       
