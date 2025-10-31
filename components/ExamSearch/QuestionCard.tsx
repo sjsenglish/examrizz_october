@@ -93,8 +93,20 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     videoUrl: hit?.videoSolutionLink || hit?.video_solution_url_1,
     marks: hit?.marks,
     paperInfo: hit?.paper_info,
-    pdfUrl: hit?.markscheme_pdf
+    pdfUrl: hit?.markscheme_pdf || hit?.pdf_url || hit?.markscheme_url || hit?.answer_pdf || hit?.answers_pdf
   };
+
+  // Debug: Log available fields for maths questions
+  if (isMathsQuestion) {
+    console.log('Maths question data:', {
+      markscheme_pdf: hit?.markscheme_pdf,
+      pdf_url: hit?.pdf_url,
+      markscheme_url: hit?.markscheme_url,
+      answer_pdf: hit?.answer_pdf,
+      answers_pdf: hit?.answers_pdf,
+      allFields: Object.keys(hit || {})
+    });
+  }
   return (
     <article className={styles.questionCard}>
       <header className={styles.questionHeader}>

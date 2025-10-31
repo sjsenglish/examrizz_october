@@ -121,6 +121,20 @@ const ExamSearch: React.FC = () => {
   const currentSubject = getCurrentSubject();
   const showResults = showTSAResults || showBMATResults || showALevelResults || showInterviewResults;
 
+  // Debug logging
+  console.log('ExamSearch render:', {
+    activeTab,
+    selectedSubject,
+    selectedAdmissionsTest,
+    showFilters,
+    currentSubject,
+    currentIndexName,
+    showTSAResults,
+    showBMATResults,
+    showALevelResults,
+    showInterviewResults
+  });
+
   return (
     <InstantSearch 
       searchClient={searchClient} 
@@ -425,7 +439,10 @@ const ExamSearch: React.FC = () => {
         {/* Filter Box */}
         {showResults && showFilters && currentSubject && (
           <FilterBox 
-            onHideFilters={() => setShowFilters(false)} 
+            onHideFilters={() => {
+              console.log('Hiding filters, current state:', { activeTab, selectedSubject, selectedAdmissionsTest, currentSubject });
+              setShowFilters(false);
+            }} 
             currentSubject={currentSubject} 
           />
         )}
@@ -436,7 +453,10 @@ const ExamSearch: React.FC = () => {
             <div className="results-header">
               <ResultsCount />
               {!showFilters && (
-                <Button variant="ghost" size="sm" onClick={() => setShowFilters(true)}>
+                <Button variant="ghost" size="sm" onClick={() => {
+                  console.log('Showing filters, current state:', { activeTab, selectedSubject, selectedAdmissionsTest, currentSubject });
+                  setShowFilters(true);
+                }}>
                   show filters
                 </Button>
               )}

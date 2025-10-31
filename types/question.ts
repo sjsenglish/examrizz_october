@@ -30,6 +30,10 @@ export interface Question {
   video_solution_url_1?: string;
   qualification_level?: string;
   markscheme_pdf?: string;
+  pdf_url?: string;
+  markscheme_url?: string;
+  answer_pdf?: string;
+  answers_pdf?: string;
 }
 
 export interface QuestionCardProps {
