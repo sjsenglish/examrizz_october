@@ -74,6 +74,20 @@ export interface Question {
   all_subjects?: string[];
   subjects_clean?: string[];
   question_text_clean?: string;
+
+  // Biology question specific properties
+  QuestionNumber?: string;
+  Year?: number;
+  QuestionTopics?: string[];
+  TotalMarks?: number;
+  MarkScheme?: string;
+  Parts?: Array<{
+    PartNumber: string;
+    QuestionText: string;
+    Marks?: number;
+    SpecType?: string;
+    [key: string]: any;
+  }>;
 }
 
 export interface QuestionCardProps {
