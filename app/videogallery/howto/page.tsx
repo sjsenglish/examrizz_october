@@ -157,7 +157,7 @@ export default function HowToVideoGalleryPage() {
                 color: '#000000',
                 margin: '0'
               }}>
-                Topic 1
+                How to read, write, and take notes
               </h2>
               <button style={{
                 padding: '8px 16px',
@@ -276,7 +276,7 @@ export default function HowToVideoGalleryPage() {
                 color: '#000000',
                 margin: '0'
               }}>
-                Topic 2
+                How to make your studying efficient
               </h2>
               <button style={{
                 padding: '8px 16px',
