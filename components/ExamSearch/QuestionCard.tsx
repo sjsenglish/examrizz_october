@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Button } from '../ui/Button';
 import { QuestionCardProps, Question } from '@/types/question';
 import { VideoModal } from '../VideoModal';
@@ -179,8 +179,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
 
   const isALevelQuestion = hit?.paper_info && hit?.qualification_level === 'A Level';
   
-  // Get normalized data based on question type
-  const normalizedData = {
+  // Get normalized data based on question type - memoized to prevent re-renders
+  const normalizedData = useMemo(() => ({
     questionNumber: isInterviewQuestion ? hit?.QuestionID : (isEnglishLitQuestion ? hit?.QuestionNo : (hit?.question_number || '')),
     year: isInterviewQuestion ? null : (isEnglishLitQuestion ? hit?.PaperYear : (isMathsQuestion ? hit?.paper_info?.year : hit?.year)),
     questionType: isInterviewQuestion ? hit?.SubjectId1 : (isEnglishLitQuestion ? hit?.PaperName : (isMathsQuestion ? hit?.spec_topic : hit?.question_type)),
@@ -202,49 +202,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     textInfo: isEnglishLitQuestion ? hit?.Text1 : null,
     subjects: isInterviewQuestion ? hit?.all_subjects : null,
     pdfUrl: isEnglishLitQuestion ? hit?.MS : (hit?.markscheme_pdf || hit?.pdf_url || hit?.markscheme_url || hit?.answer_pdf || hit?.answers_pdf)
-  };
+  }), [hit, isInterviewQuestion, isEnglishLitQuestion, isMathsQuestion]);
 
-  // Debug: Log available fields for maths questions
-  if (isMathsQuestion) {
-    console.log('Maths question data:', {
-      markscheme_pdf: hit?.markscheme_pdf,
-      pdf_url: hit?.pdf_url,
-      markscheme_url: hit?.markscheme_url,
-      answer_pdf: hit?.answer_pdf,
-      answers_pdf: hit?.answers_pdf,
-      allFields: Object.keys(hit || {})
-    });
-  }
-
-  // Debug: Log available fields for English Literature questions
-  if (isEnglishLitQuestion) {
-    console.log('English Lit question data:', {
-      QuestionNo: hit?.QuestionNo,
-      PaperYear: hit?.PaperYear,
-      QuestionPrompt: hit?.QuestionPrompt,
-      QuestionTotalMarks: hit?.QuestionTotalMarks,
-      PaperName: hit?.PaperName,
-      PaperSection: hit?.PaperSection,
-      Text1: hit?.Text1,
-      MS: hit?.MS,
-      QP: hit?.QP,
-      ER: hit?.ER,
-      allFields: Object.keys(hit || {})
-    });
-  }
-
-  // Debug: Log available fields for interview questions
-  if (isInterviewQuestion) {
-    console.log('Interview question data:', {
-      QuestionID: hit?.QuestionID,
-      Time: hit?.Time,
-      QuestionPromptText: hit?.QuestionPromptText,
-      SubjectId1: hit?.SubjectId1,
-      SubjectId2: hit?.SubjectId2,
-      all_subjects: hit?.all_subjects,
-      allFields: Object.keys(hit || {})
-    });
-  }
   return (
     <article className={styles.questionCard}>
       <header className={styles.questionHeader}>
