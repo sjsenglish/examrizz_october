@@ -73,6 +73,33 @@ export default function Navbar() {
       </Link>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        {/* About Us Button */}
+        <Link 
+          href="/about"
+          style={{
+            background: '#E8F5E8',
+            border: '1px solid #4CAF50',
+            borderRadius: '20px',
+            padding: '8px 16px',
+            fontFamily: "'Figtree', sans-serif",
+            fontSize: '13px',
+            fontWeight: '500',
+            color: '#000000',
+            textDecoration: 'none',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            display: 'inline-block'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#C8E6C9';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = '#E8F5E8';
+          }}
+        >
+          About Us
+        </Link>
+
         {/* Login/Logout Button */}
         {isLoggedIn ? (
           <>

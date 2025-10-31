@@ -506,3 +506,30 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Email Contact */
+.email-contact {
+  text-align: center;
+  padding: 24px;
+  margin-top: 40px;
+  border-top: 1px solid #F8F8F5;
+}
+
+.email-contact p {
+  font-family: 'Figtree', sans-serif;
+  font-size: 16px;
+  color: #666666;
+  margin: 0;
+}
+
+.email-link {
+  color: #00CED1;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.email-link:hover {
+  color: #00B8C1;
+  text-decoration: underline;
+}

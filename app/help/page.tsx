@@ -154,6 +154,11 @@ export default function HelpPage() {
                 </div>
               </div>
             </section>
+
+            {/* Email Contact */}
+            <div className="email-contact">
+              <p>Still confused? Email us at <a href="mailto:team@examrizz.com" className="email-link">team@examrizz.com</a></p>
+            </div>
           </div>
         </div>
       </div>

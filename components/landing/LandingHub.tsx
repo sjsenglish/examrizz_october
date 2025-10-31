@@ -100,22 +100,27 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
 
         {/* PRACTICE - dead center (50% horizontal, 50% vertical) */}
         <div 
-          className="absolute"
+          className="absolute group"
           style={{
             left: '50%',
             top: '50%',
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <Link href="/practice" className="block">
+          <div className="relative">
             <Image 
               src="/icons/practice.svg"
               alt="PRACTICE"
               width={207} /* 10% smaller: 230 -> 207 */
               height={207} /* 10% smaller: 230 -> 207 */
-              className="drop-shadow-lg"
+              className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
             />
-          </Link>
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <span className="bg-white/95 px-4 py-2 rounded-lg border-2 border-black shadow-lg font-['Madimi_One'] text-lg">
+                Coming Soon
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* TEACHER - bottom-left (25% from left, 55% from top) - MOVED UP */}

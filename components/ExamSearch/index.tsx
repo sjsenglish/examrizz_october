@@ -453,19 +453,30 @@ const ExamSearch: React.FC = () => {
             {/* A Level Dropdown */}
             {showALevelDropdown && (
               <div className="dropdown-menu">
-                {aLevelSubjects.map((subject) => (
-                  <button
-                    key={subject}
-                    className="dropdown-item"
-                    onClick={() => {
-                      setSelectedSubject(subject);
-                      setActiveTab('A Level');
-                      setShowALevelDropdown(false);
-                    }}
-                  >
-                    {subject}
-                  </button>
-                ))}
+                {aLevelSubjects.map((subject) => {
+                  const isDisabled = subject === 'Biology' || subject === 'Chemistry';
+                  return (
+                    <button
+                      key={subject}
+                      className={`dropdown-item ${isDisabled ? 'dropdown-item-disabled' : ''}`}
+                      onClick={() => {
+                        if (!isDisabled) {
+                          setSelectedSubject(subject);
+                          setActiveTab('A Level');
+                          setShowALevelDropdown(false);
+                        }
+                      }}
+                      disabled={isDisabled}
+                      style={{
+                        opacity: isDisabled ? 0.4 : 1,
+                        cursor: isDisabled ? 'not-allowed' : 'pointer',
+                        color: isDisabled ? '#999' : 'inherit'
+                      }}
+                    >
+                      {subject}
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
