@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -17,11 +17,47 @@ import '../../styles/globals.css';
 import '../../styles/pages/exam-search.css';
 import './ExamSearch.css';
 
-// Custom component for interview questions with Show More functionality
-const InterviewQuestionsList = () => {
+// FIXED: Custom component for interview questions - all infinite render sources eliminated
+const InterviewQuestionsList = React.memo(() => {
+  // Fix 1: Memoize transformItems function to prevent recreation
+  const transformItems = useCallback((items: any[]) => items, []);
+  
   const { hits, isLastPage, showMore } = useInfiniteHits({
-    transformItems: (items) => items,
+    transformItems,
   });
+
+  // Fix 2: Memoize container style
+  const containerStyle = useMemo(() => ({ 
+    display: 'flex', 
+    justifyContent: 'center', 
+    margin: '2rem 0',
+    padding: '0 1rem'
+  }), []);
+
+  // Fix 3: Memoize button style
+  const buttonStyle = useMemo(() => ({
+    fontFamily: 'var(--font-primary)',
+    fontSize: 'var(--text-base)',
+    padding: 'var(--space-md) var(--space-xl)',
+    backgroundColor: 'var(--color-primary)',
+    color: 'var(--color-black)',
+    border: 'var(--border-medium)',
+    boxShadow: 'var(--shadow-sm)',
+    borderRadius: '0',
+    transition: 'all var(--transition-base)',
+    cursor: 'pointer'
+  }), []);
+
+  // Fix 4: Memoize event handlers
+  const handleMouseEnter = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.transform = 'translateY(-2px)';
+    e.currentTarget.style.boxShadow = '3px 0 0 0 var(--color-primary-dark), 0 4px 0 0 var(--color-primary-dark), 3px 4px 0 0 var(--color-primary-dark)';
+  }, []);
+
+  const handleMouseLeave = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.transform = 'translateY(0)';
+    e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+  }, []);
 
   return (
     <div>
@@ -30,36 +66,14 @@ const InterviewQuestionsList = () => {
       ))}
       
       {!isLastPage && (
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          margin: '2rem 0',
-          padding: '0 1rem'
-        }}>
+        <div style={containerStyle}>
           <Button 
             variant="primary" 
             size="md"
             onClick={showMore}
-            style={{
-              fontFamily: 'var(--font-primary)',
-              fontSize: 'var(--text-base)',
-              padding: 'var(--space-md) var(--space-xl)',
-              backgroundColor: 'var(--color-primary)',
-              color: 'var(--color-black)',
-              border: 'var(--border-medium)',
-              boxShadow: 'var(--shadow-sm)',
-              borderRadius: '0',
-              transition: 'all var(--transition-base)',
-              cursor: 'pointer'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '3px 0 0 0 var(--color-primary-dark), 0 4px 0 0 var(--color-primary-dark), 3px 4px 0 0 var(--color-primary-dark)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-            }}
+            style={buttonStyle}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           >
             Show More Questions
           </Button>
@@ -67,7 +81,7 @@ const InterviewQuestionsList = () => {
       )}
     </div>
   );
-};
+});
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
