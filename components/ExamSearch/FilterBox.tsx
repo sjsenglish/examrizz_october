@@ -1,5 +1,5 @@
-import React from 'react';
-import { useRefinementList, useClearRefinements } from 'react-instantsearch';
+import React, { useMemo } from 'react';
+import { useRefinementList, useClearRefinements, useInstantSearch } from 'react-instantsearch';
 import { Button } from '../ui/Button';
 import './FilterBox.css';
 
@@ -29,6 +29,76 @@ interface FilterBoxProps {
   currentSubject?: string;
 }
 
+// Custom hook for interview subject filter
+const useInterviewSubjectFilter = () => {
+  const { results } = useInstantSearch();
+  const [selectedSubjects, setSelectedSubjects] = React.useState<Set<string>>(new Set());
+
+  const subjects = ['psychology', 'maths', 'engineering', 'economics', 'general', 'law', 'PPE', 'philosophy', 'management'];
+  
+  const subjectItems = useMemo(() => {
+    if (!results?.hits) return [];
+    
+    const subjectCounts: Record<string, number> = {};
+    
+    // Initialize counts
+    subjects.forEach(subject => {
+      subjectCounts[subject] = 0;
+    });
+    
+    // Count occurrences in both primary and secondary subjects
+    results.hits.forEach((hit: any) => {
+      const primarySubject = hit.SubjectId1?.toLowerCase();
+      const secondarySubject = hit.SubjectId2?.toLowerCase();
+      
+      subjects.forEach(subject => {
+        if (primarySubject === subject.toLowerCase() || secondarySubject === subject.toLowerCase()) {
+          subjectCounts[subject]++;
+        }
+      });
+    });
+    
+    return subjects.map(subject => ({
+      value: subject,
+      label: subject.charAt(0).toUpperCase() + subject.slice(1),
+      count: subjectCounts[subject],
+      isRefined: selectedSubjects.has(subject)
+    })).filter(item => item.count > 0);
+  }, [results, selectedSubjects]);
+
+  const refine = (subject: string) => {
+    const newSelected = new Set(selectedSubjects);
+    if (newSelected.has(subject)) {
+      newSelected.delete(subject);
+    } else {
+      newSelected.add(subject);
+    }
+    setSelectedSubjects(newSelected);
+    
+    // Apply filter to Algolia
+    const { helper } = results!._state;
+    helper.clearRefinements();
+    
+    if (newSelected.size > 0) {
+      const filters = Array.from(newSelected).map(subj => 
+        `(SubjectId1:"${subj}" OR SubjectId2:"${subj}")`
+      ).join(' OR ');
+      helper.setQueryParameter('filters', filters);
+    }
+    
+    helper.search();
+  };
+
+  const clear = () => {
+    setSelectedSubjects(new Set());
+    const { helper } = results!._state;
+    helper.clearRefinements();
+    helper.search();
+  };
+
+  return { items: subjectItems, refine, clear };
+};
+
 export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubject }) => {
   // Guard against undefined currentSubject
   if (!currentSubject) {
@@ -40,14 +110,14 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubj
     const subjectLower = subject.toLowerCase();
     
     if (subjectLower === 'interview') {
-      // Interview questions use specific structure
+      // Interview questions use specific structure - Subject filter only
       return {
-        questionType: 'SubjectId1',
-        subType: 'SubjectId2',
-        filters: 'Time',
-        questionTypeLabel: 'Primary Subject',
-        subTypeLabel: 'Secondary Subject',
-        filtersLabel: 'Duration (minutes)'
+        questionType: 'combined_subjects',
+        subType: null,
+        filters: null,
+        questionTypeLabel: 'Subject',
+        subTypeLabel: null,
+        filtersLabel: null
       };
     } else if (subjectLower === 'english lit') {
       // English Literature uses specific structure
@@ -83,7 +153,12 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubj
   };
   
   const attributes = getAttributes(currentSubject);
+  const isInterview = currentSubject.toLowerCase() === 'interview';
   
+  // Use custom hook for interview subjects
+  const interviewSubjectFilter = useInterviewSubjectFilter();
+  
+  // Regular refinement lists for non-interview subjects
   const questionTypeRefinement = useRefinementList({
     attribute: attributes.questionType,
   });
@@ -97,6 +172,7 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubj
   });
   
   const { refine: clearAllFilters } = useClearRefinements();
+  
   return (
     <div className="filter-box-container">
       <div className="filter-box">
@@ -106,68 +182,92 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubj
         </div>
 
         {/* Filter Content Grid */}
-        <div className="filter-grid">
-          {/* Column 1 - Question Types */}
-          <div className="filter-column">
-            <div className="filter-category-title">
-              <span>{attributes.questionTypeLabel}</span>
+        {isInterview ? (
+          // Interview-specific single column Subject filter
+          <div className="filter-grid">
+            <div className="filter-column">
+              <div className="filter-category-title">
+                <span>Subject</span>
+              </div>
+              
+              {interviewSubjectFilter.items.map((item) => (
+                <label key={item.value} className="filter-option">
+                  <input 
+                    type="checkbox" 
+                    className="filter-checkbox secondary"
+                    checked={item.isRefined}
+                    onChange={() => interviewSubjectFilter.refine(item.value)}
+                  />
+                  <span>{item.label} ({item.count})</span>
+                </label>
+              ))}
             </div>
-            
-            {questionTypeRefinement.items.map((item) => (
-              <label key={item.value} className="filter-option">
-                <input 
-                  type="checkbox" 
-                  className="filter-checkbox secondary"
-                  checked={item.isRefined}
-                  onChange={() => questionTypeRefinement.refine(item.value)}
-                />
-                <span>{item.label} ({item.count})</span>
-              </label>
-            ))}
           </div>
+        ) : (
+          // Standard three-column layout for other subjects
+          <div className="filter-grid">
+            {/* Column 1 - Question Types */}
+            <div className="filter-column">
+              <div className="filter-category-title">
+                <span>{attributes.questionTypeLabel}</span>
+              </div>
+              
+              {questionTypeRefinement.items.map((item) => (
+                <label key={item.value} className="filter-option">
+                  <input 
+                    type="checkbox" 
+                    className="filter-checkbox secondary"
+                    checked={item.isRefined}
+                    onChange={() => questionTypeRefinement.refine(item.value)}
+                  />
+                  <span>{item.label} ({item.count})</span>
+                </label>
+              ))}
+            </div>
 
-          {/* Column 2 - Sub Types */}
-          <div className="filter-column">
-            <div className="filter-category-title">
-              <span>{attributes.subTypeLabel}</span>
+            {/* Column 2 - Sub Types */}
+            <div className="filter-column">
+              <div className="filter-category-title">
+                <span>{attributes.subTypeLabel}</span>
+              </div>
+              
+              {subTypesRefinement.items.map((item) => (
+                <label key={item.value} className="filter-option">
+                  <input 
+                    type="checkbox" 
+                    className="filter-checkbox secondary"
+                    checked={item.isRefined}
+                    onChange={() => subTypesRefinement.refine(item.value)}
+                  />
+                  <span>{item.label} ({item.count})</span>
+                </label>
+              ))}
             </div>
-            
-            {subTypesRefinement.items.map((item) => (
-              <label key={item.value} className="filter-option">
-                <input 
-                  type="checkbox" 
-                  className="filter-checkbox secondary"
-                  checked={item.isRefined}
-                  onChange={() => subTypesRefinement.refine(item.value)}
-                />
-                <span>{item.label} ({item.count})</span>
-              </label>
-            ))}
-          </div>
 
-          {/* Column 3 - Filters */}
-          <div className="filter-column">
-            <div className="filter-category-title">
-              <span>{attributes.filtersLabel}</span>
+            {/* Column 3 - Filters */}
+            <div className="filter-column">
+              <div className="filter-category-title">
+                <span>{attributes.filtersLabel}</span>
+              </div>
+              
+              {filtersRefinement.items.map((item) => (
+                <label key={item.value} className="filter-option">
+                  <input 
+                    type="checkbox" 
+                    className="filter-checkbox secondary"
+                    checked={item.isRefined}
+                    onChange={() => filtersRefinement.refine(item.value)}
+                  />
+                  <span>{item.label} ({item.count})</span>
+                </label>
+              ))}
             </div>
-            
-            {filtersRefinement.items.map((item) => (
-              <label key={item.value} className="filter-option">
-                <input 
-                  type="checkbox" 
-                  className="filter-checkbox secondary"
-                  checked={item.isRefined}
-                  onChange={() => filtersRefinement.refine(item.value)}
-                />
-                <span>{item.label} ({item.count})</span>
-              </label>
-            ))}
           </div>
-        </div>
+        )}
 
         {/* Control Buttons */}
         <div className="filter-controls">
-          <Button variant="ghost" size="sm" onClick={() => clearAllFilters()}>clear filters</Button>
+          <Button variant="ghost" size="sm" onClick={() => isInterview ? interviewSubjectFilter.clear() : clearAllFilters()}>clear filters</Button>
           <Button variant="ghost" size="sm" onClick={onHideFilters}>hide filters</Button>
         </div>
       </div>
