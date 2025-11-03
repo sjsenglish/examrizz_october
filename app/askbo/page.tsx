@@ -99,6 +99,21 @@ export default function StudyBookPage() {
   const [showUsageLimitModal, setShowUsageLimitModal] = useState(false);
   const [usageError, setUsageError] = useState<string | null>(null);
 
+  // Profile state
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileError, setProfileError] = useState<string | null>(null);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [editedProfile, setEditedProfile] = useState({
+    full_name: '',
+    username: '',
+    school: '',
+    rank_in_school: '',
+    target_degree: '',
+    gcse_grades: [] as Array<{subject: string, grade: string}>,
+    a_level_grades: [] as Array<{subject: string, grade: string}>
+  });
+
   // Draft workspace state
   const [draftContents, setDraftContents] = useState<{[key: number]: string}>({
     1: '',
@@ -247,6 +262,7 @@ export default function StudyBookPage() {
   useEffect(() => {
     if (userId) {
       fetchUsageInfo();
+      loadUserProfile();
     }
   }, [userId]);
 
@@ -822,6 +838,131 @@ export default function StudyBookPage() {
     }
   };
 
+  // Load user profile
+  const loadUserProfile = async () => {
+    if (!userId) return;
+    
+    setProfileLoading(true);
+    setProfileError(null);
+    
+    try {
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (error) {
+        setProfileError('Failed to load profile');
+        return;
+      }
+
+      setUserProfile(data);
+      
+      // Set edited profile with current data
+      setEditedProfile({
+        full_name: data.full_name || '',
+        username: data.username || '',
+        school: data.school || '',
+        rank_in_school: data.rank_in_school || '',
+        target_degree: data.target_degree || '',
+        gcse_grades: data.gcse_grades || [],
+        a_level_grades: data.a_level_grades || []
+      });
+    } catch (error) {
+      console.error('Error loading profile:', error);
+      setProfileError('Failed to load profile');
+    } finally {
+      setProfileLoading(false);
+    }
+  };
+
+  // Save profile changes
+  const saveProfile = async () => {
+    if (!userId) return;
+    
+    setProfileLoading(true);
+    setProfileError(null);
+    
+    try {
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .update({
+          full_name: editedProfile.full_name,
+          username: editedProfile.username,
+          school: editedProfile.school,
+          rank_in_school: editedProfile.rank_in_school,
+          target_degree: editedProfile.target_degree,
+          gcse_grades: editedProfile.gcse_grades,
+          a_level_grades: editedProfile.a_level_grades
+        })
+        .eq('id', userId)
+        .select()
+        .single();
+
+      if (error) {
+        setProfileError('Failed to save profile');
+        return;
+      }
+
+      setUserProfile(data);
+      setIsEditingProfile(false);
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      setProfileError('Failed to save profile');
+    } finally {
+      setProfileLoading(false);
+    }
+  };
+
+  // Add/remove GCSE subjects
+  const addGcseSubject = () => {
+    setEditedProfile(prev => ({
+      ...prev,
+      gcse_grades: [...prev.gcse_grades, { subject: '', grade: '' }]
+    }));
+  };
+
+  const removeGcseSubject = (index: number) => {
+    setEditedProfile(prev => ({
+      ...prev,
+      gcse_grades: prev.gcse_grades.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateGcseSubject = (index: number, field: 'subject' | 'grade', value: string) => {
+    setEditedProfile(prev => ({
+      ...prev,
+      gcse_grades: prev.gcse_grades.map((item, i) => 
+        i === index ? { ...item, [field]: value } : item
+      )
+    }));
+  };
+
+  // Add/remove A-level subjects
+  const addALevelSubject = () => {
+    setEditedProfile(prev => ({
+      ...prev,
+      a_level_grades: [...prev.a_level_grades, { subject: '', grade: '' }]
+    }));
+  };
+
+  const removeALevelSubject = (index: number) => {
+    setEditedProfile(prev => ({
+      ...prev,
+      a_level_grades: prev.a_level_grades.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateALevelSubject = (index: number, field: 'subject' | 'grade', value: string) => {
+    setEditedProfile(prev => ({
+      ...prev,
+      a_level_grades: prev.a_level_grades.map((item, i) => 
+        i === index ? { ...item, [field]: value } : item
+      )
+    }));
+  };
+
 
   const loadUploadedFiles = async () => {
     try {
@@ -1142,6 +1283,12 @@ export default function StudyBookPage() {
             onClick={() => setActiveTab('chat')}
           >
             Ask Bo
+          </button>
+          <button 
+            className={`nav-item ${activeTab === 'profile' ? 'active' : ''}`}
+            onClick={() => setActiveTab('profile')}
+          >
+            Profile
           </button>
         </div>
       </div>
@@ -1710,6 +1857,626 @@ export default function StudyBookPage() {
           </div>
         </div>
       )}
+
+        {activeTab === 'profile' && (
+          <div className="profile-page">
+            <div className="profile-container" style={{
+              maxWidth: '800px',
+              margin: '0 auto',
+              padding: '40px',
+              fontFamily: "'Figtree', sans-serif"
+            }}>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '32px'
+              }}>
+                <h2 style={{ 
+                  fontFamily: "'Madimi One', cursive", 
+                  fontSize: '28px', 
+                  letterSpacing: '0.04em', 
+                  margin: '0',
+                  color: '#000000'
+                }}>
+                  My Profile
+                </h2>
+                {!isEditingProfile ? (
+                  <button
+                    onClick={() => setIsEditingProfile(true)}
+                    style={{
+                      padding: '8px 16px',
+                      backgroundColor: '#4338CA',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      fontSize: '14px',
+                      cursor: 'pointer',
+                      fontFamily: "'Figtree', sans-serif"
+                    }}
+                  >
+                    Edit Profile
+                  </button>
+                ) : (
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      onClick={saveProfile}
+                      disabled={profileLoading}
+                      style={{
+                        padding: '8px 16px',
+                        backgroundColor: '#059669',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '6px',
+                        fontSize: '14px',
+                        cursor: profileLoading ? 'not-allowed' : 'pointer',
+                        fontFamily: "'Figtree', sans-serif",
+                        opacity: profileLoading ? 0.6 : 1
+                      }}
+                    >
+                      {profileLoading ? 'Saving...' : 'Save'}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsEditingProfile(false);
+                        setEditedProfile(userProfile || {});
+                      }}
+                      style={{
+                        padding: '8px 16px',
+                        backgroundColor: '#6B7280',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '6px',
+                        fontSize: '14px',
+                        cursor: 'pointer',
+                        fontFamily: "'Figtree', sans-serif"
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {profileError && (
+                <div style={{
+                  marginBottom: '24px',
+                  padding: '12px 16px',
+                  backgroundColor: '#FEE2E2',
+                  border: '1px solid #EF4444',
+                  borderRadius: '6px',
+                  color: '#B91C1C',
+                  fontSize: '14px'
+                }}>
+                  {profileError}
+                </div>
+              )}
+
+              {profileLoading && !userProfile ? (
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  padding: '40px',
+                  fontSize: '16px',
+                  color: '#6B7280'
+                }}>
+                  Loading profile...
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+                  {/* Personal Information Section */}
+                  <div style={{
+                    backgroundColor: '#F9FAFB',
+                    padding: '24px',
+                    borderRadius: '8px',
+                    border: '1px solid #E5E7EB'
+                  }}>
+                    <h3 style={{
+                      fontFamily: "'Madimi One', cursive",
+                      fontSize: '20px',
+                      marginBottom: '20px',
+                      color: '#000000'
+                    }}>
+                      Personal Information
+                    </h3>
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                      gap: '20px'
+                    }}>
+                      <div>
+                        <label style={{
+                          display: 'block',
+                          fontSize: '14px',
+                          fontWeight: '500',
+                          marginBottom: '6px',
+                          color: '#374151'
+                        }}>
+                          Full Name
+                        </label>
+                        {isEditingProfile ? (
+                          <input
+                            type="text"
+                            value={editedProfile.full_name || ''}
+                            onChange={(e) => setEditedProfile(prev => ({ ...prev, full_name: e.target.value }))}
+                            style={{
+                              width: '100%',
+                              padding: '10px 12px',
+                              border: '1px solid #D1D5DB',
+                              borderRadius: '6px',
+                              fontSize: '14px',
+                              fontFamily: "'Figtree', sans-serif"
+                            }}
+                          />
+                        ) : (
+                          <div style={{
+                            padding: '10px 12px',
+                            backgroundColor: 'white',
+                            border: '1px solid #E5E7EB',
+                            borderRadius: '6px',
+                            fontSize: '14px',
+                            minHeight: '20px'
+                          }}>
+                            {userProfile?.full_name || 'Not provided'}
+                          </div>
+                        )}
+                      </div>
+
+                      <div>
+                        <label style={{
+                          display: 'block',
+                          fontSize: '14px',
+                          fontWeight: '500',
+                          marginBottom: '6px',
+                          color: '#374151'
+                        }}>
+                          Username
+                        </label>
+                        {isEditingProfile ? (
+                          <input
+                            type="text"
+                            value={editedProfile.username || ''}
+                            onChange={(e) => setEditedProfile(prev => ({ ...prev, username: e.target.value }))}
+                            style={{
+                              width: '100%',
+                              padding: '10px 12px',
+                              border: '1px solid #D1D5DB',
+                              borderRadius: '6px',
+                              fontSize: '14px',
+                              fontFamily: "'Figtree', sans-serif"
+                            }}
+                          />
+                        ) : (
+                          <div style={{
+                            padding: '10px 12px',
+                            backgroundColor: 'white',
+                            border: '1px solid #E5E7EB',
+                            borderRadius: '6px',
+                            fontSize: '14px',
+                            minHeight: '20px'
+                          }}>
+                            {userProfile?.username || 'Not provided'}
+                          </div>
+                        )}
+                      </div>
+
+                      <div>
+                        <label style={{
+                          display: 'block',
+                          fontSize: '14px',
+                          fontWeight: '500',
+                          marginBottom: '6px',
+                          color: '#374151'
+                        }}>
+                          School
+                        </label>
+                        {isEditingProfile ? (
+                          <input
+                            type="text"
+                            value={editedProfile.school || ''}
+                            onChange={(e) => setEditedProfile(prev => ({ ...prev, school: e.target.value }))}
+                            style={{
+                              width: '100%',
+                              padding: '10px 12px',
+                              border: '1px solid #D1D5DB',
+                              borderRadius: '6px',
+                              fontSize: '14px',
+                              fontFamily: "'Figtree', sans-serif"
+                            }}
+                          />
+                        ) : (
+                          <div style={{
+                            padding: '10px 12px',
+                            backgroundColor: 'white',
+                            border: '1px solid #E5E7EB',
+                            borderRadius: '6px',
+                            fontSize: '14px',
+                            minHeight: '20px'
+                          }}>
+                            {userProfile?.school || 'Not provided'}
+                          </div>
+                        )}
+                      </div>
+
+                      <div>
+                        <label style={{
+                          display: 'block',
+                          fontSize: '14px',
+                          fontWeight: '500',
+                          marginBottom: '6px',
+                          color: '#374151'
+                        }}>
+                          Rank in School
+                        </label>
+                        {isEditingProfile ? (
+                          <input
+                            type="text"
+                            value={editedProfile.rank_in_school || ''}
+                            onChange={(e) => setEditedProfile(prev => ({ ...prev, rank_in_school: e.target.value }))}
+                            style={{
+                              width: '100%',
+                              padding: '10px 12px',
+                              border: '1px solid #D1D5DB',
+                              borderRadius: '6px',
+                              fontSize: '14px',
+                              fontFamily: "'Figtree', sans-serif"
+                            }}
+                          />
+                        ) : (
+                          <div style={{
+                            padding: '10px 12px',
+                            backgroundColor: 'white',
+                            border: '1px solid #E5E7EB',
+                            borderRadius: '6px',
+                            fontSize: '14px',
+                            minHeight: '20px'
+                          }}>
+                            {userProfile?.rank_in_school || 'Not provided'}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Target Degree Section */}
+                  <div style={{
+                    backgroundColor: '#F0F9FF',
+                    padding: '24px',
+                    borderRadius: '8px',
+                    border: '1px solid #0EA5E9'
+                  }}>
+                    <h3 style={{
+                      fontFamily: "'Madimi One', cursive",
+                      fontSize: '20px',
+                      marginBottom: '20px',
+                      color: '#000000'
+                    }}>
+                      Target Degree
+                    </h3>
+                    <div>
+                      <label style={{
+                        display: 'block',
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        marginBottom: '6px',
+                        color: '#374151'
+                      }}>
+                        Degree I want to apply for
+                      </label>
+                      {isEditingProfile ? (
+                        <input
+                          type="text"
+                          placeholder="e.g., Computer Science, Medicine, Law, etc."
+                          value={editedProfile.target_degree || ''}
+                          onChange={(e) => setEditedProfile(prev => ({ ...prev, target_degree: e.target.value }))}
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            border: '1px solid #D1D5DB',
+                            borderRadius: '6px',
+                            fontSize: '14px',
+                            fontFamily: "'Figtree', sans-serif"
+                          }}
+                        />
+                      ) : (
+                        <div style={{
+                          padding: '10px 12px',
+                          backgroundColor: 'white',
+                          border: '1px solid #E5E7EB',
+                          borderRadius: '6px',
+                          fontSize: '14px',
+                          minHeight: '20px'
+                        }}>
+                          {userProfile?.target_degree || 'Not specified'}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* GCSE Grades Section */}
+                  <div style={{
+                    backgroundColor: '#F0FDF4',
+                    padding: '24px',
+                    borderRadius: '8px',
+                    border: '1px solid #10B981'
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '20px'
+                    }}>
+                      <h3 style={{
+                        fontFamily: "'Madimi One', cursive",
+                        fontSize: '20px',
+                        margin: '0',
+                        color: '#000000'
+                      }}>
+                        GCSE Grades
+                      </h3>
+                      {isEditingProfile && (
+                        <button
+                          onClick={addGcseSubject}
+                          style={{
+                            padding: '6px 12px',
+                            backgroundColor: '#10B981',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            fontSize: '12px',
+                            cursor: 'pointer',
+                            fontFamily: "'Figtree', sans-serif"
+                          }}
+                        >
+                          + Add Subject
+                        </button>
+                      )}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {(isEditingProfile ? editedProfile.gcse_grades : userProfile?.gcse_grades)?.map((grade: any, index: number) => (
+                        <div key={index} style={{
+                          display: 'flex',
+                          gap: '12px',
+                          alignItems: 'center',
+                          padding: '12px',
+                          backgroundColor: 'white',
+                          borderRadius: '6px',
+                          border: '1px solid #D1D5DB'
+                        }}>
+                          {isEditingProfile ? (
+                            <>
+                              <input
+                                type="text"
+                                placeholder="Subject"
+                                value={grade.subject || ''}
+                                onChange={(e) => updateGcseSubject(index, 'subject', e.target.value)}
+                                style={{
+                                  flex: '1',
+                                  padding: '8px 10px',
+                                  border: '1px solid #D1D5DB',
+                                  borderRadius: '4px',
+                                  fontSize: '14px',
+                                  fontFamily: "'Figtree', sans-serif"
+                                }}
+                              />
+                              <select
+                                value={grade.grade || ''}
+                                onChange={(e) => updateGcseSubject(index, 'grade', e.target.value)}
+                                style={{
+                                  padding: '8px 10px',
+                                  border: '1px solid #D1D5DB',
+                                  borderRadius: '4px',
+                                  fontSize: '14px',
+                                  fontFamily: "'Figtree', sans-serif",
+                                  minWidth: '80px'
+                                }}
+                              >
+                                <option value="">Grade</option>
+                                <option value="9">9</option>
+                                <option value="8">8</option>
+                                <option value="7">7</option>
+                                <option value="6">6</option>
+                                <option value="5">5</option>
+                                <option value="4">4</option>
+                                <option value="3">3</option>
+                                <option value="2">2</option>
+                                <option value="1">1</option>
+                                <option value="U">U</option>
+                              </select>
+                              <button
+                                onClick={() => removeGcseSubject(index)}
+                                style={{
+                                  padding: '8px',
+                                  backgroundColor: '#EF4444',
+                                  color: 'white',
+                                  border: 'none',
+                                  borderRadius: '4px',
+                                  fontSize: '12px',
+                                  cursor: 'pointer',
+                                  fontFamily: "'Figtree', sans-serif"
+                                }}
+                              >
+                                Remove
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <span style={{ flex: '1', fontSize: '14px', fontWeight: '500' }}>
+                                {grade.subject}
+                              </span>
+                              <span style={{
+                                padding: '4px 8px',
+                                backgroundColor: '#F3F4F6',
+                                borderRadius: '4px',
+                                fontSize: '14px',
+                                fontWeight: '600',
+                                minWidth: '40px',
+                                textAlign: 'center'
+                              }}>
+                                {grade.grade}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      )) || (
+                        <div style={{
+                          padding: '20px',
+                          textAlign: 'center',
+                          color: '#6B7280',
+                          fontSize: '14px',
+                          backgroundColor: 'white',
+                          borderRadius: '6px',
+                          border: '1px solid #E5E7EB'
+                        }}>
+                          No GCSE grades added yet
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* A-Level Grades Section */}
+                  <div style={{
+                    backgroundColor: '#FFFBEB',
+                    padding: '24px',
+                    borderRadius: '8px',
+                    border: '1px solid #F59E0B'
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '20px'
+                    }}>
+                      <h3 style={{
+                        fontFamily: "'Madimi One', cursive",
+                        fontSize: '20px',
+                        margin: '0',
+                        color: '#000000'
+                      }}>
+                        A-Level Grades
+                      </h3>
+                      {isEditingProfile && (
+                        <button
+                          onClick={addALevelSubject}
+                          style={{
+                            padding: '6px 12px',
+                            backgroundColor: '#F59E0B',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            fontSize: '12px',
+                            cursor: 'pointer',
+                            fontFamily: "'Figtree', sans-serif"
+                          }}
+                        >
+                          + Add Subject
+                        </button>
+                      )}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {(isEditingProfile ? editedProfile.a_level_grades : userProfile?.a_level_grades)?.map((grade: any, index: number) => (
+                        <div key={index} style={{
+                          display: 'flex',
+                          gap: '12px',
+                          alignItems: 'center',
+                          padding: '12px',
+                          backgroundColor: 'white',
+                          borderRadius: '6px',
+                          border: '1px solid #D1D5DB'
+                        }}>
+                          {isEditingProfile ? (
+                            <>
+                              <input
+                                type="text"
+                                placeholder="Subject"
+                                value={grade.subject || ''}
+                                onChange={(e) => updateALevelSubject(index, 'subject', e.target.value)}
+                                style={{
+                                  flex: '1',
+                                  padding: '8px 10px',
+                                  border: '1px solid #D1D5DB',
+                                  borderRadius: '4px',
+                                  fontSize: '14px',
+                                  fontFamily: "'Figtree', sans-serif"
+                                }}
+                              />
+                              <select
+                                value={grade.grade || ''}
+                                onChange={(e) => updateALevelSubject(index, 'grade', e.target.value)}
+                                style={{
+                                  padding: '8px 10px',
+                                  border: '1px solid #D1D5DB',
+                                  borderRadius: '4px',
+                                  fontSize: '14px',
+                                  fontFamily: "'Figtree', sans-serif",
+                                  minWidth: '80px'
+                                }}
+                              >
+                                <option value="">Grade</option>
+                                <option value="A*">A*</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="U">U</option>
+                              </select>
+                              <button
+                                onClick={() => removeALevelSubject(index)}
+                                style={{
+                                  padding: '8px',
+                                  backgroundColor: '#EF4444',
+                                  color: 'white',
+                                  border: 'none',
+                                  borderRadius: '4px',
+                                  fontSize: '12px',
+                                  cursor: 'pointer',
+                                  fontFamily: "'Figtree', sans-serif"
+                                }}
+                              >
+                                Remove
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <span style={{ flex: '1', fontSize: '14px', fontWeight: '500' }}>
+                                {grade.subject}
+                              </span>
+                              <span style={{
+                                padding: '4px 8px',
+                                backgroundColor: '#F3F4F6',
+                                borderRadius: '4px',
+                                fontSize: '14px',
+                                fontWeight: '600',
+                                minWidth: '40px',
+                                textAlign: 'center'
+                              }}>
+                                {grade.grade}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      )) || (
+                        <div style={{
+                          padding: '20px',
+                          textAlign: 'center',
+                          color: '#6B7280',
+                          fontSize: '14px',
+                          backgroundColor: 'white',
+                          borderRadius: '6px',
+                          border: '1px solid #E5E7EB'
+                        }}>
+                          No A-Level grades added yet
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
       {/* Draft Popout Container */}
       {showDraftPopout && (

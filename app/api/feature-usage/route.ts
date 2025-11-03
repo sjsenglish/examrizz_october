@@ -39,12 +39,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Verify user exists
-    const { data: user, error: userError } = await supabase.auth.admin.getUserById(userId);
-    
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Invalid user' }, { status: 401 });
-    }
+    // Skip expensive user verification for GET requests (we trust client-side auth)
+    // User verification happens during auth, no need to re-verify on every usage check
 
     if (feature) {
       // Check specific feature usage

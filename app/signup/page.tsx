@@ -1041,10 +1041,20 @@ export default function SignupPage() {
                     >
                       <option value="">Select Subject</option>
                       <option value="Maths">Maths</option>
-                      <option value="English">English</option>
-                      <option value="Science">Science</option>
+                      <option value="English Language">English Language</option>
+                      <option value="English Literature">English Literature</option>
+                      <option value="Combined Science">Combined Science</option>
+                      <option value="Biology">Biology</option>
+                      <option value="Chemistry">Chemistry</option>
+                      <option value="Physics">Physics</option>
                       <option value="History">History</option>
                       <option value="Geography">Geography</option>
+                      <option value="Religious Studies">Religious Studies</option>
+                      <option value="Art & Design">Art & Design</option>
+                      <option value="Computer Science">Computer Science</option>
+                      <option value="French">French</option>
+                      <option value="Spanish">Spanish</option>
+                      <option value="Physical Education">Physical Education</option>
                     </select>
                     <select
                       value={subject.grade}
@@ -1118,10 +1128,20 @@ export default function SignupPage() {
                     >
                       <option value="">Select Subject</option>
                       <option value="Maths">Maths</option>
-                      <option value="Physics">Physics</option>
-                      <option value="Chemistry">Chemistry</option>
-                      <option value="Biology">Biology</option>
                       <option value="English Literature">English Literature</option>
+                      <option value="Biology">Biology</option>
+                      <option value="Chemistry">Chemistry</option>
+                      <option value="Physics">Physics</option>
+                      <option value="History">History</option>
+                      <option value="Psychology">Psychology</option>
+                      <option value="Business Studies">Business Studies</option>
+                      <option value="Economics">Economics</option>
+                      <option value="Geography">Geography</option>
+                      <option value="Art & Design">Art & Design</option>
+                      <option value="Computer Science">Computer Science</option>
+                      <option value="English Language">English Language</option>
+                      <option value="Further Maths">Further Maths</option>
+                      <option value="Sociology">Sociology</option>
                     </select>
                     <select
                       value={subject.grade}

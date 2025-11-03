@@ -59,24 +59,49 @@ export interface MonthlyUsage {
   percentage_used: number
 }
 
-// Get user's subscription tier
+// In-memory cache for subscription tiers (5 minute TTL)
+const tierCache = new Map<string, { tier: 'free' | 'plus' | 'max', timestamp: number }>()
+const TIER_CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+
+// Get user's subscription tier (with caching)
 export async function getUserSubscriptionTier(userId: string): Promise<'free' | 'plus' | 'max'> {
+  // Check cache first
+  const cached = tierCache.get(userId)
+  const now = Date.now()
+  
+  if (cached && (now - cached.timestamp) < TIER_CACHE_TTL) {
+    return cached.tier
+  }
+
   const { data, error } = await supabase
     .from('user_subscriptions')
     .select('subscription_tier, subscription_status')
     .eq('user_id', userId)
     .single()
 
-  if (error || !data) {
-    return 'free'
+  let tier: 'free' | 'plus' | 'max' = 'free'
+
+  if (data && !error) {
+    // Only active/trialing subscriptions get their tier benefits
+    if (data.subscription_status === 'active' || data.subscription_status === 'trialing') {
+      tier = data.subscription_tier as 'free' | 'plus' | 'max'
+    }
   }
 
-  // Only active/trialing subscriptions get their tier benefits
-  if (data.subscription_status === 'active' || data.subscription_status === 'trialing') {
-    return data.subscription_tier as 'free' | 'plus' | 'max'
+  // Cache the result
+  tierCache.set(userId, { tier, timestamp: now })
+  
+  // Cleanup old cache entries periodically
+  if (tierCache.size > 1000) { // Prevent memory bloat
+    const cutoff = now - TIER_CACHE_TTL
+    for (const [key, value] of tierCache.entries()) {
+      if (value.timestamp < cutoff) {
+        tierCache.delete(key)
+      }
+    }
   }
 
-  return 'free'
+  return tier
 }
 
 // Record usage for a user
@@ -304,15 +329,60 @@ export async function canUseFeature(
   }
 }
 
-// Get feature usage summary for user
+// Get feature usage summary for user (optimized version)
 export async function getFeatureUsageSummary(userId: string) {
-  const submitAnswerUsage = await canUseFeature(userId, 'submit_answer')
-  const videoSolutionUsage = await canUseFeature(userId, 'video_solution')
+  // Get subscription tier once
   const tier = await getUserSubscriptionTier(userId)
+  
+  // Prepare date filters
+  const now = new Date()
+  const monthYear = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+  const dayDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+  
+  // Run both feature usage queries in parallel
+  const [submitAnswerData, videoSolutionData] = await Promise.all([
+    // Query for submit_answer (monthly)
+    supabase
+      .from('feature_usage_tracking')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('feature', 'submit_answer')
+      .eq('month_year', monthYear),
+    
+    // Query for video_solution (daily)
+    supabase
+      .from('feature_usage_tracking')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('feature', 'video_solution')
+      .eq('day_date', dayDate)
+  ])
+
+  // Calculate submit_answer usage
+  const submitAnswerLimit = FEATURE_LIMITS.submit_answer[tier]
+  const submitAnswerCount = submitAnswerData.data?.length || 0
+  const submitAnswerRemaining = submitAnswerLimit === -1 ? -1 : Math.max(0, submitAnswerLimit - submitAnswerCount)
+  const submitAnswerAllowed = submitAnswerLimit === -1 || submitAnswerCount < submitAnswerLimit
+
+  // Calculate video_solution usage
+  const videoSolutionLimit = FEATURE_LIMITS.video_solution[tier]
+  const videoSolutionCount = videoSolutionData.data?.length || 0
+  const videoSolutionRemaining = videoSolutionLimit === -1 ? -1 : Math.max(0, videoSolutionLimit - videoSolutionCount)
+  const videoSolutionAllowed = videoSolutionLimit === -1 || videoSolutionCount < videoSolutionLimit
 
   return {
     tier,
-    submit_answer: submitAnswerUsage,
-    video_solution: videoSolutionUsage
+    submit_answer: {
+      allowed: submitAnswerAllowed,
+      remaining: submitAnswerRemaining,
+      limit: submitAnswerLimit,
+      period: 'month' as const
+    },
+    video_solution: {
+      allowed: videoSolutionAllowed,
+      remaining: videoSolutionRemaining,
+      limit: videoSolutionLimit,
+      period: 'day' as const
+    }
   }
 }
