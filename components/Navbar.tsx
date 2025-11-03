@@ -66,12 +66,13 @@ export default function Navbar() {
     }}>
       <Link href="/" style={{ textDecoration: 'none' }}>
         <h1 style={{
-          fontFamily: "'Madimi One', cursive",
+          fontFamily: "'Madimi One', 'Comic Sans MS', cursive, system-ui, sans-serif",
           fontSize: '24px',
           fontWeight: '400',
           color: '#000000',
           margin: '0',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          fontDisplay: 'swap'
         }}>
           examrizzsearch
         </h1>

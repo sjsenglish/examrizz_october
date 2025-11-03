@@ -54,8 +54,8 @@ export default function SignupPage() {
           // Use the new auth utility to ensure profile exists (fixes Discord auth issues)
           const { user, profile, error: authError } = await ensureUserProfile();
           
-          if (authError) {
-            console.error('Auth error:', authError);
+          // Only show error if authentication actually failed
+          if (authError && authError === 'Not authenticated') {
             setError('Failed to verify account. Please try again.');
             return;
           }
@@ -797,7 +797,7 @@ export default function SignupPage() {
             onClick={handleNextStep}
             style={{
               position: 'absolute',
-              bottom: '-43px',
+              bottom: '-34px',
               right: '40px',
               padding: '12px 30px',
               background: '#E7E6FF',

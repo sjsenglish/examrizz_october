@@ -99,6 +99,10 @@ body {
   position: relative;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 500px;
 }
 
 .pricing-card:hover {
@@ -129,6 +133,10 @@ body {
 .card-header {
   text-align: center;
   margin-bottom: 30px;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 .plan-name {

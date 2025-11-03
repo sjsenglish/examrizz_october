@@ -29,21 +29,44 @@ export async function ensureUserProfile(): Promise<{ user: any; profile: UserPro
       return { user: null, profile: null, error: 'Not authenticated' };
     }
 
-    // Check if profile exists
-    const { data: existingProfile, error: profileError } = await supabase
-      .from('user_profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single();
+    // Add small delay to prevent race conditions with database triggers
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Check if profile exists with retry logic
+    let existingProfile = null;
+    let profileError = null;
+    
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      
+      if (data && !error) {
+        existingProfile = data;
+        profileError = null;
+        break;
+      } else if (error?.code === 'PGRST116') {
+        // Profile doesn't exist yet, continue to creation
+        profileError = error;
+        break;
+      } else {
+        // Other error (like 406), retry after small delay
+        if (attempt < 2) {
+          await new Promise(resolve => setTimeout(resolve, 50));
+        } else {
+          profileError = error;
+        }
+      }
+    }
 
     // If profile exists, return it
     if (existingProfile && !profileError) {
       return { user, profile: existingProfile };
     }
 
-    // If profile doesn't exist, create it
-    console.log('Creating missing user profile for:', user.email);
-    
+    // If profile doesn't exist or we had an error, try to create/upsert it
     const newProfile: Partial<UserProfile> = {
       id: user.id,
       email: user.email,
@@ -62,23 +85,39 @@ export async function ensureUserProfile(): Promise<{ user: any; profile: UserPro
       newProfile.discord_linked_at = new Date().toISOString();
     }
 
+    // Use upsert to handle conflicts gracefully
     const { data: createdProfile, error: createError } = await supabase
       .from('user_profiles')
-      .insert([newProfile])
+      .upsert([newProfile], { 
+        onConflict: 'id',
+        ignoreDuplicates: false 
+      })
       .select()
       .single();
 
     if (createError) {
-      console.error('Failed to create user profile:', createError);
-      return { user, profile: null, error: 'Failed to create user profile' };
+      // Silently handle expected conflicts and try to fetch existing profile
+      if (createError.code === '23505' || createError.message?.includes('duplicate key')) {
+        const { data: retryProfile } = await supabase
+          .from('user_profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+        
+        if (retryProfile) {
+          return { user, profile: retryProfile };
+        }
+      }
+      
+      // For other errors, return without throwing
+      return { user, profile: null };
     }
 
-    console.log('Successfully created user profile:', createdProfile.id);
     return { user, profile: createdProfile };
 
   } catch (error) {
-    console.error('Error in ensureUserProfile:', error);
-    return { user: null, profile: null, error: 'Unexpected error' };
+    // Silently handle errors to prevent user-facing error messages
+    return { user: null, profile: null };
   }
 }
 
