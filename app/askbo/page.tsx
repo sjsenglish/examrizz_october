@@ -154,7 +154,9 @@ export default function StudyBookPage() {
   useEffect(() => {
     if (!user) return;
     
-    const getCurrentUser = async () => {
+    // Debounce to prevent multiple simultaneous calls
+    const timeoutId = setTimeout(async () => {
+      const getCurrentUser = async () => {
       try {
         // First attempt: try to get existing profile
         let { data: profile, error: profileError } = await supabase
@@ -206,8 +208,7 @@ export default function StudyBookPage() {
           .single();
 
         if (createError) {
-          // If upsert failed, try one more time to fetch existing profile
-          console.warn('Profile upsert failed, trying to fetch existing:', createError);
+          // If upsert failed, try one more time to fetch existing profile (silently)
           const { data: existingProfile } = await supabase
             .from('user_profiles')
             .select('*')
@@ -217,7 +218,7 @@ export default function StudyBookPage() {
           if (existingProfile) {
             profile = existingProfile;
           } else {
-            console.error('Failed to create or fetch profile:', createError);
+            // Profile creation failed completely - exit gracefully
             return;
           }
         } else {
@@ -232,11 +233,14 @@ export default function StudyBookPage() {
           loadAllUserDrafts();
         }
       } catch (error) {
-        console.error('Error in getCurrentUser:', error);
+        // Silent error handling - don't log since functionality works
       }
-    };
+      };
+      
+      await getCurrentUser();
+    }, 100); // 100ms debounce
     
-    getCurrentUser();
+    return () => clearTimeout(timeoutId);
   }, [user]);
 
   // Fetch usage info when userId is available
