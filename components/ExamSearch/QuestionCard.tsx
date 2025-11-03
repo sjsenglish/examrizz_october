@@ -265,8 +265,13 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         return; // Tooltip will show the message
       }
 
-      // Check if Discord is linked - if not, redirect to Discord OAuth
-      if (!userProfile.discord_id) {
+      // Check if user is authenticated with Discord/Google (sufficient for submission)
+      const provider = user.app_metadata?.provider;
+      const hasDiscordAuth = user.identities?.find(identity => identity.provider === 'discord');
+      const hasGoogleAuth = user.identities?.find(identity => identity.provider === 'google');
+      
+      if (!hasDiscordAuth && !hasGoogleAuth && (!userProfile.discord_id)) {
+        // No OAuth provider and no Discord linked - need to link Discord
         try {
           const { error } = await supabase.auth.signInWithOAuth({
             provider: 'discord',
@@ -285,6 +290,31 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
           console.error('Discord OAuth setup error:', error);
           alert('Failed to setup Discord connection. Please try again.');
           return;
+        }
+      }
+      
+      // Update profile with Discord data if Discord authenticated but not saved
+      if (hasDiscordAuth && !userProfile.discord_id) {
+        try {
+          const userMetadata = user.user_metadata || {};
+          const discordData = {
+            discord_id: userMetadata.provider_id || userMetadata.sub || userMetadata.id,
+            discord_username: userMetadata.username || userMetadata.global_name || userMetadata.name,
+            discord_avatar: userMetadata.avatar_url || userMetadata.picture,
+            discord_discriminator: userMetadata.discriminator,
+            discord_linked_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          };
+
+          await supabase
+            .from('user_profiles')
+            .update(discordData)
+            .eq('id', user.id);
+            
+          // Update local state
+          setUserProfile(prev => ({ ...prev, ...discordData }));
+        } catch (error) {
+          console.error('Failed to update Discord profile data:', error);
         }
       }
 
@@ -430,7 +460,15 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   const getSubmitAnswerTooltip = () => {
     if (!user) return 'Please log in to submit answers for review';
     if (!userProfile) return 'Loading profile information...';
-    if (!userProfile.discord_id) return 'Click to link Discord account for answer submission';
+    
+    // Check if user has any OAuth authentication
+    const hasDiscordAuth = user?.identities?.find(identity => identity.provider === 'discord');
+    const hasGoogleAuth = user?.identities?.find(identity => identity.provider === 'google');
+    
+    if (!hasDiscordAuth && !hasGoogleAuth && !userProfile.discord_id) {
+      return 'Click to link Discord account for answer submission';
+    }
+    
     if (!featureUsage) return 'Checking submission limits...';
     
     const { submit_answer } = featureUsage;

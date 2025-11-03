@@ -150,25 +150,61 @@ export default function StudyBookPage() {
     checkAuth();
   }, [router]);
 
-  // Get current user on mount
+  // Get current user on mount and ensure profile exists
   useEffect(() => {
     if (!user) return;
     const getCurrentUser = async () => {
-      const { data: profile } = await supabase
+      let { data: profile } = await supabase
         .from('user_profiles')
-        .select('id')
+        .select('*')
         .eq('id', user.id)
         .single();
       
-      if (profile) {
-        setUserId(profile.id);
-        loadConversationHistory(profile.id);
-        loadUploadedFiles();
-        loadDraftVersions(profile.id);
-        loadAllUserDrafts();
-      } else {
-        console.error('No user profile found for user:', user.id);
+      if (!profile) {
+        // Profile doesn't exist - create it for Discord/Google users
+        console.log('Creating missing profile for user:', user.email);
+        
+        const newProfile: any = {
+          id: user.id,
+          email: user.email,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+
+        // Add Discord data if this is a Discord user
+        const provider = user.app_metadata?.provider;
+        if (provider === 'discord') {
+          const userMetadata = user.user_metadata || {};
+          newProfile.discord_id = userMetadata.provider_id || userMetadata.sub || userMetadata.id;
+          newProfile.discord_username = userMetadata.username || userMetadata.global_name || userMetadata.name;
+          newProfile.discord_avatar = userMetadata.avatar_url || userMetadata.picture;
+          newProfile.discord_discriminator = userMetadata.discriminator;
+          newProfile.discord_linked_at = new Date().toISOString();
+        } else if (provider === 'google') {
+          const userMetadata = user.user_metadata || {};
+          newProfile.full_name = userMetadata.full_name || userMetadata.name;
+        }
+
+        const { data: createdProfile, error } = await supabase
+          .from('user_profiles')
+          .insert([newProfile])
+          .select()
+          .single();
+
+        if (error) {
+          console.error('Failed to create profile:', error);
+          return;
+        }
+        
+        profile = createdProfile;
+        console.log('Successfully created profile for user:', user.id);
       }
+      
+      setUserId(profile.id);
+      loadConversationHistory(profile.id);
+      loadUploadedFiles();
+      loadDraftVersions(profile.id);
+      loadAllUserDrafts();
     };
     getCurrentUser();
   }, [user]);
