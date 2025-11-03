@@ -58,6 +58,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   const [userAnswer, setUserAnswer] = useState('');
   const [additionalLinks, setAdditionalLinks] = useState('');
   const [videoLink, setVideoLink] = useState('');
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [isUploadingVideo, setIsUploadingVideo] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Detect question type based on data structure - memoized to prevent re-renders
@@ -192,6 +194,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
           setUserAnswer('');
           setAdditionalLinks('');
           setVideoLink('');
+          setVideoFile(null);
           setIsSubmitModalOpen(true);
         }
       }, 500);
@@ -333,6 +336,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       setUserAnswer('');
       setAdditionalLinks('');
       setVideoLink('');
+      setVideoFile(null);
       setIsSubmitModalOpen(true);
     } catch (error) {
       console.error('Submit answer error:', error);
@@ -390,11 +394,25 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         submissionType = 'admission-question';
       }
 
+      // Handle video upload if file is selected
+      let videoUrl = videoLink.trim();
+      if (videoFile && !videoUrl) {
+        const uploadedUrl = await uploadVideoFile(videoFile);
+        if (uploadedUrl) {
+          videoUrl = uploadedUrl;
+        } else {
+          alert('Failed to upload video. Please try again or use a video link instead.');
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
       // Create the question context with user's answer
       let questionContext = `**${questionType} Help Request**\n\n**QUESTION:** ${normalizedData.questionText || 'See question above'}\n\n**MY ANSWER:** ${userAnswer.trim()}`;
       
-      if (videoLink.trim()) {
-        questionContext += `\n\n**VIDEO EXPLANATION:** ${videoLink.trim()}`;
+      if (videoUrl) {
+        const videoType = videoFile ? 'VIDEO EXPLANATION (Uploaded)' : 'VIDEO EXPLANATION (Link)';
+        questionContext += `\n\n**${videoType}:** ${videoUrl}`;
       }
       
       if (additionalLinks.trim()) {
@@ -426,6 +444,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         setUserAnswer('');
         setAdditionalLinks('');
         setVideoLink('');
+        setVideoFile(null);
         window.open('https://discord.gg/examrizzsearch', '_blank');
       } else {
         alert('Failed to create help ticket. Please try again.');
@@ -438,11 +457,63 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     }
   };
 
+  const handleVideoFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('video/')) {
+      alert('Please select a valid video file (MP4, MOV, AVI, etc.)');
+      return;
+    }
+
+    // Validate file size (max 100MB)
+    const maxSize = 100 * 1024 * 1024; // 100MB
+    if (file.size > maxSize) {
+      alert('Video file must be smaller than 100MB');
+      return;
+    }
+
+    setVideoFile(file);
+    // Clear video link if file is selected
+    setVideoLink('');
+  };
+
+  const uploadVideoFile = async (file: File): Promise<string | null> => {
+    try {
+      setIsUploadingVideo(true);
+      
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('userId', user.id);
+      formData.append('type', 'video_submission');
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        return result.url || result.filePath;
+      } else {
+        console.error('Video upload failed:', await response.text());
+        return null;
+      }
+    } catch (error) {
+      console.error('Error uploading video:', error);
+      return null;
+    } finally {
+      setIsUploadingVideo(false);
+    }
+  };
+
   const handleCloseSubmitModal = () => {
     setIsSubmitModalOpen(false);
     setUserAnswer('');
     setAdditionalLinks('');
     setVideoLink('');
+    setVideoFile(null);
   };
 
   const getOptionClass = (letter: string): string => {
@@ -921,23 +992,111 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
                 marginBottom: '8px',
                 color: 'black'
               }}>
-                Video Explanation Link (Optional):
+                Video Explanation (Optional):
               </label>
-              <input
-                type="url"
-                value={videoLink}
-                onChange={(e) => setVideoLink(e.target.value)}
-                placeholder="Paste YouTube, Loom, or any video link showing your work or explanation..."
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  borderRadius: '8px',
-                  border: '1px solid #ccc',
-                  fontSize: '14px',
-                  fontFamily: 'inherit',
-                  boxSizing: 'border-box'
-                }}
-              />
+              
+              {/* Video Link Input */}
+              <div style={{ marginBottom: '12px' }}>
+                <input
+                  type="url"
+                  value={videoLink}
+                  onChange={(e) => {
+                    setVideoLink(e.target.value);
+                    if (e.target.value.trim()) setVideoFile(null); // Clear file if link is entered
+                  }}
+                  placeholder="Paste YouTube, Loom, or any video link..."
+                  disabled={!!videoFile}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    borderRadius: '8px',
+                    border: '1px solid #ccc',
+                    fontSize: '14px',
+                    fontFamily: 'inherit',
+                    boxSizing: 'border-box',
+                    backgroundColor: videoFile ? '#f5f5f5' : 'white'
+                  }}
+                />
+              </div>
+
+              {/* OR Divider */}
+              <div style={{
+                textAlign: 'center',
+                margin: '12px 0',
+                fontSize: '12px',
+                color: '#666',
+                position: 'relative'
+              }}>
+                <span style={{
+                  backgroundColor: 'white',
+                  padding: '0 8px'
+                }}>
+                  OR
+                </span>
+                <div style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: 0,
+                  right: 0,
+                  height: '1px',
+                  backgroundColor: '#ddd',
+                  zIndex: -1
+                }} />
+              </div>
+
+              {/* Video File Upload */}
+              <div>
+                <input
+                  type="file"
+                  accept="video/*"
+                  onChange={handleVideoFileChange}
+                  disabled={!!videoLink.trim() || isUploadingVideo}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    borderRadius: '8px',
+                    border: '2px dashed #ccc',
+                    fontSize: '14px',
+                    fontFamily: 'inherit',
+                    boxSizing: 'border-box',
+                    backgroundColor: (videoLink.trim() || isUploadingVideo) ? '#f5f5f5' : 'white',
+                    cursor: (videoLink.trim() || isUploadingVideo) ? 'not-allowed' : 'pointer'
+                  }}
+                />
+                {videoFile && (
+                  <div style={{
+                    marginTop: '8px',
+                    padding: '8px',
+                    backgroundColor: '#e8f5e8',
+                    borderRadius: '4px',
+                    fontSize: '12px',
+                    color: '#2d5a2d'
+                  }}>
+                    ✓ Selected: {videoFile.name} ({(videoFile.size / 1024 / 1024).toFixed(1)}MB)
+                    <button
+                      type="button"
+                      onClick={() => setVideoFile(null)}
+                      style={{
+                        marginLeft: '8px',
+                        background: 'none',
+                        border: 'none',
+                        color: '#d73502',
+                        cursor: 'pointer',
+                        fontSize: '12px'
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+                <div style={{
+                  fontSize: '11px',
+                  color: '#666',
+                  marginTop: '4px'
+                }}>
+                  Upload MP4, MOV, AVI or other video files (max 100MB)
+                </div>
+              </div>
             </div>
 
             <div style={{ marginBottom: '24px' }}>
@@ -983,14 +1142,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
                 variant="secondary"
                 size="md"
                 onClick={handleFinalSubmitAnswer}
-                disabled={isSubmitting || !userAnswer.trim()}
+                disabled={isSubmitting || isUploadingVideo || !userAnswer.trim()}
                 style={{
-                  backgroundColor: isSubmitting || !userAnswer.trim() ? '#9CA3AF' : '#5865F2',
+                  backgroundColor: (isSubmitting || isUploadingVideo || !userAnswer.trim()) ? '#9CA3AF' : '#5865F2',
                   color: 'white',
-                  opacity: isSubmitting || !userAnswer.trim() ? 0.6 : 1
+                  opacity: (isSubmitting || isUploadingVideo || !userAnswer.trim()) ? 0.6 : 1
                 }}
               >
-                {isSubmitting ? 'Submitting...' : 'Submit to Discord'}
+                {isUploadingVideo ? 'Uploading Video...' : isSubmitting ? 'Submitting...' : 'Submit to Discord'}
               </Button>
             </div>
           </div>
