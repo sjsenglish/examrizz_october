@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
 import { canMakeRequest, recordUsage, getMonthlyUsage } from '../../../../lib/usage-tracking';
+import { rateLimitApiRequest } from '../../../../lib/redis-rate-limit';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -927,6 +928,29 @@ export async function POST(request: NextRequest) {
 
     if (!message || !userId) {
       return NextResponse.json({ error: 'Message and userId are required' }, { status: 400 });
+    }
+
+    // Apply Redis rate limiting with user's subscription tier
+    const rateLimitResult = await rateLimitApiRequest(userId, 'chat', request);
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { 
+          error: `Rate limit exceeded for ${rateLimitResult.tier} tier. Upgrade for higher limits.`,
+          resetTime: rateLimitResult.resetTime,
+          tier: rateLimitResult.tier,
+          limit: rateLimitResult.limit,
+          remaining: rateLimitResult.remaining
+        }, 
+        { 
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': rateLimitResult.limit.toString(),
+            'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+            'X-RateLimit-Reset': rateLimitResult.resetTime.toString(),
+            'X-RateLimit-Tier': rateLimitResult.tier
+          }
+        }
+      );
     }
 
     // Check usage limits before processing request

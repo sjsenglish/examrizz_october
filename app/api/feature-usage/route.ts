@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { canUseFeature, recordFeatureUsage, getFeatureUsageSummary } from '../../../lib/usage-tracking';
+import { rateLimitApiRequest } from '../../../lib/redis-rate-limit';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -15,6 +16,27 @@ export async function GET(request: NextRequest) {
 
     if (!userId) {
       return NextResponse.json({ error: 'userId is required' }, { status: 400 });
+    }
+
+    // Apply rate limiting for feature usage requests
+    const rateLimitResult = await rateLimitApiRequest(userId, 'features', request);
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { 
+          error: `Too many feature requests for ${rateLimitResult.tier} tier.`,
+          resetTime: rateLimitResult.resetTime,
+          tier: rateLimitResult.tier
+        }, 
+        { 
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': rateLimitResult.limit.toString(),
+            'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+            'X-RateLimit-Reset': rateLimitResult.resetTime.toString(),
+            'X-RateLimit-Tier': rateLimitResult.tier
+          }
+        }
+      );
     }
 
     // Verify user exists

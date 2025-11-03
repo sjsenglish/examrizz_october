@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import mammoth from 'mammoth';
+import { rateLimitApiRequest } from '../../../lib/redis-rate-limit';
+import { validateFileIntegrity } from '../../../lib/file-validation';
 const pdfParse = require('pdf-parse-fork');
 
 const supabase = createClient(
@@ -25,6 +27,29 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Apply Redis rate limiting for uploads with user's subscription tier
+    const rateLimitResult = await rateLimitApiRequest(user.id, 'upload', request);
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { 
+          error: `Upload limit exceeded for ${rateLimitResult.tier} tier. ${rateLimitResult.tier === 'free' ? 'Upgrade to Plus for 20 uploads/day or Max for 100 uploads/day.' : 'Try again tomorrow.'}`,
+          resetTime: rateLimitResult.resetTime,
+          tier: rateLimitResult.tier,
+          limit: rateLimitResult.limit,
+          remaining: rateLimitResult.remaining
+        }, 
+        { 
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': rateLimitResult.limit.toString(),
+            'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+            'X-RateLimit-Reset': rateLimitResult.resetTime.toString(),
+            'X-RateLimit-Tier': rateLimitResult.tier
+          }
+        }
+      );
+    }
+
     const maxSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxSize) {
       return NextResponse.json({ error: 'File too large. Maximum size is 10MB.' }, { status: 400 });
@@ -39,6 +64,13 @@ export async function POST(request: NextRequest) {
     const fileName = `${user.id}/${Date.now()}-${file.name}`;
 
     const buffer = await file.arrayBuffer();
+    
+    // Validate file signature to prevent malicious files disguised as safe types
+    const validationResult = validateFileIntegrity(buffer, file.type);
+    if (!validationResult.valid) {
+      return NextResponse.json({ error: validationResult.error }, { status: 400 });
+    }
+    
     const uint8Array = new Uint8Array(buffer);
 
     let extractedText = '';

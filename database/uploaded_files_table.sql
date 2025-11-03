@@ -16,15 +16,15 @@ CREATE INDEX IF NOT EXISTS idx_user_uploads_created_at ON user_uploads(created_a
 -- Enable Row Level Security
 ALTER TABLE user_uploads ENABLE ROW LEVEL SECURITY;
 
--- Create RLS policies
+-- Create RLS policies (standardized to use auth.uid() directly)
 CREATE POLICY "Users can view their own uploaded files" ON user_uploads
-  FOR SELECT USING (user_id = (SELECT user_id FROM user_profiles WHERE user_id = auth.uid()));
+  FOR SELECT USING (user_id = auth.uid());
 
 CREATE POLICY "Users can insert their own uploaded files" ON user_uploads
-  FOR INSERT WITH CHECK (user_id = (SELECT user_id FROM user_profiles WHERE user_id = auth.uid()));
+  FOR INSERT WITH CHECK (user_id = auth.uid());
 
 CREATE POLICY "Users can update their own uploaded files" ON user_uploads
-  FOR UPDATE USING (user_id = (SELECT user_id FROM user_profiles WHERE user_id = auth.uid()));
+  FOR UPDATE USING (user_id = auth.uid());
 
 CREATE POLICY "Users can delete their own uploaded files" ON user_uploads
-  FOR DELETE USING (user_id = (SELECT user_id FROM user_profiles WHERE user_id = auth.uid()));
+  FOR DELETE USING (user_id = auth.uid());

@@ -4,6 +4,15 @@ import { QuestionCardProps, Question } from '@/types/question';
 import { VideoModal } from '../VideoModal';
 import { PdfModal } from '../PdfModal';
 import styles from './QuestionCard.module.css';
+import DOMPurify from 'dompurify';
+
+// Sanitize HTML content to prevent XSS attacks
+const sanitizeHtml = (html: string): string => {
+  return DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: ['br', 'p', 'strong', 'em', 'u', 'sub', 'sup'],
+    ALLOWED_ATTR: []
+  });
+};
 
 const getFirebaseImageUrl = (gsUrl: string): string => {
   if (!gsUrl || !gsUrl.startsWith('gs://')) return '';
@@ -392,12 +401,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
                 </p>
               ))
             ) : isBiologyQuestion ? (
-              // Render biology questions with HTML tags properly parsed
+              // Render biology questions with HTML tags properly parsed and sanitized
               <div 
                 dangerouslySetInnerHTML={{ 
-                  __html: normalizedData.questionText
-                    .replace(/<br\s*\/?>/gi, '<br />') // Normalize br tags
-                    .replace(/\n/g, '<br />') // Convert newlines to br tags
+                  __html: sanitizeHtml(
+                    normalizedData.questionText
+                      .replace(/<br\s*\/?>/gi, '<br />') // Normalize br tags
+                      .replace(/\n/g, '<br />') // Convert newlines to br tags
+                  )
                 }}
               />
             ) : (
@@ -421,9 +432,11 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
                 <div 
                   style={{ lineHeight: '1.6' }}
                   dangerouslySetInnerHTML={{ 
-                    __html: part.QuestionText
-                      .replace(/<br\s*\/?>/gi, '<br />') // Normalize br tags
-                      .replace(/\n/g, '<br />') // Convert newlines to br tags
+                    __html: sanitizeHtml(
+                      part.QuestionText
+                        .replace(/<br\s*\/?>/gi, '<br />') // Normalize br tags
+                        .replace(/\n/g, '<br />') // Convert newlines to br tags
+                    )
                   }}
                 />
                 {part.Marks && (

@@ -212,7 +212,7 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubj
                     checked={item.isRefined}
                     onChange={() => interviewSubjectFilter.refine(item.value)}
                   />
-                  <span>{item.label} ({item.count})</span>
+                  <span>{item.label}</span>
                 </label>
               ))}
             </div>
