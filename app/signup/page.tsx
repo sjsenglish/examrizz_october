@@ -5,6 +5,7 @@ import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
+import { ensureUserProfile } from '@/lib/auth-utils';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -55,16 +56,18 @@ export default function SignupPage() {
         }
 
         if (session?.user) {
-          setUser(session.user);
+          // Use the new auth utility to ensure profile exists (fixes Discord auth issues)
+          const { user, profile, error: authError } = await ensureUserProfile();
           
-          // Check if this user has an existing profile
-          const { data: profile, error: profileError } = await supabase
-            .from('user_profiles')
-            .select('*')
-            .eq('id', session.user.id)
-            .single();
-
-          if (!profileError && profile) {
+          if (authError) {
+            console.error('Auth error:', authError);
+            setError('Failed to verify account. Please try again.');
+            return;
+          }
+          
+          setUser(user);
+          
+          if (profile) {
             setExistingProfile(profile);
             
             // Check if this is a Discord user
@@ -89,9 +92,8 @@ export default function SignupPage() {
                 setCurrentStep(2);
               }
             }
-          } else if (profileError && profileError.code !== 'PGRST116') {
-            // PGRST116 = no rows found, which is expected for new users
-            console.error('Profile fetch error:', profileError);
+          } else {
+            console.log('Profile created but not returned - continuing with signup flow');
           }
         }
 

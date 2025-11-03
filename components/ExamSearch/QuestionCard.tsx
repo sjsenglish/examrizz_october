@@ -5,6 +5,7 @@ import { VideoModal } from '../VideoModal';
 import { PdfModal } from '../PdfModal';
 import styles from './QuestionCard.module.css';
 import DOMPurify from 'dompurify';
+import { ensureUserProfile } from '@/lib/auth-utils';
 
 // Sanitize HTML content to prevent XSS attacks
 const sanitizeHtml = (html: string): string => {
@@ -38,6 +39,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   const [isAnswerRevealed, setIsAnswerRevealed] = useState(false);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
+  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   
   // Feature usage state
   const [featureUsage, setFeatureUsage] = useState<{
@@ -50,6 +52,11 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   // Tooltip state
   const [showSubmitTooltip, setShowSubmitTooltip] = useState(false);
   const [showVideoTooltip, setShowVideoTooltip] = useState(false);
+  
+  // Submit answer modal state
+  const [userAnswer, setUserAnswer] = useState('');
+  const [additionalLinks, setAdditionalLinks] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Detect question type based on data structure - memoized to prevent re-renders
   const isMathsQuestion = useMemo(() => hit?.paper_info && hit?.spec_topic, [hit]);
@@ -75,20 +82,21 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     [isEnglishLitQuestion, hit?.PaperCode, hit?.PaperName, hit?.PaperSection, hit?.PaperYear, hit?.PaperMonth]
   );
 
-  // Load user and feature usage data with localStorage caching
+  // Load user and feature usage data with improved Discord auth handling
   useEffect(() => {
     const loadUserAndUsage = async () => {
       try {
-        const { createClient } = await import('@supabase/supabase-js');
-        const supabase = createClient(
-          process.env.NEXT_PUBLIC_SUPABASE_URL!,
-          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
-
-        const { data: { user } } = await supabase.auth.getUser();
+        // Use the new auth utility to ensure proper user profile creation
+        const { user, profile, error } = await ensureUserProfile();
+        
+        if (error) {
+          console.error('Authentication error:', error);
+          return;
+        }
+        
         setUser(user);
 
-        if (user) {
+        if (user && profile) {
           // Check localStorage cache first
           const cacheKey = `feature-usage-${user.id}`;
           const cached = localStorage.getItem(cacheKey);
@@ -202,6 +210,25 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         return; // Tooltip will show the message
       }
 
+      // Open the submission modal instead of directly submitting
+      setUserAnswer('');
+      setAdditionalLinks('');
+      setIsSubmitModalOpen(true);
+    } catch (error) {
+      console.error('Submit answer error:', error);
+      alert('Failed to open submission form. Please try again.');
+    }
+  };
+
+  const handleFinalSubmitAnswer = async () => {
+    try {
+      if (!userAnswer.trim()) {
+        alert('Please enter your answer before submitting.');
+        return;
+      }
+
+      setIsSubmitting(true);
+
       // Record submit answer usage first
       const usageResponse = await fetch('/api/feature-usage', {
         method: 'POST',
@@ -215,6 +242,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       if (!usageResponse.ok) {
         const errorData = await usageResponse.json();
         alert(errorData.error || 'Failed to submit answer.');
+        setIsSubmitting(false);
         return;
       }
 
@@ -242,13 +270,17 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         submissionType = 'admission-question';
       }
 
-      // Create the question context - question is pre-filled, user needs to add answer
-      const questionContext = `**${questionType} Help Request**\n\n**QUESTION:** ${normalizedData.questionText || 'See question above'}\n\n**STUDENT NEEDS HELP WITH:** [Please add your answer or specific question here for teacher feedback]`;
+      // Create the question context with user's answer
+      let questionContext = `**${questionType} Help Request**\n\n**QUESTION:** ${normalizedData.questionText || 'See question above'}\n\n**MY ANSWER:** ${userAnswer.trim()}`;
+      
+      if (additionalLinks.trim()) {
+        questionContext += `\n\n**ADDITIONAL LINKS/CONTEXT:** ${additionalLinks.trim()}`;
+      }
       
       // Generate unique ticket ID
       const ticketId = `QUEST-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-      // Create ticket in Discord help center via webhook (like Ask Bo)
+      // Create ticket in Discord help center via webhook with user's complete submission
       const response = await fetch('/api/discord-webhook', {
         method: 'POST',
         headers: {
@@ -265,16 +297,26 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       const result = await response.json();
       
       if (result.success) {
-        // Open Discord server directly
+        // Close modal and open Discord server
+        setIsSubmitModalOpen(false);
+        setUserAnswer('');
+        setAdditionalLinks('');
         window.open('https://discord.gg/examrizzsearch', '_blank');
       } else {
         alert('Failed to create help ticket. Please try again.');
       }
-
     } catch (error) {
       console.error('Submit answer error:', error);
-      alert('Failed to create help ticket. Please try again.');
+      alert('Failed to submit answer. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
+  };
+
+  const handleCloseSubmitModal = () => {
+    setIsSubmitModalOpen(false);
+    setUserAnswer('');
+    setAdditionalLinks('');
   };
 
   const getOptionClass = (letter: string): string => {
@@ -653,6 +695,145 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         pdfUrl={normalizedData.pdfUrl}
         questionNumber={String(normalizedData.questionNumber)}
       />
+
+      {/* Submit Answer Modal */}
+      {isSubmitModalOpen && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '24px',
+            borderRadius: '12px',
+            width: '90%',
+            maxWidth: '600px',
+            maxHeight: '80vh',
+            overflowY: 'auto',
+            border: '2px solid black',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)'
+          }}>
+            <h3 style={{
+              fontFamily: "'Madimi One', cursive",
+              fontSize: '20px',
+              marginBottom: '16px',
+              color: 'black'
+            }}>
+              Submit Your Answer for Review
+            </h3>
+            
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{
+                display: 'block',
+                fontWeight: 'bold',
+                marginBottom: '8px',
+                color: 'black'
+              }}>
+                Question:
+              </label>
+              <div style={{
+                padding: '12px',
+                backgroundColor: '#f5f5f5',
+                borderRadius: '8px',
+                border: '1px solid #ccc',
+                marginBottom: '16px',
+                fontSize: '14px',
+                lineHeight: '1.5'
+              }}>
+                {normalizedData.questionText || 'Question details will be included in the submission'}
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{
+                display: 'block',
+                fontWeight: 'bold',
+                marginBottom: '8px',
+                color: 'black'
+              }}>
+                Your Answer: *
+              </label>
+              <textarea
+                value={userAnswer}
+                onChange={(e) => setUserAnswer(e.target.value)}
+                placeholder="Enter your answer here. Our teachers will review it and provide feedback..."
+                style={{
+                  width: '100%',
+                  minHeight: '120px',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid #ccc',
+                  fontSize: '14px',
+                  fontFamily: 'inherit',
+                  resize: 'vertical'
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{
+                display: 'block',
+                fontWeight: 'bold',
+                marginBottom: '8px',
+                color: 'black'
+              }}>
+                Additional Links or Context (Optional):
+              </label>
+              <textarea
+                value={additionalLinks}
+                onChange={(e) => setAdditionalLinks(e.target.value)}
+                placeholder="Add any relevant links, sources, or additional context that might help with the review..."
+                style={{
+                  width: '100%',
+                  minHeight: '80px',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid #ccc',
+                  fontSize: '14px',
+                  fontFamily: 'inherit',
+                  resize: 'vertical'
+                }}
+              />
+            </div>
+
+            <div style={{
+              display: 'flex',
+              gap: '12px',
+              justifyContent: 'flex-end'
+            }}>
+              <Button
+                variant="ghost"
+                size="md"
+                onClick={handleCloseSubmitModal}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="secondary"
+                size="md"
+                onClick={handleFinalSubmitAnswer}
+                disabled={isSubmitting || !userAnswer.trim()}
+                style={{
+                  backgroundColor: isSubmitting || !userAnswer.trim() ? '#9CA3AF' : '#5865F2',
+                  color: 'white',
+                  opacity: isSubmitting || !userAnswer.trim() ? 0.6 : 1
+                }}
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit to Discord'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </article>
   );
 };
