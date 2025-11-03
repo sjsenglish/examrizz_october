@@ -55,7 +55,7 @@ export default function AboutPage() {
         {/* Timeline Section */}
         <section className="timeline-section">
           <Image 
-            src="/icons/our-story-timeline.svg" 
+            src="/icons/timeline.svg" 
             alt="Our Story Timeline" 
             width={1000} 
             height={400}
@@ -79,46 +79,14 @@ export default function AboutPage() {
             <span className="team-label">Who We Are</span>
           </div>
           
-          <div className="team-grid">
-            <div className="team-member">
-              <div className="team-avatar">
-                <Image src="/icons/ghost-karaoke.svg" alt="SJ" width={60} height={60} />
-              </div>
-              <h3 className="team-name">SJ</h3>
-              <p className="team-role">story teller</p>
-            </div>
-            
-            <div className="team-member">
-              <div className="team-avatar">
-                <Image src="/icons/cowboy-guitar.svg" alt="Joe" width={60} height={60} />
-              </div>
-              <h3 className="team-name">Joe</h3>
-              <p className="team-role">ideas fairy</p>
-            </div>
-            
-            <div className="team-member">
-              <div className="team-avatar">
-                <Image src="/icons/biking.svg" alt="Gabe" width={60} height={60} />
-              </div>
-              <h3 className="team-name">Gabe</h3>
-              <p className="team-role">quiet one</p>
-            </div>
-            
-            <div className="team-member">
-              <div className="team-avatar">
-                <Image src="/icons/rollerskating.svg" alt="Bo" width={60} height={60} />
-              </div>
-              <h3 className="team-name">Bo</h3>
-              <p className="team-role">busy being a cat</p>
-            </div>
-            
-            <div className="team-member">
-              <div className="team-avatar">
-                <Image src="/icons/flame-streak.svg" alt="Aurela" width={60} height={60} />
-              </div>
-              <h3 className="team-name">Aurela</h3>
-              <p className="team-role">busy being busy</p>
-            </div>
+          <div className="team-grouped">
+            <Image 
+              src="/icons/team-grouped.svg" 
+              alt="Team Members" 
+              width={600} 
+              height={300}
+              className="team-grouped-svg"
+            />
           </div>
         </section>
 
@@ -262,6 +230,16 @@ export default function AboutPage() {
             </a>
           </div>
         </section>
+
+        {/* Footer */}
+        <footer className="about-footer">
+          <div className="company-info">
+            <p className="company-name">Stream Learning LTD</p>
+            <p className="company-details">Company No: 15453227</p>
+            <p className="company-address">71-75 Shelton Street, Covent Garden, London, WC2H 9JQ</p>
+            <p className="company-email">team@examrizz.com</p>
+          </div>
+        </footer>
       </div>
     </div>
   );

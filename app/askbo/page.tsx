@@ -39,6 +39,8 @@ export default function StudyBookPage() {
   const [draftToSave, setDraftToSave] = useState('');
   const [currentPopupDraft, setCurrentPopupDraft] = useState<DraftVersion | null>(null);
   const [popupDraftContent, setPopupDraftContent] = useState('');
+  const [showDraftVersionsModal, setShowDraftVersionsModal] = useState(false);
+  const [currentVersionIndex, setCurrentVersionIndex] = useState(0);
 
   // Materials state
   const [uploadedFiles, setUploadedFiles] = useState<{
@@ -470,6 +472,7 @@ export default function StudyBookPage() {
     // Load the draft into the popup for editing
     setCurrentPopupDraft(draft);
     setPopupDraftContent(draft.content);
+    setShowDraftVersionsModal(false);
     setShowDraftPopout(true);
   };
 
@@ -1750,13 +1753,271 @@ export default function StudyBookPage() {
         </div>
       )}
 
+      {/* Draft Versions Modal */}
+      {showDraftVersionsModal && (
+        <div 
+          className="modal-backdrop" 
+          onClick={() => setShowDraftVersionsModal(false)}
+        >
+          <div 
+            className="modal" 
+            onClick={(e) => e.stopPropagation()}
+            style={{ width: '80%', maxWidth: '800px', maxHeight: '90vh' }}
+          >
+            <div className="modal-header">
+              <h3 style={{ 
+                fontFamily: "'Madimi One', cursive", 
+                fontSize: '20px', 
+                margin: '0',
+                color: '#000000'
+              }}>
+                Draft Versions
+              </h3>
+              <button 
+                onClick={() => setShowDraftVersionsModal(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  color: '#666666'
+                }}
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="modal-content" style={{ padding: '24px', maxHeight: '70vh', overflowY: 'auto' }}>
+              {allUserDrafts.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '40px' }}>
+                  <p style={{ 
+                    fontFamily: "'Figtree', sans-serif", 
+                    fontSize: '16px', 
+                    color: '#666666',
+                    marginBottom: '24px'
+                  }}>
+                    No drafts yet. Create your first draft!
+                  </p>
+                  <button
+                    onClick={() => {
+                      setCurrentPopupDraft(null);
+                      setPopupDraftContent('');
+                      setShowDraftVersionsModal(false);
+                      setShowDraftPopout(true);
+                    }}
+                    style={{
+                      padding: '12px 24px',
+                      backgroundColor: '#E7E6FF',
+                      color: '#4338CA',
+                      border: '1px solid #4338CA',
+                      borderRadius: '8px',
+                      fontFamily: "'Figtree', sans-serif",
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    + Create New Draft
+                  </button>
+                </div>
+              ) : (
+                <>
+                  {/* Navigation Header */}
+                  <div style={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center',
+                    marginBottom: '24px',
+                    padding: '16px',
+                    backgroundColor: '#F8F9FA',
+                    borderRadius: '8px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                      <button
+                        onClick={() => setCurrentVersionIndex(Math.max(0, currentVersionIndex - 1))}
+                        disabled={currentVersionIndex === 0}
+                        style={{
+                          padding: '8px 12px',
+                          backgroundColor: currentVersionIndex === 0 ? '#E5E7EB' : '#FFFFFF',
+                          color: currentVersionIndex === 0 ? '#9CA3AF' : '#374151',
+                          border: '1px solid #D1D5DB',
+                          borderRadius: '6px',
+                          fontFamily: "'Figtree', sans-serif",
+                          fontSize: '12px',
+                          cursor: currentVersionIndex === 0 ? 'not-allowed' : 'pointer'
+                        }}
+                      >
+                        ← Previous
+                      </button>
+                      
+                      <span style={{ 
+                        fontFamily: "'Figtree', sans-serif", 
+                        fontSize: '14px',
+                        color: '#374151',
+                        fontWeight: '500'
+                      }}>
+                        {currentVersionIndex + 1} of {allUserDrafts.length}
+                      </span>
+                      
+                      <button
+                        onClick={() => setCurrentVersionIndex(Math.min(allUserDrafts.length - 1, currentVersionIndex + 1))}
+                        disabled={currentVersionIndex === allUserDrafts.length - 1}
+                        style={{
+                          padding: '8px 12px',
+                          backgroundColor: currentVersionIndex === allUserDrafts.length - 1 ? '#E5E7EB' : '#FFFFFF',
+                          color: currentVersionIndex === allUserDrafts.length - 1 ? '#9CA3AF' : '#374151',
+                          border: '1px solid #D1D5DB',
+                          borderRadius: '6px',
+                          fontFamily: "'Figtree', sans-serif",
+                          fontSize: '12px',
+                          cursor: currentVersionIndex === allUserDrafts.length - 1 ? 'not-allowed' : 'pointer'
+                        }}
+                      >
+                        Next →
+                      </button>
+                    </div>
+                    
+                    <button
+                      onClick={() => {
+                        setCurrentPopupDraft(null);
+                        setPopupDraftContent('');
+                        setShowDraftVersionsModal(false);
+                        setShowDraftPopout(true);
+                      }}
+                      style={{
+                        padding: '8px 16px',
+                        backgroundColor: '#E7E6FF',
+                        color: '#4338CA',
+                        border: '1px solid #4338CA',
+                        borderRadius: '6px',
+                        fontFamily: "'Figtree', sans-serif",
+                        fontSize: '12px',
+                        fontWeight: '500',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      + New Draft
+                    </button>
+                  </div>
+
+                  {/* Current Draft Display */}
+                  {allUserDrafts[currentVersionIndex] && (
+                    <div style={{ 
+                      border: '1px solid #E5E7EB', 
+                      borderRadius: '8px',
+                      backgroundColor: '#FFFFFF'
+                    }}>
+                      {/* Draft Header */}
+                      <div style={{ 
+                        padding: '20px',
+                        borderBottom: '1px solid #E5E7EB',
+                        backgroundColor: '#F8F9FA'
+                      }}>
+                        <h4 style={{ 
+                          fontFamily: "'Madimi One', cursive",
+                          fontSize: '18px',
+                          margin: '0 0 8px 0',
+                          color: '#000000'
+                        }}>
+                          {allUserDrafts[currentVersionIndex].title || `Draft ${currentVersionIndex + 1}`}
+                        </h4>
+                        <div style={{ 
+                          display: 'flex', 
+                          gap: '24px',
+                          fontFamily: "'Figtree', sans-serif",
+                          fontSize: '12px',
+                          color: '#666666'
+                        }}>
+                          <span>Version {allUserDrafts[currentVersionIndex].version_number}</span>
+                          <span>
+                            Last edited: {new Date(allUserDrafts[currentVersionIndex].last_edited || allUserDrafts[currentVersionIndex].updated_at).toLocaleDateString()}
+                          </span>
+                          <span>
+                            {allUserDrafts[currentVersionIndex].word_count || allUserDrafts[currentVersionIndex].content.split(' ').length} words
+                          </span>
+                          <span>
+                            {allUserDrafts[currentVersionIndex].content.length} / 4,000 characters
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Draft Content */}
+                      <div style={{ padding: '20px' }}>
+                        <div style={{
+                          fontFamily: "'Figtree', sans-serif",
+                          fontSize: '14px',
+                          lineHeight: '1.6',
+                          color: '#374151',
+                          maxHeight: '300px',
+                          overflowY: 'auto',
+                          padding: '16px',
+                          backgroundColor: '#FAFAFA',
+                          borderRadius: '6px',
+                          border: '1px solid #E5E7EB'
+                        }}>
+                          {allUserDrafts[currentVersionIndex].content}
+                        </div>
+                      </div>
+
+                      {/* Draft Actions */}
+                      <div style={{ 
+                        padding: '20px',
+                        borderTop: '1px solid #E5E7EB',
+                        backgroundColor: '#F8F9FA',
+                        display: 'flex',
+                        gap: '12px',
+                        justifyContent: 'flex-end'
+                      }}>
+                        <button
+                          onClick={() => editDraft(allUserDrafts[currentVersionIndex])}
+                          style={{
+                            padding: '8px 16px',
+                            backgroundColor: '#FFFFFF',
+                            color: '#374151',
+                            border: '1px solid #D1D5DB',
+                            borderRadius: '6px',
+                            fontFamily: "'Figtree', sans-serif",
+                            fontSize: '12px',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          Edit Draft
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (confirm('Are you sure you want to delete this draft?')) {
+                              deleteDraft(allUserDrafts[currentVersionIndex].id);
+                              setShowDraftVersionsModal(false);
+                            }
+                          }}
+                          style={{
+                            padding: '8px 16px',
+                            backgroundColor: '#FEE2E2',
+                            color: '#DC2626',
+                            border: '1px solid #FCA5A5',
+                            borderRadius: '6px',
+                            fontFamily: "'Figtree', sans-serif",
+                            fontSize: '12px',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          Delete Draft
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Floating Draft Button */}
       <button
         onClick={() => {
-          if (!showDraftPopout) {
-            loadDraftForPopup();
-          }
-          setShowDraftPopout(!showDraftPopout);
+          setShowDraftVersionsModal(true);
+          setCurrentVersionIndex(0);
         }}
         className="floating-draft-button"
         title="Quick Draft"

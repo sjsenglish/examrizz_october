@@ -319,7 +319,7 @@ function PaymentContent() {
                 <h3 className="plan-name">Plus</h3>
                 <div className="price-display">
                   <span className="currency">£</span>
-                  <span className="price">9.99</span>
+                  <span className="price">10</span>
                   <span className="period">/month</span>
                 </div>
                 {currentTier === 'plus' && <div className="current-badge">Current Plan</div>}
@@ -348,7 +348,7 @@ function PaymentContent() {
                 <h3 className="plan-name">Max</h3>
                 <div className="price-display">
                   <span className="currency">£</span>
-                  <span className="price">19.99</span>
+                  <span className="price">20</span>
                   <span className="period">/month</span>
                 </div>
                 {currentTier === 'max' && <div className="current-badge">Current Plan</div>}

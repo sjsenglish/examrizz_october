@@ -72,9 +72,10 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionFeatures> 
       yearly: 0
     },
     features: [
-      '5 questions per day',
-      'Basic practice tests',
-      'Community support'
+      'Unlimited access to A level and admissions materials, including past paper and original questions',
+      'University interview questions by course',
+      'Entry-level access to personal statement advisor',
+      'Community access and support (discord)'
     ],
     limits: {
       questionsPerDay: 5,
@@ -99,11 +100,10 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionFeatures> 
       yearly: 0 // No yearly option for now
     },
     features: [
-      'Unlimited questions',
-      'Video solutions',
-      'Advanced practice tests',
-      'Study materials',
-      'Email support'
+      'Premium access to personal statement advisor, with additional usage and features each month',
+      'Ask questions with real teachers (limited per month)',
+      'Premium discord features',
+      'Everything in Free'
     ],
     limits: {
       videoAccess: true,
@@ -127,12 +127,11 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionFeatures> 
       yearly: 0 // No yearly option for now
     },
     features: [
-      'Everything in Plus',
-      'Personalized AI feedback',
+      'Ultimate personal statement advisor guidance and attention',
+      'University interview guidance and support from real teachers',
+      'Early access to new features',
       'Priority support',
-      'Offline access',
-      'Advanced analytics',
-      'Early access to new features'
+      'Everything in Plus'
     ],
     limits: {
       videoAccess: true,

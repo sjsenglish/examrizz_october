@@ -306,7 +306,8 @@ export default function SignupPage() {
           margin: '0 auto',
           padding: '30px 40px',
           textAlign: 'center',
-          position: 'relative'
+          position: 'relative',
+          minHeight: '600px'
         }}>
           <h2 style={{
             fontFamily: "'Figtree', sans-serif",
@@ -523,7 +524,7 @@ export default function SignupPage() {
             onClick={handleNextStep}
             style={{
               position: 'absolute',
-              bottom: '20px',
+              bottom: '-80px',
               right: '40px',
               padding: '12px 30px',
               background: '#E7E6FF',

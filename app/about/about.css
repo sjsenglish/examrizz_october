@@ -64,10 +64,11 @@
   display: inline-block;
   background: #FFFFFF;
   border: 2px solid #000000;
-  border-radius: 20px;
+  border-radius: 4px;
   padding: 12px 32px;
-  font-family: 'Madimi One', cursive;
+  font-family: 'Figtree', sans-serif;
   font-size: 16px;
+  font-weight: 500;
   color: #000000;
   margin-bottom: 24px;
 }
@@ -90,56 +91,33 @@
 
 .team-header {
   margin-bottom: 40px;
+  text-align: center;
 }
 
 .team-label {
   display: inline-block;
-  background: #F8F8F5;
+  background: #FFFFFF;
   border: 2px solid #000000;
-  border-radius: 20px;
+  border-radius: 4px;
   padding: 8px 24px;
-  font-family: 'Madimi One', cursive;
-  font-size: 16px;
-  color: #000000;
-}
-
-.team-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 40px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.team-member {
-  text-align: center;
-}
-
-.team-avatar {
-  width: 80px;
-  height: 80px;
-  background: #F0F9FF;
-  border: 2px solid #000000;
-  border-radius: 50%;
-  margin: 0 auto 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.team-name {
-  font-family: 'Madimi One', cursive;
-  font-size: 16px;
-  color: #000000;
-  margin: 0 0 8px 0;
-}
-
-.team-role {
   font-family: 'Figtree', sans-serif;
-  font-size: 14px;
-  color: #666666;
-  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000000;
+}
+
+.team-grouped {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.team-grouped-svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 /* Offerings Section */
@@ -155,12 +133,13 @@
 
 .offerings-label {
   display: inline-block;
-  background: #F8F8F5;
+  background: #FFFFFF;
   border: 2px solid #000000;
-  border-radius: 20px;
+  border-radius: 4px;
   padding: 8px 24px;
-  font-family: 'Madimi One', cursive;
+  font-family: 'Figtree', sans-serif;
   font-size: 16px;
+  font-weight: 500;
   color: #000000;
 }
 
@@ -233,6 +212,48 @@
   transform: translateY(-2px);
 }
 
+/* Footer */
+.about-footer {
+  position: relative;
+  margin-top: 80px;
+  padding: 40px 0;
+  z-index: 10;
+}
+
+.company-info {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  text-align: right;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #E5E7EB;
+}
+
+.company-name {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000000;
+  margin: 0 0 4px 0;
+}
+
+.company-details,
+.company-address,
+.company-email {
+  font-family: 'Figtree', sans-serif;
+  font-size: 12px;
+  color: #666666;
+  margin: 0 0 2px 0;
+  line-height: 1.4;
+}
+
+.company-email {
+  color: #00CED1;
+  text-decoration: none;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .about-title {
@@ -251,10 +272,6 @@
     font-size: 10px;
   }
   
-  .team-grid {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 30px;
-  }
   
   .offerings-grid {
     grid-template-columns: 1fr;
@@ -263,5 +280,13 @@
   
   .cloud-decoration {
     display: none;
+  }
+  
+  .company-info {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    text-align: center;
+    margin-top: 40px;
   }
 }
