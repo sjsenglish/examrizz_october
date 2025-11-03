@@ -31,7 +31,7 @@ interface FilterBoxProps {
 
 // Custom hook for interview subject filter
 const useInterviewSubjectFilter = () => {
-  const { results } = useInstantSearch();
+  const { results, indexUiState, setIndexUiState } = useInstantSearch();
   const [selectedSubjects, setSelectedSubjects] = React.useState<Set<string>>(new Set());
 
   const subjects = ['psychology', 'maths', 'engineering', 'economics', 'general', 'law', 'PPE', 'philosophy', 'management'];
@@ -75,25 +75,39 @@ const useInterviewSubjectFilter = () => {
     }
     setSelectedSubjects(newSelected);
     
-    // Apply filter to Algolia
-    const { helper } = results!._state;
-    helper.clearRefinements();
-    
+    // Apply filter using setIndexUiState
     if (newSelected.size > 0) {
       const filters = Array.from(newSelected).map(subj => 
         `(SubjectId1:"${subj}" OR SubjectId2:"${subj}")`
       ).join(' OR ');
-      helper.setQueryParameter('filters', filters);
+      
+      setIndexUiState({
+        ...indexUiState,
+        configure: {
+          ...indexUiState.configure,
+          filters: filters
+        }
+      });
+    } else {
+      setIndexUiState({
+        ...indexUiState,
+        configure: {
+          ...indexUiState.configure,
+          filters: undefined
+        }
+      });
     }
-    
-    helper.search();
   };
 
   const clear = () => {
     setSelectedSubjects(new Set());
-    const { helper } = results!._state;
-    helper.clearRefinements();
-    helper.search();
+    setIndexUiState({
+      ...indexUiState,
+      configure: {
+        ...indexUiState.configure,
+        filters: undefined
+      }
+    });
   };
 
   return { items: subjectItems, refine, clear };
@@ -164,11 +178,11 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubj
   });
   
   const subTypesRefinement = useRefinementList({
-    attribute: attributes.subType,
+    attribute: attributes.subType || 'placeholder',
   });
   
   const filtersRefinement = useRefinementList({
-    attribute: attributes.filters,
+    attribute: attributes.filters || 'placeholder',
   });
   
   const { refine: clearAllFilters } = useClearRefinements();
@@ -226,42 +240,46 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubj
             </div>
 
             {/* Column 2 - Sub Types */}
-            <div className="filter-column">
-              <div className="filter-category-title">
-                <span>{attributes.subTypeLabel}</span>
+            {attributes.subType && (
+              <div className="filter-column">
+                <div className="filter-category-title">
+                  <span>{attributes.subTypeLabel}</span>
+                </div>
+                
+                {subTypesRefinement.items.map((item) => (
+                  <label key={item.value} className="filter-option">
+                    <input 
+                      type="checkbox" 
+                      className="filter-checkbox secondary"
+                      checked={item.isRefined}
+                      onChange={() => subTypesRefinement.refine(item.value)}
+                    />
+                    <span>{item.label} ({item.count})</span>
+                  </label>
+                ))}
               </div>
-              
-              {subTypesRefinement.items.map((item) => (
-                <label key={item.value} className="filter-option">
-                  <input 
-                    type="checkbox" 
-                    className="filter-checkbox secondary"
-                    checked={item.isRefined}
-                    onChange={() => subTypesRefinement.refine(item.value)}
-                  />
-                  <span>{item.label} ({item.count})</span>
-                </label>
-              ))}
-            </div>
+            )}
 
             {/* Column 3 - Filters */}
-            <div className="filter-column">
-              <div className="filter-category-title">
-                <span>{attributes.filtersLabel}</span>
+            {attributes.filters && (
+              <div className="filter-column">
+                <div className="filter-category-title">
+                  <span>{attributes.filtersLabel}</span>
+                </div>
+                
+                {filtersRefinement.items.map((item) => (
+                  <label key={item.value} className="filter-option">
+                    <input 
+                      type="checkbox" 
+                      className="filter-checkbox secondary"
+                      checked={item.isRefined}
+                      onChange={() => filtersRefinement.refine(item.value)}
+                    />
+                    <span>{item.label} ({item.count})</span>
+                  </label>
+                ))}
               </div>
-              
-              {filtersRefinement.items.map((item) => (
-                <label key={item.value} className="filter-option">
-                  <input 
-                    type="checkbox" 
-                    className="filter-checkbox secondary"
-                    checked={item.isRefined}
-                    onChange={() => filtersRefinement.refine(item.value)}
-                  />
-                  <span>{item.label} ({item.count})</span>
-                </label>
-              ))}
-            </div>
+            )}
           </div>
         )}
 
