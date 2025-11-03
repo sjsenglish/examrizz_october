@@ -197,13 +197,43 @@ const NavigationArrow: React.FC<NavigationArrowProps> = ({ direction, onClick })
   return (
     <button className={`nav-arrow ${direction}`} onClick={onClick}>
       <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path 
-          d={direction === 'left' ? "M15 18L9 12L15 6" : "M9 6L15 12L9 18"} 
-          stroke="#000000" 
-          strokeWidth="1.5" 
-          strokeLinecap="round" 
-          strokeLinejoin="round"
-        />
+        {direction === 'left' ? (
+          // Left arrow with tail
+          <g>
+            <path 
+              d="M20 12H4" 
+              stroke="#000000" 
+              strokeWidth="3" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            />
+            <path 
+              d="M10 18L4 12L10 6" 
+              stroke="#000000" 
+              strokeWidth="3" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            />
+          </g>
+        ) : (
+          // Right arrow with tail
+          <g>
+            <path 
+              d="M4 12H20" 
+              stroke="#000000" 
+              strokeWidth="3" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            />
+            <path 
+              d="M14 6L20 12L14 18" 
+              stroke="#000000" 
+              strokeWidth="3" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            />
+          </g>
+        )}
       </svg>
     </button>
   );
