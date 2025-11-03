@@ -852,22 +852,24 @@ export default function StudyBookPage() {
         .eq('id', userId)
         .single();
 
-      if (error) {
+      if (error && error.code !== 'PGRST116') {
         setProfileError('Failed to load profile');
         return;
       }
 
-      setUserProfile(data);
+      // Handle case where profile doesn't exist yet (PGRST116 = no rows returned)
+      const profileData = data || {};
+      setUserProfile(profileData);
       
-      // Set edited profile with current data
+      // Set edited profile with current data, ensuring all fields are available for editing
       setEditedProfile({
-        full_name: data.full_name || '',
-        username: data.username || '',
-        school: data.school || '',
-        rank_in_school: data.rank_in_school || '',
-        target_degree: data.target_degree || '',
-        gcse_grades: data.gcse_grades || [],
-        a_level_grades: data.a_level_grades || []
+        full_name: profileData?.full_name || '',
+        username: profileData?.username || '',
+        school: profileData?.school || '',
+        rank_in_school: profileData?.rank_in_school || '',
+        target_degree: profileData?.target_degree || '',
+        gcse_grades: Array.isArray(profileData?.gcse_grades) ? profileData.gcse_grades : [],
+        a_level_grades: Array.isArray(profileData?.a_level_grades) ? profileData.a_level_grades : []
       });
     } catch (error) {
       console.error('Error loading profile:', error);
@@ -901,7 +903,16 @@ export default function StudyBookPage() {
         .single();
 
       if (error) {
-        setProfileError('Failed to save profile');
+        console.error('Profile update error:', error);
+        
+        // Handle specific constraint violations
+        if (error.code === '23505' && error.message?.includes('user_profiles_username_key')) {
+          setProfileError('This username is already taken. Please choose a different one.');
+        } else if (error.code === '23505') {
+          setProfileError('This information conflicts with existing data. Please check your entries.');
+        } else {
+          setProfileError(`Failed to save profile: ${error.message || 'Unknown error'}`);
+        }
         return;
       }
 
@@ -909,7 +920,7 @@ export default function StudyBookPage() {
       setIsEditingProfile(false);
     } catch (error) {
       console.error('Error saving profile:', error);
-      setProfileError('Failed to save profile');
+      setProfileError('Failed to save profile due to a network error. Please try again.');
     } finally {
       setProfileLoading(false);
     }
@@ -1919,7 +1930,17 @@ export default function StudyBookPage() {
                     <button
                       onClick={() => {
                         setIsEditingProfile(false);
-                        setEditedProfile(userProfile || {});
+                        // Reset to current profile data or empty fields
+                        setEditedProfile({
+                          full_name: userProfile?.full_name || '',
+                          username: userProfile?.username || '',
+                          school: userProfile?.school || '',
+                          rank_in_school: userProfile?.rank_in_school || '',
+                          target_degree: userProfile?.target_degree || '',
+                          gcse_grades: Array.isArray(userProfile?.gcse_grades) ? userProfile.gcse_grades : [],
+                          a_level_grades: Array.isArray(userProfile?.a_level_grades) ? userProfile.a_level_grades : []
+                        });
+                        setProfileError(null);
                       }}
                       style={{
                         padding: '8px 16px',
