@@ -153,17 +153,27 @@ export default function StudyBookPage() {
   // Get current user on mount and ensure profile exists
   useEffect(() => {
     if (!user) return;
+    
     const getCurrentUser = async () => {
-      let { data: profile, error: profileError } = await supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-      
-      
-      if (!profile) {
-        // Profile doesn't exist - create it for Discord/Google users
+      try {
+        // First attempt: try to get existing profile
+        let { data: profile, error: profileError } = await supabase
+          .from('user_profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
         
+        // If profile exists, use it
+        if (profile && !profileError) {
+          setUserId(profile.id);
+          loadConversationHistory(profile.id);
+          loadUploadedFiles();
+          loadDraftVersions(profile.id);
+          loadAllUserDrafts();
+          return;
+        }
+
+        // Profile doesn't exist - create it (with race condition protection)
         const newProfile: any = {
           id: user.id,
           email: user.email,
@@ -171,7 +181,7 @@ export default function StudyBookPage() {
           updated_at: new Date().toISOString()
         };
 
-        // Add Discord data if this is a Discord user
+        // Add provider-specific data
         const provider = user.app_metadata?.provider;
         if (provider === 'discord') {
           const userMetadata = user.user_metadata || {};
@@ -185,26 +195,47 @@ export default function StudyBookPage() {
           newProfile.full_name = userMetadata.full_name || userMetadata.name;
         }
 
-        const { data: createdProfile, error } = await supabase
+        // Use upsert to handle race conditions (creates if not exists, ignores if exists)
+        const { data: createdProfile, error: createError } = await supabase
           .from('user_profiles')
-          .insert([newProfile])
+          .upsert([newProfile], { 
+            onConflict: 'id',
+            ignoreDuplicates: false 
+          })
           .select()
           .single();
 
-        if (error) {
-          console.error('Failed to create profile:', error);
-          return;
+        if (createError) {
+          // If upsert failed, try one more time to fetch existing profile
+          console.warn('Profile upsert failed, trying to fetch existing:', createError);
+          const { data: existingProfile } = await supabase
+            .from('user_profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+          
+          if (existingProfile) {
+            profile = existingProfile;
+          } else {
+            console.error('Failed to create or fetch profile:', createError);
+            return;
+          }
+        } else {
+          profile = createdProfile;
         }
         
-        profile = createdProfile;
+        if (profile) {
+          setUserId(profile.id);
+          loadConversationHistory(profile.id);
+          loadUploadedFiles();
+          loadDraftVersions(profile.id);
+          loadAllUserDrafts();
+        }
+      } catch (error) {
+        console.error('Error in getCurrentUser:', error);
       }
-      
-      setUserId(profile.id);
-      loadConversationHistory(profile.id);
-      loadUploadedFiles();
-      loadDraftVersions(profile.id);
-      loadAllUserDrafts();
     };
+    
     getCurrentUser();
   }, [user]);
 
