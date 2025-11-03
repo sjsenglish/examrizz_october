@@ -375,67 +375,52 @@ export default function StudyBookPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user || !popupDraftContent.trim()) return;
 
-      if (currentPopupDraft) {
-        // Update existing draft
-        const { error } = await supabase
-          .from('draft_versions')
-          .update({
-            content: popupDraftContent,
-            word_count: popupDraftContent.split(' ').length,
-            last_edited: new Date().toISOString()
-          })
-          .eq('id', currentPopupDraft.id);
+      // Always create a new version instead of updating existing ones
+      // Get the next version number
+      const { data: existingDrafts } = await supabase
+        .from('draft_versions')
+        .select('version_number')
+        .eq('user_id', user.id)
+        .order('version_number', { ascending: false })
+        .limit(1);
 
-        if (error) {
-          console.error('Error updating draft:', error);
-          alert('Failed to save draft. Please try again.');
-          return;
-        }
-      } else {
-        // Create new draft
-        const { data: existingDrafts } = await supabase
-          .from('draft_versions')
-          .select('version_number')
-          .eq('user_id', user.id)
-          .order('version_number', { ascending: false })
-          .limit(1);
+      const nextVersionNumber = existingDrafts && existingDrafts.length > 0 
+        ? existingDrafts[0].version_number + 1 
+        : 1;
 
-        const nextVersionNumber = existingDrafts && existingDrafts.length > 0 
-          ? existingDrafts[0].version_number + 1 
-          : 1;
+      // Mark all existing drafts as not current
+      await supabase
+        .from('draft_versions')
+        .update({ is_current: false })
+        .eq('user_id', user.id);
 
-        // Mark all existing drafts as not current
-        await supabase
-          .from('draft_versions')
-          .update({ is_current: false })
-          .eq('user_id', user.id);
+      // Always save as new version
+      const { data, error } = await supabase
+        .from('draft_versions')
+        .insert({
+          user_id: user.id,
+          question_number: 1,
+          version_number: nextVersionNumber,
+          content: popupDraftContent,
+          title: currentPopupDraft?.title || `Personal Statement Draft v${nextVersionNumber}`,
+          word_count: popupDraftContent.split(' ').length,
+          is_current: true
+        })
+        .select()
+        .single();
 
-        const { data, error } = await supabase
-          .from('draft_versions')
-          .insert({
-            user_id: user.id,
-            question_number: 1,
-            version_number: nextVersionNumber,
-            content: popupDraftContent,
-            title: 'Quick Draft',
-            word_count: popupDraftContent.split(' ').length,
-            is_current: true
-          })
-          .select()
-          .single();
-
-        if (error) {
-          console.error('Error saving new draft:', error);
-          alert('Failed to save draft. Please try again.');
-          return;
-        }
-
-        setCurrentPopupDraft(data);
+      if (error) {
+        console.error('Error saving new draft version:', error);
+        alert('Failed to save draft. Please try again.');
+        return;
       }
+
+      setCurrentPopupDraft(data);
 
       // Refresh drafts
       await loadAllUserDrafts();
-      alert('Draft saved successfully!');
+      alert(`Draft saved as version ${nextVersionNumber}!`);
+      setShowDraftPopout(false);
     } catch (error) {
       console.error('Error saving draft from popup:', error);
       alert('Failed to save draft. Please try again.');
@@ -2013,20 +1998,6 @@ export default function StudyBookPage() {
         </div>
       )}
 
-      {/* Floating Draft Button */}
-      <button
-        onClick={() => {
-          setShowDraftVersionsModal(true);
-          setCurrentVersionIndex(0);
-        }}
-        className="floating-draft-button"
-        title="Quick Draft"
-      >
-        <img 
-          src="/icons/learn-hub-book.svg" 
-          alt="Quick Draft" 
-        />
-      </button>
     </div>
   );
 }

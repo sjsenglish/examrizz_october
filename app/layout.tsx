@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Inter, Figtree } from 'next/font/google';
 import './globals.css';
+import { PostHogProvider, PostHogPageView } from '../components/PostHogProvider';
+import { Suspense } from 'react';
 
 // Optimize font loading with proper fallbacks
 const inter = Inter({ 
@@ -34,7 +36,12 @@ export default function RootLayout({
         {/* Font preloading handled by Next.js font optimization */}
       </head>
       <body className={`${inter.className} ${figtree.className} antialiased`}>
-        {children}
+        <PostHogProvider>
+          <Suspense fallback={null}>
+            <PostHogPageView />
+          </Suspense>
+          {children}
+        </PostHogProvider>
       </body>
     </html>
   );

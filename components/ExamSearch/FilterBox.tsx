@@ -37,8 +37,6 @@ const useInterviewSubjectFilter = () => {
   const subjects = ['psychology', 'maths', 'engineering', 'economics', 'general', 'law', 'PPE', 'philosophy', 'management'];
   
   const subjectItems = useMemo(() => {
-    if (!results?.hits) return [];
-    
     const subjectCounts: Record<string, number> = {};
     
     // Initialize counts
@@ -46,24 +44,26 @@ const useInterviewSubjectFilter = () => {
       subjectCounts[subject] = 0;
     });
     
-    // Count occurrences in both primary and secondary subjects
-    results.hits.forEach((hit: any) => {
-      const primarySubject = hit.SubjectId1?.toLowerCase();
-      const secondarySubject = hit.SubjectId2?.toLowerCase();
-      
-      subjects.forEach(subject => {
-        if (primarySubject === subject.toLowerCase() || secondarySubject === subject.toLowerCase()) {
-          subjectCounts[subject]++;
-        }
+    // Count occurrences in both primary and secondary subjects if results exist
+    if (results?.hits) {
+      results.hits.forEach((hit: any) => {
+        const primarySubject = hit.SubjectId1?.toLowerCase();
+        const secondarySubject = hit.SubjectId2?.toLowerCase();
+        
+        subjects.forEach(subject => {
+          if (primarySubject === subject.toLowerCase() || secondarySubject === subject.toLowerCase()) {
+            subjectCounts[subject]++;
+          }
+        });
       });
-    });
+    }
     
     return subjects.map(subject => ({
       value: subject,
       label: subject.charAt(0).toUpperCase() + subject.slice(1),
       count: subjectCounts[subject],
       isRefined: selectedSubjects.has(subject)
-    })).filter(item => item.count > 0);
+    }));
   }, [results, selectedSubjects]);
 
   const refine = (subject: string) => {

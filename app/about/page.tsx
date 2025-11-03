@@ -57,8 +57,8 @@ export default function AboutPage() {
           <Image 
             src="/icons/timeline.svg" 
             alt="Our Story Timeline" 
-            width={1000} 
-            height={400}
+            width={1150} 
+            height={460}
             className="timeline-svg"
           />
         </section>
