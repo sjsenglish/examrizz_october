@@ -75,7 +75,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     [isEnglishLitQuestion, hit?.PaperCode, hit?.PaperName, hit?.PaperSection, hit?.PaperYear, hit?.PaperMonth]
   );
 
-  // Load user and feature usage data
+  // Load user and feature usage data with localStorage caching
   useEffect(() => {
     const loadUserAndUsage = async () => {
       try {
@@ -89,11 +89,35 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         setUser(user);
 
         if (user) {
+          // Check localStorage cache first
+          const cacheKey = `feature-usage-${user.id}`;
+          const cached = localStorage.getItem(cacheKey);
+          const now = Date.now();
+          
+          if (cached) {
+            try {
+              const parsedCache = JSON.parse(cached);
+              // Use cached data if it's less than 10 seconds old
+              if (now - parsedCache.timestamp < 10000) {
+                setFeatureUsage(parsedCache.data);
+                return;
+              }
+            } catch (e) {
+              // Invalid cache, proceed to fetch
+            }
+          }
+
           // Fetch feature usage summary
           const response = await fetch(`/api/feature-usage?userId=${user.id}`);
           if (response.ok) {
             const data = await response.json();
             setFeatureUsage(data.summary);
+            
+            // Cache the result in localStorage
+            localStorage.setItem(cacheKey, JSON.stringify({
+              data: data.summary,
+              timestamp: now
+            }));
           }
         }
       } catch (error) {
@@ -277,26 +301,30 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   // Generate tooltip text for feature usage
   const getSubmitAnswerTooltip = () => {
     if (!user) return 'Please log in to submit answers for review';
-    if (!featureUsage) return 'Loading usage information...';
+    if (!featureUsage) return 'Checking submission limits...';
     
     const { submit_answer } = featureUsage;
+    const periodText = submit_answer.period === 'day' ? 'daily' : 'monthly';
+    
     if (!submit_answer.allowed) {
-      return `Limit reached: ${submit_answer.remaining} of ${submit_answer.limit} ${submit_answer.period}ly submissions remaining`;
+      return `Limit reached: ${submit_answer.remaining} of ${submit_answer.limit} ${periodText} submissions remaining`;
     }
     if (submit_answer.limit === -1) return 'Unlimited submissions available';
-    return `${submit_answer.remaining} of ${submit_answer.limit} ${submit_answer.period}ly submissions remaining`;
+    return `${submit_answer.remaining} of ${submit_answer.limit} ${periodText} submissions remaining`;
   };
 
   const getVideoSolutionTooltip = () => {
     if (!user) return 'Please log in to access video solutions';
-    if (!featureUsage) return 'Loading usage information...';
+    if (!featureUsage) return 'Checking video limits...';
     
     const { video_solution } = featureUsage;
+    const periodText = video_solution.period === 'day' ? 'daily' : 'monthly';
+    
     if (!video_solution.allowed) {
-      return `Limit reached: ${video_solution.remaining} of ${video_solution.limit} ${video_solution.period}ly video solutions remaining`;
+      return `Limit reached: ${video_solution.remaining} of ${video_solution.limit} ${periodText} video solutions remaining`;
     }
     if (video_solution.limit === -1) return 'Unlimited video solutions available';
-    return `${video_solution.remaining} of ${video_solution.limit} ${video_solution.period}ly video solutions remaining`;
+    return `${video_solution.remaining} of ${video_solution.limit} ${periodText} video solutions remaining`;
   };
 
   // Check if video solutions are available for this question type
