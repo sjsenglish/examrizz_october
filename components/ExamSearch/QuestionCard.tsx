@@ -471,7 +471,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
               size="md"
               onClick={handleVideoSolutionClick}
               title={getVideoSolutionTooltip()}
-              disabled={featureUsage && !featureUsage.video_solution.allowed}
+              disabled={featureUsage ? !featureUsage.video_solution.allowed : false}
               style={{
                 opacity: featureUsage && !featureUsage.video_solution.allowed ? 0.6 : 1,
                 cursor: featureUsage && !featureUsage.video_solution.allowed ? 'not-allowed' : 'pointer'
@@ -487,7 +487,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
             size="md"
             onClick={handleSubmitAnswer}
             title={getSubmitAnswerTooltip()}
-            disabled={featureUsage && !featureUsage.submit_answer.allowed}
+            disabled={featureUsage ? !featureUsage.submit_answer.allowed : false}
             style={{ 
               backgroundColor: featureUsage && !featureUsage.submit_answer.allowed ? '#9CA3AF' : '#5865F2', 
               color: 'white',
