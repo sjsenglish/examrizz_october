@@ -42,7 +42,7 @@ export default function TermsAndConditionsPage() {
       {/* Main Content */}
       <div className="main-content">
         <div className="terms-container">
-          <h1 className="terms-title">Stream Learning LTD (trading as "Examrizz" or "Examrizzsearch"): "Examrizzsearch.com" Terms and Conditions</h1>
+          <h1 className="terms-title">Terms and Conditions</h1>
           <p className="last-updated">Last updated: 31st October 2025</p>
 
           <div className="terms-content">

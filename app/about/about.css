@@ -15,22 +15,6 @@
   position: relative;
 }
 
-/* Decorative Clouds */
-.cloud-decoration {
-  position: absolute;
-  opacity: 0.6;
-  z-index: 1;
-}
-
-.cloud-left {
-  top: 100px;
-  left: -50px;
-}
-
-.cloud-right {
-  top: 150px;
-  right: -50px;
-}
 
 /* Header */
 .about-header {
@@ -40,21 +24,9 @@
   position: relative;
 }
 
-.about-title {
-  font-family: 'Madimi One', cursive;
-  font-size: 48px;
-  font-weight: 400;
-  color: #000000;
-  margin: 0 0 16px 0;
-}
-
-.about-subtitle {
-  font-family: 'Figtree', sans-serif;
-  font-size: 18px;
-  font-weight: 500;
-  color: #00CED1;
-  letter-spacing: 2px;
-  margin: 0;
+.title-with-clouds {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Timeline Section */
@@ -62,121 +34,12 @@
   margin-bottom: 80px;
   position: relative;
   z-index: 10;
-}
-
-.timeline-header {
-  margin-bottom: 40px;
-}
-
-.timeline-label {
-  display: inline-block;
-  background: #F8F8F5;
-  border: 2px solid #000000;
-  border-radius: 20px;
-  padding: 8px 24px;
-  font-family: 'Madimi One', cursive;
-  font-size: 16px;
-  color: #000000;
-}
-
-.timeline-container {
-  position: relative;
-  height: 300px;
-  margin: 40px 0;
-  background: #F8F8F5;
-  border: 2px solid #000000;
-  border-radius: 12px;
-  padding: 40px 20px;
-}
-
-.timeline-line {
-  position: absolute;
-  top: 50%;
-  left: 5%;
-  right: 5%;
-  height: 3px;
-  background: #00CED1;
-  transform: translateY(-50%);
-}
-
-.timeline-point {
-  position: absolute;
-  top: 50%;
-  transform: translateX(-50%);
-}
-
-.timeline-point::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 12px;
-  height: 12px;
-  background: #00CED1;
-  border-radius: 50%;
-  z-index: 2;
-}
-
-.timeline-year {
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: 'Madimi One', cursive;
-  font-size: 14px;
-  font-weight: 600;
-  color: #000000;
-  white-space: nowrap;
-}
-
-.timeline-content {
-  position: absolute;
-  top: 25px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120px;
   text-align: center;
 }
 
-.timeline-content p {
-  font-family: 'Figtree', sans-serif;
-  font-size: 11px;
-  color: #333333;
-  line-height: 1.3;
-  margin: 0;
-}
-
-.timeline-launch {
-  position: absolute;
-  top: 30%;
-  transform: translateX(-50%);
-}
-
-.timeline-launch-label {
-  background: #E7E6FF;
-  border: 2px solid #000000;
-  border-radius: 8px;
-  padding: 4px 12px;
-  font-family: 'Figtree', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  color: #000000;
-  white-space: nowrap;
-  margin-bottom: 8px;
-}
-
-.timeline-pin {
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 12px solid #00CED1;
-  margin: 0 auto;
-}
-
-.timeline-future {
-  opacity: 0.8;
+.timeline-svg {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Mission Section */
@@ -353,12 +216,13 @@
   gap: 20px;
 }
 
-.social-icon {
-  width: 50px;
-  height: 50px;
-  background: #CCCCCC;
-  border-radius: 50%;
-  border: 2px solid #000000;
+.social-link {
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  transform: translateY(-2px);
 }
 
 /* Responsive Design */

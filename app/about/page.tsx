@@ -41,79 +41,26 @@ export default function AboutPage() {
 
       {/* Main Content */}
       <div className="about-container">
-        {/* Decorative Clouds */}
-        <div className="cloud-decoration cloud-left">
-          <Image src="/svg/island-cloud-big.svg" alt="Cloud" width={150} height={100} />
-        </div>
-        <div className="cloud-decoration cloud-right">
-          <Image src="/svg/island-cloud-big.svg" alt="Cloud" width={150} height={100} />
-        </div>
-
-        {/* Header */}
+        {/* Header with Title and Clouds */}
         <header className="about-header">
-          <h1 className="about-title">examrizzsearch</h1>
-          <p className="about-subtitle">ABOUT US</p>
+          <Image 
+            src="/icons/examrizzsearch-title-w-clouds.svg" 
+            alt="Examrizzsearch About Us" 
+            width={800} 
+            height={300}
+            className="title-with-clouds"
+          />
         </header>
 
         {/* Timeline Section */}
         <section className="timeline-section">
-          <div className="timeline-header">
-            <span className="timeline-label">Our Story</span>
-          </div>
-          
-          <div className="timeline-container">
-            <div className="timeline-line"></div>
-            
-            {/* Timeline Points */}
-            <div className="timeline-point" style={{ left: '5%' }}>
-              <div className="timeline-year">2018</div>
-              <div className="timeline-content">
-                <p>examrizz starts with Sj learning how to learn. Challenge: learn C4 maths for a UCL acceptance exam.</p>
-              </div>
-            </div>
-
-            <div className="timeline-point" style={{ left: '25%' }}>
-              <div className="timeline-year">2023</div>
-              <div className="timeline-content">
-                <p>examrizz begins to research topics in medicine. Sj works with TSA questions, real past admission materials.</p>
-              </div>
-            </div>
-
-            <div className="timeline-point" style={{ left: '45%' }}>
-              <div className="timeline-year">2024</div>
-              <div className="timeline-content">
-                <p>First students start the examrizz process online.</p>
-              </div>
-            </div>
-
-            <div className="timeline-point" style={{ left: '65%' }}>
-              <div className="timeline-year">Jan 2025</div>
-              <div className="timeline-content">
-                <p>All features available for the first academic year! In-person, online + AI tutoring, text + video</p>
-              </div>
-            </div>
-
-            <div className="timeline-point" style={{ left: '85%' }}>
-              <div className="timeline-year">Now</div>
-              <div className="timeline-content">
-                <p>Our beta test and our bot.</p>
-              </div>
-            </div>
-
-            {/* V2 Launch Point */}
-            <div className="timeline-launch" style={{ left: '75%' }}>
-              <div className="timeline-launch-label">V2 Launch</div>
-              <div className="timeline-pin"></div>
-            </div>
-
-            {/* March Point */}
-            <div className="timeline-point timeline-future" style={{ left: '95%' }}>
-              <div className="timeline-year">March</div>
-              <div className="timeline-content">
-                <p>examrizz beta test!</p>
-              </div>
-            </div>
-          </div>
+          <Image 
+            src="/icons/our-story-timeline.svg" 
+            alt="Our Story Timeline" 
+            width={1000} 
+            height={400}
+            className="timeline-svg"
+          />
         </section>
 
         {/* Mission Section */}
@@ -239,7 +186,7 @@ export default function AboutPage() {
 
             <div className="offering-item">
               <div className="offering-icon">
-                <Image src="/svg/island-cloud-big.svg" alt="Common Room" width={80} height={80} />
+                <Image src="/icons/common-room-icon.svg" alt="Common Room" width={80} height={80} />
               </div>
               <h3 className="offering-title">COMMON ROOM</h3>
               <p className="offering-description">
@@ -308,19 +255,6 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="offering-item">
-              <div className="offering-icon">
-                <Image src="/svg/island-cloud-medium.svg" alt="Common Room" width={80} height={80} />
-              </div>
-              <h3 className="offering-title">COMMON ROOM</h3>
-              <p className="offering-description">
-                Chat with others. 
-                <br />
-                Collaborate online safely 
-                <br />
-                and anonymously.
-              </p>
-            </div>
           </div>
         </section>
 
@@ -328,11 +262,21 @@ export default function AboutPage() {
         <section className="social-section">
           <h3 className="social-title">Our Socials & Contact</h3>
           <div className="social-icons">
-            <div className="social-icon"></div>
-            <div className="social-icon"></div>
-            <div className="social-icon"></div>
-            <div className="social-icon"></div>
-            <div className="social-icon"></div>
+            <a href="#" className="social-link">
+              <Image src="/icons/insta-icon.svg" alt="Instagram" width={50} height={50} />
+            </a>
+            <a href="#" className="social-link">
+              <Image src="/icons/youtube-icon.svg" alt="YouTube" width={50} height={50} />
+            </a>
+            <a href="#" className="social-link">
+              <Image src="/icons/discord-icon.svg" alt="Discord" width={50} height={50} />
+            </a>
+            <a href="#" className="social-link">
+              <Image src="/icons/email-icon.svg" alt="Email" width={50} height={50} />
+            </a>
+            <a href="#" className="social-link">
+              <Image src="/icons/tiktok-icon.svg" alt="TikTok" width={50} height={50} />
+            </a>
           </div>
         </section>
       </div>
