@@ -1892,59 +1892,20 @@ export default function StudyBookPage() {
                 </div>
               ) : (
                 <>
-                  {/* Navigation Header */}
+                  {/* Header with New Draft Button */}
                   <div style={{ 
                     display: 'flex', 
                     justifyContent: 'space-between', 
                     alignItems: 'center',
-                    marginBottom: '24px',
-                    padding: '16px',
-                    backgroundColor: '#F8F9FA',
-                    borderRadius: '8px'
+                    marginBottom: '24px'
                   }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                      <button
-                        onClick={() => setCurrentVersionIndex(Math.max(0, currentVersionIndex - 1))}
-                        disabled={currentVersionIndex === 0}
-                        style={{
-                          padding: '8px 12px',
-                          backgroundColor: currentVersionIndex === 0 ? '#E5E7EB' : '#FFFFFF',
-                          color: currentVersionIndex === 0 ? '#9CA3AF' : '#374151',
-                          border: '1px solid #D1D5DB',
-                          borderRadius: '6px',
-                          fontFamily: "'Figtree', sans-serif",
-                          fontSize: '12px',
-                          cursor: currentVersionIndex === 0 ? 'not-allowed' : 'pointer'
-                        }}
-                      >
-                        ← Previous
-                      </button>
-                      
-                      <span style={{ 
-                        fontFamily: "'Figtree', sans-serif", 
-                        fontSize: '14px',
-                        color: '#374151',
-                        fontWeight: '500'
-                      }}>
-                        {currentVersionIndex + 1} of {allUserDrafts.length}
-                      </span>
-                      
-                      <button
-                        onClick={() => setCurrentVersionIndex(Math.min(allUserDrafts.length - 1, currentVersionIndex + 1))}
-                        disabled={currentVersionIndex === allUserDrafts.length - 1}
-                        style={{
-                          padding: '8px 12px',
-                          backgroundColor: currentVersionIndex === allUserDrafts.length - 1 ? '#E5E7EB' : '#FFFFFF',
-                          color: currentVersionIndex === allUserDrafts.length - 1 ? '#9CA3AF' : '#374151',
-                          border: '1px solid #D1D5DB',
-                          borderRadius: '6px',
-                          fontFamily: "'Figtree', sans-serif",
-                          fontSize: '12px',
-                          cursor: currentVersionIndex === allUserDrafts.length - 1 ? 'not-allowed' : 'pointer'
-                        }}
-                      >
-                        Next →
-                      </button>
+                    <div style={{ 
+                      fontFamily: "'Figtree', sans-serif", 
+                      fontSize: '16px',
+                      color: '#374151',
+                      fontWeight: '500'
+                    }}>
+                      {allUserDrafts.length} draft{allUserDrafts.length !== 1 ? 's' : ''} total
                     </div>
                     
                     <button
@@ -1970,8 +1931,170 @@ export default function StudyBookPage() {
                     </button>
                   </div>
 
-                  {/* Current Draft Display */}
-                  {allUserDrafts[currentVersionIndex] && (
+                  {/* All Drafts Grid */}
+                  <div style={{ 
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                    gap: '16px',
+                    maxHeight: '60vh',
+                    overflowY: 'auto',
+                    padding: '4px' // For scrollbar
+                  }}>
+                    {allUserDrafts.map((draft, index) => {
+                      const formatDate = (dateString: string) => {
+                        const date = new Date(dateString);
+                        const now = new Date();
+                        const diffTime = Math.abs(now.getTime() - date.getTime());
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        
+                        if (diffDays === 1) return 'Today';
+                        if (diffDays === 2) return 'Yesterday';
+                        if (diffDays <= 7) return `${diffDays} days ago`;
+                        return date.toLocaleDateString();
+                      };
+
+                      return (
+                        <div key={draft.id} style={{ 
+                          border: '1px solid #E5E7EB', 
+                          borderRadius: '8px',
+                          backgroundColor: '#FFFFFF',
+                          overflow: 'hidden',
+                          transition: 'box-shadow 0.2s ease',
+                          cursor: 'pointer'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}>
+                          {/* Draft Header */}
+                          <div style={{ 
+                            padding: '16px',
+                            borderBottom: '1px solid #E5E7EB',
+                            backgroundColor: '#F8F9FA'
+                          }}>
+                            <h4 style={{ 
+                              fontFamily: "'Madimi One', cursive",
+                              fontSize: '16px',
+                              margin: '0 0 8px 0',
+                              color: '#000000',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap'
+                            }}>
+                              {draft.title || `Draft ${index + 1}`}
+                            </h4>
+                            <div style={{ 
+                              display: 'flex', 
+                              gap: '16px',
+                              fontFamily: "'Figtree', sans-serif",
+                              fontSize: '11px',
+                              color: '#666666',
+                              flexWrap: 'wrap'
+                            }}>
+                              <span>V{draft.version_number}</span>
+                              <span>{formatDate(draft.last_edited || draft.updated_at)}</span>
+                              <span>{draft.word_count || draft.content.split(' ').length} words</span>
+                            </div>
+                          </div>
+
+                          {/* Draft Preview */}
+                          <div style={{ padding: '16px' }}>
+                            <div style={{
+                              fontFamily: "'Figtree', sans-serif",
+                              fontSize: '13px',
+                              lineHeight: '1.5',
+                              color: '#6B7280',
+                              height: '80px',
+                              overflow: 'hidden',
+                              marginBottom: '12px'
+                            }}>
+                              {draft.content.substring(0, 150)}
+                              {draft.content.length > 150 && '...'}
+                            </div>
+
+                            {/* Progress Bar */}
+                            <div style={{ marginBottom: '12px' }}>
+                              <div style={{
+                                width: '100%',
+                                height: '4px',
+                                backgroundColor: '#E5E7EB',
+                                borderRadius: '2px',
+                                overflow: 'hidden'
+                              }}>
+                                <div style={{
+                                  width: `${Math.min(100, (draft.content.length / 4000) * 100)}%`,
+                                  height: '100%',
+                                  backgroundColor: draft.content.length > 4000 ? '#DC2626' : '#10B981',
+                                  transition: 'width 0.3s ease'
+                                }}></div>
+                              </div>
+                              <div style={{
+                                fontFamily: "'Figtree', sans-serif",
+                                fontSize: '10px',
+                                color: '#9CA3AF',
+                                marginTop: '4px',
+                                textAlign: 'right'
+                              }}>
+                                {draft.content.length} / 4,000 characters
+                              </div>
+                            </div>
+
+                            {/* Draft Actions */}
+                            <div style={{ 
+                              display: 'flex',
+                              gap: '8px',
+                              justifyContent: 'flex-end'
+                            }}>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  editDraft(draft);
+                                }}
+                                style={{
+                                  padding: '6px 12px',
+                                  backgroundColor: '#FFFFFF',
+                                  color: '#374151',
+                                  border: '1px solid #D1D5DB',
+                                  borderRadius: '4px',
+                                  fontFamily: "'Figtree', sans-serif",
+                                  fontSize: '11px',
+                                  cursor: 'pointer',
+                                  fontWeight: '500'
+                                }}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (confirm('Are you sure you want to delete this draft?')) {
+                                    deleteDraft(draft.id);
+                                  }
+                                }}
+                                style={{
+                                  padding: '6px 12px',
+                                  backgroundColor: '#FEE2E2',
+                                  color: '#DC2626',
+                                  border: '1px solid #FCA5A5',
+                                  borderRadius: '4px',
+                                  fontFamily: "'Figtree', sans-serif",
+                                  fontSize: '11px',
+                                  cursor: 'pointer',
+                                  fontWeight: '500'
+                                }}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {/* End of grid display - now I need to remove the old single draft display */}
+                  {false && allUserDrafts[currentVersionIndex] && (
                     <div style={{ 
                       border: '1px solid #E5E7EB', 
                       borderRadius: '8px',

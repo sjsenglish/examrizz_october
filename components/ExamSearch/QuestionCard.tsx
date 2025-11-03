@@ -107,18 +107,15 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
 
   const handleVideoSolutionClick = async () => {
     if (!user) {
-      alert('Please log in to access video solutions.');
-      return;
+      return; // Tooltip will show the message
     }
 
     if (!featureUsage) {
-      alert('Loading usage information...');
-      return;
+      return; // Tooltip will show the message
     }
 
     if (!featureUsage.video_solution.allowed) {
-      alert(`You've reached your video solution limit. ${featureUsage.video_solution.remaining} of ${featureUsage.video_solution.limit} ${featureUsage.video_solution.period}ly uses remaining.`);
-      return;
+      return; // Tooltip will show the message
     }
 
     try {
@@ -157,18 +154,15 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   const handleSubmitAnswer = async () => {
     try {
       if (!user) {
-        alert('Please log in to submit an answer for review.');
-        return;
+        return; // Tooltip will show the message
       }
 
       if (!featureUsage) {
-        alert('Loading usage information...');
-        return;
+        return; // Tooltip will show the message
       }
 
       if (!featureUsage.submit_answer.allowed) {
-        alert(`You've reached your submission limit. ${featureUsage.submit_answer.remaining} of ${featureUsage.submit_answer.limit} ${featureUsage.submit_answer.period}ly submissions remaining.`);
-        return;
+        return; // Tooltip will show the message
       }
 
       // Record submit answer usage first
@@ -269,16 +263,26 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
 
   // Generate tooltip text for feature usage
   const getSubmitAnswerTooltip = () => {
-    if (!featureUsage || !user) return '';
+    if (!user) return 'Please log in to submit answers for review';
+    if (!featureUsage) return 'Loading usage information...';
+    
     const { submit_answer } = featureUsage;
-    if (submit_answer.limit === -1) return 'Unlimited submissions';
-    return `${submit_answer.remaining} of ${submit_answer.limit} monthly submissions remaining`;
+    if (!submit_answer.allowed) {
+      return `Limit reached: ${submit_answer.remaining} of ${submit_answer.limit} ${submit_answer.period}ly submissions remaining`;
+    }
+    if (submit_answer.limit === -1) return 'Unlimited submissions available';
+    return `${submit_answer.remaining} of ${submit_answer.limit} ${submit_answer.period}ly submissions remaining`;
   };
 
   const getVideoSolutionTooltip = () => {
-    if (!featureUsage || !user) return '';
+    if (!user) return 'Please log in to access video solutions';
+    if (!featureUsage) return 'Loading usage information...';
+    
     const { video_solution } = featureUsage;
-    if (video_solution.limit === -1) return 'Unlimited video solutions';
+    if (!video_solution.allowed) {
+      return `Limit reached: ${video_solution.remaining} of ${video_solution.limit} ${video_solution.period}ly video solutions remaining`;
+    }
+    if (video_solution.limit === -1) return 'Unlimited video solutions available';
     return `${video_solution.remaining} of ${video_solution.limit} ${video_solution.period}ly video solutions remaining`;
   };
 
@@ -471,10 +475,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
               size="md"
               onClick={handleVideoSolutionClick}
               title={getVideoSolutionTooltip()}
-              disabled={featureUsage ? !featureUsage.video_solution.allowed : false}
+              disabled={!user || !featureUsage || !featureUsage.video_solution.allowed}
               style={{
-                opacity: featureUsage && !featureUsage.video_solution.allowed ? 0.6 : 1,
-                cursor: featureUsage && !featureUsage.video_solution.allowed ? 'not-allowed' : 'pointer'
+                opacity: (!user || !featureUsage || !featureUsage.video_solution.allowed) ? 0.6 : 1,
+                cursor: (!user || !featureUsage || !featureUsage.video_solution.allowed) ? 'not-allowed' : 'pointer'
               }}
             >
               Video Solution
@@ -487,12 +491,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
             size="md"
             onClick={handleSubmitAnswer}
             title={getSubmitAnswerTooltip()}
-            disabled={featureUsage ? !featureUsage.submit_answer.allowed : false}
+            disabled={!user || !featureUsage || !featureUsage.submit_answer.allowed}
             style={{ 
-              backgroundColor: featureUsage && !featureUsage.submit_answer.allowed ? '#9CA3AF' : '#5865F2', 
+              backgroundColor: (!user || !featureUsage || !featureUsage.submit_answer.allowed) ? '#9CA3AF' : '#5865F2', 
               color: 'white',
-              opacity: featureUsage && !featureUsage.submit_answer.allowed ? 0.6 : 1,
-              cursor: featureUsage && !featureUsage.submit_answer.allowed ? 'not-allowed' : 'pointer'
+              opacity: (!user || !featureUsage || !featureUsage.submit_answer.allowed) ? 0.6 : 1,
+              cursor: (!user || !featureUsage || !featureUsage.submit_answer.allowed) ? 'not-allowed' : 'pointer'
             }}
           >
             Submit Answer
