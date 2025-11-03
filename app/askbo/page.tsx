@@ -160,17 +160,9 @@ export default function StudyBookPage() {
         .eq('id', user.id)
         .single();
       
-      if (profileError) {
-        console.error('Profile query error:', profileError);
-        console.log('User ID:', user.id);
-        console.log('User email:', user.email);
-        console.log('User metadata:', user.user_metadata);
-        console.log('User app_metadata:', user.app_metadata);
-      }
       
       if (!profile) {
         // Profile doesn't exist - create it for Discord/Google users
-        console.log('Creating missing profile for user:', user.email);
         
         const newProfile: any = {
           id: user.id,
@@ -205,7 +197,6 @@ export default function StudyBookPage() {
         }
         
         profile = createdProfile;
-        console.log('Successfully created profile for user:', user.id);
       }
       
       setUserId(profile.id);

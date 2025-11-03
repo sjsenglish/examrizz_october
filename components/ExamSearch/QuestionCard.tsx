@@ -57,6 +57,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   // Submit answer modal state
   const [userAnswer, setUserAnswer] = useState('');
   const [additionalLinks, setAdditionalLinks] = useState('');
+  const [videoLink, setVideoLink] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Detect question type based on data structure - memoized to prevent re-renders
@@ -107,12 +108,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
           .eq('id', user.id)
           .single();
           
-        if (profileError) {
-          console.error('QuestionCard profile query error:', profileError);
-          console.log('User ID:', user.id);
-          console.log('User email:', user.email);
-          console.log('User identities:', user.identities);
-        }
           
         setUserProfile(profile);
 
@@ -196,6 +191,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         if (featureUsage?.submit_answer?.allowed) {
           setUserAnswer('');
           setAdditionalLinks('');
+          setVideoLink('');
           setIsSubmitModalOpen(true);
         }
       }, 500);
@@ -336,6 +332,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       // Open the submission modal for users with Discord linked
       setUserAnswer('');
       setAdditionalLinks('');
+      setVideoLink('');
       setIsSubmitModalOpen(true);
     } catch (error) {
       console.error('Submit answer error:', error);
@@ -396,6 +393,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       // Create the question context with user's answer
       let questionContext = `**${questionType} Help Request**\n\n**QUESTION:** ${normalizedData.questionText || 'See question above'}\n\n**MY ANSWER:** ${userAnswer.trim()}`;
       
+      if (videoLink.trim()) {
+        questionContext += `\n\n**VIDEO EXPLANATION:** ${videoLink.trim()}`;
+      }
+      
       if (additionalLinks.trim()) {
         questionContext += `\n\n**ADDITIONAL LINKS/CONTEXT:** ${additionalLinks.trim()}`;
       }
@@ -424,6 +425,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         setIsSubmitModalOpen(false);
         setUserAnswer('');
         setAdditionalLinks('');
+        setVideoLink('');
         window.open('https://discord.gg/examrizzsearch', '_blank');
       } else {
         alert('Failed to create help ticket. Please try again.');
@@ -440,6 +442,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     setIsSubmitModalOpen(false);
     setUserAnswer('');
     setAdditionalLinks('');
+    setVideoLink('');
   };
 
   const getOptionClass = (letter: string): string => {
@@ -907,6 +910,32 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
                   fontSize: '14px',
                   fontFamily: 'inherit',
                   resize: 'vertical'
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{
+                display: 'block',
+                fontWeight: 'bold',
+                marginBottom: '8px',
+                color: 'black'
+              }}>
+                Video Explanation Link (Optional):
+              </label>
+              <input
+                type="url"
+                value={videoLink}
+                onChange={(e) => setVideoLink(e.target.value)}
+                placeholder="Paste YouTube, Loom, or any video link showing your work or explanation..."
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid #ccc',
+                  fontSize: '14px',
+                  fontFamily: 'inherit',
+                  boxSizing: 'border-box'
                 }}
               />
             </div>
