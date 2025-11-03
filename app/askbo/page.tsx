@@ -292,19 +292,19 @@ export default function StudyBookPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Load all drafts for the drafts page, grouped by latest version
+      // Load ALL drafts for the drafts page (all versions)
       const { data: drafts, error } = await supabase
         .from('draft_versions')
         .select('*')
         .eq('user_id', user.id)
-        .eq('is_current', true)
-        .order('last_edited', { ascending: false });
+        .order('created_at', { ascending: false }); // Show newest first
 
       if (error) {
         console.error('Error loading all user drafts:', error);
         return;
       }
 
+      console.log('Loaded drafts from database:', drafts); // Debug log
       setAllUserDrafts(drafts || []);
     } catch (error) {
       console.error('Error loading all user drafts:', error);
@@ -1238,16 +1238,74 @@ export default function StudyBookPage() {
         {activeTab === 'drafts' && (
           <div className="drafts-page">
             <div className="drafts-container">
-              <h2 style={{ 
-                fontFamily: "'Madimi One', cursive", 
-                fontSize: '28px', 
-                letterSpacing: '0.04em', 
-                marginBottom: '24px',
-                color: '#000000'
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center',
+                marginBottom: '24px'
               }}>
-                Personal Statement Drafts
-              </h2>
+                <h2 style={{ 
+                  fontFamily: "'Madimi One', cursive", 
+                  fontSize: '28px', 
+                  letterSpacing: '0.04em', 
+                  margin: '0',
+                  color: '#000000'
+                }}>
+                  Personal Statement Drafts
+                </h2>
+                
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  <button
+                    onClick={loadAllUserDrafts}
+                    style={{
+                      padding: '8px 16px',
+                      backgroundColor: '#E0F7FA',
+                      color: '#006064',
+                      border: '1px solid #00ACC1',
+                      borderRadius: '6px',
+                      fontFamily: "'Figtree', sans-serif",
+                      fontSize: '12px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    🔄 Refresh Drafts
+                  </button>
+                  
+                  <button
+                    onClick={() => setShowDraftVersionsModal(true)}
+                    style={{
+                      padding: '8px 16px',
+                      backgroundColor: '#E7E6FF',
+                      color: '#4338CA',
+                      border: '1px solid #4338CA',
+                      borderRadius: '6px',
+                      fontFamily: "'Figtree', sans-serif",
+                      fontSize: '12px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    📝 View All Drafts (Modal)
+                  </button>
+                </div>
+              </div>
               
+              {/* Debug info */}
+              <div style={{ 
+                padding: '16px', 
+                backgroundColor: '#F0F9FF', 
+                borderRadius: '8px', 
+                marginBottom: '16px',
+                fontFamily: "'Figtree', sans-serif",
+                fontSize: '14px'
+              }}>
+                <strong>Debug Info:</strong> Found {allUserDrafts.length} drafts in database
+                {allUserDrafts.length > 0 && (
+                  <div style={{ marginTop: '8px' }}>
+                    Latest draft: "{allUserDrafts[0]?.title || 'Untitled'}" (Version {allUserDrafts[0]?.version_number})
+                  </div>
+                )}
+              </div>
+
               <div className="drafts-grid">
                 {allUserDrafts.map((draft, index) => {
                   const formatDate = (dateString: string) => {
