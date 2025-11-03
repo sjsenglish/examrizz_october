@@ -474,7 +474,11 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
           
           {/* Video Solution button - only show when video is available for TSA and Maths */}
           {isVideoSolutionAvailable() && (
-            <div style={{ position: 'relative', display: 'inline-block' }}>
+            <div 
+              style={{ position: 'relative', display: 'inline-block' }}
+              onMouseEnter={() => setShowVideoTooltip(true)}
+              onMouseLeave={() => setShowVideoTooltip(false)}
+            >
               <Button 
                 variant="primary" 
                 size="md"
@@ -484,8 +488,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
                   opacity: (!user || !featureUsage || !featureUsage.video_solution.allowed) ? 0.6 : 1,
                   cursor: (!user || !featureUsage || !featureUsage.video_solution.allowed) ? 'not-allowed' : 'pointer'
                 }}
-                onMouseEnter={() => setShowVideoTooltip(true)}
-                onMouseLeave={() => setShowVideoTooltip(false)}
               >
                 Video Solution
               </Button>
@@ -497,14 +499,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
                   bottom: '100%',
                   left: '50%',
                   transform: 'translateX(-50%)',
-                  marginBottom: '8px',
-                  zIndex: 1000,
-                  opacity: showVideoTooltip ? 1 : 0,
-                  transition: 'opacity 0.3s ease',
+                  marginBottom: '10px',
+                  zIndex: 10000,
                   pointerEvents: 'none'
                 }}>
-                  <span style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  <div style={{
+                    backgroundColor: 'white',
                     padding: '8px 12px',
                     borderRadius: '8px',
                     border: '2px solid black',
@@ -513,10 +513,72 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
                     fontSize: '12px',
                     color: 'black',
                     whiteSpace: 'nowrap',
-                    display: 'block'
+                    position: 'relative'
                   }}>
                     {getVideoSolutionTooltip()}
-                  </span>
+                    {/* Arrow */}
+                    <div style={{
+                      position: 'absolute',
+                      top: '100%',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      width: '0',
+                      height: '0',
+                      borderLeft: '6px solid transparent',
+                      borderRight: '6px solid transparent',
+                      borderTop: '6px solid black'
+                    }}></div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          
+          {/* Submit Answer button - available for all question types */}
+          <div 
+            style={{ position: 'relative', display: 'inline-block' }}
+            onMouseEnter={() => setShowSubmitTooltip(true)}
+            onMouseLeave={() => setShowSubmitTooltip(false)}
+          >
+            <Button 
+              variant="secondary" 
+              size="md"
+              onClick={handleSubmitAnswer}
+              disabled={!user || !featureUsage || !featureUsage.submit_answer.allowed}
+              style={{ 
+                backgroundColor: (!user || !featureUsage || !featureUsage.submit_answer.allowed) ? '#9CA3AF' : '#5865F2', 
+                color: 'white',
+                opacity: (!user || !featureUsage || !featureUsage.submit_answer.allowed) ? 0.6 : 1,
+                cursor: (!user || !featureUsage || !featureUsage.submit_answer.allowed) ? 'not-allowed' : 'pointer'
+              }}
+            >
+              Submit Answer
+            </Button>
+            
+            {/* Custom Tooltip */}
+            {showSubmitTooltip && (
+              <div style={{
+                position: 'absolute',
+                bottom: '100%',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                marginBottom: '10px',
+                zIndex: 10000,
+                pointerEvents: 'none'
+              }}>
+                <div style={{
+                  backgroundColor: 'white',
+                  padding: '8px 12px',
+                  borderRadius: '8px',
+                  border: '2px solid black',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                  fontFamily: "'Madimi One', cursive",
+                  fontSize: '12px',
+                  color: 'black',
+                  whiteSpace: 'nowrap',
+                  position: 'relative'
+                }}>
+                  {getSubmitAnswerTooltip()}
                   {/* Arrow */}
                   <div style={{
                     position: 'absolute',
@@ -530,68 +592,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
                     borderTop: '6px solid black'
                   }}></div>
                 </div>
-              )}
-            </div>
-          )}
-          
-          {/* Submit Answer button - available for all question types */}
-          <div style={{ position: 'relative', display: 'inline-block' }}>
-            <Button 
-              variant="secondary" 
-              size="md"
-              onClick={handleSubmitAnswer}
-              disabled={!user || !featureUsage || !featureUsage.submit_answer.allowed}
-              style={{ 
-                backgroundColor: (!user || !featureUsage || !featureUsage.submit_answer.allowed) ? '#9CA3AF' : '#5865F2', 
-                color: 'white',
-                opacity: (!user || !featureUsage || !featureUsage.submit_answer.allowed) ? 0.6 : 1,
-                cursor: (!user || !featureUsage || !featureUsage.submit_answer.allowed) ? 'not-allowed' : 'pointer'
-              }}
-              onMouseEnter={() => setShowSubmitTooltip(true)}
-              onMouseLeave={() => setShowSubmitTooltip(false)}
-            >
-              Submit Answer
-            </Button>
-            
-            {/* Custom Tooltip */}
-            {showSubmitTooltip && (
-              <div style={{
-                position: 'absolute',
-                bottom: '100%',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                marginBottom: '8px',
-                zIndex: 1000,
-                opacity: showSubmitTooltip ? 1 : 0,
-                transition: 'opacity 0.3s ease',
-                pointerEvents: 'none'
-              }}>
-                <span style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                  padding: '8px 12px',
-                  borderRadius: '8px',
-                  border: '2px solid black',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                  fontFamily: "'Madimi One', cursive",
-                  fontSize: '12px',
-                  color: 'black',
-                  whiteSpace: 'nowrap',
-                  display: 'block'
-                }}>
-                  {getSubmitAnswerTooltip()}
-                </span>
-                {/* Arrow */}
-                <div style={{
-                  position: 'absolute',
-                  top: '100%',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  width: '0',
-                  height: '0',
-                  borderLeft: '6px solid transparent',
-                  borderRight: '6px solid transparent',
-                  borderTop: '6px solid black'
-                }}></div>
               </div>
             )}
           </div>

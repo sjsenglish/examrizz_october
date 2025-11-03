@@ -304,7 +304,6 @@ export default function StudyBookPage() {
         return;
       }
 
-      console.log('Loaded drafts from database:', drafts); // Debug log
       setAllUserDrafts(drafts || []);
     } catch (error) {
       console.error('Error loading all user drafts:', error);
@@ -337,7 +336,7 @@ export default function StudyBookPage() {
           question_number: 1, // Default to question 1 for chat drafts
           version_number: nextVersionNumber,
           content: draftToSave,
-          title: title || 'Chat Draft',
+          title: title || `Personal Statement v${nextVersionNumber}`,
           word_count: draftToSave.split(' ').length,
           is_current: false // Set to false initially
         })
@@ -441,7 +440,7 @@ export default function StudyBookPage() {
           question_number: 1,
           version_number: nextVersionNumber,
           content: popupDraftContent,
-          title: currentPopupDraft?.title || `Personal Statement Draft v${nextVersionNumber}`,
+          title: currentPopupDraft?.title || `Personal Statement v${nextVersionNumber}`,
           word_count: popupDraftContent.split(' ').length,
           is_current: false // Set to false initially
         })
@@ -1265,73 +1264,15 @@ export default function StudyBookPage() {
         {activeTab === 'drafts' && (
           <div className="drafts-page">
             <div className="drafts-container">
-              <div style={{ 
-                display: 'flex', 
-                justifyContent: 'space-between', 
-                alignItems: 'center',
-                marginBottom: '24px'
+              <h2 style={{ 
+                fontFamily: "'Madimi One', cursive", 
+                fontSize: '28px', 
+                letterSpacing: '0.04em', 
+                marginBottom: '24px',
+                color: '#000000'
               }}>
-                <h2 style={{ 
-                  fontFamily: "'Madimi One', cursive", 
-                  fontSize: '28px', 
-                  letterSpacing: '0.04em', 
-                  margin: '0',
-                  color: '#000000'
-                }}>
-                  Personal Statement Drafts
-                </h2>
-                
-                <div style={{ display: 'flex', gap: '12px' }}>
-                  <button
-                    onClick={loadAllUserDrafts}
-                    style={{
-                      padding: '8px 16px',
-                      backgroundColor: '#E0F7FA',
-                      color: '#006064',
-                      border: '1px solid #00ACC1',
-                      borderRadius: '6px',
-                      fontFamily: "'Figtree', sans-serif",
-                      fontSize: '12px',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    🔄 Refresh Drafts
-                  </button>
-                  
-                  <button
-                    onClick={() => setShowDraftVersionsModal(true)}
-                    style={{
-                      padding: '8px 16px',
-                      backgroundColor: '#E7E6FF',
-                      color: '#4338CA',
-                      border: '1px solid #4338CA',
-                      borderRadius: '6px',
-                      fontFamily: "'Figtree', sans-serif",
-                      fontSize: '12px',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    📝 View All Drafts (Modal)
-                  </button>
-                </div>
-              </div>
-              
-              {/* Debug info */}
-              <div style={{ 
-                padding: '16px', 
-                backgroundColor: '#F0F9FF', 
-                borderRadius: '8px', 
-                marginBottom: '16px',
-                fontFamily: "'Figtree', sans-serif",
-                fontSize: '14px'
-              }}>
-                <strong>Debug Info:</strong> Found {allUserDrafts.length} drafts in database
-                {allUserDrafts.length > 0 && (
-                  <div style={{ marginTop: '8px' }}>
-                    Latest draft: "{allUserDrafts[0]?.title || 'Untitled'}" (Version {allUserDrafts[0]?.version_number})
-                  </div>
-                )}
-              </div>
+                Personal Statement Drafts
+              </h2>
 
               <div className="drafts-grid">
                 {allUserDrafts.map((draft, index) => {
