@@ -39,6 +39,36 @@ export async function POST(request: NextRequest) {
     const contentFieldName = questionType.field;
     const submissionCategory = safeType === 'general-help' ? "General Help" : "Question Practice";
 
+    // Parse content to extract video information
+    const videoUrlMatch = content.match(/\*\*VIDEO EXPLANATION \((Uploaded|Link)\):\*\* (.+)/);
+    const isUploadedVideo = videoUrlMatch && videoUrlMatch[1] === 'Uploaded';
+    const videoUrl = videoUrlMatch ? videoUrlMatch[2] : null;
+    
+    // Split content into parts to handle length limits better
+    const contentParts = [];
+    let remainingContent = content;
+    
+    // If there's a video, extract it to display separately
+    if (videoUrl) {
+      remainingContent = content.replace(/\*\*VIDEO EXPLANATION \((Uploaded|Link)\):\*\* .+/, '').trim();
+    }
+    
+    // Split remaining content if too long
+    if (remainingContent.length > 1024) {
+      const parts = remainingContent.match(/.{1,1020}/g) || [];
+      contentParts.push(...parts.map((part, index) => ({
+        name: index === 0 ? contentFieldName : `${contentFieldName} (continued)`,
+        value: part + (index === parts.length - 1 ? '' : '...'),
+        inline: false
+      })));
+    } else {
+      contentParts.push({
+        name: contentFieldName,
+        value: remainingContent,
+        inline: false
+      });
+    }
+
     // Format the Discord message with proper embed
     const discordPayload = {
       embeds: [
@@ -61,11 +91,12 @@ export async function POST(request: NextRequest) {
               value: submissionCategory,
               inline: true
             },
-            {
-              name: contentFieldName,
-              value: content.length > 1024 ? content.substring(0, 1021) + '...' : content,
+            ...contentParts,
+            ...(videoUrl ? [{
+              name: isUploadedVideo ? "🎥 Video File (Uploaded)" : "🔗 Video Link",
+              value: videoUrl,
               inline: false
-            }
+            }] : [])
           ],
           footer: {
             text: safeType === 'general-help' ? "ExamRizz Help Center" : "ExamRizz Question Practice"
