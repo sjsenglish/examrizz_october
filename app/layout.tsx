@@ -18,11 +18,19 @@ const figtree = Figtree({
 });
 
 export const metadata: Metadata = {
-  title: 'examrizz - Gamified Learning Platform',
+  title: 'search and solutions',
   description: 'Your gamified learning adventure starts here. Practice, learn, compete, and grow with examrizz.',
   keywords: ['education', 'learning', 'gamified', 'practice', 'study'],
   authors: [{ name: 'examrizz Team' }],
   viewport: 'width=device-width, initial-scale=1',
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', type: 'image/x-icon' }
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({

@@ -420,7 +420,7 @@ const ExamSearch: React.FC = () => {
         
         {/* Page Title */}
         <header className="page-title-section">
-          <h1 className="page-main-title">examrizzsearch</h1>
+          <h1 className="page-main-title">search and solutions</h1>
         </header>
         
         {/* Search Bar */}
