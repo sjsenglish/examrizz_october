@@ -48,6 +48,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     tier: string;
   } | null>(null);
   const [user, setUser] = useState<any>(null);
+  const [userProfile, setUserProfile] = useState<any>(null);
   
   // Tooltip state
   const [showSubmitTooltip, setShowSubmitTooltip] = useState(false);
@@ -91,10 +92,15 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         
         if (error) {
           console.error('Authentication error:', error);
+          // Clear any stale state on auth error
+          setUser(null);
+          setUserProfile(null);
+          setFeatureUsage(null);
           return;
         }
         
         setUser(user);
+        setUserProfile(profile);
 
         if (user && profile) {
           // Check localStorage cache first
@@ -111,7 +117,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
                 return;
               }
             } catch (e) {
-              // Invalid cache, proceed to fetch
+              // Invalid cache, clear it
+              localStorage.removeItem(cacheKey);
             }
           }
 
@@ -126,15 +133,45 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
               data: data.summary,
               timestamp: now
             }));
+          } else {
+            // Clear stale feature usage on API error
+            setFeatureUsage(null);
           }
+        } else {
+          // No user or profile, clear feature usage
+          setFeatureUsage(null);
         }
       } catch (error) {
         console.error('Error loading user and feature usage:', error);
+        // Clear stale state on any error
+        setUser(null);
+        setUserProfile(null);
+        setFeatureUsage(null);
       }
     };
 
     loadUserAndUsage();
   }, []);
+
+  // Handle OAuth callback for submit answer
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('submit') === 'true' && user && userProfile?.discord_id) {
+      // User just came back from Discord OAuth and is now linked
+      // Clean up URL and open submit modal
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+      
+      // Small delay to ensure everything is loaded
+      setTimeout(() => {
+        if (featureUsage?.submit_answer?.allowed) {
+          setUserAnswer('');
+          setAdditionalLinks('');
+          setIsSubmitModalOpen(true);
+        }
+      }, 500);
+    }
+  }, [user, userProfile, featureUsage]);
 
   const handleAnswerClick = (letter: string) => {
     setSelectedAnswer(letter);
@@ -202,6 +239,39 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         return; // Tooltip will show the message
       }
 
+      if (!userProfile) {
+        return; // Tooltip will show the message
+      }
+
+      // Check if Discord is linked - if not, redirect to Discord OAuth
+      if (!userProfile.discord_id) {
+        try {
+          const { createClient } = await import('@supabase/supabase-js');
+          const supabase = createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+          );
+
+          const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'discord',
+            options: {
+              redirectTo: `${window.location.origin}${window.location.pathname}?submit=true`
+            }
+          });
+
+          if (error) {
+            console.error('Discord OAuth error:', error);
+            alert('Failed to connect Discord account. Please try again.');
+          }
+          // User will be redirected to Discord OAuth
+          return;
+        } catch (error) {
+          console.error('Discord OAuth setup error:', error);
+          alert('Failed to setup Discord connection. Please try again.');
+          return;
+        }
+      }
+
       if (!featureUsage) {
         return; // Tooltip will show the message
       }
@@ -210,7 +280,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         return; // Tooltip will show the message
       }
 
-      // Open the submission modal instead of directly submitting
+      // Open the submission modal for users with Discord linked
       setUserAnswer('');
       setAdditionalLinks('');
       setIsSubmitModalOpen(true);
@@ -343,6 +413,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   // Generate tooltip text for feature usage
   const getSubmitAnswerTooltip = () => {
     if (!user) return 'Please log in to submit answers for review';
+    if (!userProfile) return 'Loading profile information...';
+    if (!userProfile.discord_id) return 'Click to link Discord account for answer submission';
     if (!featureUsage) return 'Checking submission limits...';
     
     const { submit_answer } = featureUsage;
@@ -627,12 +699,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
               variant="secondary" 
               size="md"
               onClick={handleSubmitAnswer}
-              disabled={!user || !featureUsage || !featureUsage.submit_answer.allowed}
+              disabled={!user || !userProfile || (userProfile?.discord_id && (!featureUsage || !featureUsage.submit_answer.allowed))}
               style={{ 
-                backgroundColor: (!user || !featureUsage || !featureUsage.submit_answer.allowed) ? '#9CA3AF' : '#5865F2', 
+                backgroundColor: (!user || !userProfile || (userProfile?.discord_id && (!featureUsage || !featureUsage.submit_answer.allowed))) ? '#9CA3AF' : '#5865F2', 
                 color: 'white',
-                opacity: (!user || !featureUsage || !featureUsage.submit_answer.allowed) ? 0.6 : 1,
-                cursor: (!user || !featureUsage || !featureUsage.submit_answer.allowed) ? 'not-allowed' : 'pointer'
+                opacity: (!user || !userProfile || (userProfile?.discord_id && (!featureUsage || !featureUsage.submit_answer.allowed))) ? 0.6 : 1,
+                cursor: (!user || !userProfile || (userProfile?.discord_id && (!featureUsage || !featureUsage.submit_answer.allowed))) ? 'not-allowed' : 'pointer'
               }}
             >
               Submit Answer

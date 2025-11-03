@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
+import { performLogout } from '@/lib/auth-utils';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -36,8 +37,17 @@ export default function Navbar() {
   }, []);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push('/');
+    try {
+      // Use the comprehensive logout utility
+      await performLogout();
+      
+      // Force a page refresh to ensure all components reset their state
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Error during logout:', error);
+      // Force logout even if there's an error
+      window.location.href = '/';
+    }
   };
 
   const handleLogin = () => {

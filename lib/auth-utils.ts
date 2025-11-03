@@ -137,3 +137,44 @@ export async function validateUserSession(): Promise<{ isValid: boolean; user: a
     profile: result.profile
   };
 }
+
+/**
+ * Clears all user-related cached data and performs complete logout
+ */
+export async function performLogout(): Promise<void> {
+  try {
+    // Clear localStorage cache
+    const keys = Object.keys(localStorage);
+    keys.forEach(key => {
+      if (key.startsWith('feature-usage-') || 
+          key.includes('user-') || 
+          key.includes('auth-') ||
+          key.includes('supabase-')) {
+        localStorage.removeItem(key);
+      }
+    });
+
+    // Clear sessionStorage cache  
+    const sessionKeys = Object.keys(sessionStorage);
+    sessionKeys.forEach(key => {
+      if (key.includes('user-') || 
+          key.includes('auth-') ||
+          key.includes('supabase-')) {
+        sessionStorage.removeItem(key);
+      }
+    });
+
+    // Sign out from Supabase
+    const { createClient } = await import('@supabase/supabase-js');
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+    
+    await supabase.auth.signOut();
+    
+  } catch (error) {
+    console.error('Error during logout:', error);
+    // Continue with logout even if there are errors
+  }
+}
