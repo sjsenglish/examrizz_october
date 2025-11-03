@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase-client';
 import { useRouter } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import Navbar from '@/components/Navbar';
@@ -16,10 +16,6 @@ interface UsageInfo {
   percentage_used: number;
 }
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 interface DraftVersion {
   id: string;

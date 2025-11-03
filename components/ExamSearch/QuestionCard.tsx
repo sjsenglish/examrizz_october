@@ -5,7 +5,7 @@ import { VideoModal } from '../VideoModal';
 import { PdfModal } from '../PdfModal';
 import styles from './QuestionCard.module.css';
 import DOMPurify from 'dompurify';
-import { ensureUserProfile } from '@/lib/auth-utils';
+import { supabase } from '@/lib/supabase-client';
 
 // Sanitize HTML content to prevent XSS attacks
 const sanitizeHtml = (html: string): string => {
@@ -83,16 +83,15 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     [isEnglishLitQuestion, hit?.PaperCode, hit?.PaperName, hit?.PaperSection, hit?.PaperYear, hit?.PaperMonth]
   );
 
-  // Load user and feature usage data with improved Discord auth handling
+  // Load user and feature usage data - using same approach as Ask Bo
   useEffect(() => {
     const loadUserAndUsage = async () => {
       try {
-        // Use the new auth utility to ensure proper user profile creation
-        const { user, profile, error } = await ensureUserProfile();
+        // Check authentication using same method as Ask Bo
+        const { data: { user } } = await supabase.auth.getUser();
         
-        if (error) {
-          console.error('Authentication error:', error);
-          // Clear any stale state on auth error
+        if (!user) {
+          // User not authenticated - clear state
           setUser(null);
           setUserProfile(null);
           setFeatureUsage(null);
@@ -100,9 +99,17 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         }
         
         setUser(user);
+        
+        // Get user profile from database
+        const { data: profile } = await supabase
+          .from('user_profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+          
         setUserProfile(profile);
 
-        if (user && profile) {
+        if (user) {
           // Check localStorage cache first
           const cacheKey = `feature-usage-${user.id}`;
           const cached = localStorage.getItem(cacheKey);
@@ -151,6 +158,21 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     };
 
     loadUserAndUsage();
+
+    // Listen for auth state changes - same as Ask Bo
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        // User signed in - reload user data
+        loadUserAndUsage();
+      } else if (event === 'SIGNED_OUT') {
+        // User signed out - clear state
+        setUser(null);
+        setUserProfile(null);
+        setFeatureUsage(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   // Handle OAuth callback for submit answer
@@ -246,12 +268,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       // Check if Discord is linked - if not, redirect to Discord OAuth
       if (!userProfile.discord_id) {
         try {
-          const { createClient } = await import('@supabase/supabase-js');
-          const supabase = createClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-          );
-
           const { error } = await supabase.auth.signInWithOAuth({
             provider: 'discord',
             options: {
