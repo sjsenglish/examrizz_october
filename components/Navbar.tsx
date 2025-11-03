@@ -71,8 +71,7 @@ export default function Navbar() {
           fontWeight: '400',
           color: '#000000',
           margin: '0',
-          cursor: 'pointer',
-          fontDisplay: 'swap'
+          cursor: 'pointer'
         }}>
           examrizzsearch
         </h1>
