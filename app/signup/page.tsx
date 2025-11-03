@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -15,6 +15,12 @@ export default function SignupPage() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   
+  // Authentication state
+  const [user, setUser] = useState<any>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [discordConnected, setDiscordConnected] = useState(false);
+  const [existingProfile, setExistingProfile] = useState<any>(null);
+  
   // Step 2 form data
   const [fullName, setFullName] = useState('');
   const [username, setUsername] = useState('');
@@ -27,13 +33,111 @@ export default function SignupPage() {
   const [aLevelSubjects, setALevelSubjects] = useState<Array<{subject: string, grade: string}>>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleNextStep = () => {
     setCurrentStep(2);
   };
 
+  // Check authentication state and handle OAuth redirects
+  useEffect(() => {
+    const checkAuthState = async () => {
+      try {
+        setAuthLoading(true);
+        
+        // Check current session
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) {
+          console.error('Session error:', sessionError);
+          setError('Failed to check authentication status');
+          return;
+        }
+
+        if (session?.user) {
+          setUser(session.user);
+          
+          // Check if this user has an existing profile
+          const { data: profile, error: profileError } = await supabase
+            .from('user_profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+
+          if (!profileError && profile) {
+            setExistingProfile(profile);
+            
+            // Check if this is a Discord user
+            if (profile.discord_id) {
+              setDiscordConnected(true);
+              setSuccessMessage('Discord account connected successfully!');
+              
+              // Pre-fill form with existing data
+              if (profile.full_name) setFullName(profile.full_name);
+              if (profile.username) setUsername(profile.username);
+              if (profile.school) setSchool(profile.school);
+              if (profile.rank_in_school) setRankInSchool(profile.rank_in_school);
+              if (profile.email) setEmail(profile.email);
+              
+              // If user already has complete profile, redirect to home
+              if (profile.full_name && profile.username) {
+                setSuccessMessage('Account setup complete! Redirecting...');
+                setTimeout(() => router.push('/'), 2000);
+                return;
+              } else {
+                // Go to step 2 to complete profile
+                setCurrentStep(2);
+              }
+            }
+          } else if (profileError && profileError.code !== 'PGRST116') {
+            // PGRST116 = no rows found, which is expected for new users
+            console.error('Profile fetch error:', profileError);
+          }
+        }
+
+        // Check URL for OAuth error parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const oauthError = urlParams.get('error');
+        const oauthErrorDescription = urlParams.get('error_description');
+        
+        if (oauthError) {
+          setError(`Authentication failed: ${oauthErrorDescription || oauthError}`);
+          // Clean URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+      } catch (err) {
+        console.error('Auth state check error:', err);
+        setError('An unexpected error occurred');
+      } finally {
+        setAuthLoading(false);
+      }
+    };
+
+    checkAuthState();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        setUser(session.user);
+        // Re-check profile when user signs in
+        checkAuthState();
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setExistingProfile(null);
+        setDiscordConnected(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [router]);
+
   const handleDiscordConnect = async () => {
     try {
+      setLoading(true);
+      setError('');
+      setSuccessMessage('Connecting to Discord...');
+      
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'discord',
         options: {
@@ -43,11 +147,16 @@ export default function SignupPage() {
       
       if (error) {
         console.error('Discord OAuth error:', error);
-        setError('Failed to connect with Discord');
+        setError('Failed to connect with Discord: ' + error.message);
+        setSuccessMessage('');
       }
+      // Note: If successful, user will be redirected and useEffect will handle the rest
     } catch (err) {
       console.error('Discord connection error:', err);
-      setError('Failed to connect with Discord');
+      setError('Failed to connect with Discord. Please try again.');
+      setSuccessMessage('');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,6 +167,10 @@ export default function SignupPage() {
 
   const handleDiscordLogin = async () => {
     try {
+      setLoading(true);
+      setError('');
+      setSuccessMessage('Signing in with Discord...');
+      
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'discord',
         options: {
@@ -67,11 +180,16 @@ export default function SignupPage() {
       
       if (error) {
         console.error('Discord login error:', error);
-        setError('Failed to sign in with Discord');
+        setError('Failed to sign in with Discord: ' + error.message);
+        setSuccessMessage('');
       }
+      // Note: If successful, user will be redirected to home page
     } catch (err) {
       console.error('Discord login error:', err);
-      setError('Failed to sign in with Discord');
+      setError('Failed to sign in with Discord. Please try again.');
+      setSuccessMessage('');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -117,6 +235,11 @@ export default function SignupPage() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // If user is already authenticated (via Discord), update existing profile instead of creating new account
+    if (user) {
+      return await updateExistingProfile();
+    }
+    
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
@@ -124,6 +247,7 @@ export default function SignupPage() {
 
     setLoading(true);
     setError('');
+    setSuccessMessage('Creating your account...');
 
     try {
       const { data, error: authError } = await supabase.auth.signUp({
@@ -139,81 +263,200 @@ export default function SignupPage() {
 
       if (authError) {
         setError(authError.message);
+        setSuccessMessage('');
         return;
       }
 
       if (data.user) {
-        const user = data.user; // Store in a const to help TypeScript
+        const userId = data.user.id;
         
-        // Create user profile with additional data
-        const { error: profileError } = await supabase
+        // Check if profile already exists (might be created by Discord trigger)
+        const { data: existingProfile, error: checkError } = await supabase
           .from('user_profiles')
-          .insert({
-            id: user.id,
-            email: user.email,
-            full_name: fullName,
-            username: username,
-            school: school,
-            rank_in_school: rankInSchool
-          });
+          .select('id')
+          .eq('id', userId)
+          .single();
 
-        if (profileError) {
-          console.error('Profile creation error:', profileError);
-          setError('Failed to create profile: ' + profileError.message);
-          return;
+        if (checkError && checkError.code !== 'PGRST116') {
+          console.error('Error checking existing profile:', checkError);
         }
 
-        // Store GCSE grades if any
-        if (gcseSubjects.length > 0) {
-          const gcseGrades = gcseSubjects
-            .filter(g => g.subject && g.grade)
-            .map(g => ({
-              user_id: user.id,
-              subject: g.subject,
-              grade: g.grade
-            }));
+        if (existingProfile) {
+          // Update existing profile
+          const { error: updateError } = await supabase
+            .from('user_profiles')
+            .update({
+              email: data.user.email,
+              full_name: fullName,
+              username: username,
+              school: school,
+              rank_in_school: rankInSchool
+            })
+            .eq('id', userId);
 
-          if (gcseGrades.length > 0) {
-            const { error: gcseError } = await supabase
-              .from('user_gcse_grades')
-              .insert(gcseGrades);
+          if (updateError) {
+            console.error('Profile update error:', updateError);
+            setError('Failed to update profile: ' + updateError.message);
+            setSuccessMessage('');
+            return;
+          }
+        } else {
+          // Create new profile
+          const { error: profileError } = await supabase
+            .from('user_profiles')
+            .insert({
+              id: userId,
+              email: data.user.email,
+              full_name: fullName,
+              username: username,
+              school: school,
+              rank_in_school: rankInSchool
+            });
 
-            if (gcseError) {
-              console.error('GCSE grades error:', gcseError);
-            }
+          if (profileError) {
+            console.error('Profile creation error:', profileError);
+            setError('Failed to create profile: ' + profileError.message);
+            setSuccessMessage('');
+            return;
           }
         }
 
-        // Store A Level grades if any
-        if (aLevelSubjects.length > 0) {
-          const aLevelGrades = aLevelSubjects
-            .filter(g => g.subject && g.grade)
-            .map(g => ({
-              user_id: user.id,
-              subject: g.subject,
-              grade: g.grade
-            }));
-
-          if (aLevelGrades.length > 0) {
-            const { error: aLevelError } = await supabase
-              .from('user_alevel_grades')
-              .insert(aLevelGrades);
-
-            if (aLevelError) {
-              console.error('A Level grades error:', aLevelError);
-            }
-          }
-        }
-
-        router.push('/');
+        await saveGradesForUser(userId);
+        
+        setSuccessMessage('Account created successfully! Redirecting...');
+        setTimeout(() => router.push('/'), 2000);
       }
     } catch (err) {
       console.error('Signup error:', err);
       setError('An unexpected error occurred');
+      setSuccessMessage('');
     } finally {
       setLoading(false);
     }
   };
+
+  // Handle updating existing profile for Discord users
+  const updateExistingProfile = async () => {
+    if (!user) return;
+    
+    setLoading(true);
+    setError('');
+    setSuccessMessage('Updating your profile...');
+
+    try {
+      // Update existing profile with form data
+      const { error: updateError } = await supabase
+        .from('user_profiles')
+        .update({
+          full_name: fullName,
+          username: username,
+          school: school,
+          rank_in_school: rankInSchool
+        })
+        .eq('id', user.id);
+
+      if (updateError) {
+        console.error('Profile update error:', updateError);
+        setError('Failed to update profile: ' + updateError.message);
+        setSuccessMessage('');
+        return;
+      }
+
+      await saveGradesForUser(user.id);
+      
+      setSuccessMessage('Profile updated successfully! Redirecting...');
+      setTimeout(() => router.push('/'), 2000);
+    } catch (err) {
+      console.error('Profile update error:', err);
+      setError('An unexpected error occurred');
+      setSuccessMessage('');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Helper function to save grades
+  const saveGradesForUser = async (userId: string) => {
+    try {
+      // Store GCSE grades if any
+      if (gcseSubjects.length > 0) {
+        const gcseGrades = gcseSubjects
+          .filter(g => g.subject && g.grade)
+          .map(g => ({
+            user_id: userId,
+            subject: g.subject,
+            grade: g.grade
+          }));
+
+        if (gcseGrades.length > 0) {
+          // Delete existing grades first to avoid conflicts
+          await supabase
+            .from('user_gcse_grades')
+            .delete()
+            .eq('user_id', userId);
+            
+          const { error: gcseError } = await supabase
+            .from('user_gcse_grades')
+            .insert(gcseGrades);
+
+          if (gcseError) {
+            console.error('GCSE grades error:', gcseError);
+          }
+        }
+      }
+
+      // Store A Level grades if any
+      if (aLevelSubjects.length > 0) {
+        const aLevelGrades = aLevelSubjects
+          .filter(g => g.subject && g.grade)
+          .map(g => ({
+            user_id: userId,
+            subject: g.subject,
+            grade: g.grade
+          }));
+
+        if (aLevelGrades.length > 0) {
+          // Delete existing grades first to avoid conflicts
+          await supabase
+            .from('user_alevel_grades')
+            .delete()
+            .eq('user_id', userId);
+            
+          const { error: aLevelError } = await supabase
+            .from('user_alevel_grades')
+            .insert(aLevelGrades);
+
+          if (aLevelError) {
+            console.error('A Level grades error:', aLevelError);
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error saving grades:', err);
+    }
+  };
+
+  // Show loading screen during authentication check
+  if (authLoading) {
+    return (
+      <>
+        <Navbar />
+        <div style={{
+          minHeight: '100vh',
+          background: '#FFFFFF',
+          fontFamily: "'Figtree', sans-serif",
+          paddingTop: '60px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '18px', color: '#666666' }}>Loading...</div>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   if (currentStep === 1) {
     return (
@@ -225,6 +468,33 @@ export default function SignupPage() {
           fontFamily: "'Figtree', sans-serif",
           paddingTop: '60px'
         }}>
+          {/* Success/Error Messages */}
+          {(successMessage || error) && (
+            <div style={{
+              position: 'fixed',
+              top: '80px',
+              right: '20px',
+              zIndex: 1000,
+              maxWidth: '400px',
+              padding: '16px 20px',
+              borderRadius: '8px',
+              backgroundColor: successMessage ? '#F0FDF4' : '#FEE2E2',
+              border: `1px solid ${successMessage ? '#22C55E' : '#F87171'}`,
+              borderLeft: `4px solid ${successMessage ? '#16A34A' : '#EF4444'}`,
+              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+              animation: 'slideInFromRight 0.3s ease-out'
+            }}>
+              <div style={{
+                fontFamily: "'Figtree', sans-serif",
+                fontSize: '14px',
+                color: successMessage ? '#15803D' : '#B91C1C',
+                fontWeight: '500'
+              }}>
+                {successMessage || error}
+              </div>
+            </div>
+          )}
+
           {/* Header */}
         <div style={{
           display: 'flex',
@@ -342,33 +612,39 @@ export default function SignupPage() {
           }}>
             <button
               onClick={handleDiscordConnect}
+              disabled={loading || discordConnected}
               style={{
                 padding: '12px 24px',
-                background: '#00CED1',
+                background: discordConnected ? '#16A34A' : (loading ? '#9CA3AF' : '#00CED1'),
                 color: '#FFFFFF',
                 border: 'none',
                 borderRadius: '8px',
                 fontFamily: "'Figtree', sans-serif",
                 fontSize: '14px',
                 fontWeight: '600',
-                cursor: 'pointer'
+                cursor: (loading || discordConnected) ? 'not-allowed' : 'pointer',
+                opacity: (loading || discordConnected) ? 0.8 : 1,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
               }}
             >
-              Connect my Discord
+              {discordConnected ? '✓ Discord Connected' : (loading ? 'Connecting...' : 'Connect my Discord')}
             </button>
             
             <button
               onClick={handleJoinNow}
+              disabled={loading}
               style={{
                 padding: '12px 24px',
-                background: '#E7E6FF',
-                color: '#4338CA',
-                border: '1px solid #4338CA',
+                background: loading ? '#F3F4F6' : '#E7E6FF',
+                color: loading ? '#9CA3AF' : '#4338CA',
+                border: `1px solid ${loading ? '#D1D5DB' : '#4338CA'}`,
                 borderRadius: '8px',
                 fontFamily: "'Figtree', sans-serif",
                 fontSize: '14px',
                 fontWeight: '600',
-                cursor: 'pointer'
+                cursor: loading ? 'not-allowed' : 'pointer'
               }}
             >
               Don't have Discord? Join now!
@@ -634,6 +910,33 @@ export default function SignupPage() {
         </div>
       </div>
 
+      {/* Success/Error Messages */}
+      {(successMessage || error) && (
+        <div style={{
+          position: 'fixed',
+          top: '80px',
+          right: '20px',
+          zIndex: 1000,
+          maxWidth: '400px',
+          padding: '16px 20px',
+          borderRadius: '8px',
+          backgroundColor: successMessage ? '#F0FDF4' : '#FEE2E2',
+          border: `1px solid ${successMessage ? '#22C55E' : '#F87171'}`,
+          borderLeft: `4px solid ${successMessage ? '#16A34A' : '#EF4444'}`,
+          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+          animation: 'slideInFromRight 0.3s ease-out'
+        }}>
+          <div style={{
+            fontFamily: "'Figtree', sans-serif",
+            fontSize: '14px',
+            color: successMessage ? '#15803D' : '#B91C1C',
+            fontWeight: '500'
+          }}>
+            {successMessage || error}
+          </div>
+        </div>
+      )}
+
       {/* Main content */}
       <div style={{
         maxWidth: '1200px',
@@ -655,6 +958,21 @@ export default function SignupPage() {
           }}>
             Profile
           </h2>
+
+          {/* Discord user info */}
+          {discordConnected && user && (
+            <div style={{
+              background: '#F0FDF4',
+              border: '1px solid #22C55E',
+              borderRadius: '6px',
+              padding: '12px',
+              marginBottom: '20px',
+              fontSize: '14px',
+              color: '#15803D'
+            }}>
+              <strong>✓ Discord Connected!</strong> Complete your profile below to finish setting up your account.
+            </div>
+          )}
 
           {error && (
             <div style={{
@@ -913,8 +1231,51 @@ export default function SignupPage() {
             color: '#000000',
             margin: '0 0 15px 0'
           }}>
-            Sign-up Details
+            {user ? 'Account Connected' : 'Sign-up Details'}
           </h2>
+
+          {/* Show different content based on authentication status */}
+          {user ? (
+            // User is already authenticated (Discord)
+            <div>
+              <div style={{
+                background: '#F0FDF4',
+                border: '1px solid #22C55E',
+                borderRadius: '6px',
+                padding: '20px',
+                textAlign: 'center',
+                marginBottom: '20px'
+              }}>
+                <div style={{ fontSize: '48px', marginBottom: '16px' }}>✓</div>
+                <h3 style={{
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '18px',
+                  fontWeight: '600',
+                  color: '#15803D',
+                  margin: '0 0 8px 0'
+                }}>
+                  Account Connected!
+                </h3>
+                <p style={{
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  color: '#16A34A',
+                  margin: '0 0 16px 0'
+                }}>
+                  Your Discord account is connected. Complete the profile form on the left to finish setup.
+                </p>
+                <div style={{
+                  fontSize: '12px',
+                  color: '#15803D',
+                  fontWeight: '500'
+                }}>
+                  Email: {user.email}
+                </div>
+              </div>
+            </div>
+          ) : (
+            // User needs to sign up or sign in
+            <div>
 
           <div style={{ marginBottom: '15px' }}>
             <input
@@ -1043,6 +1404,8 @@ export default function SignupPage() {
               Gmail Sign Up
             </button>
           </div>
+          </div>
+          )}
 
           {/* Info box */}
           <div style={{
@@ -1111,7 +1474,7 @@ export default function SignupPage() {
             }}
           >
             <span style={{ fontSize: '18px' }}>✓</span>
-            {loading ? 'Creating...' : 'Confirm'}
+            {loading ? (user ? 'Updating...' : 'Creating...') : (user ? 'Complete Setup' : 'Confirm')}
           </button>
         </div>
       </div>
