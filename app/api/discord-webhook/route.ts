@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     // Split remaining content if too long
     if (remainingContent.length > 1024) {
       const parts = remainingContent.match(/.{1,1020}/g) || [];
-      contentParts.push(...parts.map((part, index) => ({
+      contentParts.push(...parts.map((part: string, index: number) => ({
         name: index === 0 ? contentFieldName : `${contentFieldName} (continued)`,
         value: part + (index === parts.length - 1 ? '' : '...'),
         inline: false
