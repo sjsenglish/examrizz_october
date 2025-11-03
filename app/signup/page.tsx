@@ -1188,7 +1188,7 @@ export default function SignupPage() {
             </p>
 
             {/* Discord connection status */}
-            {user && userProfile?.discord_id ? (
+            {user && existingProfile?.discord_id ? (
               <div style={{
                 background: '#F0FDF4',
                 border: '1px solid #22C55E',
