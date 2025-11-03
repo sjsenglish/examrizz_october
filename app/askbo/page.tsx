@@ -154,11 +154,19 @@ export default function StudyBookPage() {
   useEffect(() => {
     if (!user) return;
     const getCurrentUser = async () => {
-      let { data: profile } = await supabase
+      let { data: profile, error: profileError } = await supabase
         .from('user_profiles')
         .select('*')
         .eq('id', user.id)
         .single();
+      
+      if (profileError) {
+        console.error('Profile query error:', profileError);
+        console.log('User ID:', user.id);
+        console.log('User email:', user.email);
+        console.log('User metadata:', user.user_metadata);
+        console.log('User app_metadata:', user.app_metadata);
+      }
       
       if (!profile) {
         // Profile doesn't exist - create it for Discord/Google users

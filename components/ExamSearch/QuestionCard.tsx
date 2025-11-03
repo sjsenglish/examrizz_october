@@ -101,11 +101,18 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         setUser(user);
         
         // Get user profile from database
-        const { data: profile } = await supabase
+        const { data: profile, error: profileError } = await supabase
           .from('user_profiles')
           .select('*')
           .eq('id', user.id)
           .single();
+          
+        if (profileError) {
+          console.error('QuestionCard profile query error:', profileError);
+          console.log('User ID:', user.id);
+          console.log('User email:', user.email);
+          console.log('User identities:', user.identities);
+        }
           
         setUserProfile(profile);
 
