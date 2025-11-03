@@ -134,17 +134,16 @@ export default function AboutPage() {
               <div className="offering-icon">
                 <Image src="/icons/island-ask-bo.svg" alt="Ask Bo" width={80} height={80} />
               </div>
-              <h3 className="offering-title">ASK BO</h3>
               <p className="offering-description">
-                Ask us anything! 
+                The ultimate PS writing 
                 <br />
-                Exam questions, guidance, 
+                tool. Helps you write 
                 <br />
-                your stuck on deadlines
+                from scratch or grades 
                 <br />
-                and stuff like that. we 
+                your draft for top uni 
                 <br />
-                are humans.
+                level competitiveness.
               </p>
             </div>
 
@@ -152,17 +151,16 @@ export default function AboutPage() {
               <div className="offering-icon">
                 <Image src="/icons/practice.svg" alt="Practice" width={80} height={80} />
               </div>
-              <h3 className="offering-title">PRACTICE</h3>
               <p className="offering-description">
-                Mixed question practice.
+                Make custom question
                 <br />
-                Full practice papers. TSA, 
+                packs for just the topics
                 <br />
-                A-levels, anything you 
+                you need. 
                 <br />
-                want. Downloadable. 
+                Find original, spec-
                 <br />
-                questions.
+                specific questions. 
               </p>
             </div>
 
@@ -170,17 +168,12 @@ export default function AboutPage() {
               <div className="offering-icon">
                 <Image src="/icons/arena.svg" alt="Arena" width={80} height={80} />
               </div>
-              <h3 className="offering-title">ARENA</h3>
               <p className="offering-description">
-                Find others online for 
+                Find others aiming for 
                 <br />
-                competitions! Join study 
+                the same course. 
                 <br />
-                groups. Find study mates 
-                <br />
-                and buddies. Social 
-                <br />
-                studying.
+                Compete in challenges.
               </p>
             </div>
 
@@ -188,13 +181,12 @@ export default function AboutPage() {
               <div className="offering-icon">
                 <Image src="/icons/common-room-icon.svg" alt="Common Room" width={80} height={80} />
               </div>
-              <h3 className="offering-title">COMMON ROOM</h3>
               <p className="offering-description">
-                Chat with others. 
+                Offline third space 
                 <br />
-                Collaborate online safely 
+                coming soon! For
                 <br />
-                and anonymously.
+                in-person help. 
               </p>
             </div>
 
@@ -203,19 +195,18 @@ export default function AboutPage() {
               <div className="offering-icon">
                 <Image src="/icons/video.svg" alt="Video" width={80} height={80} />
               </div>
-              <h3 className="offering-title">VIDEO</h3>
               <p className="offering-description">
-                Different video series 
+                Efficient video series
                 <br />
-                for different learning 
+                for all subjects.
                 <br />
-                styles. From 30 second 
+                Watch our “how to” and 
                 <br />
-                'tips' to hour-long 
+                “basics” series to set
                 <br />
-                lectures. Completely 
+                you up for all subject
                 <br />
-                flexible learning.
+                learning.
               </p>
             </div>
 
@@ -223,19 +214,18 @@ export default function AboutPage() {
               <div className="offering-icon">
                 <Image src="/icons/learn.svg" alt="Learn" width={80} height={80} />
               </div>
-              <h3 className="offering-title">LEARN</h3>
               <p className="offering-description">
-                Full guided learning by 
+                Full guided learning to
                 <br />
-                exam board. From 
+                teach you every subject  
                 <br />
-                specification to full exam. With 
+                in under 60 hours. Best 
                 <br />
-                past papers & videos. Read 
+                if you're home-schooled, 
                 <br />
-                anything anywhere in 
+                falling behind, or need
                 <br />
-                sequence.
+                to the whole course quickly.
               </p>
             </div>
 
@@ -243,15 +233,8 @@ export default function AboutPage() {
               <div className="offering-icon">
                 <Image src="/icons/teacher.svg" alt="Teacher" width={80} height={80} />
               </div>
-              <h3 className="offering-title">TEACHER</h3>
               <p className="offering-description">
-                Online space covering 
-                <br />
-                classroom management, 
-                <br />
-                lesson plans, timetables, 
-                <br />
-                resources.
+                Contact us to learn more. 
               </p>
             </div>
 

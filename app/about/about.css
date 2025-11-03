@@ -22,11 +22,16 @@
   margin-bottom: 80px;
   z-index: 10;
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .title-with-clouds {
   max-width: 100%;
   height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 /* Timeline Section */
@@ -35,11 +40,16 @@
   position: relative;
   z-index: 10;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .timeline-svg {
   max-width: 100%;
   height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 /* Mission Section */
@@ -196,8 +206,6 @@
 .social-section {
   text-align: center;
   padding: 40px 0;
-  background: #E8F5E8;
-  border-radius: 12px;
   margin: 40px 0;
   position: relative;
   z-index: 10;
