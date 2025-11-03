@@ -8,6 +8,14 @@ import ReactMarkdown from 'react-markdown';
 import Navbar from '@/components/Navbar';
 import './study-book.css';
 
+interface UsageInfo {
+  total_cost: number;
+  total_tokens: number;
+  limit: number;
+  remaining: number;
+  percentage_used: number;
+}
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -90,6 +98,11 @@ export default function StudyBookPage() {
   const [isCreatingTicket, setIsCreatingTicket] = useState(false);
   const [ticketResult, setTicketResult] = useState<{success: boolean, message: string, ticketId?: string} | null>(null);
 
+  // Usage tracking state
+  const [usageInfo, setUsageInfo] = useState<UsageInfo | null>(null);
+  const [showUsageLimitModal, setShowUsageLimitModal] = useState(false);
+  const [usageError, setUsageError] = useState<string | null>(null);
+
   // Draft workspace state
   const [draftContents, setDraftContents] = useState<{[key: number]: string}>({
     1: '',
@@ -164,6 +177,13 @@ export default function StudyBookPage() {
     getCurrentUser();
   }, [user]);
 
+  // Fetch usage info when userId is available
+  useEffect(() => {
+    if (userId) {
+      fetchUsageInfo();
+    }
+  }, [userId]);
+
   // Handle clicking outside of category dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -187,6 +207,16 @@ export default function StudyBookPage() {
       return () => clearTimeout(timer);
     }
   }, [ticketResult]);
+
+  // Auto-hide usage limit notification after 8 seconds
+  useEffect(() => {
+    if (showUsageLimitModal) {
+      const timer = setTimeout(() => {
+        setShowUsageLimitModal(false);
+      }, 8000);
+      return () => clearTimeout(timer);
+    }
+  }, [showUsageLimitModal]);
 
   const loadConversationHistory = async (currentUserId: string) => {
     try {
@@ -291,6 +321,7 @@ export default function StudyBookPage() {
         .from('draft_versions')
         .select('version_number')
         .eq('user_id', user.id)
+        .eq('question_number', 1) // Default to question 1 for chat drafts
         .order('version_number', { ascending: false })
         .limit(1);
 
@@ -298,14 +329,8 @@ export default function StudyBookPage() {
         ? existingDrafts[0].version_number + 1 
         : 1;
 
-      // Mark all existing drafts as not current
-      await supabase
-        .from('draft_versions')
-        .update({ is_current: false })
-        .eq('user_id', user.id);
-
-      // Save new draft
-      const { data, error } = await supabase
+      // First, insert the new version (not marked as current yet)
+      const { data: newDraft, error: insertError } = await supabase
         .from('draft_versions')
         .insert({
           user_id: user.id,
@@ -314,15 +339,34 @@ export default function StudyBookPage() {
           content: draftToSave,
           title: title || 'Chat Draft',
           word_count: draftToSave.split(' ').length,
-          is_current: true
+          is_current: false // Set to false initially
         })
         .select()
         .single();
 
-      if (error) {
-        console.error('Error saving draft:', error);
+      if (insertError) {
+        console.error('Error saving new draft version:', insertError);
         alert('Failed to save draft. Please try again.');
         return;
+      }
+
+      // Then mark all other drafts for this question as not current
+      await supabase
+        .from('draft_versions')
+        .update({ is_current: false })
+        .eq('user_id', user.id)
+        .eq('question_number', 1)
+        .neq('id', newDraft.id);
+
+      // Finally, mark the new draft as current
+      const { error: updateError } = await supabase
+        .from('draft_versions')
+        .update({ is_current: true })
+        .eq('id', newDraft.id);
+
+      if (updateError) {
+        console.error('Error marking draft as current:', updateError);
+        // Draft is saved but not marked as current - not a critical error
       }
 
       // Clear the chat message and close modal
@@ -333,7 +377,7 @@ export default function StudyBookPage() {
       // Refresh drafts
       await loadAllUserDrafts();
       
-      alert('Draft saved successfully!');
+      alert(`Draft saved as version ${nextVersionNumber}!`);
     } catch (error) {
       console.error('Error saving draft from chat:', error);
       alert('Failed to save draft. Please try again.');
@@ -376,11 +420,12 @@ export default function StudyBookPage() {
       if (!user || !popupDraftContent.trim()) return;
 
       // Always create a new version instead of updating existing ones
-      // Get the next version number
+      // Get the next version number for this specific question
       const { data: existingDrafts } = await supabase
         .from('draft_versions')
         .select('version_number')
         .eq('user_id', user.id)
+        .eq('question_number', 1)
         .order('version_number', { ascending: false })
         .limit(1);
 
@@ -388,14 +433,8 @@ export default function StudyBookPage() {
         ? existingDrafts[0].version_number + 1 
         : 1;
 
-      // Mark all existing drafts as not current
-      await supabase
-        .from('draft_versions')
-        .update({ is_current: false })
-        .eq('user_id', user.id);
-
-      // Always save as new version
-      const { data, error } = await supabase
+      // First, insert the new version (not marked as current yet)
+      const { data: newDraft, error: insertError } = await supabase
         .from('draft_versions')
         .insert({
           user_id: user.id,
@@ -404,18 +443,37 @@ export default function StudyBookPage() {
           content: popupDraftContent,
           title: currentPopupDraft?.title || `Personal Statement Draft v${nextVersionNumber}`,
           word_count: popupDraftContent.split(' ').length,
-          is_current: true
+          is_current: false // Set to false initially
         })
         .select()
         .single();
 
-      if (error) {
-        console.error('Error saving new draft version:', error);
+      if (insertError) {
+        console.error('Error saving new draft version:', insertError);
         alert('Failed to save draft. Please try again.');
         return;
       }
 
-      setCurrentPopupDraft(data);
+      // Then mark all other drafts for this question as not current
+      await supabase
+        .from('draft_versions')
+        .update({ is_current: false })
+        .eq('user_id', user.id)
+        .eq('question_number', 1)
+        .neq('id', newDraft.id);
+
+      // Finally, mark the new draft as current
+      const { error: updateError } = await supabase
+        .from('draft_versions')
+        .update({ is_current: true })
+        .eq('id', newDraft.id);
+
+      if (updateError) {
+        console.error('Error marking draft as current:', updateError);
+        // Draft is saved but not marked as current - not a critical error
+      }
+
+      setCurrentPopupDraft(newDraft);
 
       // Refresh drafts
       await loadAllUserDrafts();
@@ -461,6 +519,21 @@ export default function StudyBookPage() {
     setShowDraftPopout(true);
   };
 
+  // Fetch usage information
+  const fetchUsageInfo = async () => {
+    if (!userId) return;
+    
+    try {
+      const response = await fetch(`/api/usage?userId=${userId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setUsageInfo(data.monthlyUsage);
+      }
+    } catch (error) {
+      console.error('Error fetching usage info:', error);
+    }
+  };
+
   const sendMessage = async () => {
     if (!currentMessage.trim() || !userId || isLoading) {
       return;
@@ -488,7 +561,17 @@ export default function StudyBookPage() {
         })
       });
 
-      if (!response.ok) throw new Error('Failed to send message');
+      if (!response.ok) {
+        if (response.status === 402) {
+          // Usage limit exceeded
+          const errorData = await response.json();
+          setUsageError(errorData.message);
+          setUsageInfo(errorData.usage);
+          setShowUsageLimitModal(true);
+          return;
+        }
+        throw new Error('Failed to send message');
+      }
 
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
@@ -529,6 +612,8 @@ export default function StudyBookPage() {
                 if (data.conversationId && !conversationId) {
                   setConversationId(data.conversationId);
                 }
+                // Refresh usage info after successful message
+                fetchUsageInfo();
               } else if (data.type === 'error') {
                 setMessages(prev => prev.map(msg => 
                   msg.id === assistantId 
@@ -1994,6 +2079,109 @@ export default function StudyBookPage() {
                 </>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Usage Limit Notification */}
+      {showUsageLimitModal && (
+        <div style={{
+          position: 'fixed',
+          top: '80px',
+          right: '20px',
+          zIndex: 1000,
+          backgroundColor: '#FFFFFF',
+          border: '1px solid #F87171',
+          borderLeft: '4px solid #EF4444',
+          borderRadius: '8px',
+          padding: '16px 20px',
+          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+          maxWidth: '400px',
+          animation: 'slideInFromRight 0.3s ease-out'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+            <div style={{ 
+              backgroundColor: '#FEE2E2', 
+              borderRadius: '50%', 
+              padding: '6px',
+              minWidth: '32px',
+              height: '32px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <span style={{ fontSize: '16px' }}>⚠️</span>
+            </div>
+            
+            <div style={{ flex: 1 }}>
+              <h4 style={{ 
+                margin: '0 0 4px 0',
+                fontFamily: "'Figtree', sans-serif",
+                fontSize: '15px',
+                fontWeight: '600',
+                color: '#1F2937'
+              }}>
+                Monthly limit reached
+              </h4>
+              <p style={{ 
+                margin: '0 0 12px 0',
+                fontFamily: "'Figtree', sans-serif",
+                fontSize: '13px',
+                color: '#6B7280',
+                lineHeight: '1.4'
+              }}>
+                You've reached your AskBo usage limit for this month.
+              </p>
+              
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <Link 
+                  href="/payment"
+                  style={{
+                    padding: '6px 12px',
+                    backgroundColor: '#4338CA',
+                    color: 'white',
+                    textDecoration: 'none',
+                    borderRadius: '5px',
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '12px',
+                    fontWeight: '500'
+                  }}
+                  onClick={() => setShowUsageLimitModal(false)}
+                >
+                  Upgrade
+                </Link>
+                <button
+                  onClick={() => setShowUsageLimitModal(false)}
+                  style={{
+                    padding: '6px 12px',
+                    backgroundColor: 'transparent',
+                    color: '#6B7280',
+                    border: '1px solid #D1D5DB',
+                    borderRadius: '5px',
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '12px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Dismiss
+                </button>
+              </div>
+            </div>
+            
+            <button
+              onClick={() => setShowUsageLimitModal(false)}
+              style={{
+                background: 'none',
+                border: 'none',
+                fontSize: '18px',
+                cursor: 'pointer',
+                color: '#9CA3AF',
+                padding: '0',
+                marginLeft: '8px'
+              }}
+            >
+              ×
+            </button>
           </div>
         </div>
       )}

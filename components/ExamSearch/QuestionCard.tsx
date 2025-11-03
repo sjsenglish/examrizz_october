@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Button } from '../ui/Button';
 import { QuestionCardProps, Question } from '@/types/question';
 import { VideoModal } from '../VideoModal';
@@ -29,6 +29,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   const [isAnswerRevealed, setIsAnswerRevealed] = useState(false);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
+  
+  // Feature usage state
+  const [featureUsage, setFeatureUsage] = useState<{
+    submit_answer: { allowed: boolean; remaining: number; limit: number; period: 'month' | 'day' };
+    video_solution: { allowed: boolean; remaining: number; limit: number; period: 'month' | 'day' };
+    tier: string;
+  } | null>(null);
+  const [user, setUser] = useState<any>(null);
 
   // Detect question type based on data structure - memoized to prevent re-renders
   const isMathsQuestion = useMemo(() => hit?.paper_info && hit?.spec_topic, [hit]);
@@ -54,6 +62,35 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     [isEnglishLitQuestion, hit?.PaperCode, hit?.PaperName, hit?.PaperSection, hit?.PaperYear, hit?.PaperMonth]
   );
 
+  // Load user and feature usage data
+  useEffect(() => {
+    const loadUserAndUsage = async () => {
+      try {
+        const { createClient } = await import('@supabase/supabase-js');
+        const supabase = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        );
+
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+
+        if (user) {
+          // Fetch feature usage summary
+          const response = await fetch(`/api/feature-usage?userId=${user.id}`);
+          if (response.ok) {
+            const data = await response.json();
+            setFeatureUsage(data.summary);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading user and feature usage:', error);
+      }
+    };
+
+    loadUserAndUsage();
+  }, []);
+
   const handleAnswerClick = (letter: string) => {
     setSelectedAnswer(letter);
     setIsAnswerRevealed(true);
@@ -68,8 +105,45 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     // Interview questions don't have answers - they're discussion questions
   };
 
-  const handleVideoSolutionClick = () => {
-    setIsVideoModalOpen(true);
+  const handleVideoSolutionClick = async () => {
+    if (!user) {
+      alert('Please log in to access video solutions.');
+      return;
+    }
+
+    if (!featureUsage) {
+      alert('Loading usage information...');
+      return;
+    }
+
+    if (!featureUsage.video_solution.allowed) {
+      alert(`You've reached your video solution limit. ${featureUsage.video_solution.remaining} of ${featureUsage.video_solution.limit} ${featureUsage.video_solution.period}ly uses remaining.`);
+      return;
+    }
+
+    try {
+      // Record video solution usage
+      const response = await fetch('/api/feature-usage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          feature: 'video_solution'
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setFeatureUsage(prev => prev ? { ...prev, video_solution: data.usage } : null);
+        setIsVideoModalOpen(true);
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error || 'Failed to access video solution.');
+      }
+    } catch (error) {
+      console.error('Video solution error:', error);
+      alert('Failed to access video solution. Please try again.');
+    }
   };
 
   const handleCloseVideoModal = () => {
@@ -82,19 +156,40 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
 
   const handleSubmitAnswer = async () => {
     try {
-      // Import Supabase client for authentication check
-      const { createClient } = await import('@supabase/supabase-js');
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      );
-
-      // Check if user is authenticated
-      const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         alert('Please log in to submit an answer for review.');
         return;
       }
+
+      if (!featureUsage) {
+        alert('Loading usage information...');
+        return;
+      }
+
+      if (!featureUsage.submit_answer.allowed) {
+        alert(`You've reached your submission limit. ${featureUsage.submit_answer.remaining} of ${featureUsage.submit_answer.limit} ${featureUsage.submit_answer.period}ly submissions remaining.`);
+        return;
+      }
+
+      // Record submit answer usage first
+      const usageResponse = await fetch('/api/feature-usage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          feature: 'submit_answer'
+        })
+      });
+
+      if (!usageResponse.ok) {
+        const errorData = await usageResponse.json();
+        alert(errorData.error || 'Failed to submit answer.');
+        return;
+      }
+
+      // Update feature usage state
+      const usageData = await usageResponse.json();
+      setFeatureUsage(prev => prev ? { ...prev, submit_answer: usageData.usage } : null);
 
       // Format question context for Discord help center ticket
       let questionType = '';
@@ -171,6 +266,26 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   };
 
   const isALevelQuestion = useMemo(() => hit?.paper_info && hit?.qualification_level === 'A Level', [hit]);
+
+  // Generate tooltip text for feature usage
+  const getSubmitAnswerTooltip = () => {
+    if (!featureUsage || !user) return '';
+    const { submit_answer } = featureUsage;
+    if (submit_answer.limit === -1) return 'Unlimited submissions';
+    return `${submit_answer.remaining} of ${submit_answer.limit} monthly submissions remaining`;
+  };
+
+  const getVideoSolutionTooltip = () => {
+    if (!featureUsage || !user) return '';
+    const { video_solution } = featureUsage;
+    if (video_solution.limit === -1) return 'Unlimited video solutions';
+    return `${video_solution.remaining} of ${video_solution.limit} ${video_solution.period}ly video solutions remaining`;
+  };
+
+  // Check if video solutions are available for this question type
+  const isVideoSolutionAvailable = () => {
+    return normalizedData.videoUrl && (isMathsQuestion || (!isInterviewQuestion && !isEnglishLitQuestion && !isBiologyQuestion));
+  };
   
   // Get normalized data based on question type - memoized to prevent re-renders
   const normalizedData = useMemo(() => ({
@@ -349,12 +464,18 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
             </Button>
           )}
           
-          {/* Video Solution button - only show when video is available */}
-          {normalizedData.videoUrl && (
+          {/* Video Solution button - only show when video is available for TSA and Maths */}
+          {isVideoSolutionAvailable() && (
             <Button 
               variant="primary" 
               size="md"
               onClick={handleVideoSolutionClick}
+              title={getVideoSolutionTooltip()}
+              disabled={featureUsage && !featureUsage.video_solution.allowed}
+              style={{
+                opacity: featureUsage && !featureUsage.video_solution.allowed ? 0.6 : 1,
+                cursor: featureUsage && !featureUsage.video_solution.allowed ? 'not-allowed' : 'pointer'
+              }}
             >
               Video Solution
             </Button>
@@ -365,7 +486,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
             variant="secondary" 
             size="md"
             onClick={handleSubmitAnswer}
-            style={{ backgroundColor: '#5865F2', color: 'white' }}
+            title={getSubmitAnswerTooltip()}
+            disabled={featureUsage && !featureUsage.submit_answer.allowed}
+            style={{ 
+              backgroundColor: featureUsage && !featureUsage.submit_answer.allowed ? '#9CA3AF' : '#5865F2', 
+              color: 'white',
+              opacity: featureUsage && !featureUsage.submit_answer.allowed ? 0.6 : 1,
+              cursor: featureUsage && !featureUsage.submit_answer.allowed ? 'not-allowed' : 'pointer'
+            }}
           >
             Submit Answer
           </Button>

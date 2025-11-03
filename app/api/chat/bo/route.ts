@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
+import { canMakeRequest, recordUsage, getMonthlyUsage } from '../../../../lib/usage-tracking';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -928,6 +929,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Message and userId are required' }, { status: 400 });
     }
 
+    // Check usage limits before processing request
+    const estimatedInputTokens = Math.ceil(message.length / 4); // Rough estimate: 4 chars per token
+    const estimatedOutputTokens = 500; // Conservative estimate for Bo's response
+    
+    const usageCheck = await canMakeRequest(userId, estimatedInputTokens, estimatedOutputTokens);
+    
+    if (!usageCheck.allowed) {
+      return NextResponse.json({ 
+        error: 'usage_limit_exceeded',
+        message: usageCheck.reason,
+        usage: usageCheck.usage
+      }, { status: 402 }); // 402 Payment Required
+    }
+
     let currentConversationId = conversationId;
 
     // If no conversation ID provided, check for existing conversation or create new one
@@ -1202,6 +1217,16 @@ export async function POST(request: NextRequest) {
               role: 'assistant',
               content: fullResponse
             });
+
+          // Record usage for billing/limits
+          try {
+            const actualInputTokens = Math.ceil(message.length / 4);
+            const actualOutputTokens = Math.ceil(fullResponse.length / 4);
+            await recordUsage(userId, 'askbo', actualInputTokens, actualOutputTokens);
+          } catch (usageError) {
+            console.error('Error recording usage:', usageError);
+            // Don't fail the request if usage tracking fails
+          }
 
           // Send completion signal
           controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ 
