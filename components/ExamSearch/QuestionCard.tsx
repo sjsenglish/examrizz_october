@@ -279,7 +279,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       if (!hasDiscordAuth && !hasGoogleAuth && (!userProfile.discord_id)) {
         // No OAuth provider and no Discord linked - need to link Discord
         try {
-          const { error } = await supabase.auth.signInWithOAuth({
+          // Use linkIdentity to add Discord to existing account without signing out
+          const { error } = await supabase.auth.linkIdentity({
             provider: 'discord',
             options: {
               redirectTo: `${window.location.origin}${window.location.pathname}?submit=true`
@@ -287,40 +288,32 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
           });
 
           if (error) {
-            console.error('Discord OAuth error:', error);
-            alert('Failed to connect Discord account. Please try again.');
+            console.error('Discord linking error:', error);
+            alert('Failed to link Discord account. Please try again.');
           }
-          // User will be redirected to Discord OAuth
+          // User will be redirected to Discord OAuth for linking
           return;
         } catch (error) {
-          console.error('Discord OAuth setup error:', error);
-          alert('Failed to setup Discord connection. Please try again.');
+          console.error('Discord linking setup error:', error);
+          alert('Failed to setup Discord linking. Please try again.');
           return;
         }
       }
       
-      // Update profile with Discord data if Discord authenticated but not saved
+      // Refresh profile data to get latest Discord info (handled by ensureUserProfile)
       if (hasDiscordAuth && !userProfile.discord_id) {
-        try {
-          const userMetadata = user.user_metadata || {};
-          const discordData = {
-            discord_id: userMetadata.provider_id || userMetadata.sub || userMetadata.id,
-            discord_username: userMetadata.username || userMetadata.global_name || userMetadata.name,
-            discord_avatar: userMetadata.avatar_url || userMetadata.picture,
-            discord_discriminator: userMetadata.discriminator,
-            discord_linked_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          };
-
-          await supabase
+        // Profile should be automatically updated by ensureUserProfile, but refresh local state
+        const { data: { user: currentUser } } = await supabase.auth.getUser();
+        if (currentUser) {
+          const { data: refreshedProfile } = await supabase
             .from('user_profiles')
-            .update(discordData)
-            .eq('id', user.id);
-            
-          // Update local state
-          setUserProfile((prev: any) => ({ ...prev, ...discordData }));
-        } catch (error) {
-          console.error('Failed to update Discord profile data:', error);
+            .select('*')
+            .eq('id', currentUser.id)
+            .single();
+          
+          if (refreshedProfile) {
+            setUserProfile(refreshedProfile);
+          }
         }
       }
 

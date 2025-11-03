@@ -61,8 +61,40 @@ export async function ensureUserProfile(): Promise<{ user: any; profile: UserPro
       }
     }
 
-    // If profile exists, return it
+    // If profile exists, check if we need to sync Discord data
     if (existingProfile && !profileError) {
+      // Check if user has Discord auth but profile lacks Discord data
+      const provider = user.app_metadata?.provider;
+      const hasDiscordAuth = user.identities?.find((identity: any) => identity.provider === 'discord');
+      
+      if ((provider === 'discord' || hasDiscordAuth) && !existingProfile.discord_id) {
+        // User has Discord auth but profile doesn't have Discord data - sync it
+        try {
+          const userMetadata = user.user_metadata || {};
+          const discordData = {
+            discord_id: userMetadata.provider_id || userMetadata.sub || userMetadata.id,
+            discord_username: userMetadata.username || userMetadata.global_name || userMetadata.name,
+            discord_avatar: userMetadata.avatar_url || userMetadata.picture,
+            discord_discriminator: userMetadata.discriminator,
+            discord_linked_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          };
+
+          const { data: updatedProfile, error: updateError } = await supabase
+            .from('user_profiles')
+            .update(discordData)
+            .eq('id', user.id)
+            .select()
+            .single();
+
+          if (!updateError && updatedProfile) {
+            return { user, profile: updatedProfile };
+          }
+        } catch (error) {
+          // If Discord sync fails, continue with existing profile
+        }
+      }
+      
       return { user, profile: existingProfile };
     }
 

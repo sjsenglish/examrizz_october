@@ -138,6 +138,7 @@
 
 .offerings-header {
   margin-bottom: 40px;
+  text-align: center;
 }
 
 .offerings-label {
@@ -232,9 +233,9 @@
 .company-info {
   position: absolute;
   bottom: 20px;
-  right: 5px;
+  right: 20px;
   text-align: right;
-  padding: 8px;
+  padding: 0;
 }
 
 .company-name {

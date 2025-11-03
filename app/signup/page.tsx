@@ -135,18 +135,39 @@ export default function SignupPage() {
       setError('');
       setSuccessMessage('Connecting to Discord...');
       
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'discord',
-        options: {
-          redirectTo: `${window.location.origin}/signup`
-        }
-      });
+      // Check if user is already logged in
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
       
-      if (error) {
-        console.error('Discord OAuth error:', error);
-        setError('Failed to connect with Discord: ' + error.message);
-        setSuccessMessage('');
+      if (currentUser) {
+        // User is logged in (Email/Google) - link Discord to existing account
+        const { error } = await supabase.auth.linkIdentity({
+          provider: 'discord',
+          options: {
+            redirectTo: `${window.location.origin}/signup`
+          }
+        });
+        
+        if (error) {
+          console.error('Discord linking error:', error);
+          setError('Failed to link Discord account: ' + error.message);
+          setSuccessMessage('');
+        }
+      } else {
+        // No user logged in - create new Discord account
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: 'discord',
+          options: {
+            redirectTo: `${window.location.origin}/signup`
+          }
+        });
+        
+        if (error) {
+          console.error('Discord OAuth error:', error);
+          setError('Failed to connect with Discord: ' + error.message);
+          setSuccessMessage('');
+        }
       }
+      
       // Note: If successful, user will be redirected and useEffect will handle the rest
     } catch (err) {
       console.error('Discord connection error:', err);
@@ -465,34 +486,7 @@ export default function SignupPage() {
           fontFamily: "'Figtree', sans-serif",
           paddingTop: '60px'
         }}>
-          {/* Success/Error Messages */}
-          {(successMessage || error) && (
-            <div style={{
-              position: 'fixed',
-              top: '80px',
-              right: '20px',
-              zIndex: 1000,
-              maxWidth: '400px',
-              padding: '16px 20px',
-              borderRadius: '8px',
-              backgroundColor: successMessage ? '#F0FDF4' : '#FEE2E2',
-              border: `1px solid ${successMessage ? '#22C55E' : '#F87171'}`,
-              borderLeft: `4px solid ${successMessage ? '#16A34A' : '#EF4444'}`,
-              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
-              animation: 'slideInFromRight 0.3s ease-out'
-            }}>
-              <div style={{
-                fontFamily: "'Figtree', sans-serif",
-                fontSize: '14px',
-                color: successMessage ? '#15803D' : '#B91C1C',
-                fontWeight: '500'
-              }}>
-                {successMessage || error}
-              </div>
-            </div>
-          )}
-
-          {/* Header */}
+        {/* Header */}
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -567,385 +561,40 @@ export default function SignupPage() {
           </div>
         </div>
 
-        {/* Main content */}
-        <div style={{
-          maxWidth: '1000px',
-          margin: '0 auto',
-          padding: '30px 40px',
-          textAlign: 'center',
-          position: 'relative',
-          minHeight: '600px'
-        }}>
-          <h2 style={{
-            fontFamily: "'Figtree', sans-serif",
-            fontSize: '28px',
-            fontWeight: '700',
-            color: '#000000',
-            margin: '0 0 15px 0'
-          }}>
-            Join the Community!
-          </h2>
-          
-          <p style={{
-            fontFamily: "'Figtree', sans-serif",
-            fontSize: '16px',
-            color: '#666666',
-            margin: '0 0 30px 0',
-            lineHeight: '1.5',
-            maxWidth: '700px',
-            marginLeft: 'auto',
-            marginRight: 'auto'
-          }}>
-            Find other students doing your subjects, help each other out, join workshops, get teacher feedback,
-            and @ us teachers whenever you need
-          </p>
-
-          {/* Discord connection buttons */}
+        {/* Success/Error Messages */}
+        {(successMessage || error) && (
           <div style={{
-            display: 'flex',
-            gap: '15px',
-            justifyContent: 'center',
-            marginBottom: '30px'
+            position: 'fixed',
+            top: '80px',
+            right: '20px',
+            zIndex: 1000,
+            maxWidth: '400px',
+            padding: '16px 20px',
+            borderRadius: '8px',
+            backgroundColor: successMessage ? '#F0FDF4' : '#FEE2E2',
+            border: `1px solid ${successMessage ? '#22C55E' : '#F87171'}`,
+            borderLeft: `4px solid ${successMessage ? '#16A34A' : '#EF4444'}`,
+            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+            animation: 'slideInFromRight 0.3s ease-out'
           }}>
-            <button
-              onClick={handleDiscordConnect}
-              disabled={loading || discordConnected}
-              style={{
-                padding: '12px 24px',
-                background: discordConnected ? '#16A34A' : (loading ? '#9CA3AF' : '#00CED1'),
-                color: '#FFFFFF',
-                border: 'none',
-                borderRadius: '8px',
-                fontFamily: "'Figtree', sans-serif",
-                fontSize: '14px',
-                fontWeight: '600',
-                cursor: (loading || discordConnected) ? 'not-allowed' : 'pointer',
-                opacity: (loading || discordConnected) ? 0.8 : 1,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}
-            >
-              {discordConnected ? '✓ Discord Connected' : (loading ? 'Connecting...' : 'Connect my Discord')}
-            </button>
-            
-            <button
-              onClick={handleJoinNow}
-              disabled={loading}
-              style={{
-                padding: '12px 24px',
-                background: loading ? '#F3F4F6' : '#E7E6FF',
-                color: loading ? '#9CA3AF' : '#4338CA',
-                border: `1px solid ${loading ? '#D1D5DB' : '#4338CA'}`,
-                borderRadius: '8px',
-                fontFamily: "'Figtree', sans-serif",
-                fontSize: '14px',
-                fontWeight: '600',
-                cursor: loading ? 'not-allowed' : 'pointer'
-              }}
-            >
-              Don't have Discord? Join now!
-            </button>
-          </div>
-
-          {/* Feature cards */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '20px',
-            maxWidth: '900px',
-            margin: '0 auto 30px'
-          }}>
-            {/* Subject Communities */}
             <div style={{
-              background: '#E0F7FA',
-              borderRadius: '12px',
-              padding: '25px 20px',
-              textAlign: 'center'
-            }}>
-              <div style={{
-                width: '60px',
-                height: '60px',
-                margin: '0 auto 15px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <img 
-                  src="/icons/cowboy-guitar.svg" 
-                  alt="Subject Communities" 
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain'
-                  }}
-                />
-              </div>
-              <h3 style={{
-                fontFamily: "'Figtree', sans-serif",
-                fontSize: '16px',
-                fontWeight: '700',
-                color: '#000000',
-                margin: '0 0 8px 0'
-              }}>
-                Subject<br />Communities
-              </h3>
-              <p style={{
-                fontFamily: "'Figtree', sans-serif",
-                fontSize: '12px',
-                color: '#666666',
-                margin: '0',
-                lineHeight: '1.4'
-              }}>
-                Find students with the same subjects and target unis
-              </p>
-            </div>
-
-            {/* Interview Practice */}
-            <div style={{
-              background: '#E0F7FA',
-              borderRadius: '12px',
-              padding: '25px 20px',
-              textAlign: 'center'
-            }}>
-              <div style={{
-                width: '60px',
-                height: '60px',
-                margin: '0 auto 15px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <img 
-                  src="/icons/ghost-karaoke.svg" 
-                  alt="Interview Practice" 
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain'
-                  }}
-                />
-              </div>
-              <h3 style={{
-                fontFamily: "'Figtree', sans-serif",
-                fontSize: '16px',
-                fontWeight: '700',
-                color: '#000000',
-                margin: '0 0 8px 0'
-              }}>
-                Interview Practice<br />& PS Reviews
-              </h3>
-              <p style={{
-                fontFamily: "'Figtree', sans-serif",
-                fontSize: '12px',
-                color: '#666666',
-                margin: '0',
-                lineHeight: '1.4'
-              }}>
-                Submit video/audio answers to our interview question bank or submit your personal statement for teacher feedback.
-              </p>
-            </div>
-
-            {/* Live Workshops */}
-            <div style={{
-              background: '#E0F7FA',
-              borderRadius: '12px',
-              padding: '25px 20px',
-              textAlign: 'center'
-            }}>
-              <div style={{
-                width: '60px',
-                height: '60px',
-                margin: '0 auto 15px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <img 
-                  src="/icons/biking.svg" 
-                  alt="Live Workshops" 
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain'
-                  }}
-                />
-              </div>
-              <h3 style={{
-                fontFamily: "'Figtree', sans-serif",
-                fontSize: '16px',
-                fontWeight: '700',
-                color: '#000000',
-                margin: '0 0 8px 0'
-              }}>
-                Live Workshops &<br />PS Reviews
-              </h3>
-              <p style={{
-                fontFamily: "'Figtree', sans-serif",
-                fontSize: '12px',
-                color: '#666666',
-                margin: '0',
-                lineHeight: '1.4'
-              }}>
-                Join workshops for applications and subject prep.
-              </p>
-            </div>
-          </div>
-
-          {/* Next Step button - positioned bottom right */}
-          <button
-            onClick={handleNextStep}
-            style={{
-              position: 'absolute',
-              bottom: '-34px',
-              right: '40px',
-              padding: '12px 30px',
-              background: '#E7E6FF',
-              color: '#4338CA',
-              border: '1px solid #4338CA',
-              borderRadius: '8px',
               fontFamily: "'Figtree', sans-serif",
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-          >
-            Next Step
-            <span style={{ fontSize: '18px' }}>→</span>
-          </button>
-        </div>
-      </div>
-      </>
-    );
-  }
-
-  // Step 2 - Profile Setup
-  return (
-    <>
-      <Navbar />
-      <div style={{
-        minHeight: '100vh',
-        background: '#FFFFFF',
-        fontFamily: "'Figtree', sans-serif",
-        paddingTop: '60px'
-      }}>
-      {/* Header */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '30px 40px',
-        borderBottom: '1px solid #E5E7EB'
-      }}>
-        <h1 style={{
-          fontFamily: "'Figtree', sans-serif",
-          fontSize: '32px',
-          fontWeight: '700',
-          color: '#000000',
-          margin: '0'
-        }}>
-          SIGN UP
-        </h1>
-        
-        {/* Steps indicator */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '20px',
-          fontFamily: "'Figtree', sans-serif",
-          fontSize: '16px',
-          color: '#666666'
-        }}>
-          <span>Step 2 of 2</span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '50%',
-              background: '#00CED1',
-              color: '#FFFFFF',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: '700',
-              fontSize: '18px'
+              fontSize: '14px',
+              color: successMessage ? '#15803D' : '#B91C1C',
+              fontWeight: '500'
             }}>
-              1
+              {successMessage || error}
             </div>
-            <div style={{
-              width: '40px',
-              height: '2px',
-              background: '#00CED1'
-            }}></div>
-            <div style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '50%',
-              background: '#00CED1',
-              color: '#FFFFFF',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: '700',
-              fontSize: '18px'
-            }}>
-              2
-            </div>
-            <img 
-              src="/icons/rollerskating.svg" 
-              alt="Ghost" 
-              style={{
-                width: '50px',
-                height: '50px',
-                marginLeft: '10px'
-              }}
-            />
           </div>
-        </div>
-      </div>
+        )}
 
-      {/* Success/Error Messages */}
-      {(successMessage || error) && (
+        {/* Main content - Sign up form */}
         <div style={{
-          position: 'fixed',
-          top: '80px',
-          right: '20px',
-          zIndex: 1000,
-          maxWidth: '400px',
-          padding: '16px 20px',
-          borderRadius: '8px',
-          backgroundColor: successMessage ? '#F0FDF4' : '#FEE2E2',
-          border: `1px solid ${successMessage ? '#22C55E' : '#F87171'}`,
-          borderLeft: `4px solid ${successMessage ? '#16A34A' : '#EF4444'}`,
-          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
-          animation: 'slideInFromRight 0.3s ease-out'
+          maxWidth: '600px',
+          margin: '0 auto',
+          padding: '40px 20px',
+          textAlign: 'center'
         }}>
-          <div style={{
-            fontFamily: "'Figtree', sans-serif",
-            fontSize: '14px',
-            color: successMessage ? '#15803D' : '#B91C1C',
-            fontWeight: '500'
-          }}>
-            {successMessage || error}
-          </div>
-        </div>
-      )}
-
-      {/* Main content */}
-      <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '20px',
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '40px',
-        minHeight: 'calc(100vh - 140px)'
-      }}>
-        {/* Left column - Profile */}
-        <div>
           <h2 style={{
             fontFamily: "'Figtree', sans-serif",
             fontSize: '24px',
@@ -953,49 +602,21 @@ export default function SignupPage() {
             color: '#000000',
             margin: '0 0 20px 0'
           }}>
-            Profile
+            Create Your Account
           </h2>
 
-          {/* Discord user info */}
-          {discordConnected && user && (
-            <div style={{
-              background: '#F0FDF4',
-              border: '1px solid #22C55E',
-              borderRadius: '6px',
-              padding: '12px',
-              marginBottom: '20px',
-              fontSize: '14px',
-              color: '#15803D'
-            }}>
-              <strong>✓ Discord Connected!</strong> Complete your profile below to finish setting up your account.
-            </div>
-          )}
-
-          {error && (
-            <div style={{
-              background: '#FEE2E2',
-              border: '1px solid #EF4444',
-              borderRadius: '6px',
-              padding: '12px',
-              marginBottom: '20px',
-              color: '#B91C1C',
-              fontSize: '14px'
-            }}>
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSignup}>
+          {/* Email/Password Form */}
+          <form onSubmit={handleSignup} style={{ marginBottom: '20px' }}>
             <div style={{ marginBottom: '15px' }}>
               <input
-                type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="Full Name"
+                placeholder="Email"
                 style={{
                   width: '100%',
-                  padding: '12px',
+                  padding: '16px',
                   border: '1px solid #D1D5DB',
                   borderRadius: '6px',
                   background: '#E0F7FA',
@@ -1006,16 +627,16 @@ export default function SignupPage() {
               />
             </div>
 
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '15px' }}>
               <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
-                placeholder="Username"
+                placeholder="Password"
                 style={{
                   width: '100%',
-                  padding: '12px',
+                  padding: '16px',
                   border: '1px solid #D1D5DB',
                   borderRadius: '6px',
                   background: '#E0F7FA',
@@ -1028,13 +649,14 @@ export default function SignupPage() {
 
             <div style={{ marginBottom: '20px' }}>
               <input
-                type="text"
-                value={school}
-                onChange={(e) => setSchool(e.target.value)}
-                placeholder="School"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                placeholder="Confirm password"
                 style={{
                   width: '100%',
-                  padding: '12px',
+                  padding: '16px',
                   border: '1px solid #D1D5DB',
                   borderRadius: '6px',
                   background: '#E0F7FA',
@@ -1045,299 +667,30 @@ export default function SignupPage() {
               />
             </div>
 
-            <div style={{ marginBottom: '20px' }}>
-              <input
-                type="text"
-                value={rankInSchool}
-                onChange={(e) => setRankInSchool(e.target.value)}
-                placeholder="Your rank in your school"
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  border: '1px solid #D1D5DB',
-                  borderRadius: '6px',
-                  background: '#E0F7FA',
-                  fontSize: '16px',
-                  outline: 'none',
-                  boxSizing: 'border-box'
-                }}
-              />
-            </div>
-
-            {/* GCSE Grades */}
-            <div style={{ marginBottom: '20px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                <h3 style={{
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '16px',
-                  fontWeight: '700',
-                  margin: '0',
-                  color: '#000000'
-                }}>
-                  GCSE GRADES
-                </h3>
-                <span style={{ fontSize: '12px', color: '#666666' }}>Optional</span>
-              </div>
-
-              {gcseSubjects.map((subject, index) => (
-                <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-                  <select
-                    value={subject.subject}
-                    onChange={(e) => updateGcseSubject(index, 'subject', e.target.value)}
-                    style={{
-                      flex: '1',
-                      padding: '8px',
-                      border: '1px solid #D1D5DB',
-                      borderRadius: '6px',
-                      background: '#FFFFFF',
-                      fontSize: '14px'
-                    }}
-                  >
-                    <option value="">Select Subject</option>
-                    <option value="Maths">Maths</option>
-                    <option value="English">English</option>
-                    <option value="Science">Science</option>
-                    <option value="History">History</option>
-                    <option value="Geography">Geography</option>
-                  </select>
-                  <select
-                    value={subject.grade}
-                    onChange={(e) => updateGcseSubject(index, 'grade', e.target.value)}
-                    style={{
-                      width: '80px',
-                      padding: '8px',
-                      border: '1px solid #D1D5DB',
-                      borderRadius: '6px',
-                      background: '#FFFFFF',
-                      fontSize: '14px'
-                    }}
-                  >
-                    <option value="">Grade</option>
-                    <option value="9">9</option>
-                    <option value="8">8</option>
-                    <option value="7">7</option>
-                    <option value="6">6</option>
-                    <option value="5">5</option>
-                    <option value="4">4</option>
-                  </select>
-                </div>
-              ))}
-
-              <button
-                type="button"
-                onClick={addGcseSubject}
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  background: '#FFFFFF',
-                  border: '2px dashed #D1D5DB',
-                  borderRadius: '6px',
-                  fontSize: '14px',
-                  color: '#666666',
-                  cursor: 'pointer'
-                }}
-              >
-                + Add GCSE Subject
-              </button>
-            </div>
-
-            {/* A Level Grades */}
-            <div style={{ marginBottom: '20px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                <h3 style={{
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '16px',
-                  fontWeight: '700',
-                  margin: '0',
-                  color: '#000000'
-                }}>
-                  A LEVEL GRADES
-                </h3>
-                <span style={{ fontSize: '12px', color: '#666666' }}>Optional</span>
-              </div>
-
-              {aLevelSubjects.map((subject, index) => (
-                <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-                  <select
-                    value={subject.subject}
-                    onChange={(e) => updateALevelSubject(index, 'subject', e.target.value)}
-                    style={{
-                      flex: '1',
-                      padding: '8px',
-                      border: '1px solid #D1D5DB',
-                      borderRadius: '6px',
-                      background: '#FFFFFF',
-                      fontSize: '14px'
-                    }}
-                  >
-                    <option value="">Select Subject</option>
-                    <option value="Maths">Maths</option>
-                    <option value="Physics">Physics</option>
-                    <option value="Chemistry">Chemistry</option>
-                    <option value="Biology">Biology</option>
-                    <option value="English Literature">English Literature</option>
-                  </select>
-                  <select
-                    value={subject.grade}
-                    onChange={(e) => updateALevelSubject(index, 'grade', e.target.value)}
-                    style={{
-                      width: '80px',
-                      padding: '8px',
-                      border: '1px solid #D1D5DB',
-                      borderRadius: '6px',
-                      background: '#FFFFFF',
-                      fontSize: '14px'
-                    }}
-                  >
-                    <option value="">Grade</option>
-                    <option value="A*">A*</option>
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="C">C</option>
-                    <option value="D">D</option>
-                  </select>
-                </div>
-              ))}
-
-              <button
-                type="button"
-                onClick={addALevelSubject}
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  background: '#FFFFFF',
-                  border: '2px dashed #D1D5DB',
-                  borderRadius: '6px',
-                  fontSize: '14px',
-                  color: '#666666',
-                  cursor: 'pointer'
-                }}
-              >
-                + Add A Level Subject
-              </button>
-            </div>
-          </form>
-        </div>
-
-        {/* Right column - Sign-up Details */}
-        <div>
-          <h2 style={{
-            fontFamily: "'Figtree', sans-serif",
-            fontSize: '20px',
-            fontWeight: '700',
-            color: '#000000',
-            margin: '0 0 15px 0'
-          }}>
-            {user ? 'Account Connected' : 'Sign-up Details'}
-          </h2>
-
-          {/* Show different content based on authentication status */}
-          {user ? (
-            // User is already authenticated (Discord)
-            <div>
-              <div style={{
-                background: '#F0FDF4',
-                border: '1px solid #22C55E',
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                width: '100%',
+                padding: '16px',
+                background: loading ? '#9CA3AF' : '#4338CA',
+                color: '#FFFFFF',
+                border: 'none',
                 borderRadius: '6px',
-                padding: '20px',
-                textAlign: 'center',
+                fontSize: '16px',
+                fontWeight: '600',
+                cursor: loading ? 'not-allowed' : 'pointer',
                 marginBottom: '20px'
-              }}>
-                <div style={{ fontSize: '48px', marginBottom: '16px' }}>✓</div>
-                <h3 style={{
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '18px',
-                  fontWeight: '600',
-                  color: '#15803D',
-                  margin: '0 0 8px 0'
-                }}>
-                  Account Connected!
-                </h3>
-                <p style={{
-                  fontFamily: "'Figtree', sans-serif",
-                  fontSize: '14px',
-                  color: '#16A34A',
-                  margin: '0 0 16px 0'
-                }}>
-                  Your Discord account is connected. Complete the profile form on the left to finish setup.
-                </p>
-                <div style={{
-                  fontSize: '12px',
-                  color: '#15803D',
-                  fontWeight: '500'
-                }}>
-                  Email: {user.email}
-                </div>
-              </div>
-            </div>
-          ) : (
-            // User needs to sign up or sign in
-            <div>
-
-          <div style={{ marginBottom: '15px' }}>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="Email"
-              style={{
-                width: '100%',
-                padding: '16px',
-                border: '1px solid #D1D5DB',
-                borderRadius: '6px',
-                background: '#E0F7FA',
-                fontSize: '16px',
-                outline: 'none',
-                boxSizing: 'border-box'
               }}
-            />
-          </div>
-
-          <div style={{ marginBottom: '15px' }}>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="Password"
-              style={{
-                width: '100%',
-                padding: '16px',
-                border: '1px solid #D1D5DB',
-                borderRadius: '6px',
-                background: '#E0F7FA',
-                fontSize: '16px',
-                outline: 'none',
-                boxSizing: 'border-box'
-              }}
-            />
-          </div>
-
-          <div style={{ marginBottom: '20px' }}>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              placeholder="Confirm password"
-              style={{
-                width: '100%',
-                padding: '16px',
-                border: '1px solid #D1D5DB',
-                borderRadius: '6px',
-                background: '#E0F7FA',
-                fontSize: '16px',
-                outline: 'none',
-                boxSizing: 'border-box'
-              }}
-            />
-          </div>
+            >
+              {loading ? 'Creating Account...' : 'Create Account'}
+            </button>
+          </form>
 
           {/* Or divider */}
           <div style={{
             textAlign: 'center',
-            margin: '15px 0',
+            margin: '20px 0',
             fontSize: '16px',
             fontWeight: '600',
             color: '#000000'
@@ -1401,81 +754,706 @@ export default function SignupPage() {
               Gmail Sign Up
             </button>
           </div>
-          </div>
-          )}
-
-          {/* Info box */}
-          <div style={{
-            background: '#F3E8FF',
-            borderRadius: '8px',
-            padding: '15px',
-            marginBottom: '20px'
-          }}>
-            <h3 style={{
-              fontFamily: "'Figtree', sans-serif",
-              fontSize: '16px',
-              fontWeight: '700',
-              margin: '0 0 8px 0',
-              color: '#000000'
-            }}>
-              Why do we ask for your grades?
-            </h3>
-            <p style={{
-              fontSize: '12px',
-              color: '#666666',
-              margin: '0 0 10px 0',
-              lineHeight: '1.4'
-            }}>
-              We use your GCSE and predicted A Level grades to personalize your learning experience, recommend suitable content, and track your progress toward your target grades.
-            </p>
-            <p style={{
-              fontSize: '12px',
-              color: '#666666',
-              margin: '0',
-              lineHeight: '1.4'
-            }}>
-              You can skip this and add them later in your profile.
-            </p>
-          </div>
 
           {/* Error message */}
           {error && (
             <div style={{
               color: '#EF4444',
               fontSize: '14px',
-              marginBottom: '10px'
+              marginBottom: '20px',
+              textAlign: 'center'
             }}>
-              error - {error}
+              {error}
             </div>
           )}
 
-          {/* Confirm button - positioned bottom right */}
+          {/* Next Step button - positioned bottom right */}
           <button
-            onClick={handleSignup}
-            disabled={loading}
+            onClick={handleNextStep}
             style={{
               position: 'absolute',
               bottom: '20px',
               right: '40px',
               padding: '12px 30px',
-              background: loading ? '#9CA3AF' : '#E7E6FF',
-              color: loading ? '#FFFFFF' : '#4338CA',
-              border: loading ? 'none' : '1px solid #4338CA',
+              background: '#E7E6FF',
+              color: '#4338CA',
+              border: '1px solid #4338CA',
               borderRadius: '8px',
+              fontFamily: "'Figtree', sans-serif",
               fontSize: '16px',
               fontWeight: '600',
-              cursor: loading ? 'not-allowed' : 'pointer',
+              cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               gap: '8px'
             }}
           >
-            <span style={{ fontSize: '18px' }}>✓</span>
-            {loading ? (user ? 'Updating...' : 'Creating...') : (user ? 'Complete Setup' : 'Confirm')}
+            Next Step
+            <span style={{ fontSize: '18px' }}>→</span>
           </button>
         </div>
       </div>
-    </div>
+      </>
+    );
+  }
+
+  // Step 2 - Discord Community (Optional)
+  return (
+    <>
+      <Navbar />
+      <div style={{
+        minHeight: '100vh',
+        background: '#FFFFFF',
+        fontFamily: "'Figtree', sans-serif",
+        paddingTop: '60px'
+      }}>
+        {/* Success/Error Messages */}
+        {(successMessage || error) && (
+          <div style={{
+            position: 'fixed',
+            top: '80px',
+            right: '20px',
+            zIndex: 1000,
+            maxWidth: '400px',
+            padding: '16px 20px',
+            borderRadius: '8px',
+            backgroundColor: successMessage ? '#F0FDF4' : '#FEE2E2',
+            border: `1px solid ${successMessage ? '#22C55E' : '#F87171'}`,
+            borderLeft: `4px solid ${successMessage ? '#16A34A' : '#EF4444'}`,
+            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+            animation: 'slideInFromRight 0.3s ease-out'
+          }}>
+            <div style={{
+              fontFamily: "'Figtree', sans-serif",
+              fontSize: '14px',
+              color: successMessage ? '#15803D' : '#B91C1C',
+              fontWeight: '500'
+            }}>
+              {successMessage || error}
+            </div>
+          </div>
+        )}
+
+        {/* Header */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '30px 40px',
+          borderBottom: '1px solid #E5E7EB'
+        }}>
+          <h1 style={{
+            fontFamily: "'Figtree', sans-serif",
+            fontSize: '32px',
+            fontWeight: '700',
+            color: '#000000',
+            margin: '0'
+          }}>
+            SIGN UP
+          </h1>
+          
+          {/* Steps indicator */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '20px',
+            fontFamily: "'Figtree', sans-serif",
+            fontSize: '16px',
+            color: '#666666'
+          }}>
+            <span>Step 2 of 2</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                background: '#00CED1',
+                color: '#FFFFFF',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: '700',
+                fontSize: '18px'
+              }}>
+                1
+              </div>
+              <div style={{
+                width: '40px',
+                height: '2px',
+                background: '#00CED1'
+              }}></div>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                background: '#00CED1',
+                color: '#FFFFFF',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: '700',
+                fontSize: '18px'
+              }}>
+                2
+              </div>
+              <img 
+                src="/icons/rollerskating.svg" 
+                alt="Ghost" 
+                style={{
+                  width: '50px',
+                  height: '50px',
+                  marginLeft: '10px'
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Main content */}
+        <div style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          padding: '20px',
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '40px',
+          minHeight: 'calc(100vh - 140px)'
+        }}>
+          {/* Left column - Profile Form */}
+          <div>
+            <h2 style={{
+              fontFamily: "'Figtree', sans-serif",
+              fontSize: '24px',
+              fontWeight: '700',
+              color: '#000000',
+              margin: '0 0 20px 0'
+            }}>
+              Complete Your Profile
+            </h2>
+
+            <form onSubmit={handleSignup}>
+              <div style={{ marginBottom: '15px' }}>
+                <input
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required
+                  placeholder="Full Name"
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '1px solid #D1D5DB',
+                    borderRadius: '6px',
+                    background: '#E0F7FA',
+                    fontSize: '16px',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              <div style={{ marginBottom: '20px' }}>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  placeholder="Username"
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '1px solid #D1D5DB',
+                    borderRadius: '6px',
+                    background: '#E0F7FA',
+                    fontSize: '16px',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              <div style={{ marginBottom: '20px' }}>
+                <input
+                  type="text"
+                  value={school}
+                  onChange={(e) => setSchool(e.target.value)}
+                  placeholder="School (Optional)"
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '1px solid #D1D5DB',
+                    borderRadius: '6px',
+                    background: '#E0F7FA',
+                    fontSize: '16px',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              <div style={{ marginBottom: '20px' }}>
+                <input
+                  type="text"
+                  value={rankInSchool}
+                  onChange={(e) => setRankInSchool(e.target.value)}
+                  placeholder="Your rank in your school (Optional)"
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '1px solid #D1D5DB',
+                    borderRadius: '6px',
+                    background: '#E0F7FA',
+                    fontSize: '16px',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              {/* GCSE Grades */}
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                  <h3 style={{
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '16px',
+                    fontWeight: '700',
+                    margin: '0',
+                    color: '#000000'
+                  }}>
+                    GCSE GRADES
+                  </h3>
+                  <span style={{ fontSize: '12px', color: '#666666' }}>Optional</span>
+                </div>
+
+                {gcseSubjects.map((subject, index) => (
+                  <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                    <select
+                      value={subject.subject}
+                      onChange={(e) => updateGcseSubject(index, 'subject', e.target.value)}
+                      style={{
+                        flex: '1',
+                        padding: '8px',
+                        border: '1px solid #D1D5DB',
+                        borderRadius: '6px',
+                        background: '#FFFFFF',
+                        fontSize: '14px'
+                      }}
+                    >
+                      <option value="">Select Subject</option>
+                      <option value="Maths">Maths</option>
+                      <option value="English">English</option>
+                      <option value="Science">Science</option>
+                      <option value="History">History</option>
+                      <option value="Geography">Geography</option>
+                    </select>
+                    <select
+                      value={subject.grade}
+                      onChange={(e) => updateGcseSubject(index, 'grade', e.target.value)}
+                      style={{
+                        width: '80px',
+                        padding: '8px',
+                        border: '1px solid #D1D5DB',
+                        borderRadius: '6px',
+                        background: '#FFFFFF',
+                        fontSize: '14px'
+                      }}
+                    >
+                      <option value="">Grade</option>
+                      <option value="9">9</option>
+                      <option value="8">8</option>
+                      <option value="7">7</option>
+                      <option value="6">6</option>
+                      <option value="5">5</option>
+                      <option value="4">4</option>
+                    </select>
+                  </div>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={addGcseSubject}
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    background: '#FFFFFF',
+                    border: '2px dashed #D1D5DB',
+                    borderRadius: '6px',
+                    fontSize: '14px',
+                    color: '#666666',
+                    cursor: 'pointer'
+                  }}
+                >
+                  + Add GCSE Subject
+                </button>
+              </div>
+
+              {/* A Level Grades */}
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                  <h3 style={{
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '16px',
+                    fontWeight: '700',
+                    margin: '0',
+                    color: '#000000'
+                  }}>
+                    A LEVEL GRADES
+                  </h3>
+                  <span style={{ fontSize: '12px', color: '#666666' }}>Optional</span>
+                </div>
+
+                {aLevelSubjects.map((subject, index) => (
+                  <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                    <select
+                      value={subject.subject}
+                      onChange={(e) => updateALevelSubject(index, 'subject', e.target.value)}
+                      style={{
+                        flex: '1',
+                        padding: '8px',
+                        border: '1px solid #D1D5DB',
+                        borderRadius: '6px',
+                        background: '#FFFFFF',
+                        fontSize: '14px'
+                      }}
+                    >
+                      <option value="">Select Subject</option>
+                      <option value="Maths">Maths</option>
+                      <option value="Physics">Physics</option>
+                      <option value="Chemistry">Chemistry</option>
+                      <option value="Biology">Biology</option>
+                      <option value="English Literature">English Literature</option>
+                    </select>
+                    <select
+                      value={subject.grade}
+                      onChange={(e) => updateALevelSubject(index, 'grade', e.target.value)}
+                      style={{
+                        width: '80px',
+                        padding: '8px',
+                        border: '1px solid #D1D5DB',
+                        borderRadius: '6px',
+                        background: '#FFFFFF',
+                        fontSize: '14px'
+                      }}
+                    >
+                      <option value="">Grade</option>
+                      <option value="A*">A*</option>
+                      <option value="A">A</option>
+                      <option value="B">B</option>
+                      <option value="C">C</option>
+                      <option value="D">D</option>
+                    </select>
+                  </div>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={addALevelSubject}
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    background: '#FFFFFF',
+                    border: '2px dashed #D1D5DB',
+                    borderRadius: '6px',
+                    fontSize: '14px',
+                    color: '#666666',
+                    cursor: 'pointer'
+                  }}
+                >
+                  + Add A Level Subject
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Right column - Discord Community */}
+          <div>
+            <h2 style={{
+              fontFamily: "'Figtree', sans-serif",
+              fontSize: '24px',
+              fontWeight: '700',
+              color: '#000000',
+              margin: '0 0 15px 0'
+            }}>
+              Join the Community! (Optional)
+            </h2>
+            
+            <p style={{
+              fontFamily: "'Figtree', sans-serif",
+              fontSize: '16px',
+              color: '#666666',
+              margin: '0 0 30px 0',
+              lineHeight: '1.5'
+            }}>
+              Connect with other students, get help, and join workshops. You can skip this and add Discord later.
+            </p>
+
+            {/* Discord connection status */}
+            {user && userProfile?.discord_id ? (
+              <div style={{
+                background: '#F0FDF4',
+                border: '1px solid #22C55E',
+                borderRadius: '8px',
+                padding: '20px',
+                textAlign: 'center',
+                marginBottom: '30px'
+              }}>
+                <div style={{ fontSize: '48px', marginBottom: '16px' }}>✓</div>
+                <h3 style={{
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '18px',
+                  fontWeight: '600',
+                  color: '#15803D',
+                  margin: '0 0 8px 0'
+                }}>
+                  Discord Connected!
+                </h3>
+                <p style={{
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  color: '#16A34A',
+                  margin: '0'
+                }}>
+                  You're all set to join the community discussions.
+                </p>
+              </div>
+            ) : (
+              <div style={{
+                display: 'flex',
+                gap: '15px',
+                justifyContent: 'center',
+                marginBottom: '30px'
+              }}>
+                <button
+                  onClick={handleDiscordConnect}
+                  disabled={loading || discordConnected}
+                  style={{
+                    padding: '12px 24px',
+                    background: discordConnected ? '#16A34A' : (loading ? '#9CA3AF' : '#00CED1'),
+                    color: '#FFFFFF',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontFamily: "'Figtree', sans-serif",
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    cursor: (loading || discordConnected) ? 'not-allowed' : 'pointer',
+                    opacity: (loading || discordConnected) ? 0.8 : 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  {discordConnected ? '✓ Discord Connected' : (loading ? 'Connecting...' : 'Connect Discord')}
+                </button>
+              </div>
+            )}
+
+            {/* Feature cards */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '15px',
+              marginBottom: '30px'
+            }}>
+              {/* Subject Communities */}
+              <div style={{
+                background: '#E0F7FA',
+                borderRadius: '8px',
+                padding: '20px',
+                textAlign: 'center'
+              }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  margin: '0 auto 10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <img 
+                    src="/icons/cowboy-guitar.svg" 
+                    alt="Subject Communities" 
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain'
+                    }}
+                  />
+                </div>
+                <h3 style={{
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  fontWeight: '700',
+                  color: '#000000',
+                  margin: '0 0 5px 0'
+                }}>
+                  Subject Communities
+                </h3>
+                <p style={{
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '11px',
+                  color: '#666666',
+                  margin: '0',
+                  lineHeight: '1.3'
+                }}>
+                  Find students with the same subjects
+                </p>
+              </div>
+
+              {/* Interview Practice */}
+              <div style={{
+                background: '#E0F7FA',
+                borderRadius: '8px',
+                padding: '20px',
+                textAlign: 'center'
+              }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  margin: '0 auto 10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <img 
+                    src="/icons/ghost-karaoke.svg" 
+                    alt="Interview Practice" 
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain'
+                    }}
+                  />
+                </div>
+                <h3 style={{
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  fontWeight: '700',
+                  color: '#000000',
+                  margin: '0 0 5px 0'
+                }}>
+                  Interview Practice
+                </h3>
+                <p style={{
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '11px',
+                  color: '#666666',
+                  margin: '0',
+                  lineHeight: '1.3'
+                }}>
+                  Get teacher feedback
+                </p>
+              </div>
+
+              {/* Live Workshops */}
+              <div style={{
+                background: '#E0F7FA',
+                borderRadius: '8px',
+                padding: '20px',
+                textAlign: 'center'
+              }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  margin: '0 auto 10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <img 
+                    src="/icons/biking.svg" 
+                    alt="Live Workshops" 
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain'
+                    }}
+                  />
+                </div>
+                <h3 style={{
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  fontWeight: '700',
+                  color: '#000000',
+                  margin: '0 0 5px 0'
+                }}>
+                  Live Workshops
+                </h3>
+                <p style={{
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '11px',
+                  color: '#666666',
+                  margin: '0',
+                  lineHeight: '1.3'
+                }}>
+                  Join workshops and events
+                </p>
+              </div>
+
+              {/* Help */}
+              <div style={{
+                background: '#E0F7FA',
+                borderRadius: '8px',
+                padding: '20px',
+                textAlign: 'center'
+              }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  margin: '0 auto 10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <span style={{ fontSize: '24px' }}>💬</span>
+                </div>
+                <h3 style={{
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  fontWeight: '700',
+                  color: '#000000',
+                  margin: '0 0 5px 0'
+                }}>
+                  Get Help
+                </h3>
+                <p style={{
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '11px',
+                  color: '#666666',
+                  margin: '0',
+                  lineHeight: '1.3'
+                }}>
+                  @ teachers anytime
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Complete Setup button - positioned bottom right */}
+        <button
+          onClick={handleSignup}
+          disabled={loading}
+          style={{
+            position: 'absolute',
+            bottom: '20px',
+            right: '40px',
+            padding: '12px 30px',
+            background: loading ? '#9CA3AF' : '#4338CA',
+            color: '#FFFFFF',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '16px',
+            fontWeight: '600',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}
+        >
+          <span style={{ fontSize: '18px' }}>✓</span>
+          {loading ? 'Completing Setup...' : 'Complete Setup'}
+        </button>
+      </div>
     </>
   );
 }
