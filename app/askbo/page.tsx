@@ -933,34 +933,61 @@ export default function StudyBookPage() {
         return;
       }
 
-      // Original upload logic for new materials
-      if (!materialForm.file) {
-        alert('Please select a file to upload');
+      // Check if at least some content is provided
+      if (!materialForm.title && !materialForm.description && !materialForm.main_arguments && 
+          !materialForm.conclusions && !materialForm.sources && !materialForm.methodology && !materialForm.file) {
+        alert('Please provide at least some content (title, description, or other fields)');
         return;
       }
 
-      // Create FormData with file AND metadata
-      const formData = new FormData();
-      formData.append('file', materialForm.file);
-      formData.append('category', materialForm.category || '');
-      formData.append('title', materialForm.title || '');
-      formData.append('description', materialForm.description || '');
-      formData.append('main_arguments', materialForm.main_arguments || '');
-      formData.append('conclusions', materialForm.conclusions || '');
-      formData.append('sources', materialForm.sources || '');
-      formData.append('methodology', materialForm.methodology || '');
-      formData.append('completion_date', materialForm.completion_date || '');
-      
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`
-        },
-        body: formData
-      });
+      if (materialForm.file) {
+        // If file is provided, use the upload API
+        const formData = new FormData();
+        formData.append('file', materialForm.file);
+        formData.append('category', materialForm.category || '');
+        formData.append('title', materialForm.title || '');
+        formData.append('description', materialForm.description || '');
+        formData.append('main_arguments', materialForm.main_arguments || '');
+        formData.append('conclusions', materialForm.conclusions || '');
+        formData.append('sources', materialForm.sources || '');
+        formData.append('methodology', materialForm.methodology || '');
+        formData.append('completion_date', materialForm.completion_date || '');
+        
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`
+          },
+          body: formData
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to upload file');
+        if (!response.ok) {
+          throw new Error('Failed to upload file');
+        }
+      } else {
+        // If no file, save directly to database
+        const { error } = await supabase
+          .from('user_uploads')
+          .insert({
+            user_id: session.user.id,
+            category: materialForm.category || null,
+            title: materialForm.title || 'Untitled Material',
+            description: materialForm.description || '',
+            main_arguments: materialForm.main_arguments || '',
+            conclusions: materialForm.conclusions || '',
+            sources: materialForm.sources || '',
+            methodology: materialForm.methodology || '',
+            completion_date: materialForm.completion_date || '',
+            file_name: 'No file attached',
+            file_type: 'text/plain',
+            file_path: null
+          });
+
+        if (error) {
+          console.error('Error saving material:', error);
+          alert('Failed to save material');
+          return;
+        }
       }
 
       await loadUploadedFiles();
@@ -1622,7 +1649,7 @@ export default function StudyBookPage() {
               
               {!editingMaterialId && (
                 <div className="form-group">
-                  <label style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>File</label>
+                  <label style={{ fontFamily: "'Figtree', sans-serif", letterSpacing: '0.04em' }}>File (Optional)</label>
                   <div style={{ position: 'relative' }}>
                     <input 
                       type="file"
@@ -1646,7 +1673,7 @@ export default function StudyBookPage() {
                       cursor: 'pointer',
                       color: materialForm.file ? '#000000' : '#666666'
                     }}>
-                      {materialForm.file ? materialForm.file.name : 'Add your material here'}
+                      {materialForm.file ? materialForm.file.name : 'Add a file (optional) or leave blank'}
                     </div>
                   </div>
                 </div>

@@ -800,7 +800,7 @@ export default function SignupPage() {
             onClick={handleNextStep}
             style={{
               position: 'absolute',
-              bottom: '-48px',
+              bottom: '-43px',
               right: '40px',
               padding: '12px 30px',
               background: '#E7E6FF',
