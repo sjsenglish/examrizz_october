@@ -267,8 +267,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
 
       // Check if user is authenticated with Discord/Google (sufficient for submission)
       const provider = user.app_metadata?.provider;
-      const hasDiscordAuth = user.identities?.find(identity => identity.provider === 'discord');
-      const hasGoogleAuth = user.identities?.find(identity => identity.provider === 'google');
+      const hasDiscordAuth = user.identities?.find((identity: any) => identity.provider === 'discord');
+      const hasGoogleAuth = user.identities?.find((identity: any) => identity.provider === 'google');
       
       if (!hasDiscordAuth && !hasGoogleAuth && (!userProfile.discord_id)) {
         // No OAuth provider and no Discord linked - need to link Discord
@@ -312,7 +312,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
             .eq('id', user.id);
             
           // Update local state
-          setUserProfile(prev => ({ ...prev, ...discordData }));
+          setUserProfile((prev: any) => ({ ...prev, ...discordData }));
         } catch (error) {
           console.error('Failed to update Discord profile data:', error);
         }
@@ -462,8 +462,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     if (!userProfile) return 'Loading profile information...';
     
     // Check if user has any OAuth authentication
-    const hasDiscordAuth = user?.identities?.find(identity => identity.provider === 'discord');
-    const hasGoogleAuth = user?.identities?.find(identity => identity.provider === 'google');
+    const hasDiscordAuth = user?.identities?.find((identity: any) => identity.provider === 'discord');
+    const hasGoogleAuth = user?.identities?.find((identity: any) => identity.provider === 'google');
     
     if (!hasDiscordAuth && !hasGoogleAuth && !userProfile.discord_id) {
       return 'Click to link Discord account for answer submission';

@@ -684,7 +684,7 @@ export default function StudyBookPage() {
     if (!user) return false;
 
     // Check if user has Discord identity linked
-    const discordIdentity = user.identities?.find(identity => identity.provider === 'discord');
+    const discordIdentity = user.identities?.find((identity: any) => identity.provider === 'discord');
     return !!discordIdentity;
   };
 
