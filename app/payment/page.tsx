@@ -34,7 +34,13 @@ function PaymentContent() {
       await upgrade(priceId, tier);
     } catch (error) {
       console.error('Upgrade failed:', error);
-      setMessage('Failed to start upgrade process. Please try again.');
+      
+      if (error instanceof Error && error.message === 'SIGN_IN_REQUIRED') {
+        setMessage('Please sign in to your account first to upgrade your plan. Click here to go to the login page.');
+      } else {
+        setMessage('Failed to start upgrade process. Please try again.');
+      }
+      
       setUpgrading(null);
     }
   };
@@ -133,14 +139,57 @@ function PaymentContent() {
           {/* Message Display */}
           {message && (
             <div className="message-banner" style={{
-              padding: '16px',
+              padding: '16px 20px',
               marginBottom: '24px',
-              backgroundColor: message.includes('Failed') || message.includes('canceled') ? '#fee' : '#efe',
-              border: `1px solid ${message.includes('Failed') || message.includes('canceled') ? '#fcc' : '#cfc'}`,
+              backgroundColor: message.includes('sign in') ? '#F0F9FF' : 
+                              message.includes('Failed') || message.includes('canceled') ? '#FEF2F2' : '#F0FDF4',
+              border: `1px solid ${message.includes('sign in') ? '#0EA5E9' : 
+                                  message.includes('Failed') || message.includes('canceled') ? '#F87171' : '#22C55E'}`,
+              borderLeft: `4px solid ${message.includes('sign in') ? '#0EA5E9' : 
+                                      message.includes('Failed') || message.includes('canceled') ? '#EF4444' : '#16A34A'}`,
               borderRadius: '8px',
-              textAlign: 'center'
+              textAlign: 'center',
+              fontFamily: "'Figtree', sans-serif",
+              fontSize: '14px',
+              color: message.includes('sign in') ? '#0C4A6E' : 
+                     message.includes('Failed') || message.includes('canceled') ? '#B91C1C' : '#15803D',
+              fontWeight: '500',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
             }}>
-              {message}
+              {message.includes('sign in') && (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '16px' }}>🔐</span>
+                    <span>Please sign in to your account first to upgrade your plan.</span>
+                  </div>
+                  <Link 
+                    href="/login"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '8px 16px',
+                      backgroundColor: '#0EA5E9',
+                      color: 'white',
+                      textDecoration: 'none',
+                      borderRadius: '6px',
+                      fontSize: '13px',
+                      fontWeight: '600',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#0284C7';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#0EA5E9';
+                    }}
+                  >
+                    <span>👤</span>
+                    Sign In Now
+                  </Link>
+                </div>
+              )}
+              {!message.includes('sign in') && message}
             </div>
           )}
 

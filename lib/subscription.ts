@@ -86,7 +86,7 @@ export async function createCheckoutSession(
     const { data: { user } } = await supabase.auth.getUser();
     
     if (!user) {
-      throw new Error('User must be authenticated');
+      throw new Error('SIGN_IN_REQUIRED');
     }
 
     const response = await fetch('/api/subscriptions/create-checkout', {

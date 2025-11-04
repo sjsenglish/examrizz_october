@@ -23,6 +23,11 @@ export function SubscriptionTest() {
       await upgrade(priceId, 'plus');
     } catch (err) {
       console.error('Test upgrade failed:', err);
+      if (err instanceof Error && err.message === 'SIGN_IN_REQUIRED') {
+        alert('Please sign in to your account first to upgrade your plan.');
+      } else {
+        alert('Upgrade failed. Please try again.');
+      }
     }
   };
 
