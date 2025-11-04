@@ -268,7 +268,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       const hasDiscordAuth = user.identities?.find((identity: any) => identity.provider === 'discord');
       const hasGoogleAuth = user.identities?.find((identity: any) => identity.provider === 'google');
       
-      if (!hasDiscordAuth && !hasGoogleAuth && (!userProfile.discord_id)) {
+      if (!hasDiscordAuth && !hasGoogleAuth && (!userProfile?.discord_id)) {
         // No OAuth provider and no Discord linked - need to link Discord
         try {
           // Use linkIdentity to add Discord to existing account without signing out
@@ -527,7 +527,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     const hasDiscordAuth = user?.identities?.find((identity: any) => identity.provider === 'discord');
     const hasGoogleAuth = user?.identities?.find((identity: any) => identity.provider === 'google');
     
-    if (!hasDiscordAuth && !hasGoogleAuth && !userProfile.discord_id) {
+    if (!hasDiscordAuth && !hasGoogleAuth && !userProfile?.discord_id) {
       return 'Click to link Discord account for answer submission';
     }
     
@@ -815,12 +815,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
               variant="secondary" 
               size="md"
               onClick={handleSubmitAnswer}
-              disabled={!user || !userProfile || (userProfile?.discord_id && (!featureUsage || !featureUsage.submit_answer.allowed))}
+              disabled={!user || !userProfile || (!!userProfile?.discord_id && (!featureUsage || !featureUsage.submit_answer.allowed))}
               style={{ 
-                backgroundColor: (!user || !userProfile || (userProfile?.discord_id && (!featureUsage || !featureUsage.submit_answer.allowed))) ? '#9CA3AF' : '#5865F2', 
+                backgroundColor: (!user || !userProfile || (!!userProfile?.discord_id && (!featureUsage || !featureUsage.submit_answer.allowed))) ? '#9CA3AF' : '#5865F2', 
                 color: 'white',
-                opacity: (!user || !userProfile || (userProfile?.discord_id && (!featureUsage || !featureUsage.submit_answer.allowed))) ? 0.6 : 1,
-                cursor: (!user || !userProfile || (userProfile?.discord_id && (!featureUsage || !featureUsage.submit_answer.allowed))) ? 'not-allowed' : 'pointer'
+                opacity: (!user || !userProfile || (!!userProfile?.discord_id && (!featureUsage || !featureUsage.submit_answer.allowed))) ? 0.6 : 1,
+                cursor: (!user || !userProfile || (!!userProfile?.discord_id && (!featureUsage || !featureUsage.submit_answer.allowed))) ? 'not-allowed' : 'pointer'
               }}
             >
               Submit Answer
