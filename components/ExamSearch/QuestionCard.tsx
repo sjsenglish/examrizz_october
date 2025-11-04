@@ -50,7 +50,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     tier: string;
   } | null>(null);
   const [user, setUser] = useState<any>(null);
-  const { profile: userProfile } = useProfile();
+  const { profile: userProfile, refreshProfile } = useProfile();
   
   // Tooltip state
   const [showSubmitTooltip, setShowSubmitTooltip] = useState(false);
@@ -293,19 +293,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       }
       
       // Refresh profile data to get latest Discord info (handled by ensureUserProfile)
-      if (hasDiscordAuth && !userProfile.discord_id) {
-        // Profile should be automatically updated by ensureUserProfile, but refresh local state
-        const { data: { user: currentUser } } = await supabase.auth.getUser();
-        if (currentUser) {
-          const { data: refreshedProfile } = await supabase
-            .from('user_profiles')
-            .select('*')
-            .eq('id', currentUser.id)
-            .single();
-          
-          if (refreshedProfile) {
-            setUserProfile(refreshedProfile);
-          }
+      if (hasDiscordAuth && !userProfile?.discord_id) {
+        // Refresh profile through context to get latest Discord info
+        try {
+          await refreshProfile();
+        } catch (error) {
+          console.error('Error refreshing profile after Discord auth:', error);
         }
       }
 
