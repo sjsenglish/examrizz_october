@@ -355,9 +355,14 @@ function PaymentContent() {
               <button 
                 className="plan-button trial"
                 disabled={currentTier === 'free'}
-                style={{ opacity: currentTier === 'free' ? 0.5 : 1 }}
+                style={{ 
+                  opacity: currentTier === 'free' ? 0.8 : 1,
+                  cursor: currentTier === 'free' ? 'not-allowed' : 'pointer',
+                  backgroundColor: currentTier === 'free' ? '#16A34A' : undefined,
+                  color: currentTier === 'free' ? 'white' : undefined
+                }}
               >
-                {currentTier === 'free' ? 'Current Plan' : 'Downgrade to Free'}
+                {currentTier === 'free' ? '✓ Current Plan' : 'Downgrade to Free'}
               </button>
             </div>
 
@@ -379,12 +384,17 @@ function PaymentContent() {
               </ul>
               <button 
                 className="plan-button monthly"
-                onClick={() => handleUpgrade('plus')}
+                onClick={() => currentTier !== 'plus' && !upgrading && handleUpgrade('plus')}
                 disabled={currentTier === 'plus' || upgrading === 'plus'}
-                style={{ opacity: currentTier === 'plus' ? 0.5 : 1 }}
+                style={{ 
+                  opacity: currentTier === 'plus' ? 0.8 : 1,
+                  cursor: currentTier === 'plus' || upgrading === 'plus' ? 'not-allowed' : 'pointer',
+                  backgroundColor: currentTier === 'plus' ? '#16A34A' : undefined,
+                  color: currentTier === 'plus' ? 'white' : undefined
+                }}
               >
                 {upgrading === 'plus' ? 'Processing...' : 
-                 currentTier === 'plus' ? 'Current Plan' : 
+                 currentTier === 'plus' ? '✓ Current Plan' : 
                  'Upgrade to Plus'}
               </button>
             </div>
@@ -408,12 +418,17 @@ function PaymentContent() {
               </ul>
               <button 
                 className="plan-button annual"
-                onClick={() => handleUpgrade('max')}
+                onClick={() => currentTier !== 'max' && !upgrading && handleUpgrade('max')}
                 disabled={currentTier === 'max' || upgrading === 'max'}
-                style={{ opacity: currentTier === 'max' ? 0.5 : 1 }}
+                style={{ 
+                  opacity: currentTier === 'max' ? 0.8 : 1,
+                  cursor: currentTier === 'max' || upgrading === 'max' ? 'not-allowed' : 'pointer',
+                  backgroundColor: currentTier === 'max' ? '#16A34A' : undefined,
+                  color: currentTier === 'max' ? 'white' : undefined
+                }}
               >
                 {upgrading === 'max' ? 'Processing...' : 
-                 currentTier === 'max' ? 'Current Plan' : 
+                 currentTier === 'max' ? '✓ Current Plan' : 
                  'Upgrade to Max'}
               </button>
             </div>

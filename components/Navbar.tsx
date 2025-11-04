@@ -5,12 +5,30 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { performLogout } from '@/lib/auth-utils';
 import { supabase } from '@/lib/supabase-client';
+import { useSubscription } from '@/hooks/useSubscription';
 
 export default function Navbar() {
   const router = useRouter();
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const { subscription, tier } = useSubscription();
+
+  // Get member status for display
+  const getMemberStatus = () => {
+    if (!isLoggedIn) return null;
+    
+    switch (tier) {
+      case 'plus':
+        return { text: 'Plus Member', color: '#7C3AED', bgColor: '#F3E8FF' };
+      case 'max':
+        return { text: 'Max Member', color: '#DC2626', bgColor: '#FEF2F2' };
+      default:
+        return { text: 'Free', color: '#059669', bgColor: '#ECFDF5' };
+    }
+  };
+
+  const memberStatus = getMemberStatus();
 
   useEffect(() => {
     // Check if user is logged in
@@ -104,6 +122,30 @@ export default function Navbar() {
         >
           About Us
         </Link>
+
+        {/* Member Status Tag */}
+        {memberStatus && (
+          <div style={{
+            background: memberStatus.bgColor,
+            border: `1px solid ${memberStatus.color}`,
+            borderRadius: '12px',
+            padding: '4px 12px',
+            fontFamily: "'Figtree', sans-serif",
+            fontSize: '11px',
+            fontWeight: '600',
+            color: memberStatus.color,
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}>
+            {tier === 'plus' && '⭐'}
+            {tier === 'max' && '👑'}
+            {tier === 'free' && '🆓'}
+            {memberStatus.text}
+          </div>
+        )}
 
         {/* How To Button */}
         <Link 

@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import Navbar from '@/components/Navbar';
 import { useProfile } from '@/contexts/ProfileContext';
+import { useSubscription } from '@/hooks/useSubscription';
 import './study-book.css';
 
 interface UsageInfo {
@@ -45,6 +46,21 @@ export default function StudyBookPage() {
     updateProfileCache,
     saveProfileAndUpdateCache 
   } = useProfile();
+  
+  // Get subscription information
+  const { subscription, tier } = useSubscription();
+  
+  // Get member status display info
+  const getMemberStatus = () => {
+    switch (tier) {
+      case 'plus':
+        return { text: 'Plus Member', icon: '⭐', color: '#7C3AED', bgColor: '#F3E8FF' };
+      case 'max':
+        return { text: 'Max Member', icon: '👑', color: '#DC2626', bgColor: '#FEF2F2' };
+      default:
+        return { text: 'Free Member', icon: '🆓', color: '#059669', bgColor: '#ECFDF5' };
+    }
+  };
   const [activeTab, setActiveTab] = useState('materials');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showDraftPopout, setShowDraftPopout] = useState(false);
@@ -2004,6 +2020,59 @@ export default function StudyBookPage() {
                     }}>
                       Personal Information
                     </h3>
+                    
+                    {/* Member Status Display */}
+                    <div style={{
+                      marginBottom: '24px',
+                      padding: '16px',
+                      backgroundColor: getMemberStatus().bgColor,
+                      border: `1px solid ${getMemberStatus().color}`,
+                      borderRadius: '8px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px'
+                    }}>
+                      <span style={{ fontSize: '20px' }}>{getMemberStatus().icon}</span>
+                      <div>
+                        <div style={{
+                          fontWeight: '600',
+                          fontSize: '16px',
+                          color: getMemberStatus().color,
+                          marginBottom: '4px'
+                        }}>
+                          {getMemberStatus().text}
+                        </div>
+                        <div style={{
+                          fontSize: '14px',
+                          color: '#6B7280'
+                        }}>
+                          {subscription?.subscription_status === 'active' ? 'Active subscription' : 
+                           subscription?.subscription_status === 'trialing' ? 'Trial period' :
+                           tier === 'free' ? 'Free tier' : 'Subscription inactive'}
+                        </div>
+                      </div>
+                      <div style={{ marginLeft: 'auto' }}>
+                        <Link 
+                          href="/payment"
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            padding: '8px 12px',
+                            backgroundColor: getMemberStatus().color,
+                            color: 'white',
+                            textDecoration: 'none',
+                            borderRadius: '6px',
+                            fontSize: '13px',
+                            fontWeight: '500',
+                            transition: 'all 0.2s ease'
+                          }}
+                        >
+                          {tier === 'free' ? 'Upgrade' : 'Manage'}
+                        </Link>
+                      </div>
+                    </div>
+                    
                     <div style={{
                       display: 'grid',
                       gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
