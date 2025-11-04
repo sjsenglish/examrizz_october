@@ -846,6 +846,7 @@ export default function StudyBookPage() {
     setProfileError(null);
     
     try {
+      // Load user profile
       const { data, error } = await supabase
         .from('user_profiles')
         .select('*')
@@ -859,7 +860,35 @@ export default function StudyBookPage() {
 
       // Handle case where profile doesn't exist yet (PGRST116 = no rows returned)
       const profileData = data || {};
-      setUserProfile(profileData);
+      
+      // Load GCSE grades from separate table
+      const { data: gcseGrades, error: gcseError } = await supabase
+        .from('user_gcse_grades')
+        .select('subject, grade')
+        .eq('user_id', userId);
+      
+      // Load A Level grades from separate table
+      const { data: aLevelGrades, error: aLevelError } = await supabase
+        .from('user_alevel_grades')
+        .select('subject, grade')
+        .eq('user_id', userId);
+
+      if (gcseError) {
+        console.error('Error loading GCSE grades:', gcseError);
+      }
+      
+      if (aLevelError) {
+        console.error('Error loading A Level grades:', aLevelError);
+      }
+
+      // Combine profile with grades
+      const profileWithGrades = {
+        ...profileData,
+        gcse_grades: gcseGrades || [],
+        a_level_grades: aLevelGrades || []
+      };
+      
+      setUserProfile(profileWithGrades);
       
       // Set edited profile with current data, ensuring all fields are available for editing
       setEditedProfile({
@@ -868,8 +897,8 @@ export default function StudyBookPage() {
         school: profileData?.school || '',
         rank_in_school: profileData?.rank_in_school || '',
         target_degree: profileData?.target_degree || '',
-        gcse_grades: Array.isArray(profileData?.gcse_grades) ? profileData.gcse_grades : [],
-        a_level_grades: Array.isArray(profileData?.a_level_grades) ? profileData.a_level_grades : []
+        gcse_grades: gcseGrades || [],
+        a_level_grades: aLevelGrades || []
       });
     } catch (error) {
       console.error('Error loading profile:', error);
@@ -887,6 +916,7 @@ export default function StudyBookPage() {
     setProfileError(null);
     
     try {
+      // Update user profile (excluding grades)
       const { data, error } = await supabase
         .from('user_profiles')
         .update({
@@ -894,9 +924,7 @@ export default function StudyBookPage() {
           username: editedProfile.username,
           school: editedProfile.school,
           rank_in_school: editedProfile.rank_in_school,
-          target_degree: editedProfile.target_degree,
-          gcse_grades: editedProfile.gcse_grades,
-          a_level_grades: editedProfile.a_level_grades
+          target_degree: editedProfile.target_degree
         })
         .eq('id', userId)
         .select()
@@ -916,7 +944,76 @@ export default function StudyBookPage() {
         return;
       }
 
-      setUserProfile(data);
+      // Save GCSE grades to separate table
+      if (editedProfile.gcse_grades.length > 0) {
+        // Delete existing grades first
+        await supabase
+          .from('user_gcse_grades')
+          .delete()
+          .eq('user_id', userId);
+          
+        // Insert new grades
+        const gcseGrades = editedProfile.gcse_grades
+          .filter(g => g.subject && g.grade)
+          .map(g => ({
+            user_id: userId,
+            subject: g.subject,
+            grade: g.grade
+          }));
+
+        if (gcseGrades.length > 0) {
+          const { error: gcseError } = await supabase
+            .from('user_gcse_grades')
+            .insert(gcseGrades);
+
+          if (gcseError) {
+            console.error('GCSE grades save error:', gcseError);
+          }
+        }
+      } else {
+        // Remove all grades if none provided
+        await supabase
+          .from('user_gcse_grades')
+          .delete()
+          .eq('user_id', userId);
+      }
+
+      // Save A Level grades to separate table
+      if (editedProfile.a_level_grades.length > 0) {
+        // Delete existing grades first
+        await supabase
+          .from('user_alevel_grades')
+          .delete()
+          .eq('user_id', userId);
+          
+        // Insert new grades
+        const aLevelGrades = editedProfile.a_level_grades
+          .filter(g => g.subject && g.grade)
+          .map(g => ({
+            user_id: userId,
+            subject: g.subject,
+            grade: g.grade
+          }));
+
+        if (aLevelGrades.length > 0) {
+          const { error: aLevelError } = await supabase
+            .from('user_alevel_grades')
+            .insert(aLevelGrades);
+
+          if (aLevelError) {
+            console.error('A Level grades save error:', aLevelError);
+          }
+        }
+      } else {
+        // Remove all grades if none provided
+        await supabase
+          .from('user_alevel_grades')
+          .delete()
+          .eq('user_id', userId);
+      }
+
+      // Reload the profile to get updated data
+      await loadUserProfile();
       setIsEditingProfile(false);
     } catch (error) {
       console.error('Error saving profile:', error);
