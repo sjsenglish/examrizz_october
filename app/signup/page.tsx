@@ -253,99 +253,126 @@ export default function SignupPage() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Handle Step 1 - Email/Password registration
+    if (currentStep === 1) {
+      if (password !== confirmPassword) {
+        setError('Passwords do not match');
+        return;
+      }
+
+      setLoading(true);
+      setError('');
+      setSuccessMessage('Creating your account...');
+
+      try {
+        const { data, error: authError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              email: email
+            }
+          }
+        });
+
+        if (authError) {
+          setError(authError.message);
+          setSuccessMessage('');
+          return;
+        }
+
+        if (data.user) {
+          setUser(data.user);
+          setSuccessMessage('Account created! Now complete your profile...');
+          // Move to Step 2 to complete profile
+          setCurrentStep(2);
+        }
+      } catch (err) {
+        console.error('Signup error:', err);
+        setError('An unexpected error occurred');
+        setSuccessMessage('');
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+    
+    // Handle Step 2 - Profile completion
     // If user is already authenticated (via Discord), update existing profile instead of creating new account
     if (user) {
       return await updateExistingProfile();
     }
-    
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
 
     setLoading(true);
     setError('');
-    setSuccessMessage('Creating your account...');
+    setSuccessMessage('Completing your profile...');
 
     try {
-      const { data, error: authError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
-            username: username
-          }
-        }
-      });
-
-      if (authError) {
-        setError(authError.message);
-        setSuccessMessage('');
+      // User should be authenticated at this point from Step 1
+      if (!user) {
+        setError('Please complete Step 1 first');
+        setCurrentStep(1);
         return;
       }
 
-      if (data.user) {
-        const userId = data.user.id;
-        
-        // Check if profile already exists (might be created by Discord trigger)
-        const { data: existingProfile, error: checkError } = await supabase
-          .from('user_profiles')
-          .select('id')
-          .eq('id', userId)
-          .single();
+      const userId = user.id;
+      
+      // Check if profile already exists (might be created by triggers)
+      const { data: existingProfile, error: checkError } = await supabase
+        .from('user_profiles')
+        .select('id')
+        .eq('id', userId)
+        .single();
 
-        if (checkError && checkError.code !== 'PGRST116') {
-          console.error('Error checking existing profile:', checkError);
-        }
-
-        if (existingProfile) {
-          // Update existing profile
-          const { error: updateError } = await supabase
-            .from('user_profiles')
-            .update({
-              email: data.user.email,
-              full_name: fullName,
-              username: username,
-              school: school,
-              rank_in_school: rankInSchool
-            })
-            .eq('id', userId);
-
-          if (updateError) {
-            console.error('Profile update error:', updateError);
-            setError('Failed to update profile: ' + updateError.message);
-            setSuccessMessage('');
-            return;
-          }
-        } else {
-          // Create new profile
-          const { error: profileError } = await supabase
-            .from('user_profiles')
-            .insert({
-              id: userId,
-              email: data.user.email,
-              full_name: fullName,
-              username: username,
-              school: school,
-              rank_in_school: rankInSchool
-            });
-
-          if (profileError) {
-            console.error('Profile creation error:', profileError);
-            setError('Failed to create profile: ' + profileError.message);
-            setSuccessMessage('');
-            return;
-          }
-        }
-
-        await saveGradesForUser(userId);
-        
-        setSuccessMessage('Account created successfully! Redirecting...');
-        setTimeout(() => router.push('/'), 2000);
+      if (checkError && checkError.code !== 'PGRST116') {
+        console.error('Error checking existing profile:', checkError);
       }
+
+      if (existingProfile) {
+        // Update existing profile
+        const { error: updateError } = await supabase
+          .from('user_profiles')
+          .update({
+            full_name: fullName,
+            username: username,
+            school: school,
+            rank_in_school: rankInSchool
+          })
+          .eq('id', userId);
+
+        if (updateError) {
+          console.error('Profile update error:', updateError);
+          setError('Failed to update profile: ' + updateError.message);
+          setSuccessMessage('');
+          return;
+        }
+      } else {
+        // Create new profile
+        const { error: profileError } = await supabase
+          .from('user_profiles')
+          .insert({
+            id: userId,
+            email: user.email,
+            full_name: fullName,
+            username: username,
+            school: school,
+            rank_in_school: rankInSchool
+          });
+
+        if (profileError) {
+          console.error('Profile creation error:', profileError);
+          setError('Failed to create profile: ' + profileError.message);
+          setSuccessMessage('');
+          return;
+        }
+      }
+
+      await saveGradesForUser(userId);
+      
+      setSuccessMessage('Profile completed successfully! Redirecting...');
+      setTimeout(() => router.push('/'), 2000);
     } catch (err) {
-      console.error('Signup error:', err);
+      console.error('Profile completion error:', err);
       setError('An unexpected error occurred');
       setSuccessMessage('');
     } finally {
@@ -605,18 +632,182 @@ export default function SignupPage() {
             Create Your Account
           </h2>
 
-          <p style={{
-            fontFamily: "'Figtree', sans-serif",
-            fontSize: '18px',
-            color: '#666666',
-            margin: '0 0 40px 0',
-            textAlign: 'center',
-            lineHeight: '1.5'
-          }}>
-            Complete your student profile and join the community
-          </p>
+          {/* Email/Password Form */}
+          <form onSubmit={handleSignup} style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '15px' }}>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="Email"
+                style={{
+                  width: '100%',
+                  padding: '16px',
+                  border: '1px solid #D1D5DB',
+                  borderRadius: '6px',
+                  background: '#E0F7FA',
+                  fontSize: '16px',
+                  outline: 'none',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
 
-          {/* Next Step button - positioned bottom right */}
+            <div style={{ marginBottom: '15px' }}>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="Password"
+                style={{
+                  width: '100%',
+                  padding: '16px',
+                  border: '1px solid #D1D5DB',
+                  borderRadius: '6px',
+                  background: '#E0F7FA',
+                  fontSize: '16px',
+                  outline: 'none',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                placeholder="Confirm password"
+                style={{
+                  width: '100%',
+                  padding: '16px',
+                  border: '1px solid #D1D5DB',
+                  borderRadius: '6px',
+                  background: '#E0F7FA',
+                  fontSize: '16px',
+                  outline: 'none',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                width: '100%',
+                padding: '16px',
+                background: loading ? '#9CA3AF' : '#4338CA',
+                color: '#FFFFFF',
+                border: 'none',
+                borderRadius: '6px',
+                fontSize: '16px',
+                fontWeight: '600',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                marginBottom: '20px'
+              }}
+            >
+              {loading ? 'Creating Account...' : 'Create Account'}
+            </button>
+          </form>
+
+          {/* Or divider */}
+          <div style={{
+            textAlign: 'center',
+            margin: '20px 0',
+            fontSize: '16px',
+            fontWeight: '600',
+            color: '#000000'
+          }}>
+            Or
+          </div>
+
+          {/* Social Login Buttons */}
+          <div style={{ marginBottom: '20px' }}>
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              disabled={loading}
+              style={{
+                width: '100%',
+                padding: '14px',
+                background: '#FFFFFF',
+                color: '#000000',
+                border: '1px solid #D1D5DB',
+                borderRadius: '6px',
+                fontSize: '16px',
+                fontWeight: '500',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '10px',
+                marginBottom: '12px',
+                opacity: loading ? 0.6 : 1
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              Continue with Google
+            </button>
+
+            <button
+              type="button"
+              onClick={handleDiscordLogin}
+              disabled={loading}
+              style={{
+                width: '100%',
+                padding: '14px',
+                background: '#5865F2',
+                color: '#FFFFFF',
+                border: 'none',
+                borderRadius: '6px',
+                fontSize: '16px',
+                fontWeight: '500',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '10px',
+                marginBottom: '20px',
+                opacity: loading ? 0.6 : 1
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+              </svg>
+              Continue with Discord
+            </button>
+          </div>
+
+          {/* Already have account link */}
+          <div style={{
+            textAlign: 'center',
+            fontFamily: "'Figtree', sans-serif",
+            fontSize: '14px',
+            color: '#666666'
+          }}>
+            Already have an account?{' '}
+            <Link 
+              href="/login" 
+              style={{
+                color: '#4338CA',
+                textDecoration: 'none',
+                fontWeight: '600'
+              }}
+            >
+              Sign in
+            </Link>
+          </div>
+
+          {/* Skip to Profile button - positioned bottom right */}
           <button
             onClick={handleNextStep}
             style={{
@@ -624,21 +815,21 @@ export default function SignupPage() {
               bottom: '20px',
               right: '40px',
               padding: '12px 30px',
-              background: '#E7E6FF',
-              color: '#4338CA',
-              border: '1px solid #4338CA',
+              background: '#F3F4F6',
+              color: '#6B7280',
+              border: '1px solid #D1D5DB',
               borderRadius: '8px',
               fontFamily: "'Figtree', sans-serif",
-              fontSize: '16px',
-              fontWeight: '600',
+              fontSize: '14px',
+              fontWeight: '500',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               gap: '8px'
             }}
           >
-            Next Step
-            <span style={{ fontSize: '18px' }}>→</span>
+            Skip to Profile
+            <span style={{ fontSize: '16px' }}>→</span>
           </button>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase-client';
 import { 
   UserSubscription, 
   SubscriptionTier, 
@@ -6,11 +6,7 @@ import {
   hasFeatureAccess,
   FeatureAccess 
 } from '@/types/subscription';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { ensureUserSubscription } from '@/lib/ensure-user-subscription';
 
 // Cache for subscription data to prevent repeated database calls
 const subscriptionCache = new Map<string, { subscription: UserSubscription | null; timestamp: number }>();
@@ -33,22 +29,19 @@ export async function getCurrentUserSubscription(): Promise<UserSubscription | n
       return cached.subscription;
     }
 
-    const { data, error } = await supabase
-      .from('user_subscriptions')
-      .select('*')
-      .eq('user_id', user.id)
-      .single();
+    // Use ensureUserSubscription to handle cases where user doesn't have a subscription record
+    const subscription = await ensureUserSubscription(user.id);
 
-    if (error) {
-      console.error('Error fetching user subscription:', error);
+    if (!subscription) {
+      console.error('Failed to get or create user subscription');
       // Cache null result for a short time to prevent repeated failed calls
       subscriptionCache.set(user.id, { subscription: null, timestamp: Date.now() });
       return null;
     }
 
     // Cache the result
-    subscriptionCache.set(user.id, { subscription: data, timestamp: Date.now() });
-    return data;
+    subscriptionCache.set(user.id, { subscription, timestamp: Date.now() });
+    return subscription;
   } catch (error) {
     console.error('Error in getCurrentUserSubscription:', error);
     return null;
