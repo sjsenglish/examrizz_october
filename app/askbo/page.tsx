@@ -1271,6 +1271,25 @@ export default function StudyBookPage() {
             Ask Bo
           </button>
           <button 
+            className="nav-item disabled"
+            style={{
+              cursor: 'not-allowed',
+              opacity: '0.6',
+              position: 'relative'
+            }}
+          >
+            <span>Interview Prep</span>
+            <span style={{
+              fontFamily: "'Madimi One', cursive",
+              fontSize: '11px',
+              color: '#666',
+              marginLeft: '8px',
+              fontWeight: '400'
+            }}>
+              Coming Soon
+            </span>
+          </button>
+          <button 
             className={`nav-item ${activeTab === 'profile' ? 'active' : ''}`}
             onClick={() => setActiveTab('profile')}
           >
