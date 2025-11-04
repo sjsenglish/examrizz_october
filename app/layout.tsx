@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Figtree } from 'next/font/google';
 import './globals.css';
 import { PostHogProvider, PostHogPageView } from '../components/PostHogProvider';
+import { ProfileProvider } from '../contexts/ProfileContext';
 import { Suspense } from 'react';
 
 // Optimize font loading with proper fallbacks
@@ -45,10 +46,12 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} ${figtree.className} antialiased`}>
         <PostHogProvider>
-          <Suspense fallback={null}>
-            <PostHogPageView />
-          </Suspense>
-          {children}
+          <ProfileProvider>
+            <Suspense fallback={null}>
+              <PostHogPageView />
+            </Suspense>
+            {children}
+          </ProfileProvider>
         </PostHogProvider>
       </body>
     </html>

@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase-client';
 import { useRouter } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import Navbar from '@/components/Navbar';
+import { useProfile } from '@/contexts/ProfileContext';
 import './study-book.css';
 
 interface UsageInfo {
@@ -34,6 +35,16 @@ export default function StudyBookPage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  
+  // Use profile context instead of local state
+  const { 
+    profile: userProfile, 
+    loading: profileLoading, 
+    error: profileError, 
+    refreshProfile,
+    updateProfileCache,
+    saveProfileAndUpdateCache 
+  } = useProfile();
   const [activeTab, setActiveTab] = useState('materials');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showDraftPopout, setShowDraftPopout] = useState(false);
@@ -99,10 +110,7 @@ export default function StudyBookPage() {
   const [showUsageLimitModal, setShowUsageLimitModal] = useState(false);
   const [usageError, setUsageError] = useState<string | null>(null);
 
-  // Profile state
-  const [userProfile, setUserProfile] = useState<any>(null);
-  const [profileLoading, setProfileLoading] = useState(false);
-  const [profileError, setProfileError] = useState<string | null>(null);
+  // Profile editing state (keep local for form management)
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editedProfile, setEditedProfile] = useState({
     full_name: '',
@@ -262,7 +270,6 @@ export default function StudyBookPage() {
   useEffect(() => {
     if (userId) {
       fetchUsageInfo();
-      loadUserProfile();
     }
   }, [userId]);
 
@@ -838,188 +845,43 @@ export default function StudyBookPage() {
     }
   };
 
-  // Load user profile
-  const loadUserProfile = async () => {
-    if (!userId) return;
-    
-    setProfileLoading(true);
-    setProfileError(null);
-    
-    try {
-      // Load user profile
-      const { data, error } = await supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
-
-      if (error && error.code !== 'PGRST116') {
-        setProfileError('Failed to load profile');
-        return;
-      }
-
-      // Handle case where profile doesn't exist yet (PGRST116 = no rows returned)
-      const profileData = data || {};
-      
-      // Load GCSE grades from separate table
-      const { data: gcseGrades, error: gcseError } = await supabase
-        .from('user_gcse_grades')
-        .select('subject, grade')
-        .eq('user_id', userId);
-      
-      // Load A Level grades from separate table
-      const { data: aLevelGrades, error: aLevelError } = await supabase
-        .from('user_alevel_grades')
-        .select('subject, grade')
-        .eq('user_id', userId);
-
-      if (gcseError) {
-        console.error('Error loading GCSE grades:', gcseError);
-      }
-      
-      if (aLevelError) {
-        console.error('Error loading A Level grades:', aLevelError);
-      }
-
-      // Combine profile with grades
-      const profileWithGrades = {
-        ...profileData,
-        gcse_grades: gcseGrades || [],
-        a_level_grades: aLevelGrades || []
-      };
-      
-      setUserProfile(profileWithGrades);
-      
-      // Set edited profile with current data, ensuring all fields are available for editing
+  // Initialize editing form when profile data is available
+  useEffect(() => {
+    if (userProfile && !isEditingProfile) {
       setEditedProfile({
-        full_name: profileData?.full_name || '',
-        username: profileData?.username || '',
-        school: profileData?.school || '',
-        rank_in_school: profileData?.rank_in_school || '',
-        target_degree: profileData?.target_degree || '',
-        gcse_grades: gcseGrades || [],
-        a_level_grades: aLevelGrades || []
+        full_name: userProfile.full_name || '',
+        username: userProfile.username || '',
+        school: userProfile.school || '',
+        rank_in_school: userProfile.rank_in_school || '',
+        target_degree: userProfile.target_degree || '',
+        gcse_grades: userProfile.gcse_grades || [],
+        a_level_grades: userProfile.a_level_grades || []
       });
-    } catch (error) {
-      console.error('Error loading profile:', error);
-      setProfileError('Failed to load profile');
-    } finally {
-      setProfileLoading(false);
     }
-  };
+  }, [userProfile, isEditingProfile]);
 
-  // Save profile changes
+  // Save profile changes using the cached context method
   const saveProfile = async () => {
     if (!userId) return;
     
-    setProfileLoading(true);
-    setProfileError(null);
-    
     try {
-      // Update user profile (excluding grades)
-      const { data, error } = await supabase
-        .from('user_profiles')
-        .update({
+      await saveProfileAndUpdateCache(
+        {
           full_name: editedProfile.full_name,
           username: editedProfile.username,
           school: editedProfile.school,
           rank_in_school: editedProfile.rank_in_school,
           target_degree: editedProfile.target_degree
-        })
-        .eq('id', userId)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Profile update error:', error);
-        
-        // Handle specific constraint violations
-        if (error.code === '23505' && error.message?.includes('user_profiles_username_key')) {
-          setProfileError('This username is already taken. Please choose a different one.');
-        } else if (error.code === '23505') {
-          setProfileError('This information conflicts with existing data. Please check your entries.');
-        } else {
-          setProfileError(`Failed to save profile: ${error.message || 'Unknown error'}`);
+        },
+        {
+          gcse: editedProfile.gcse_grades,
+          aLevel: editedProfile.a_level_grades
         }
-        return;
-      }
-
-      // Save GCSE grades to separate table
-      if (editedProfile.gcse_grades.length > 0) {
-        // Delete existing grades first
-        await supabase
-          .from('user_gcse_grades')
-          .delete()
-          .eq('user_id', userId);
-          
-        // Insert new grades
-        const gcseGrades = editedProfile.gcse_grades
-          .filter(g => g.subject && g.grade)
-          .map(g => ({
-            user_id: userId,
-            subject: g.subject,
-            grade: g.grade
-          }));
-
-        if (gcseGrades.length > 0) {
-          const { error: gcseError } = await supabase
-            .from('user_gcse_grades')
-            .insert(gcseGrades);
-
-          if (gcseError) {
-            console.error('GCSE grades save error:', gcseError);
-          }
-        }
-      } else {
-        // Remove all grades if none provided
-        await supabase
-          .from('user_gcse_grades')
-          .delete()
-          .eq('user_id', userId);
-      }
-
-      // Save A Level grades to separate table
-      if (editedProfile.a_level_grades.length > 0) {
-        // Delete existing grades first
-        await supabase
-          .from('user_alevel_grades')
-          .delete()
-          .eq('user_id', userId);
-          
-        // Insert new grades
-        const aLevelGrades = editedProfile.a_level_grades
-          .filter(g => g.subject && g.grade)
-          .map(g => ({
-            user_id: userId,
-            subject: g.subject,
-            grade: g.grade
-          }));
-
-        if (aLevelGrades.length > 0) {
-          const { error: aLevelError } = await supabase
-            .from('user_alevel_grades')
-            .insert(aLevelGrades);
-
-          if (aLevelError) {
-            console.error('A Level grades save error:', aLevelError);
-          }
-        }
-      } else {
-        // Remove all grades if none provided
-        await supabase
-          .from('user_alevel_grades')
-          .delete()
-          .eq('user_id', userId);
-      }
-
-      // Reload the profile to get updated data
-      await loadUserProfile();
+      );
+      
       setIsEditingProfile(false);
     } catch (error) {
       console.error('Error saving profile:', error);
-      setProfileError('Failed to save profile due to a network error. Please try again.');
-    } finally {
-      setProfileLoading(false);
     }
   };
 

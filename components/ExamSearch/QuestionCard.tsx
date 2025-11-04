@@ -7,6 +7,7 @@ import styles from './QuestionCard.module.css';
 import DOMPurify from 'dompurify';
 import { supabase } from '@/lib/supabase-client';
 import { uploadVideoToSupabase, validateVideoFile, formatFileSize } from '@/lib/video-upload';
+import { useProfile } from '@/contexts/ProfileContext';
 
 // Sanitize HTML content to prevent XSS attacks
 const sanitizeHtml = (html: string): string => {
@@ -49,7 +50,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     tier: string;
   } | null>(null);
   const [user, setUser] = useState<any>(null);
-  const [userProfile, setUserProfile] = useState<any>(null);
+  const { profile: userProfile } = useProfile();
   
   // Tooltip state
   const [showSubmitTooltip, setShowSubmitTooltip] = useState(false);
@@ -98,22 +99,13 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         if (!user) {
           // User not authenticated - clear state
           setUser(null);
-          setUserProfile(null);
           setFeatureUsage(null);
           return;
         }
         
         setUser(user);
         
-        // Get user profile from database
-        const { data: profile, error: profileError } = await supabase
-          .from('user_profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
-          
-          
-        setUserProfile(profile);
+        // Profile is now handled by ProfileContext
 
         if (user) {
           // Check localStorage cache first
@@ -158,7 +150,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         console.error('Error loading user and feature usage:', error);
         // Clear stale state on any error
         setUser(null);
-        setUserProfile(null);
         setFeatureUsage(null);
       }
     };
@@ -173,7 +164,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       } else if (event === 'SIGNED_OUT') {
         // User signed out - clear state
         setUser(null);
-        setUserProfile(null);
         setFeatureUsage(null);
       }
     });
