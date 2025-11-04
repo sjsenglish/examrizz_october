@@ -1874,8 +1874,11 @@ export default function StudyBookPage() {
             <div className="profile-container" style={{
               maxWidth: '800px',
               margin: '0 auto',
-              padding: '40px',
-              fontFamily: "'Figtree', sans-serif"
+              padding: '40px 40px 80px 40px',
+              fontFamily: "'Figtree', sans-serif",
+              minHeight: 'calc(100vh - 200px)',
+              position: 'relative',
+              top: '0'
             }}>
               <div style={{
                 display: 'flex',
@@ -1897,13 +1900,24 @@ export default function StudyBookPage() {
                     onClick={() => setIsEditingProfile(true)}
                     style={{
                       padding: '8px 16px',
-                      backgroundColor: '#4338CA',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '6px',
-                      fontSize: '14px',
+                      backgroundColor: 'white',
+                      color: '#000000',
+                      border: '1px solid #ddd',
+                      borderRadius: '8px',
+                      fontSize: '13px',
                       cursor: 'pointer',
-                      fontFamily: "'Figtree', sans-serif"
+                      fontFamily: "'Madimi One', cursive",
+                      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                      transition: 'all 0.3s ease',
+                      letterSpacing: '0.02em'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                      e.currentTarget.style.transform = 'translateY(0)';
                     }}
                   >
                     Edit Profile
@@ -1915,14 +1929,29 @@ export default function StudyBookPage() {
                       disabled={profileLoading}
                       style={{
                         padding: '8px 16px',
-                        backgroundColor: '#059669',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '6px',
-                        fontSize: '14px',
+                        backgroundColor: 'white',
+                        color: '#000000',
+                        border: '1px solid #ddd',
+                        borderRadius: '8px',
+                        fontSize: '13px',
                         cursor: profileLoading ? 'not-allowed' : 'pointer',
-                        fontFamily: "'Figtree', sans-serif",
+                        fontFamily: "'Madimi One', cursive",
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                        transition: 'all 0.3s ease',
+                        letterSpacing: '0.02em',
                         opacity: profileLoading ? 0.6 : 1
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!profileLoading) {
+                          e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+                          e.currentTarget.style.transform = 'translateY(-1px)';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!profileLoading) {
+                          e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                        }
                       }}
                     >
                       {profileLoading ? 'Saving...' : 'Save'}
@@ -1944,13 +1973,24 @@ export default function StudyBookPage() {
                       }}
                       style={{
                         padding: '8px 16px',
-                        backgroundColor: '#6B7280',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '6px',
-                        fontSize: '14px',
+                        backgroundColor: 'white',
+                        color: '#000000',
+                        border: '1px solid #ddd',
+                        borderRadius: '8px',
+                        fontSize: '13px',
                         cursor: 'pointer',
-                        fontFamily: "'Figtree', sans-serif"
+                        fontFamily: "'Madimi One', cursive",
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                        transition: 'all 0.3s ease',
+                        letterSpacing: '0.02em'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                        e.currentTarget.style.transform = 'translateY(0)';
                       }}
                     >
                       Cancel
@@ -2162,10 +2202,10 @@ export default function StudyBookPage() {
 
                   {/* Target Degree Section */}
                   <div style={{
-                    backgroundColor: '#F0F9FF',
+                    backgroundColor: '#D3F6F7',
                     padding: '24px',
                     borderRadius: '8px',
-                    border: '1px solid #0EA5E9'
+                    border: '1px solid #00CED1'
                   }}>
                     <h3 style={{
                       fontFamily: "'Madimi One', cursive",
@@ -2217,10 +2257,10 @@ export default function StudyBookPage() {
 
                   {/* GCSE Grades Section */}
                   <div style={{
-                    backgroundColor: '#F0FDF4',
+                    backgroundColor: '#D3F6F7',
                     padding: '24px',
                     borderRadius: '8px',
-                    border: '1px solid #10B981'
+                    border: '1px solid #00CED1'
                   }}>
                     <div style={{
                       display: 'flex',
@@ -2241,9 +2281,9 @@ export default function StudyBookPage() {
                           onClick={addGcseSubject}
                           style={{
                             padding: '6px 12px',
-                            backgroundColor: '#10B981',
-                            color: 'white',
-                            border: 'none',
+                            backgroundColor: '#D3F6F7',
+                            color: '#000000',
+                            border: '1px solid #00CED1',
                             borderRadius: '4px',
                             fontSize: '12px',
                             cursor: 'pointer',
@@ -2358,10 +2398,10 @@ export default function StudyBookPage() {
 
                   {/* A-Level Grades Section */}
                   <div style={{
-                    backgroundColor: '#FFFBEB',
+                    backgroundColor: '#D3F6F7',
                     padding: '24px',
                     borderRadius: '8px',
-                    border: '1px solid #F59E0B'
+                    border: '1px solid #00CED1'
                   }}>
                     <div style={{
                       display: 'flex',
@@ -2382,9 +2422,9 @@ export default function StudyBookPage() {
                           onClick={addALevelSubject}
                           style={{
                             padding: '6px 12px',
-                            backgroundColor: '#F59E0B',
-                            color: 'white',
-                            border: 'none',
+                            backgroundColor: '#D3F6F7',
+                            color: '#000000',
+                            border: '1px solid #00CED1',
                             borderRadius: '4px',
                             fontSize: '12px',
                             cursor: 'pointer',
