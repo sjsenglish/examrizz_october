@@ -694,23 +694,29 @@ export default function SignupPage() {
               />
             </div>
 
+            {/* Next Step button - replacing create account */}
             <button
-              type="submit"
-              disabled={loading}
+              type="button"
+              onClick={handleNextStep}
               style={{
                 width: '100%',
                 padding: '16px',
-                background: loading ? '#9CA3AF' : '#4338CA',
-                color: '#FFFFFF',
-                border: 'none',
+                background: '#E7E6FF',
+                color: '#4338CA',
+                border: '1px solid #4338CA',
                 borderRadius: '6px',
                 fontSize: '16px',
                 fontWeight: '600',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                marginBottom: '20px'
+                cursor: 'pointer',
+                marginBottom: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
               }}
             >
-              {loading ? 'Creating Account...' : 'Create Account'}
+              Next Step
+              <span style={{ fontSize: '18px' }}>→</span>
             </button>
           </form>
 
@@ -807,30 +813,6 @@ export default function SignupPage() {
             </Link>
           </div>
 
-          {/* Skip to Profile button - positioned bottom right */}
-          <button
-            onClick={handleNextStep}
-            style={{
-              position: 'absolute',
-              bottom: '20px',
-              right: '40px',
-              padding: '12px 30px',
-              background: '#F3F4F6',
-              color: '#6B7280',
-              border: '1px solid #D1D5DB',
-              borderRadius: '8px',
-              fontFamily: "'Figtree', sans-serif",
-              fontSize: '14px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-          >
-            Skip to Profile
-            <span style={{ fontSize: '16px' }}>→</span>
-          </button>
         </div>
       </div>
       </>

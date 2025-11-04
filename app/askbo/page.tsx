@@ -2021,57 +2021,6 @@ export default function StudyBookPage() {
                       Personal Information
                     </h3>
                     
-                    {/* Member Status Display */}
-                    <div style={{
-                      marginBottom: '24px',
-                      padding: '16px',
-                      backgroundColor: getMemberStatus().bgColor,
-                      border: `1px solid ${getMemberStatus().color}`,
-                      borderRadius: '8px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px'
-                    }}>
-                      <span style={{ fontSize: '20px' }}>{getMemberStatus().icon}</span>
-                      <div>
-                        <div style={{
-                          fontWeight: '600',
-                          fontSize: '16px',
-                          color: getMemberStatus().color,
-                          marginBottom: '4px'
-                        }}>
-                          {getMemberStatus().text}
-                        </div>
-                        <div style={{
-                          fontSize: '14px',
-                          color: '#6B7280'
-                        }}>
-                          {subscription?.subscription_status === 'active' ? 'Active subscription' : 
-                           subscription?.subscription_status === 'trialing' ? 'Trial period' :
-                           tier === 'free' ? 'Free tier' : 'Subscription inactive'}
-                        </div>
-                      </div>
-                      <div style={{ marginLeft: 'auto' }}>
-                        <Link 
-                          href="/payment"
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '6px',
-                            padding: '8px 12px',
-                            backgroundColor: getMemberStatus().color,
-                            color: 'white',
-                            textDecoration: 'none',
-                            borderRadius: '6px',
-                            fontSize: '13px',
-                            fontWeight: '500',
-                            transition: 'all 0.2s ease'
-                          }}
-                        >
-                          {tier === 'free' ? 'Upgrade' : 'Manage'}
-                        </Link>
-                      </div>
-                    </div>
                     
                     <div style={{
                       display: 'grid',

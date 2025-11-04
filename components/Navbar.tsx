@@ -123,29 +123,6 @@ export default function Navbar() {
           About Us
         </Link>
 
-        {/* Member Status Tag */}
-        {memberStatus && (
-          <div style={{
-            background: memberStatus.bgColor,
-            border: `1px solid ${memberStatus.color}`,
-            borderRadius: '12px',
-            padding: '4px 12px',
-            fontFamily: "'Figtree', sans-serif",
-            fontSize: '11px',
-            fontWeight: '600',
-            color: memberStatus.color,
-            textTransform: 'uppercase',
-            letterSpacing: '0.5px',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '4px'
-          }}>
-            {tier === 'plus' && '⭐'}
-            {tier === 'max' && '👑'}
-            {tier === 'free' && '🆓'}
-            {memberStatus.text}
-          </div>
-        )}
 
         {/* How To Button */}
         <Link 
