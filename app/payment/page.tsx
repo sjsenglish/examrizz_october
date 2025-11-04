@@ -11,7 +11,7 @@ import './payment.css';
 function PaymentContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { subscription, loading, upgrade, manageBilling, cancel, reactivate } = useSubscription();
+  const { subscription, loading, upgrade, manageBilling, cancel, reactivate, refresh } = useSubscription();
   const [upgrading, setUpgrading] = useState<string | null>(null);
   const [message, setMessage] = useState<string>('');
 
@@ -22,10 +22,14 @@ function PaymentContent() {
     
     if (success === 'true') {
       setMessage('Payment successful! Your subscription has been activated.');
+      // Force refresh subscription data after successful payment
+      setTimeout(() => {
+        refresh();
+      }, 1000); // Small delay to allow webhook processing
     } else if (canceled === 'true') {
       setMessage('Payment was canceled. You can try again anytime.');
     }
-  }, [searchParams]);
+  }, [searchParams, refresh]);
 
   const handleUpgrade = async (tier: 'plus' | 'max') => {
     try {
@@ -136,6 +140,53 @@ function PaymentContent() {
       {/* Main Content */}
       <div className="main-content">
         <div className="payment-container">
+          {/* Manual Refresh Button for After Payment */}
+          {searchParams.get('success') === 'true' && (
+            <div style={{
+              padding: '16px 20px',
+              marginBottom: '24px',
+              backgroundColor: '#F0F9FF',
+              border: '1px solid #0EA5E9',
+              borderLeft: '4px solid #0EA5E9',
+              borderRadius: '8px',
+              textAlign: 'center',
+              fontFamily: "'Figtree', sans-serif",
+              fontSize: '14px',
+              color: '#0C4A6E',
+              fontWeight: '500',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
+            }}>
+              <div style={{ marginBottom: '12px' }}>
+                🎉 Payment successful! Your subscription is being activated...
+              </div>
+              <button
+                onClick={() => {
+                  refresh();
+                  setMessage('Refreshing subscription status...');
+                }}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#0EA5E9',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#0284C7';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#0EA5E9';
+                }}
+              >
+                🔄 Refresh Status
+              </button>
+            </div>
+          )}
+
           {/* Message Display */}
           {message && (
             <div className="message-banner" style={{

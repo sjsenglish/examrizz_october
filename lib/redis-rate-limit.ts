@@ -160,3 +160,11 @@ export async function rateLimitApiRequest(
     request,
   });
 }
+
+/**
+ * Clear tier cache for a specific user
+ */
+export function clearTierCache(userId: string) {
+  tierCache.delete(userId);
+  console.log('Cleared tier cache for user:', userId);
+}

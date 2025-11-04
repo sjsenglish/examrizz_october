@@ -223,3 +223,11 @@ export function subscribeToSubscriptionChanges(
     subscription.unsubscribe();
   };
 }
+
+/**
+ * Clear subscription cache for a specific user
+ */
+export function clearSubscriptionCache(userId: string) {
+  subscriptionCache.delete(userId);
+  console.log('Cleared subscription cache for user:', userId);
+}

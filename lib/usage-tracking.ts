@@ -417,3 +417,25 @@ export async function getFeatureUsageSummary(userId: string) {
     }
   }
 }
+
+/**
+ * Clear all feature usage cache entries for a specific user
+ */
+export function clearFeatureUsageCacheForUser(userId: string) {
+  let clearedCount = 0;
+  for (const [key, value] of featureUsageCache.entries()) {
+    if (key.startsWith(`${userId}:`)) {
+      featureUsageCache.delete(key);
+      clearedCount++;
+    }
+  }
+  console.log(`Cleared ${clearedCount} feature usage cache entries for user:`, userId);
+}
+
+/**
+ * Clear tier cache for a specific user (also clear usage tracking tier cache)
+ */
+export function clearUsageTrackingTierCache(userId: string) {
+  tierCache.delete(userId);
+  console.log('Cleared usage tracking tier cache for user:', userId);
+}

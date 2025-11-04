@@ -21,6 +21,34 @@ const supabase = createClient(
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
+// Function to clear subscription-related caches after updates
+async function clearSubscriptionCaches(userId: string) {
+  try {
+    // Clear subscription caches by making a request to our cache invalidation endpoint
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    
+    await fetch(`${baseUrl}/api/internal/clear-cache`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.INTERNAL_API_SECRET || 'dev-secret'}`,
+      },
+      body: JSON.stringify({ 
+        userId,
+        cacheTypes: ['subscription', 'tier', 'profile'] 
+      }),
+    }).catch(error => {
+      console.warn('Failed to clear caches:', error);
+      // Don't throw - cache clearing is not critical for webhook success
+    });
+    
+    console.log('Attempted to clear caches for user:', userId);
+  } catch (error) {
+    console.warn('Error clearing subscription caches:', error);
+    // Don't throw - cache clearing failure shouldn't fail the webhook
+  }
+}
+
 // Map Stripe price IDs to subscription tiers
 const PRICE_ID_TO_TIER: Record<string, SubscriptionTier> = {
   'price_1SOIx7RslRN77kT8F5nCPTkg': 'plus', // Plus monthly
@@ -92,6 +120,9 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
       }
 
       console.log('Successfully updated subscription for user:', existingSubscription.user_id);
+      
+      // Clear cached subscription data after successful update
+      await clearSubscriptionCaches(existingSubscription.user_id);
     } else {
       console.log('No existing subscription found for customer:', subscriptionData.customer_id);
       // This case should be rare since we create customer records during checkout
@@ -107,6 +138,13 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   console.log('Handling subscription deletion:', subscription.id);
   
   try {
+    // Get user ID before updating (since we need it for cache clearing)
+    const { data: userSubscription } = await supabase
+      .from('user_subscriptions')
+      .select('user_id')
+      .eq('stripe_subscription_id', subscription.id)
+      .single();
+
     // Update subscription to canceled status and downgrade to free tier
     const { error } = await supabase
       .from('user_subscriptions')
@@ -124,6 +162,11 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     }
 
     console.log('Successfully handled subscription deletion');
+    
+    // Clear caches if we found the user
+    if (userSubscription?.user_id) {
+      await clearSubscriptionCaches(userSubscription.user_id);
+    }
   } catch (error) {
     console.error('Error in handleSubscriptionDeleted:', error);
     throw error;
@@ -169,6 +212,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     await handleSubscriptionUpdate(stripeSubscription);
 
     console.log('Successfully handled checkout completion for user:', userId);
+    
+    // Clear cached subscription data after successful checkout
+    await clearSubscriptionCaches(userId);
   } catch (error) {
     console.error('Error in handleCheckoutCompleted:', error);
     throw error;
