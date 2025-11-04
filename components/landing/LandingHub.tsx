@@ -50,102 +50,82 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
       >
         {/* ARENA - top-left (20% from left, 25% from top) */}
         <div 
-          className="absolute group"
+          className="absolute"
           style={{
             left: '32%',
             top: '18%',
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <div className="relative">
+          <Link href="/arena" className="block">
             <Image 
               src="/icons/arena.svg"
               alt="ARENA"
               width={248} /* 10% smaller: 276 -> 248 */
               height={248} /* 10% smaller: 276 -> 248 */
-              className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
+              className="drop-shadow-lg"
             />
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <span className="bg-white/95 px-4 py-2 rounded-lg border-2 border-black shadow-lg font-['Madimi_One'] text-lg">
-                Coming Soon
-              </span>
-            </div>
-          </div>
+          </Link>
         </div>
 
         {/* VIDEO - top-right (75% from left, 25% from top) */}
         <div 
-          className="absolute group"
+          className="absolute"
           style={{
             left: '65%',
             top: '15%',
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <div className="relative">
+          <Link href="/videogallery" className="block">
             <Image 
               src="/icons/video.svg"
               alt="VIDEO"
               width={207} /* 10% smaller: 230 -> 207 */
               height={207} /* 10% smaller: 230 -> 207 */
-              className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
+              className="drop-shadow-lg"
             />
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <span className="bg-white/95 px-4 py-2 rounded-lg border-2 border-black shadow-lg font-['Madimi_One'] text-lg">
-                Coming Soon
-              </span>
-            </div>
-          </div>
+          </Link>
         </div>
 
         {/* PRACTICE - dead center (50% horizontal, 50% vertical) */}
         <div 
-          className="absolute group"
+          className="absolute"
           style={{
             left: '50%',
             top: '50%',
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <div className="relative">
+          <Link href="/practice" className="block">
             <Image 
               src="/icons/practice.svg"
               alt="PRACTICE"
               width={207} /* 10% smaller: 230 -> 207 */
               height={207} /* 10% smaller: 230 -> 207 */
-              className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
+              className="drop-shadow-lg"
             />
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <span className="bg-white/95 px-4 py-2 rounded-lg border-2 border-black shadow-lg font-['Madimi_One'] text-lg">
-                Coming Soon
-              </span>
-            </div>
-          </div>
+          </Link>
         </div>
 
         {/* TEACHER - bottom-left (25% from left, 55% from top) - MOVED UP */}
         <div 
-          className="absolute group"
+          className="absolute"
           style={{
             left: '25%',
             top: '55%',
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <div className="relative">
+          <Link href="/teacher" className="block">
             <Image 
               src="/icons/teacher.svg"
               alt="TEACHER"
               width={228} /* 10% smaller: 253 -> 228 */
               height={228} /* 10% smaller: 253 -> 228 */
-              className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
+              className="drop-shadow-lg"
             />
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <span className="bg-white/95 px-4 py-2 rounded-lg border-2 border-black shadow-lg font-['Madimi_One'] text-lg">
-                Coming Soon
-              </span>
-            </div>
-          </div>
+          </Link>
         </div>
 
         {/* ASK BO - moved further left (18% from left, 25% from top) */}
@@ -170,27 +150,22 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
 
         {/* LEARN - bottom-right (70% from left, 45% from top) - MOVED UP */}
         <div 
-          className="absolute group"
+          className="absolute"
           style={{
             left: '70%',
             top: '45%',
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <div className="relative">
+          <Link href="/learn" className="block">
             <Image 
               src="/icons/learn.svg"
               alt="LEARN"
               width={186} /* 10% smaller: 207 -> 186 */
               height={186} /* 10% smaller: 207 -> 186 */
-              className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
+              className="drop-shadow-lg"
             />
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <span className="bg-white/95 px-4 py-2 rounded-lg border-2 border-black shadow-lg font-['Madimi_One'] text-lg">
-                Coming Soon
-              </span>
-            </div>
-          </div>
+          </Link>
         </div>
       </div>
 
