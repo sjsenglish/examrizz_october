@@ -103,9 +103,19 @@ export async function checkRateLimit(options: RateLimitOptions): Promise<RateLim
   }
 }
 
-// Helper function to get user's subscription tier from database
+// Cache for user tiers to prevent repeated database calls
+const tierCache = new Map<string, { tier: SubscriptionTier; timestamp: number }>();
+const TIER_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+// Helper function to get user's subscription tier from database with caching
 export async function getUserTier(userId: string): Promise<SubscriptionTier> {
   try {
+    // Check cache first
+    const cached = tierCache.get(userId);
+    if (cached && Date.now() - cached.timestamp < TIER_CACHE_DURATION) {
+      return cached.tier;
+    }
+
     // Import Supabase client
     const { createClient } = await import('@supabase/supabase-js');
     
@@ -116,12 +126,18 @@ export async function getUserTier(userId: string): Promise<SubscriptionTier> {
     
     const { data: subscription } = await supabase
       .from('user_subscriptions')
-      .select('tier')
+      .select('subscription_tier, subscription_status')
       .eq('user_id', userId)
-      .eq('status', 'active')
       .single();
     
-    return (subscription?.tier as SubscriptionTier) || 'free';
+    // Check if subscription is active
+    const isActive = subscription?.subscription_status === 'active' || subscription?.subscription_status === 'trialing';
+    const tier = (isActive ? subscription?.subscription_tier : 'free') as SubscriptionTier || 'free';
+    
+    // Cache the result
+    tierCache.set(userId, { tier, timestamp: Date.now() });
+    
+    return tier;
   } catch (error) {
     console.error('Error fetching user tier:', error);
     return 'free'; // Default to free tier on error

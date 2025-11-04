@@ -63,6 +63,10 @@ export interface MonthlyUsage {
 const tierCache = new Map<string, { tier: 'free' | 'plus' | 'max', timestamp: number }>()
 const TIER_CACHE_TTL = 5 * 60 * 1000 // 5 minutes
 
+// In-memory cache for feature usage (1 minute TTL)
+const featureUsageCache = new Map<string, { count: number, timestamp: number }>()
+const FEATURE_USAGE_CACHE_TTL = 60 * 1000 // 1 minute
+
 // Get user's subscription tier (with caching)
 export async function getUserSubscriptionTier(userId: string): Promise<'free' | 'plus' | 'max'> {
   // Check cache first
@@ -102,6 +106,62 @@ export async function getUserSubscriptionTier(userId: string): Promise<'free' | 
   }
 
   return tier
+}
+
+// Get cached feature usage count (with caching)
+async function getCachedFeatureUsageCount(
+  userId: string, 
+  feature: 'submit_answer' | 'video_solution',
+  filterField: string,
+  filterValue: string
+): Promise<number> {
+  const cacheKey = `${userId}:${feature}:${filterValue}`
+  const cached = featureUsageCache.get(cacheKey)
+  const now = Date.now()
+
+  if (cached && (now - cached.timestamp) < FEATURE_USAGE_CACHE_TTL) {
+    return cached.count
+  }
+
+  const { data, error } = await supabase
+    .from('feature_usage_tracking')
+    .select('id')
+    .eq('user_id', userId)
+    .eq('feature', feature)
+    .eq(filterField, filterValue)
+
+  if (error) {
+    console.error('Error checking feature usage:', error)
+    return 0
+  }
+
+  const count = data?.length || 0
+  
+  // Cache the result
+  featureUsageCache.set(cacheKey, { count, timestamp: now })
+  
+  // Cleanup old cache entries periodically
+  if (featureUsageCache.size > 1000) {
+    const cutoff = now - FEATURE_USAGE_CACHE_TTL
+    for (const [key, value] of featureUsageCache.entries()) {
+      if (value.timestamp < cutoff) {
+        featureUsageCache.delete(key)
+      }
+    }
+  }
+
+  return count
+}
+
+// Invalidate feature usage cache for a user/feature combination
+function invalidateFeatureUsageCache(userId: string, feature: 'submit_answer' | 'video_solution') {
+  const now = new Date()
+  const monthYear = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+  const dayDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+  
+  // Invalidate both monthly and daily cache entries for this user/feature
+  featureUsageCache.delete(`${userId}:${feature}:${monthYear}`)
+  featureUsageCache.delete(`${userId}:${feature}:${dayDate}`)
 }
 
 // Record usage for a user
@@ -263,6 +323,9 @@ export async function recordFeatureUsage(
     console.error('Error recording feature usage:', error)
     throw new Error('Failed to record feature usage')
   }
+
+  // Invalidate cache since usage count has changed
+  invalidateFeatureUsageCache(userId, feature)
 }
 
 // Check if user can use a feature
@@ -300,24 +363,7 @@ export async function canUseFeature(
     period = 'day'
   }
 
-  const { data, error } = await supabase
-    .from('feature_usage_tracking')
-    .select('id')
-    .eq('user_id', userId)
-    .eq('feature', feature)
-    .eq(filterField, filterValue)
-
-  if (error) {
-    console.error('Error checking feature usage:', error)
-    return {
-      allowed: false,
-      remaining: 0,
-      limit,
-      period
-    }
-  }
-
-  const usageCount = data?.length || 0
+  const usageCount = await getCachedFeatureUsageCount(userId, feature, filterField, filterValue)
   const remaining = Math.max(0, limit - usageCount)
   const allowed = usageCount < limit
 
@@ -339,34 +385,19 @@ export async function getFeatureUsageSummary(userId: string) {
   const monthYear = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
   const dayDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
   
-  // Run both feature usage queries in parallel
-  const [submitAnswerData, videoSolutionData] = await Promise.all([
-    // Query for submit_answer (monthly)
-    supabase
-      .from('feature_usage_tracking')
-      .select('id')
-      .eq('user_id', userId)
-      .eq('feature', 'submit_answer')
-      .eq('month_year', monthYear),
-    
-    // Query for video_solution (daily)
-    supabase
-      .from('feature_usage_tracking')
-      .select('id')
-      .eq('user_id', userId)
-      .eq('feature', 'video_solution')
-      .eq('day_date', dayDate)
+  // Get cached usage counts in parallel
+  const [submitAnswerCount, videoSolutionCount] = await Promise.all([
+    getCachedFeatureUsageCount(userId, 'submit_answer', 'month_year', monthYear),
+    getCachedFeatureUsageCount(userId, 'video_solution', 'day_date', dayDate)
   ])
 
   // Calculate submit_answer usage
   const submitAnswerLimit = FEATURE_LIMITS.submit_answer[tier]
-  const submitAnswerCount = submitAnswerData.data?.length || 0
   const submitAnswerRemaining = submitAnswerLimit === -1 ? -1 : Math.max(0, submitAnswerLimit - submitAnswerCount)
   const submitAnswerAllowed = submitAnswerLimit === -1 || submitAnswerCount < submitAnswerLimit
 
   // Calculate video_solution usage
   const videoSolutionLimit = FEATURE_LIMITS.video_solution[tier]
-  const videoSolutionCount = videoSolutionData.data?.length || 0
   const videoSolutionRemaining = videoSolutionLimit === -1 ? -1 : Math.max(0, videoSolutionLimit - videoSolutionCount)
   const videoSolutionAllowed = videoSolutionLimit === -1 || videoSolutionCount < videoSolutionLimit
 

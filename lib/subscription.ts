@@ -12,8 +12,12 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
+// Cache for subscription data to prevent repeated database calls
+const subscriptionCache = new Map<string, { subscription: UserSubscription | null; timestamp: number }>();
+const SUBSCRIPTION_CACHE_DURATION = 2 * 60 * 1000; // 2 minutes (shorter than profile cache)
+
 /**
- * Get the current user's subscription
+ * Get the current user's subscription (with caching)
  */
 export async function getCurrentUserSubscription(): Promise<UserSubscription | null> {
   try {
@@ -21,6 +25,12 @@ export async function getCurrentUserSubscription(): Promise<UserSubscription | n
     
     if (!user) {
       throw new Error('No authenticated user');
+    }
+
+    // Check cache first
+    const cached = subscriptionCache.get(user.id);
+    if (cached && Date.now() - cached.timestamp < SUBSCRIPTION_CACHE_DURATION) {
+      return cached.subscription;
     }
 
     const { data, error } = await supabase
@@ -31,9 +41,13 @@ export async function getCurrentUserSubscription(): Promise<UserSubscription | n
 
     if (error) {
       console.error('Error fetching user subscription:', error);
+      // Cache null result for a short time to prevent repeated failed calls
+      subscriptionCache.set(user.id, { subscription: null, timestamp: Date.now() });
       return null;
     }
 
+    // Cache the result
+    subscriptionCache.set(user.id, { subscription: data, timestamp: Date.now() });
     return data;
   } catch (error) {
     console.error('Error in getCurrentUserSubscription:', error);

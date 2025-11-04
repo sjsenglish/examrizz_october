@@ -90,7 +90,7 @@ export function useSubscription(): UseSubscriptionReturn {
         unsubscribe();
       }
     };
-  }, [fetchSubscription]);
+  }, []); // Remove fetchSubscription from dependencies to prevent infinite loops
 
   // Computed values
   const isActive = subscription ? isSubscriptionActive(subscription.subscription_status) : false;
