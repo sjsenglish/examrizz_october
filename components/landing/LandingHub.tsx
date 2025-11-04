@@ -49,28 +49,23 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
         }}
       >
         {/* ARENA - top-left (20% from left, 25% from top) */}
-        <div 
-          className="absolute group"
+        <div
+          className="absolute"
           style={{
             left: '32%',
             top: '18%',
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <div className="relative">
-            <Image 
+          <Link href="/competition" className="block">
+            <Image
               src="/icons/arena.svg"
               alt="ARENA"
               width={248} /* 10% smaller: 276 -> 248 */
               height={248} /* 10% smaller: 276 -> 248 */
-              className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
+              className="drop-shadow-lg"
             />
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <span className="bg-white/95 px-4 py-2 rounded-lg border-2 border-black shadow-lg font-['Madimi_One'] text-lg">
-                Coming Soon
-              </span>
-            </div>
-          </div>
+          </Link>
         </div>
 
         {/* VIDEO - top-right (75% from left, 25% from top) */}

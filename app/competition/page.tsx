@@ -1,174 +1,292 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import './competition.css';
 
-export default function CompetitionPage() {
+interface EvalTool {
+  id: string;
+  title: string;
+  icon: string;
+  description: string;
+  status: 'available' | 'coming-soon' | 'beta';
+  features: string[];
+  color: string;
+}
+
+const evaluationTools: EvalTool[] = [
+  {
+    id: 'essay-grader',
+    title: 'Essay Grader',
+    icon: '📝',
+    description: 'AI-powered essay evaluation with detailed feedback',
+    status: 'beta',
+    features: ['Grammar & Structure', 'Argument Analysis', 'Grading Rubric', 'Improvement Tips'],
+    color: '#7C3AED'
+  },
+  {
+    id: 'answer-checker',
+    title: 'Answer Checker',
+    icon: '✓',
+    description: 'Verify your exam answers instantly',
+    status: 'available',
+    features: ['Instant Feedback', 'Step-by-step Solutions', 'Mark Scheme Alignment', 'Common Mistakes'],
+    color: '#00CED1'
+  },
+  {
+    id: 'mock-interview',
+    title: 'Mock Interview',
+    icon: '🎤',
+    description: 'Practice interviews with AI interviewer',
+    status: 'coming-soon',
+    features: ['Subject-specific Questions', 'Real-time Feedback', 'Confidence Builder', 'Video Recording'],
+    color: '#DC2626'
+  },
+  {
+    id: 'study-planner',
+    title: 'Study Planner',
+    icon: '📅',
+    description: 'Personalized study plans based on your goals',
+    status: 'available',
+    features: ['Custom Schedules', 'Goal Tracking', 'Progress Analytics', 'Adaptive Learning'],
+    color: '#059669'
+  },
+  {
+    id: 'weakness-analyzer',
+    title: 'Weakness Analyzer',
+    icon: '🎯',
+    description: 'Identify and target your weak areas',
+    status: 'beta',
+    features: ['Topic Analysis', 'Performance Tracking', 'Targeted Practice', 'Improvement Metrics'],
+    color: '#F59E0B'
+  },
+  {
+    id: 'concept-explainer',
+    title: 'Concept Explainer',
+    icon: '💡',
+    description: 'Break down complex topics into simple terms',
+    status: 'available',
+    features: ['Visual Explanations', 'Examples & Analogies', 'Multi-level Depth', 'Interactive Q&A'],
+    color: '#8B5CF6'
+  },
+  {
+    id: 'exam-predictor',
+    title: 'Exam Predictor',
+    icon: '🔮',
+    description: 'AI predicts likely exam topics and questions',
+    status: 'coming-soon',
+    features: ['Pattern Recognition', 'Topic Probability', 'Question Trends', 'Smart Preparation'],
+    color: '#EC4899'
+  },
+  {
+    id: 'peer-comparison',
+    title: 'Peer Comparison',
+    icon: '📊',
+    description: 'Compare your performance anonymously',
+    status: 'coming-soon',
+    features: ['Anonymous Benchmarking', 'Percentile Ranking', 'Subject Comparison', 'Growth Tracking'],
+    color: '#3B82F6'
+  }
+];
+
+export default function ArenaPage() {
+  const [selectedTool, setSelectedTool] = useState<string | null>(null);
+  const [filter, setFilter] = useState<'all' | 'available' | 'beta' | 'coming-soon'>('all');
+
+  const filteredTools = evaluationTools.filter(tool =>
+    filter === 'all' ? true : tool.status === filter
+  );
+
+  const getStatusBadge = (status: string) => {
+    switch(status) {
+      case 'available':
+        return <span className="status-badge available">Available</span>;
+      case 'beta':
+        return <span className="status-badge beta">Beta</span>;
+      case 'coming-soon':
+        return <span className="status-badge coming-soon">Coming Soon</span>;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="page-background" style={{ paddingTop: '60px' }}>
+    <div className="arena-page-background">
       <Navbar />
 
-      {/* Main Content */}
-      <div className="main-content">
+      <div className="arena-main-content">
         {/* Back Button */}
-        <Link href="/" className="back-button">
+        <Link href="/" className="arena-back-button">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
           Back
         </Link>
 
-        {/* Discord Button */}
-        <a href="#" className="discord-button">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" fill="currentColor"/>
-          </svg>
-          Discord
-        </a>
-
-        {/* Main Container */}
-        <div className="content-layout">
-          {/* Battle Zone Title - Above container */}
-          <h1 className="battle-title">BATTLE ZONE</h1>
-
-          {/* Main Content Container */}
-          <div className="battle-container">
-            {/* Weekly Challenge Button - Inside container top right */}
-            <div className="weekly-challenge">
-              Weekly Challenge
+        {/* Header Section */}
+        <div className="arena-header">
+          <div className="arena-title-section">
+            <div className="arena-icon-large">
+              <Image
+                src="/icons/arena.svg"
+                alt="ARENA"
+                width={120}
+                height={120}
+                className="arena-icon-img"
+              />
             </div>
-
-            {/* Lightning Icon and Select Battle Mode */}
-            <div className="select-battle-header">
-              <div className="lightning-icon">⚡</div>
-              <h2 className="select-battle-title">Select Battle Mode</h2>
+            <div className="arena-title-text">
+              <h1 className="arena-main-title">AI BUDDY ARENA</h1>
+              <p className="arena-subtitle">Choose your evaluation tool and level up your learning</p>
             </div>
+          </div>
 
-            {/* Battle Mode Cards - Row of 4 */}
-            <div className="battle-mode-grid">
-              <div className="battle-mode-card">
-                <div className="mode-header">
-                  <div className="mode-title-badge">SOLO MODE</div>
-                  <div className="online-indicator">● 4 online</div>
-                </div>
-                <div className="mode-stats">
-                  <p>247 players competing</p>
-                  <p>Top 10 win Discord badge + 200 points</p>
-                  <p>Your rank #23</p>
-                  <p>3d 14h left</p>
-                </div>
-                <button className="join-button">Join</button>
-              </div>
-
-              <div className="battle-mode-card">
-                <div className="mode-header">
-                  <div className="mode-title-badge">DUO FRIENDS</div>
-                  <div className="online-indicator">● 4 online</div>
-                </div>
-                <div className="mode-stats">
-                  <p>Top - Sarah</p>
-                  <p>Your record: 12W - 8L (60%)</p>
-                  <p>Best streak - 5</p>
-                  <p>daily</p>
-                </div>
-                <button className="join-button">Pick</button>
-              </div>
-
-              <div className="battle-mode-card">
-                <div className="mode-header">
-                  <div className="mode-title-badge">DUO RANDOM</div>
-                  <div className="online-indicator">● 23 players waiting</div>
-                </div>
-                <div className="mode-stats">
-                  <p>Quick match</p>
-                  <p>Your record: 7W - 5L (X%)</p>
-                  <p>Avg wait 30 sec</p>
-                  <p>daily</p>
-                </div>
-                <button className="join-button">Find match</button>
-              </div>
-
-              <div className="battle-mode-card">
-                <div className="mode-header">
-                  <div className="mode-title-badge">YOUR STATS</div>
-                  <div className="stats-details">details →</div>
-                </div>
-                <div className="mode-stats">
-                  <p>This week</p>
-                  <p>Rank #23 ↑</p>
-                  <p>Total 847 pts</p>
-                  <p>Win rate 67%</p>
-                  <p>Streak 4</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Divider Line */}
-            <div className="divider"></div>
-
-            {/* Bottom Section */}
-            <div className="bottom-section">
-              {/* Leaderboard */}
-              <div className="leaderboard-section">
-                <h3 className="section-title">Leaderboard</h3>
-                <p className="section-subtitle">This week's top 10</p>
-                <div className="leaderboard-container">
-                  <div className="leaderboard-item">
-                    <span className="rank">1.</span>
-                    <span className="username">User X</span>
-                    <span className="points">345 pts</span>
-                  </div>
-                  <div className="leaderboard-item">
-                    <span className="rank">2.</span>
-                    <span className="username">User X</span>
-                    <span className="points">320 pts</span>
-                  </div>
-                  <div className="leaderboard-item">
-                    <span className="rank">3.</span>
-                    <span className="username">User X</span>
-                    <span className="points">313 pts</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Recent Battles */}
-              <div className="recent-battles-section">
-                <h3 className="section-title">Recent Battles</h3>
-                <div className="recent-battles-container">
-                  <div className="battle-item">
-                    <div className="battle-info">
-                      <h4 className="battle-title">You vs. Marcus</h4>
-                      <p className="battle-details">Won 7-4 Time 2:35</p>
-                    </div>
-                    <span className="battle-time">2 days ago</span>
-                  </div>
-                  <div className="battle-item">
-                    <div className="battle-info">
-                      <h4 className="battle-title">You vs. Random</h4>
-                      <p className="battle-details">Won 7-4 Time 2:35</p>
-                    </div>
-                    <span className="battle-time">1 week ago</span>
-                  </div>
-                </div>
-                <a href="#" className="view-all-link">view all history →</a>
-              </div>
-            </div>
+          {/* Filter Buttons */}
+          <div className="arena-filter-section">
+            <button
+              className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
+              onClick={() => setFilter('all')}
+            >
+              All Tools
+            </button>
+            <button
+              className={`filter-btn ${filter === 'available' ? 'active' : ''}`}
+              onClick={() => setFilter('available')}
+            >
+              Available
+            </button>
+            <button
+              className={`filter-btn ${filter === 'beta' ? 'active' : ''}`}
+              onClick={() => setFilter('beta')}
+            >
+              Beta
+            </button>
+            <button
+              className={`filter-btn ${filter === 'coming-soon' ? 'active' : ''}`}
+              onClick={() => setFilter('coming-soon')}
+            >
+              Coming Soon
+            </button>
           </div>
         </div>
 
-        {/* Fixed Arena Icon - Bottom Left */}
-        <div className="fixed-arena-icon">
-          <Image 
-            src="/icons/arena.svg"
-            alt="ARENA"
-            width={144}
-            height={144}
-            className="arena-icon"
-          />
-          <p className="arena-text">ARENA</p>
+        {/* Tools Grid */}
+        <div className="tools-grid">
+          {filteredTools.map(tool => (
+            <div
+              key={tool.id}
+              className={`tool-card ${selectedTool === tool.id ? 'selected' : ''} ${tool.status !== 'available' ? 'disabled' : ''}`}
+              onClick={() => tool.status === 'available' && setSelectedTool(tool.id)}
+              style={{ borderColor: tool.color }}
+            >
+              <div className="tool-card-header">
+                <div className="tool-icon" style={{ backgroundColor: `${tool.color}15` }}>
+                  <span style={{ fontSize: '48px' }}>{tool.icon}</span>
+                </div>
+                {getStatusBadge(tool.status)}
+              </div>
+
+              <h3 className="tool-title" style={{ color: tool.color }}>{tool.title}</h3>
+              <p className="tool-description">{tool.description}</p>
+
+              <div className="tool-features">
+                {tool.features.map((feature, idx) => (
+                  <div key={idx} className="feature-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M20 6L9 17L4 12" stroke={tool.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <span>{feature}</span>
+                  </div>
+                ))}
+              </div>
+
+              {tool.status === 'available' && (
+                <button
+                  className="tool-action-btn"
+                  style={{
+                    backgroundColor: tool.color,
+                    borderColor: tool.color
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // Handle tool launch
+                    alert(`Launching ${tool.title}... (To be implemented)`);
+                  }}
+                >
+                  Launch Tool
+                </button>
+              )}
+
+              {tool.status === 'beta' && (
+                <button
+                  className="tool-action-btn beta-btn"
+                  style={{
+                    backgroundColor: `${tool.color}20`,
+                    borderColor: tool.color,
+                    color: tool.color
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    alert(`${tool.title} is in beta. Join waitlist?`);
+                  }}
+                >
+                  Join Beta
+                </button>
+              )}
+
+              {tool.status === 'coming-soon' && (
+                <button
+                  className="tool-action-btn disabled-btn"
+                  disabled
+                >
+                  Coming Soon
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Info Section */}
+        <div className="arena-info-section">
+          <div className="info-card">
+            <h3>🚀 How It Works</h3>
+            <ol>
+              <li>Choose an evaluation tool that matches your needs</li>
+              <li>Upload your work or start a new session</li>
+              <li>Get instant AI-powered feedback and insights</li>
+              <li>Track your progress and improve over time</li>
+            </ol>
+          </div>
+
+          <div className="info-card">
+            <h3>⭐ Pro Tips</h3>
+            <ul>
+              <li>Use multiple tools together for comprehensive evaluation</li>
+              <li>Review feedback regularly to identify patterns</li>
+              <li>Set specific goals before each evaluation session</li>
+              <li>Track your improvements across different topics</li>
+            </ul>
+          </div>
+
+          <div className="info-card">
+            <h3>📈 Your Progress</h3>
+            <div className="progress-stats">
+              <div className="stat-item">
+                <div className="stat-number">0</div>
+                <div className="stat-label">Evaluations</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-number">0</div>
+                <div className="stat-label">Hours Saved</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-number">0%</div>
+                <div className="stat-label">Improvement</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
