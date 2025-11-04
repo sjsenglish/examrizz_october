@@ -6,6 +6,7 @@ import { PdfModal } from '../PdfModal';
 import styles from './QuestionCard.module.css';
 import DOMPurify from 'dompurify';
 import { supabase } from '@/lib/supabase-client';
+import { uploadVideoToSupabase, validateVideoFile, formatFileSize } from '@/lib/video-upload';
 
 // Sanitize HTML content to prevent XSS attacks
 const sanitizeHtml = (html: string): string => {
@@ -60,6 +61,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   const [videoLink, setVideoLink] = useState('');
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [isUploadingVideo, setIsUploadingVideo] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Detect question type based on data structure - memoized to prevent re-renders
@@ -454,20 +456,15 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
-    if (!file.type.startsWith('video/')) {
-      alert('Please select a valid video file (MP4, MOV, AVI, etc.)');
-      return;
-    }
-
-    // Validate file size (max 100MB)
-    const maxSize = 100 * 1024 * 1024; // 100MB
-    if (file.size > maxSize) {
-      alert('Video file must be smaller than 100MB');
+    // Validate the video file using the utility function
+    const validation = validateVideoFile(file);
+    if (!validation.valid) {
+      alert(validation.error);
       return;
     }
 
     setVideoFile(file);
+    setUploadProgress(0); // Reset progress
     // Clear video link if file is selected
     setVideoLink('');
   };
@@ -475,29 +472,37 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   const uploadVideoFile = async (file: File): Promise<string | null> => {
     try {
       setIsUploadingVideo(true);
+      setUploadProgress(0);
       
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('userId', user.id);
-      formData.append('type', 'video_submission');
-
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData
+      // Generate a ticket ID for organizing files
+      const ticketId = `QUEST-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Use the utility function for upload with progress tracking
+      const result = await uploadVideoToSupabase(file, {
+        fileName: file.name,
+        fileType: file.type,
+        fileSize: file.size,
+        userId: user.id,
+        ticketId: ticketId,
+        onProgress: (progress) => {
+          setUploadProgress(progress);
+        }
       });
 
-      if (response.ok) {
-        const result = await response.json();
-        return result.url || result.filePath;
-      } else {
-        console.error('Video upload failed:', await response.text());
+      if (!result.success) {
+        alert(result.error || 'Failed to upload video');
         return null;
       }
+
+      return result.publicUrl!;
+
     } catch (error) {
       console.error('Error uploading video:', error);
+      alert('Upload failed due to network error. Please check your connection and try again.');
       return null;
     } finally {
       setIsUploadingVideo(false);
+      setUploadProgress(0);
     }
   };
 
@@ -1065,7 +1070,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
                     fontSize: '12px',
                     color: '#2d5a2d'
                   }}>
-                    ✓ Selected: {videoFile.name} ({(videoFile.size / 1024 / 1024).toFixed(1)}MB)
+                    ✓ Selected: {videoFile.name} ({formatFileSize(videoFile.size)})
                     <button
                       type="button"
                       onClick={() => setVideoFile(null)}
@@ -1087,7 +1092,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
                   color: '#666',
                   marginTop: '4px'
                 }}>
-                  Upload MP4, MOV, AVI or other video files (max 100MB)
+                  Upload MP4, MOV, AVI or other video files (max 2GB)
                 </div>
               </div>
             </div>
@@ -1118,6 +1123,45 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
               />
             </div>
 
+            {isUploadingVideo && (
+              <div style={{
+                padding: '16px',
+                backgroundColor: '#f8fafc',
+                borderRadius: '8px',
+                border: '1px solid #e2e8f0',
+                marginBottom: '16px'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginBottom: '8px'
+                }}>
+                  <span style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>
+                    Uploading video...
+                  </span>
+                  <span style={{ fontSize: '14px', fontWeight: '600', color: '#5865F2' }}>
+                    {uploadProgress}%
+                  </span>
+                </div>
+                <div style={{
+                  width: '100%',
+                  height: '8px',
+                  backgroundColor: '#e5e7eb',
+                  borderRadius: '4px',
+                  overflow: 'hidden'
+                }}>
+                  <div style={{
+                    width: `${uploadProgress}%`,
+                    height: '100%',
+                    backgroundColor: '#5865F2',
+                    transition: 'width 0.3s ease',
+                    borderRadius: '4px'
+                  }} />
+                </div>
+              </div>
+            )}
+
             <div style={{
               display: 'flex',
               gap: '12px',
@@ -1142,7 +1186,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
                   opacity: (isSubmitting || isUploadingVideo || !userAnswer.trim()) ? 0.6 : 1
                 }}
               >
-                {isUploadingVideo ? 'Uploading Video...' : isSubmitting ? 'Submitting...' : 'Submit to Discord'}
+                {isUploadingVideo ? `Uploading Video... ${uploadProgress}%` : isSubmitting ? 'Submitting...' : 'Submit to Discord'}
               </Button>
             </div>
           </div>
