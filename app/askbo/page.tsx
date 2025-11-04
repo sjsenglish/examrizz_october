@@ -1870,15 +1870,20 @@ export default function StudyBookPage() {
       )}
 
         {activeTab === 'profile' && (
-          <div className="profile-page">
+          <div className="profile-page" style={{
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            right: '0',
+            bottom: '0',
+            overflow: 'auto',
+            paddingTop: '20px'
+          }}>
             <div className="profile-container" style={{
               maxWidth: '800px',
               margin: '0 auto',
-              padding: '40px 40px 80px 40px',
-              fontFamily: "'Figtree', sans-serif",
-              minHeight: 'calc(100vh - 200px)',
-              position: 'relative',
-              top: '0'
+              padding: '20px 40px 80px 40px',
+              fontFamily: "'Figtree', sans-serif"
             }}>
               <div style={{
                 display: 'flex',
@@ -2349,13 +2354,24 @@ export default function StudyBookPage() {
                                 onClick={() => removeGcseSubject(index)}
                                 style={{
                                   padding: '8px',
-                                  backgroundColor: '#EF4444',
-                                  color: 'white',
-                                  border: 'none',
+                                  backgroundColor: 'white',
+                                  color: '#000000',
+                                  border: '1px solid #ddd',
                                   borderRadius: '4px',
                                   fontSize: '12px',
                                   cursor: 'pointer',
-                                  fontFamily: "'Figtree', sans-serif"
+                                  fontFamily: "'Madimi One', cursive",
+                                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                  transition: 'all 0.3s ease',
+                                  letterSpacing: '0.02em'
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+                                  e.currentTarget.style.transform = 'translateY(-1px)';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                                  e.currentTarget.style.transform = 'translateY(0)';
                                 }}
                               >
                                 Remove
@@ -2487,13 +2503,24 @@ export default function StudyBookPage() {
                                 onClick={() => removeALevelSubject(index)}
                                 style={{
                                   padding: '8px',
-                                  backgroundColor: '#EF4444',
-                                  color: 'white',
-                                  border: 'none',
+                                  backgroundColor: 'white',
+                                  color: '#000000',
+                                  border: '1px solid #ddd',
                                   borderRadius: '4px',
                                   fontSize: '12px',
                                   cursor: 'pointer',
-                                  fontFamily: "'Figtree', sans-serif"
+                                  fontFamily: "'Madimi One', cursive",
+                                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                  transition: 'all 0.3s ease',
+                                  letterSpacing: '0.02em'
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+                                  e.currentTarget.style.transform = 'translateY(-1px)';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                                  e.currentTarget.style.transform = 'translateY(0)';
                                 }}
                               >
                                 Remove
