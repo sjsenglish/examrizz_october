@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from('student-videos')
       .createSignedUploadUrl(filePath, {
-        upsertable: true // Allow overwriting if needed
+        upsert: true // Allow overwriting if needed
       });
 
     if (uploadError) {
