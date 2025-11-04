@@ -1933,7 +1933,6 @@ export default function StudyBookPage() {
                           gcse_grades: Array.isArray(userProfile?.gcse_grades) ? userProfile.gcse_grades : [],
                           a_level_grades: Array.isArray(userProfile?.a_level_grades) ? userProfile.a_level_grades : []
                         });
-                        setProfileError(null);
                       }}
                       style={{
                         padding: '8px 16px',
