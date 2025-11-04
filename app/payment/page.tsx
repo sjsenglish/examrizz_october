@@ -283,7 +283,6 @@ function PaymentContent() {
           {/* Header */}
           <div className="payment-header">
             <h1 className="payment-title">Choose Your Plan</h1>
-            <p className="payment-subtitle">Unlock unlimited access to all practice questions and video solutions</p>
           </div>
 
           {/* Pricing Cards */}

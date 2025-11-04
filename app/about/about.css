@@ -72,7 +72,7 @@
 .mission-button {
   display: inline-block;
   background: #FFFFFF;
-  border: 2px solid #000000;
+  border: 1px solid #000000;
   border-radius: 4px;
   padding: 8px 24px;
   font-family: 'Figtree', sans-serif;
@@ -80,6 +80,7 @@
   font-weight: 500;
   color: #000000;
   margin-bottom: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .mission-text {
@@ -106,13 +107,14 @@
 .team-label {
   display: inline-block;
   background: #FFFFFF;
-  border: 2px solid #000000;
+  border: 1px solid #000000;
   border-radius: 4px;
   padding: 8px 24px;
   font-family: 'Figtree', sans-serif;
   font-size: 16px;
   font-weight: 500;
   color: #000000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .team-grouped {
@@ -144,13 +146,14 @@
 .offerings-label {
   display: inline-block;
   background: #FFFFFF;
-  border: 2px solid #000000;
+  border: 1px solid #000000;
   border-radius: 4px;
   padding: 8px 24px;
   font-family: 'Figtree', sans-serif;
   font-size: 16px;
   font-weight: 500;
   color: #000000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .offerings-grid {
@@ -236,6 +239,8 @@
   right: 20px;
   text-align: right;
   padding: 0;
+  min-width: 300px;
+  white-space: nowrap;
 }
 
 .company-name {
@@ -244,6 +249,7 @@
   font-weight: 600;
   color: #000000;
   margin: 0 0 4px 0;
+  white-space: nowrap;
 }
 
 .company-details,
@@ -254,6 +260,7 @@
   color: #666666;
   margin: 0 0 2px 0;
   line-height: 1.4;
+  white-space: nowrap;
 }
 
 .company-email {
@@ -295,5 +302,14 @@
     right: auto;
     text-align: center;
     margin-top: 40px;
+    min-width: auto;
+    white-space: normal;
+  }
+  
+  .company-name,
+  .company-details,
+  .company-address,
+  .company-email {
+    white-space: normal;
   }
 }

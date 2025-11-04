@@ -67,9 +67,7 @@ export default function AboutPage() {
         <section className="mission-section">
           <div className="mission-button">Our Mission</div>
           <p className="mission-text">
-            Making school life 10x easier. If you've got any questions, we're here.
-            <br />
-            Join the examrizz community.
+            Using our years of experience sending students to top universities to help all students benefit. Make your school life 10x easier and find a community where you can get top quality answers for all your needs.
           </p>
         </section>
 
