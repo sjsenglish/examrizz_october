@@ -67,7 +67,7 @@ export default function AboutPage() {
         <section className="mission-section">
           <div className="mission-button">Our Mission</div>
           <p className="mission-text">
-            Using our years of experience sending students to top universities to help all students benefit. Make your school life 10x easier and find a community where you can get top quality answers for all your needs.
+            We use our years of experience sending students to top universities to help all students benefit. Make your school life 10x easier and find a community of experts who provide answers you can trust.
           </p>
         </section>
 

@@ -231,9 +231,11 @@
   margin-top: 80px;
   padding: 40px 0;
   z-index: 10;
+  min-height: 120px;
+  width: 100%;
 }
 
-.company-info {
+.about-footer .company-info {
   position: absolute;
   bottom: 20px;
   right: 20px;
@@ -241,6 +243,8 @@
   padding: 0;
   min-width: 300px;
   white-space: nowrap;
+  margin-left: auto;
+  display: block;
 }
 
 .company-name {
