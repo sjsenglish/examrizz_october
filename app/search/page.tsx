@@ -1,74 +1,49 @@
+'use client';
+
+import React from 'react';
 import Link from 'next/link';
-import './search.css';
+import ExamSearch from '@/components/ExamSearch';
+import Navbar from '@/components/Navbar';
 
 export default function SearchPage() {
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F8F8F5' }}>
-      {/* Header */}
-      <div style={{
-        padding: '20px 40px',
-        backgroundColor: '#F8F8F5'
-      }}>
-        <Link href="/" style={{ textDecoration: 'none' }}>
-          <h1 style={{
-            fontFamily: "'Madimi One', cursive",
-            fontSize: '32px',
-            fontWeight: '400',
-            color: '#000000',
-            margin: '0',
-            cursor: 'pointer'
-          }}>
-            examrizzsearch
-          </h1>
-        </Link>
-      </div>
+    <div style={{ 
+      minHeight: '100vh',
+      backgroundColor: '#FFFFFF',
+      paddingTop: '60px'
+    }}>
+      <Navbar />
 
-      <div className="p-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <Link 
-              href="/" 
-              className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-4"
-            >
-              ← Back to Hub
-            </Link>
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">Search</h1>
-          <p className="text-lg text-gray-600">Searchable question library powered by Algolia</p>
-        </div>
-        
-        <div className="mb-8">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search questions, topics, subjects..."
-              className="w-full px-6 py-4 text-lg border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none"
-            />
-            <button className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary-600">
-              <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
-              </svg>
-            </button>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="card">
-            <h3 className="text-xl font-semibold mb-2">Recent Searches</h3>
-            <p className="text-gray-600">Your search history</p>
-          </div>
-          
-          <div className="card">
-            <h3 className="text-xl font-semibold mb-2">Popular Topics</h3>
-            <p className="text-gray-600">Trending questions</p>
-          </div>
-          
-          <div className="card">
-            <h3 className="text-xl font-semibold mb-2">Saved Questions</h3>
-            <p className="text-gray-600">Your bookmarked content</p>
-          </div>
-        </div>
-      </div>
-      </div>
+      {/* Back Button */}
+      <Link 
+        href="/" 
+        style={{
+          position: 'absolute',
+          top: '90px',
+          right: '45px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          padding: '9px 18px',
+          backgroundColor: '#FFFFFF',
+          borderRadius: '8px',
+          textDecoration: 'none',
+          color: '#333333',
+          fontFamily: "'Madimi One', cursive",
+          fontSize: '13px',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+          transition: 'all 0.3s ease',
+          zIndex: 20
+        }}
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+        Back
+      </Link>
+
+      {/* Search Component - preserves all existing functionality */}
+      <ExamSearch />
     </div>
   );
 }

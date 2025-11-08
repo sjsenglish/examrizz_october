@@ -167,6 +167,26 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             />
           </Link>
         </div>
+
+        {/* SEARCH - bottom-left (35% from left, 75% from top) */}
+        <div 
+          className="absolute"
+          style={{
+            left: '35%',
+            top: '75%',
+            transform: 'translate(-50%, -50%)'
+          }}
+        >
+          <Link href="/search" className="block">
+            <Image 
+              src="/icons/search-island-icon.svg"
+              alt="SEARCH"
+              width={186}
+              height={186}
+              className="drop-shadow-lg"
+            />
+          </Link>
+        </div>
       </div>
 
 

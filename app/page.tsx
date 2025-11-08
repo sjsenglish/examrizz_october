@@ -1,9 +1,21 @@
 'use client';
 
-import { NewSwipeableContainer } from '@/components/NewSwipeableContainer';
+import React from 'react';
+import { LandingHub } from '@/components/landing/LandingHub';
+import Navbar from '@/components/Navbar';
 import './home.css';
 
 export default function Home() {
-  // Use NewSwipeableContainer which includes arrow navigation between search and island
-  return <NewSwipeableContainer />;
+  return (
+    <div style={{ 
+      minHeight: '100vh',
+      backgroundColor: '#FFFFFF',
+      paddingTop: '60px'
+    }}>
+      <Navbar />
+      
+      {/* Island Hub - now the main page content */}
+      <LandingHub />
+    </div>
+  );
 }
