@@ -1,782 +1,1002 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { createClient } from '@supabase/supabase-js';
+import { useRouter } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
 import Navbar from '@/components/Navbar';
 import './learn.css';
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+interface Message {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+}
+
+interface LearnSession {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  first_message: string;
+  message_count: number;
+  spec_point?: string;
+}
+
+interface StudentProfile {
+  target_grade: string;
+  exam_date: string;
+  current_topic?: string;
+  total_mastery?: number;
+}
+
+interface SpecPointProgress {
+  spec_point: string;
+  title: string;
+  description: string;
+  mastery_score: number;
+  total_questions: number;
+  correct_answers: number;
+  last_practiced?: string;
+}
+
+interface Subject {
+  id: string;
+  name: string;
+  level: 'GCSE' | 'A-Level';
+  grade_achieved?: string;
+  target_grade?: string;
+}
+
+interface University {
+  id: string;
+  name: string;
+  course: string;
+  type: 'firm' | 'insurance' | 'choice';
+}
+
+interface Supercurricular {
+  id: string;
+  type: 'book' | 'lecture' | 'course' | 'experience' | 'competition' | 'other';
+  title: string;
+  description: string;
+  date_completed?: string;
+  relevance_to_subject?: string;
+}
+
+interface Timeline {
+  current_status: string;
+  exam_dates: { subject: string; date: string; type: 'mock' | 'real' }[];
+  predicted_grades_date?: string;
+  application_deadlines: { university: string; deadline: string }[];
+}
+
+interface UserProfile {
+  id: string;
+  subjects: Subject[];
+  universities: University[];
+  supercurriculars: Supercurricular[];
+  timeline: Timeline;
+  created_at: string;
+  updated_at: string;
+}
+
 export default function LearnPage() {
-  const [activeTab, setActiveTab] = useState<'lesson' | 'practice' | 'test'>('lesson');
-  const [expandedTopics, setExpandedTopics] = useState<{[key: number]: boolean}>({
-    1: true, // Proof topic is expanded by default
-  });
-  const [videoVisible, setVideoVisible] = useState<{[key: string]: boolean}>({});
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  
+  // Main view state - 'chat', 'progress', or 'profile'
+  const [activeView, setActiveView] = useState<'chat' | 'progress' | 'profile'>('chat');
+  
+  // Chat state
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [currentMessage, setCurrentMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+  
+  // Session management state
+  const [sessions, setSessions] = useState<LearnSession[]>([]);
+  const [showSessionsSidebar, setShowSessionsSidebar] = useState(false);
+  
+  // Profile state
+  const [studentProfile, setStudentProfile] = useState<StudentProfile | null>(null);
+  
+  // Progress tracking state
+  const [specPointsProgress, setSpecPointsProgress] = useState<SpecPointProgress[]>([]);
+  const [overallMastery, setOverallMastery] = useState<number>(0);
+  
+  // Profile state
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
 
-  const toggleTopic = (topicId: number) => {
-    setExpandedTopics(prev => ({ ...prev, [topicId]: !prev[topicId] }));
+  // Auth protection - check if user is logged in
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        router.push('/login');
+        return;
+      }
+      setUser(user);
+      setUserId(user.id);
+      setLoading(false);
+    };
+    checkAuth();
+  }, [router]);
+
+  // Load sessions and current session on mount
+  useEffect(() => {
+    if (!userId) return;
+    loadSessions();
+    loadCurrentSession();
+    loadStudentProfile();
+    loadProgressData();
+    loadUserProfile();
+  }, [userId]);
+
+  const loadSessions = async () => {
+    if (!userId) return;
+    
+    try {
+      const { data: sessionsData } = await supabase
+        .from('learn_sessions')
+        .select(`
+          id,
+          created_at,
+          updated_at,
+          spec_point,
+          first_message
+        `)
+        .eq('user_id', userId)
+        .order('updated_at', { ascending: false });
+
+      if (sessionsData) {
+        const formattedSessions: LearnSession[] = sessionsData.map(session => ({
+          id: session.id,
+          created_at: session.created_at,
+          updated_at: session.updated_at,
+          first_message: session.first_message || 'New maths session',
+          message_count: 0, // TODO: Add message count logic
+          spec_point: session.spec_point
+        }));
+        setSessions(formattedSessions);
+      }
+    } catch (error) {
+      console.error('Error loading learn sessions:', error);
+    }
   };
 
-  const toggleVideo = (exampleId: string) => {
-    setVideoVisible(prev => ({ ...prev, [exampleId]: !prev[exampleId] }));
+  const loadCurrentSession = async () => {
+    if (!userId) return;
+    
+    try {
+      const { data: session } = await supabase
+        .from('learn_sessions')
+        .select('id')
+        .eq('user_id', userId)
+        .order('updated_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (session) {
+        await loadSession(session.id);
+      }
+    } catch (error) {
+      console.error('Error loading current session:', error);
+    }
   };
+
+  const loadSession = async (sessionId: string) => {
+    try {
+      setCurrentSessionId(sessionId);
+      
+      // TODO: Load messages from learn_question_attempts or similar table
+      // For now, starting with empty messages
+      setMessages([]);
+    } catch (error) {
+      console.error('Error loading session:', error);
+    }
+  };
+
+  const loadStudentProfile = async () => {
+    if (!userId) return;
+    
+    try {
+      const { data: profile } = await supabase
+        .from('learn_student_subjects')
+        .select('target_grade, exam_date')
+        .eq('user_id', userId)
+        .eq('subject', 'Mathematics') // Focus on maths for now
+        .single();
+
+      if (profile) {
+        setStudentProfile({
+          target_grade: profile.target_grade,
+          exam_date: profile.exam_date
+        });
+      }
+    } catch (error) {
+      console.error('Error loading student profile:', error);
+    }
+  };
+
+  const loadProgressData = async () => {
+    if (!userId) return;
+    
+    try {
+      // Load spec points progress - for now we'll focus on the main spec points
+      // This would ideally come from your learn_student_progress table
+      const { data: progressData } = await supabase
+        .from('learn_student_progress')
+        .select(`
+          spec_point,
+          mastery_score,
+          total_questions,
+          correct_answers,
+          last_practiced
+        `)
+        .eq('user_id', userId)
+        .order('spec_point');
+
+      if (progressData) {
+        // Map the data to include titles and descriptions
+        const specPointsWithDetails: SpecPointProgress[] = progressData.map(item => ({
+          spec_point: item.spec_point,
+          title: getSpecPointTitle(item.spec_point),
+          description: getSpecPointDescription(item.spec_point),
+          mastery_score: item.mastery_score || 0,
+          total_questions: item.total_questions || 0,
+          correct_answers: item.correct_answers || 0,
+          last_practiced: item.last_practiced
+        }));
+
+        setSpecPointsProgress(specPointsWithDetails);
+        
+        // Calculate overall mastery
+        const totalMastery = specPointsWithDetails.reduce((sum, item) => sum + item.mastery_score, 0);
+        const averageMastery = specPointsWithDetails.length > 0 ? totalMastery / specPointsWithDetails.length : 0;
+        setOverallMastery(averageMastery);
+      } else {
+        // If no progress data exists, create default entry for Power Rule
+        const defaultProgress: SpecPointProgress[] = [{
+          spec_point: '7.2',
+          title: 'Power Rule',
+          description: 'Practice differentiation using the power rule for polynomial functions.',
+          mastery_score: 0,
+          total_questions: 0,
+          correct_answers: 0
+        }];
+        setSpecPointsProgress(defaultProgress);
+        setOverallMastery(0);
+      }
+    } catch (error) {
+      console.error('Error loading progress data:', error);
+      // Fallback to default data
+      const defaultProgress: SpecPointProgress[] = [{
+        spec_point: '7.2',
+        title: 'Power Rule',
+        description: 'Practice differentiation using the power rule for polynomial functions.',
+        mastery_score: 0,
+        total_questions: 0,
+        correct_answers: 0
+      }];
+      setSpecPointsProgress(defaultProgress);
+      setOverallMastery(0);
+    }
+  };
+
+  const getSpecPointTitle = (specPoint: string): string => {
+    const specPointTitles: { [key: string]: string } = {
+      '7.2': 'Power Rule',
+      '7.1': 'Introduction to Differentiation',
+      '7.3': 'Product Rule',
+      '7.4': 'Quotient Rule',
+      '7.5': 'Chain Rule'
+    };
+    return specPointTitles[specPoint] || `Spec Point ${specPoint}`;
+  };
+
+  const getSpecPointDescription = (specPoint: string): string => {
+    const specPointDescriptions: { [key: string]: string } = {
+      '7.2': 'Practice differentiation using the power rule for polynomial functions.',
+      '7.1': 'Understanding derivatives and rates of change.',
+      '7.3': 'Differentiate products of functions.',
+      '7.4': 'Differentiate quotients of functions.',
+      '7.5': 'Differentiate composite functions.'
+    };
+    return specPointDescriptions[specPoint] || 'Advanced differentiation techniques.';
+  };
+
+  const loadUserProfile = async () => {
+    if (!userId) return;
+    
+    try {
+      // Load comprehensive user profile from user_profiles table
+      const { data: profile } = await supabase
+        .from('user_profiles')
+        .select(`
+          id,
+          subjects,
+          universities,
+          supercurriculars,
+          timeline,
+          created_at,
+          updated_at
+        `)
+        .eq('id', userId)
+        .single();
+
+      if (profile) {
+        setUserProfile(profile);
+      }
+    } catch (error) {
+      console.error('Error loading user profile:', error);
+    }
+  };
+
+  const saveUserProfile = async (profileData: Partial<UserProfile>) => {
+    if (!userId) return;
+    
+    try {
+      const { error } = await supabase
+        .from('user_profiles')
+        .upsert({
+          id: userId,
+          ...profileData,
+          updated_at: new Date().toISOString()
+        });
+
+      if (error) throw error;
+      
+      await loadUserProfile(); // Reload to get fresh data
+      setIsEditingProfile(false);
+    } catch (error) {
+      console.error('Error saving user profile:', error);
+      alert('Error saving profile. Please try again.');
+    }
+  };
+
+  const createNewSession = async () => {
+    if (!userId) return;
+    
+    try {
+      const { data: newSession } = await supabase
+        .from('learn_sessions')
+        .insert({
+          user_id: userId,
+          spec_point: '7.2', // Default to Power Rule for now
+          session_type: 'practice'
+        })
+        .select('id')
+        .single();
+
+      if (newSession) {
+        setCurrentSessionId(newSession.id);
+        setMessages([]);
+        await loadSessions();
+        setShowSessionsSidebar(false);
+      }
+    } catch (error) {
+      console.error('Error creating new session:', error);
+    }
+  };
+
+  const startPracticeSession = async (specPoint: string) => {
+    if (!userId) return;
+    
+    try {
+      const { data: newSession } = await supabase
+        .from('learn_sessions')
+        .insert({
+          user_id: userId,
+          spec_point: specPoint,
+          session_type: 'practice'
+        })
+        .select('id')
+        .single();
+
+      if (newSession) {
+        setCurrentSessionId(newSession.id);
+        setMessages([]);
+        await loadSessions();
+        setActiveView('chat'); // Switch to chat view
+        setShowSessionsSidebar(false);
+      }
+    } catch (error) {
+      console.error('Error starting practice session:', error);
+    }
+  };
+
+  const sendMessage = async () => {
+    if (!currentMessage.trim() || !userId || isLoading) {
+      return;
+    }
+
+    const userMessage = {
+      id: Date.now().toString(),
+      role: 'user' as const,
+      content: currentMessage.trim(),
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setCurrentMessage('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/chat/learn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userMessage.content,
+          sessionId: currentSessionId,
+          userId,
+          specPoint: '7.2' // Default to Power Rule for now
+        })
+      });
+
+      if (!response.ok) throw new Error('Failed to send message');
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let assistantMessage = '';
+
+      const assistantId = (Date.now() + 1).toString();
+      setMessages(prev => [...prev, {
+        id: assistantId,
+        role: 'assistant',
+        content: '',
+        timestamp: new Date()
+      }]);
+
+      while (reader) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n');
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              
+              if (data.type === 'token') {
+                assistantMessage += data.content;
+                setMessages(prev => prev.map(msg => 
+                  msg.id === assistantId 
+                    ? { ...msg, content: assistantMessage }
+                    : msg
+                ));
+                
+                if (data.sessionId && !currentSessionId) {
+                  setCurrentSessionId(data.sessionId);
+                }
+              } else if (data.type === 'complete') {
+                if (data.sessionId && !currentSessionId) {
+                  setCurrentSessionId(data.sessionId);
+                }
+                await loadSessions();
+              }
+            } catch (e) {
+              console.error('Error parsing SSE data:', e);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again.',
+        timestamp: new Date()
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  // Show loading spinner while checking auth
+  if (loading) {
+    return (
+      <div className="learn-loading">
+        <div className="loading-spinner"></div>
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ 
-      minHeight: '100vh',
-      backgroundColor: '#FAFAFA',
-      paddingTop: '60px'
-    }}>
+    <div className="learn-page" style={{ paddingTop: '60px' }}>
       <Navbar />
 
-      <div style={{ display: 'flex', height: 'calc(100vh - 60px)' }}>
-        {/* Left Sidebar */}
-        <div style={{
-          width: '320px',
-          backgroundColor: '#FFFFFF',
-          borderRight: '1px solid #E5E7EB',
-          overflowY: 'auto',
-          padding: '20px'
-        }}>
-          {/* Search Bar */}
-          <div style={{
-            marginBottom: '20px'
-          }}>
-            <div style={{
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-              backgroundColor: '#F3F4F6',
-              borderRadius: '8px',
-              padding: '10px 16px'
-            }}>
-              <input
-                type="text"
-                placeholder="Search topics..."
-                style={{
-                  flex: 1,
-                  border: 'none',
-                  background: 'transparent',
-                  outline: 'none',
-                  fontSize: '14px'
-                }}
-              />
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="#6B7280" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-            </div>
-          </div>
+      {/* Back Button */}
+      <Link href="/" className="back-button">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+        Island Hub
+      </Link>
 
-          {/* Course Title */}
-          <div style={{
-            backgroundColor: '#E0F7FA',
-            borderRadius: '8px',
-            padding: '12px 16px',
-            marginBottom: '20px'
-          }}>
-            <h3 style={{
-              fontSize: '16px',
-              fontWeight: '600',
-              margin: '0 0 4px 0'
-            }}>Edexcel A Level Maths</h3>
-            <h4 style={{
-              fontSize: '18px',
-              fontWeight: '700',
-              margin: '0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}>
-              Pure Mathematics
-              <span style={{ fontSize: '14px' }}>▼</span>
-            </h4>
-          </div>
+      {/* Main Interface */}
+      <div className="learn-container">
+        {/* View Toggle */}
+        <div className="view-toggle">
+          <button 
+            className={`toggle-btn ${activeView === 'chat' ? 'active' : ''}`}
+            onClick={() => setActiveView('chat')}
+          >
+            Learn Chat
+          </button>
+          <button 
+            className={`toggle-btn ${activeView === 'progress' ? 'active' : ''}`}
+            onClick={() => setActiveView('progress')}
+          >
+            Progress Dashboard
+          </button>
+          <button 
+            className={`toggle-btn ${activeView === 'profile' ? 'active' : ''}`}
+            onClick={() => setActiveView('profile')}
+          >
+            Profile
+          </button>
+        </div>
 
-          {/* Topics List */}
-          <div>
-            {/* Topic 1 - Proof */}
-            <div style={{ marginBottom: '12px' }}>
-              <div
-                onClick={() => toggleTopic(1)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '12px',
-                  backgroundColor: '#00CED1',
-                  color: 'white',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: '600'
-                }}
-              >
-                <span>1 Proof</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{
-                    backgroundColor: 'white',
-                    color: '#00CED1',
-                    padding: '2px 8px',
-                    borderRadius: '4px',
-                    fontSize: '12px',
-                    fontWeight: '700'
-                  }}>A*</span>
-                  <span>{expandedTopics[1] ? '▼' : '▶'}</span>
-                </div>
+        {/* Chat View */}
+        {activeView === 'chat' && (
+          <>
+            {/* Sessions Sidebar */}
+            <div className={`sessions-sidebar ${showSessionsSidebar ? 'open' : ''}`}>
+              <div className="sessions-header">
+                <h3>Learn Sessions</h3>
+                <button 
+                  className="close-sidebar"
+                  onClick={() => setShowSessionsSidebar(false)}
+                >
+                  ×
+                </button>
               </div>
               
-              {expandedTopics[1] && (
-                <div style={{
-                  marginLeft: '20px',
-                  marginTop: '8px'
-                }}>
-                  <div style={{
-                    padding: '8px 12px',
-                    fontSize: '13px',
-                    color: '#374151',
-                    backgroundColor: '#F9FAFB',
-                    borderRadius: '4px',
-                    marginBottom: '4px'
-                  }}>
-                    <strong>1.1 Mathematical Proof</strong>
-                    <span style={{ float: 'right' }}>▼</span>
+              <button 
+                className="new-session-btn"
+                onClick={createNewSession}
+              >
+                + New Maths Session
+              </button>
+              
+              <div className="sessions-list">
+                {sessions.map(session => (
+                  <div 
+                    key={session.id}
+                    className={`session-item ${session.id === currentSessionId ? 'active' : ''}`}
+                    onClick={() => {
+                      loadSession(session.id);
+                      setShowSessionsSidebar(false);
+                    }}
+                  >
+                    <div className="session-preview">{session.first_message}</div>
+                    <div className="session-meta">
+                      <span className="session-date">
+                        {new Date(session.updated_at).toLocaleDateString()}
+                      </span>
+                      {session.spec_point && (
+                        <span className="spec-point">Spec {session.spec_point}</span>
+                      )}
+                    </div>
                   </div>
-                  <div style={{
-                    marginLeft: '20px',
-                    fontSize: '12px',
-                    color: '#6B7280'
-                  }}>
-                    <div style={{ padding: '4px 0' }}>• How to proof by exhaustion</div>
-                    <div style={{ padding: '4px 0' }}>• Disproof by counter example counter example</div>
+                ))}
+              </div>
+            </div>
+
+            {/* Chat Area */}
+            <div className="chat-area">
+              {/* Chat Actions */}
+              <div className="chat-actions-bar">
+                <button 
+                  className="sessions-toggle"
+                  onClick={() => setShowSessionsSidebar(true)}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                </button>
+              </div>
+
+              {/* Messages */}
+              <div className="messages-container">
+                <div className="messages-wrapper">
+                  {messages.length === 0 ? (
+                    <div className="welcome-message">
+                      <h2>🧮 Welcome to Learn Chat</h2>
+                      <p>I'm your maths tutor AI, here to help you master A-Level Mathematics through personalized practice and feedback.</p>
+                      <p>I can help you with:</p>
+                      <ul>
+                        <li>📚 Spec point 7.2: Power Rule for differentiation</li>
+                        <li>✏️ Step-by-step worked solutions</li>
+                        <li>🎯 Personalized practice questions</li>
+                        <li>📊 Progress tracking and feedback</li>
+                      </ul>
+                      <p>Ask me anything about the Power Rule, or let me test you with a practice question!</p>
+                    </div>
+                  ) : (
+                    [...messages].reverse().map(message => (
+                      <div key={message.id} className={`message ${message.role}`}>
+                        <div className="message-content">
+                          {message.role === 'assistant' ? (
+                            <ReactMarkdown>{message.content}</ReactMarkdown>
+                          ) : (
+                            message.content
+                          )}
+                        </div>
+                        <div className="message-time">
+                          {message.timestamp.toLocaleTimeString()}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              {/* Chat Input */}
+              <div className="chat-input-area">
+                <div className="input-wrapper">
+                  <textarea
+                    value={currentMessage}
+                    onChange={(e) => setCurrentMessage(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder="Ask about the Power Rule or request a practice question..."
+                    disabled={isLoading}
+                    rows={1}
+                    className="chat-input"
+                  />
+                  <button 
+                    onClick={sendMessage}
+                    disabled={isLoading || !currentMessage.trim()}
+                    className="send-button"
+                  >
+                    {isLoading ? (
+                      <div className="loading-spinner-small"></div>
+                    ) : (
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Progress View */}
+        {activeView === 'progress' && (
+          <div className="progress-dashboard">
+            <div className="progress-header">
+              <h2>📊 Progress Dashboard</h2>
+              <p>Track your mastery across all A-Level Mathematics topics</p>
+            </div>
+
+            {/* Profile Summary */}
+            <div className="profile-summary">
+              <h3>Your Profile</h3>
+              {studentProfile ? (
+                <div className="profile-info">
+                  <div className="profile-item">
+                    <span className="label">Target Grade:</span>
+                    <span className="value">{studentProfile.target_grade}</span>
                   </div>
-                  <div style={{
-                    padding: '8px 12px',
-                    fontSize: '13px',
-                    color: '#6B7280',
-                    cursor: 'pointer'
-                  }}>
-                    1.1 Mathematical Proof
-                    <span style={{ float: 'right' }}>▶</span>
+                  <div className="profile-item">
+                    <span className="label">Exam Date:</span>
+                    <span className="value">{new Date(studentProfile.exam_date).toLocaleDateString()}</span>
+                  </div>
+                  <div className="profile-item">
+                    <span className="label">Overall Mastery:</span>
+                    <span className="value">{overallMastery.toFixed(1)}/10</span>
+                  </div>
+                </div>
+              ) : (
+                <p>Set up your profile to track progress effectively</p>
+              )}
+            </div>
+
+            {/* Spec Points Progress */}
+            <div className="spec-points-grid">
+              <h3>Spec Point Progress</h3>
+              {specPointsProgress.length > 0 ? (
+                specPointsProgress.map((progress) => (
+                  <div key={progress.spec_point} className="spec-point-card">
+                    <div className="spec-header">
+                      <h4>{progress.spec_point} - {progress.title}</h4>
+                      <div className="mastery-score">
+                        Mastery: {progress.mastery_score}/10
+                      </div>
+                    </div>
+                    <div className="spec-content">
+                      <p>{progress.description}</p>
+                      <div className="progress-stats">
+                        <span>Questions: {progress.correct_answers}/{progress.total_questions}</span>
+                        {progress.last_practiced && (
+                          <span>Last practiced: {new Date(progress.last_practiced).toLocaleDateString()}</span>
+                        )}
+                      </div>
+                      <div className="progress-bar">
+                        <div 
+                          className="progress-fill" 
+                          style={{width: `${(progress.mastery_score / 10) * 100}%`}}
+                        ></div>
+                      </div>
+                      <button 
+                        className="practice-btn"
+                        onClick={() => startPracticeSession(progress.spec_point)}
+                      >
+                        Practice Now
+                      </button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="spec-point-card">
+                  <div className="spec-header">
+                    <h4>7.2 - Power Rule</h4>
+                    <div className="mastery-score">Mastery: 0/10</div>
+                  </div>
+                  <div className="spec-content">
+                    <p>Practice differentiation using the power rule for polynomial functions.</p>
+                    <div className="progress-bar">
+                      <div className="progress-fill" style={{width: '0%'}}></div>
+                    </div>
+                    <button 
+                      className="practice-btn"
+                      onClick={() => startPracticeSession('7.2')}
+                    >
+                      Practice Now
+                    </button>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Topic 2 - Algebra and functions */}
-            <div style={{ marginBottom: '12px' }}>
-              <div
-                onClick={() => toggleTopic(2)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '12px',
-                  backgroundColor: '#F3F4F6',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: '600'
-                }}
+            {/* Coming Soon */}
+            <div className="coming-soon">
+              <h3>🚀 Coming Soon</h3>
+              <ul>
+                <li>📈 Overall mastery tracking</li>
+                <li>⏱️ Pacing vs exam date</li>
+                <li>🎯 Weak area identification</li>
+                <li>📝 Topic coverage marking</li>
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {/* Profile View */}
+        {activeView === 'profile' && (
+          <div className="profile-view">
+            <div className="profile-header">
+              <h2>👤 Your Profile</h2>
+              <p>Manage your academic information and goals</p>
+              <button 
+                className="edit-profile-btn"
+                onClick={() => setIsEditingProfile(!isEditingProfile)}
               >
-                <span>2 Algebra and functions</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{
-                    backgroundColor: '#3B82F6',
-                    color: 'white',
-                    padding: '2px 8px',
-                    borderRadius: '4px',
-                    fontSize: '12px',
-                    fontWeight: '700'
-                  }}>B</span>
-                  <span>▶</span>
-                </div>
-              </div>
+                {isEditingProfile ? 'Cancel' : 'Edit Profile'}
+              </button>
             </div>
 
-            {/* Topics 3-10 */}
-            {[
-              { num: 3, name: 'Spec topic', grade: 'C' },
-              { num: 4, name: 'Spec topic', grade: 'A**' },
-              { num: 5, name: 'Spec topic', grade: 'A' },
-              { num: 6, name: 'Spec topic', grade: 'A*' },
-              { num: 7, name: 'Spec topic', grade: 'B' },
-              { num: 8, name: 'Spec topic', grade: 'A' },
-              { num: 9, name: 'Spec topic', grade: 'C' },
-              { num: 10, name: 'Spec topic', grade: 'B' }
-            ].map(topic => (
-              <div key={topic.num} style={{ marginBottom: '12px' }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '12px',
-                    backgroundColor: '#F3F4F6',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: '600'
-                  }}
-                >
-                  <span>{topic.num} {topic.name}</span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{
-                      backgroundColor: topic.grade.includes('A') ? '#10B981' : topic.grade === 'B' ? '#3B82F6' : '#F59E0B',
-                      color: 'white',
-                      padding: '2px 8px',
-                      borderRadius: '4px',
-                      fontSize: '12px',
-                      fontWeight: '700'
-                    }}>{topic.grade}</span>
-                    <span>▶</span>
-                  </div>
-                </div>
-              </div>
-            ))}
+            {isEditingProfile ? (
+              <ProfileForm 
+                profile={userProfile}
+                onSave={saveUserProfile}
+                onCancel={() => setIsEditingProfile(false)}
+              />
+            ) : (
+              <ProfileDisplay 
+                profile={userProfile} 
+                onSetupProfile={() => setIsEditingProfile(true)}
+              />
+            )}
           </div>
-        </div>
-
-        {/* Main Content */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '24px' }}>
-          {/* Top Stats Cards */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(5, 1fr)',
-            gap: '16px',
-            marginBottom: '24px'
-          }}>
-            {/* Working Grade */}
-            <div style={{
-              backgroundColor: 'white',
-              borderRadius: '12px',
-              padding: '16px',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-            }}>
-              <div style={{ fontSize: '12px', color: '#6B7280', marginBottom: '8px' }}>WORKING GRADE</div>
-              <div style={{ fontSize: '32px', fontWeight: '700', color: '#00CED1' }}>A</div>
-              <div style={{ fontSize: '11px', color: '#6B7280' }}>Current</div>
-              <div style={{ marginTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <div style={{ flex: 1, height: '4px', backgroundColor: '#E5E7EB', borderRadius: '2px' }}>
-                  <div style={{ width: '85%', height: '100%', backgroundColor: '#00CED1', borderRadius: '2px' }}></div>
-                </div>
-              </div>
-              <div style={{ fontSize: '10px', color: '#6B7280', marginTop: '4px' }}>85% to A*</div>
-            </div>
-
-            {/* Predicted Grade */}
-            <div style={{
-              backgroundColor: 'white',
-              borderRadius: '12px',
-              padding: '16px',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-            }}>
-              <div style={{ fontSize: '12px', color: '#6B7280', marginBottom: '8px' }}>PREDICTED GRADE</div>
-              <div style={{ fontSize: '28px', fontWeight: '700' }}>A/ A*</div>
-              <div style={{ fontSize: '11px', color: '#00CED1', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                ↗ Trending up
-              </div>
-              <div style={{ fontSize: '10px', color: '#6B7280', marginTop: '8px' }}>
-                Based on<br />current<br />trajectory
-              </div>
-            </div>
-
-            {/* Learning Streak */}
-            <div style={{
-              backgroundColor: 'white',
-              borderRadius: '12px',
-              padding: '16px',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-            }}>
-              <div style={{ fontSize: '12px', color: '#6B7280', marginBottom: '8px' }}>LEARNING STREAK</div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '24px' }}>🔥</span>
-                <div>
-                  <div style={{ fontSize: '32px', fontWeight: '700' }}>5</div>
-                  <div style={{ fontSize: '12px', color: '#6B7280' }}>DAYS</div>
-                </div>
-                <div style={{ fontSize: '11px', color: '#6B7280' }}>Keep<br />going!</div>
-              </div>
-            </div>
-
-            {/* Exam Readiness */}
-            <div style={{
-              backgroundColor: 'white',
-              borderRadius: '12px',
-              padding: '16px',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-            }}>
-              <div style={{ fontSize: '12px', color: '#6B7280', marginBottom: '8px' }}>EXAM READINESS</div>
-              <div style={{ fontSize: '11px', color: '#6B7280', marginBottom: '8px' }}>Topics</div>
-              <div style={{ position: 'relative', marginBottom: '8px' }}>
-                <div style={{ width: '100%', height: '8px', backgroundColor: '#E5E7EB', borderRadius: '4px' }}>
-                  <div style={{ width: '14%', height: '100%', backgroundColor: '#00CED1', borderRadius: '4px' }}></div>
-                </div>
-                <div style={{ fontSize: '10px', color: '#6B7280', marginTop: '2px', textAlign: 'right' }}>14/20</div>
-              </div>
-              <div style={{ fontSize: '11px', color: '#6B7280', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                ✓ Exam pace on track
-              </div>
-            </div>
-
-            {/* Grade Split by Topic */}
-            <div style={{
-              backgroundColor: 'white',
-              borderRadius: '12px',
-              padding: '16px',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-            }}>
-              <div style={{ fontSize: '12px', color: '#6B7280', marginBottom: '8px' }}>GRADE SPLIT BY TOPIC</div>
-              <div style={{ position: 'relative', width: '80px', height: '80px', margin: '0 auto' }}>
-                <svg viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
-                  <circle cx="50" cy="50" r="40" fill="none" stroke="#E5E7EB" strokeWidth="20" />
-                  <circle cx="50" cy="50" r="40" fill="none" stroke="#00CED1" strokeWidth="20" 
-                    strokeDasharray="251.2" strokeDashoffset="50" />
-                </svg>
-                <div style={{ 
-                  position: 'absolute', 
-                  top: '50%', 
-                  left: '50%', 
-                  transform: 'translate(-50%, -50%)',
-                  fontSize: '10px',
-                  lineHeight: '1.2',
-                  textAlign: 'center'
-                }}>
-                  <div>⭘ A**</div>
-                  <div>⭘ A*</div>
-                  <div>⭘ A</div>
-                  <div>⭘ B</div>
-                  <div>● C</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Grade Trajectory Chart */}
-          <div style={{
-            backgroundColor: 'white',
-            borderRadius: '12px',
-            padding: '16px',
-            marginBottom: '24px',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-              <div style={{ fontSize: '12px', color: '#6B7280' }}>GRADE TRAJECTORY</div>
-              <div style={{ fontSize: '11px', color: '#10B981' }}>+1.5 grades ↗</div>
-            </div>
-            <div style={{ height: '60px', position: 'relative' }}>
-              <svg width="100%" height="100%" viewBox="0 0 400 60">
-                <line x1="0" y1="30" x2="400" y2="10" stroke="#00CED1" strokeWidth="2" />
-                <circle cx="100" cy="24" r="4" fill="#00CED1" />
-                <circle cx="200" cy="20" r="4" fill="#00CED1" />
-                <circle cx="300" cy="15" r="4" fill="#00CED1" />
-                <circle cx="400" cy="10" r="4" fill="#00CED1" />
-              </svg>
-              <div style={{ 
-                position: 'absolute', 
-                bottom: '0', 
-                left: '0', 
-                right: '0',
-                display: 'flex',
-                justifyContent: 'space-between',
-                fontSize: '10px',
-                color: '#6B7280'
-              }}>
-                <span>W2</span>
-                <span>W3</span>
-                <span>W4</span>
-                <span>W5</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Weekly Stats */}
-          <div style={{
-            backgroundColor: 'white',
-            borderRadius: '12px',
-            padding: '16px',
-            marginBottom: '24px',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-            display: 'flex',
-            gap: '24px'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '24px' }}>📊</span>
-              <div>
-                <div style={{ fontSize: '12px', color: '#6B7280' }}>THIS WEEK</div>
-              </div>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: '700' }}>47</div>
-              <div style={{ fontSize: '11px', color: '#6B7280' }}>Questions</div>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: '700' }}>73%</div>
-              <div style={{ fontSize: '11px', color: '#6B7280' }}>Accuracy</div>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: '700' }}>3h 24m</div>
-              <div style={{ fontSize: '11px', color: '#6B7280' }}>Study Time</div>
-            </div>
-          </div>
-
-          {/* Tabs */}
-          <div style={{
-            display: 'flex',
-            marginBottom: '24px'
-          }}>
-            <button
-              onClick={() => setActiveTab('lesson')}
-              style={{
-                flex: 1,
-                padding: '12px',
-                backgroundColor: activeTab === 'lesson' ? '#00CED1' : '#F3F4F6',
-                color: activeTab === 'lesson' ? 'white' : '#6B7280',
-                border: 'none',
-                fontSize: '14px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                borderRadius: activeTab === 'lesson' ? '8px 0 0 8px' : '0'
-              }}
-            >
-              LESSON
-            </button>
-            <button
-              onClick={() => setActiveTab('practice')}
-              style={{
-                flex: 1,
-                padding: '12px',
-                backgroundColor: activeTab === 'practice' ? '#00CED1' : '#F3F4F6',
-                color: activeTab === 'practice' ? 'white' : '#6B7280',
-                border: 'none',
-                fontSize: '14px',
-                fontWeight: '600',
-                cursor: 'pointer'
-              }}
-            >
-              PRACTICE
-            </button>
-            <button
-              onClick={() => setActiveTab('test')}
-              style={{
-                flex: 1,
-                padding: '12px',
-                backgroundColor: activeTab === 'test' ? '#00CED1' : '#F3F4F6',
-                color: activeTab === 'test' ? 'white' : '#6B7280',
-                border: 'none',
-                fontSize: '14px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                borderRadius: activeTab === 'test' ? '0 8px 8px 0' : '0'
-              }}
-            >
-              END OF TOPIC TEST
-            </button>
-          </div>
-
-          {/* Content based on active tab */}
-          {activeTab === 'lesson' && (
-            <>
-              {/* Topic Header */}
-              <div style={{ marginBottom: '24px' }}>
-                <h2 style={{ fontSize: '18px', fontWeight: '400', color: '#6B7280', margin: '0 0 8px 0' }}>
-                  1 Proof
-                </h2>
-                <h1 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 8px 0' }}>
-                  1.1 Mathematical Proof
-                </h1>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <h3 style={{ fontSize: '16px', fontWeight: '600', margin: '0' }}>
-                    How to proof by exhaustion
-                  </h3>
-                  <span style={{
-                    backgroundColor: '#10B981',
-                    color: 'white',
-                    padding: '2px 8px',
-                    borderRadius: '4px',
-                    fontSize: '12px',
-                    fontWeight: '700'
-                  }}>A*</span>
-                </div>
-              </div>
-
-              {/* Video Lesson */}
-              <div style={{ marginBottom: '32px' }}>
-                <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '16px' }}>Video Lesson</h2>
-                <div style={{
-                  backgroundColor: '#E5E7EB',
-                  borderRadius: '12px',
-                  height: '400px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'white',
-                  fontSize: '24px',
-                  fontWeight: '600',
-                  position: 'relative'
-                }}>
-                  <div style={{ textAlign: 'center' }}>
-                    VIDEO<br />
-                    embedded in page
-                  </div>
-                  <div style={{
-                    position: 'absolute',
-                    top: '16px',
-                    right: '16px',
-                    backgroundColor: '#00CED1',
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '8px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    <span style={{ fontSize: '20px' }}>▶</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Explanation */}
-              <div style={{ marginBottom: '32px' }}>
-                <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#374151' }}>
-                  Proof by deduction e.g. using completion of the square, prove that n2 - 6n + 10 is positive for all values of n or, for 
-                  example, differentiation from first principles for small positive integer powers of x or proving results for arithmetic and 
-                  geometric series. This is the most commonly used method of proof throughout this specification
-                </p>
-              </div>
-
-              {/* Examples */}
-              <div style={{ marginBottom: '32px' }}>
-                <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '16px' }}>Examples</h2>
-
-                {/* Example 1 */}
-                <div style={{
-                  backgroundColor: '#E0F7FA',
-                  borderRadius: '8px',
-                  padding: '20px',
-                  marginBottom: '16px'
-                }}>
-                  <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '12px' }}>Example 1</h3>
-                  <p style={{ marginBottom: '16px' }}>Simplify the following: b/q+ k/u</p>
-                  <div style={{ display: 'flex', gap: '12px' }}>
-                    <button style={{
-                      padding: '8px 20px',
-                      border: '2px solid #374151',
-                      borderRadius: '6px',
-                      backgroundColor: 'white',
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                      fontWeight: '600'
-                    }}>
-                      Worked Solution
-                    </button>
-                    <button 
-                      onClick={() => toggleVideo('example1')}
-                      style={{
-                        padding: '8px 20px',
-                        border: '2px solid #374151',
-                        borderRadius: '6px',
-                        backgroundColor: 'white',
-                        cursor: 'pointer',
-                        fontSize: '14px',
-                        fontWeight: '600'
-                      }}
-                    >
-                      Question Walkthrough
-                    </button>
-                  </div>
-                </div>
-
-                {/* Example 2 */}
-                <div style={{
-                  backgroundColor: '#E0F7FA',
-                  borderRadius: '8px',
-                  padding: '20px',
-                  marginBottom: '16px'
-                }}>
-                  <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '12px' }}>Example 2</h3>
-                  <p style={{ marginBottom: '12px' }}>Simplify the following: b/q+ k/u</p>
-                  <div style={{ marginBottom: '16px' }}>
-                    <p style={{ fontSize: '14px', fontWeight: '600', marginBottom: '8px' }}>Simplify</p>
-                    <p style={{ fontSize: '14px', marginBottom: '16px' }}>
-                      Proof by deduction e.g. using completion of the square, prove that n2 - 6n + 10 is positive for all.
-                    </p>
-                    <div style={{ borderTop: '1px solid #9CA3AF', paddingTop: '16px' }}>
-                      <p style={{ fontSize: '14px', fontWeight: '600', marginBottom: '12px' }}>Apply the idea</p>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                          <span style={{ fontSize: '14px', marginRight: '8px' }}>3y/8 × 4y/9 = 3y × 4y/8 × 9</span>
-                        </div>
-                        <span style={{ fontSize: '13px', color: '#6B7280' }}>Multiply the numerator</span>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                          <span style={{ fontSize: '14px', marginRight: '8px' }}>= 12y²</span>
-                        </div>
-                        <span style={{ fontSize: '13px', color: '#6B7280' }}>Multiply the numerator</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', gap: '12px' }}>
-                    <button style={{
-                      padding: '8px 20px',
-                      border: '2px solid #374151',
-                      borderRadius: '6px',
-                      backgroundColor: 'white',
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                      fontWeight: '600'
-                    }}>
-                      Worked Solution
-                    </button>
-                    <button style={{
-                      padding: '8px 20px',
-                      border: '2px solid #374151',
-                      borderRadius: '6px',
-                      backgroundColor: 'white',
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                      fontWeight: '600'
-                    }}>
-                      Question Walkthrough
-                    </button>
-                  </div>
-                </div>
-
-                {/* Example 3 */}
-                <div style={{
-                  backgroundColor: '#E0F7FA',
-                  borderRadius: '8px',
-                  padding: '20px',
-                  marginBottom: '16px'
-                }}>
-                  <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '12px' }}>Example 3</h3>
-                  <p style={{ marginBottom: '16px' }}>Simplify the following: b/q+ k/u</p>
-                  <div style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
-                    <button style={{
-                      padding: '8px 20px',
-                      border: '2px solid #374151',
-                      borderRadius: '6px',
-                      backgroundColor: 'white',
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                      fontWeight: '600'
-                    }}>
-                      Worked Solution
-                    </button>
-                    <button 
-                      onClick={() => toggleVideo('example3')}
-                      style={{
-                        padding: '8px 20px',
-                        border: '2px solid #374151',
-                        borderRadius: '6px',
-                        backgroundColor: 'white',
-                        cursor: 'pointer',
-                        fontSize: '14px',
-                        fontWeight: '600'
-                      }}
-                    >
-                      Question Walkthrough
-                    </button>
-                  </div>
-                  
-                  {videoVisible['example3'] && (
-                    <div style={{
-                      backgroundColor: '#D1D5DB',
-                      borderRadius: '8px',
-                      height: '300px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'white',
-                      fontSize: '18px',
-                      fontWeight: '600',
-                      textAlign: 'center',
-                      padding: '20px'
-                    }}>
-                      VIDEO<br />
-                      appears below question<br />
-                      walkthrough button when<br />
-                      clicked<br />
-                      (like a toggle effect)
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Lesson Summary */}
-              <div style={{
-                backgroundColor: 'white',
-                border: '2px solid #E5E7EB',
-                borderRadius: '12px',
-                padding: '24px',
-                marginBottom: '32px'
-              }}>
-                <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '16px' }}>LESSON SUMMARY</h2>
-                <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#374151', marginBottom: '16px' }}>
-                  Proof by deduction e.g. using completion of the square, prove that n2 - 6n + 10 is positive for all.Proof by 
-                  deduction e.g. using completion of the square, prove that n2 - 6n + 10 is positive for all.Proof by deduction 
-                  e.g. using completion of the square, prove that n2 - 6n + 10.
-                </p>
-                <div style={{ 
-                  display: 'flex', 
-                  justifyContent: 'center',
-                  fontSize: '20px',
-                  color: '#3B82F6',
-                  letterSpacing: '4px'
-                }}>
-                  <span style={{ marginRight: '16px' }}>A/B</span>
-                  <span>÷</span>
-                  <span style={{ marginLeft: '16px' }}>C/D</span>
-                  <span style={{ margin: '0 16px' }}>=</span>
-                  <span style={{ marginRight: '16px' }}>A/B</span>
-                  <span>×</span>
-                  <span style={{ marginLeft: '16px' }}>D/C</span>
-                </div>
-              </div>
-
-              {/* Practice Button */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <button
-                  onClick={() => setActiveTab('practice')}
-                  style={{
-                    padding: '12px 32px',
-                    backgroundColor: '#E0F7FA',
-                    color: '#00CED1',
-                    border: '2px solid #00CED1',
-                    borderRadius: '8px',
-                    fontSize: '16px',
-                    fontWeight: '700',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px'
-                  }}
-                >
-                  PRACTICE
-                  <span>▶</span>
-                </button>
-              </div>
-            </>
-          )}
-
-          {activeTab === 'practice' && (
-            <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '16px' }}>Practice Section</h2>
-              <p style={{ fontSize: '16px', color: '#6B7280' }}>
-                Practice questions and exercises will appear here
-              </p>
-            </div>
-          )}
-
-          {activeTab === 'test' && (
-            <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '16px' }}>End of Topic Test</h2>
-              <p style={{ fontSize: '16px', color: '#6B7280' }}>
-                Test questions will appear here
-              </p>
-            </div>
-          )}
-        </div>
+        )}
       </div>
     </div>
   );
 }
+
+// Profile Display Component
+const ProfileDisplay = ({ 
+  profile, 
+  onSetupProfile 
+}: { 
+  profile: UserProfile | null;
+  onSetupProfile: () => void;
+}) => {
+  if (!profile) {
+    return (
+      <div className="empty-profile">
+        <h3>📝 Complete Your Profile</h3>
+        <p>Add your academic information to get personalized learning recommendations.</p>
+        <button 
+          className="setup-profile-btn"
+          onClick={onSetupProfile}
+        >
+          Set Up Profile
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="profile-content">
+      {/* Basic Information */}
+      <div className="profile-section">
+        <h3>📚 Subjects</h3>
+        {profile.subjects?.length > 0 ? (
+          <div className="subjects-grid">
+            {profile.subjects.map((subject) => (
+              <div key={subject.id} className="subject-card">
+                <div className="subject-header">
+                  <span className="subject-name">{subject.name}</span>
+                  <span className="subject-level">{subject.level}</span>
+                </div>
+                <div className="subject-grades">
+                  {subject.grade_achieved && (
+                    <div className="grade-item">
+                      <span className="label">Achieved:</span>
+                      <span className="grade">{subject.grade_achieved}</span>
+                    </div>
+                  )}
+                  {subject.target_grade && (
+                    <div className="grade-item">
+                      <span className="label">Target:</span>
+                      <span className="grade target">{subject.target_grade}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="empty-section">No subjects added yet</p>
+        )}
+      </div>
+
+      {/* Universities */}
+      <div className="profile-section">
+        <h3>🎓 University Choices</h3>
+        {profile.universities?.length > 0 ? (
+          <div className="universities-list">
+            {profile.universities.map((uni) => (
+              <div key={uni.id} className="university-card">
+                <div className="university-info">
+                  <h4>{uni.name}</h4>
+                  <p>{uni.course}</p>
+                  <span className={`choice-type ${uni.type}`}>
+                    {uni.type === 'firm' ? 'Firm Choice' : 
+                     uni.type === 'insurance' ? 'Insurance Choice' : 
+                     'Choice'}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="empty-section">No university choices added yet</p>
+        )}
+      </div>
+
+      {/* Supercurriculars */}
+      <div className="profile-section">
+        <h3>⭐ Supercurriculars</h3>
+        {profile.supercurriculars?.length > 0 ? (
+          <div className="supercurriculars-list">
+            {profile.supercurriculars.map((item) => (
+              <div key={item.id} className="supercurricular-card">
+                <div className="supercurricular-header">
+                  <span className={`type-badge ${item.type}`}>
+                    {item.type}
+                  </span>
+                  <h4>{item.title}</h4>
+                </div>
+                <p>{item.description}</p>
+                {item.date_completed && (
+                  <span className="date">Completed: {new Date(item.date_completed).toLocaleDateString()}</span>
+                )}
+                {item.relevance_to_subject && (
+                  <div className="relevance">
+                    <strong>Relevance:</strong> {item.relevance_to_subject}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="empty-section">No supercurriculars added yet</p>
+        )}
+      </div>
+
+      {/* Timeline */}
+      <div className="profile-section">
+        <h3>📅 Timeline</h3>
+        {profile.timeline ? (
+          <div className="timeline-content">
+            <div className="current-status">
+              <h4>Current Status</h4>
+              <p>{profile.timeline.current_status}</p>
+            </div>
+            
+            {profile.timeline.exam_dates?.length > 0 && (
+              <div className="exam-dates">
+                <h4>Exam Dates</h4>
+                {profile.timeline.exam_dates.map((exam, index) => (
+                  <div key={index} className="exam-item">
+                    <span className="subject">{exam.subject}</span>
+                    <span className="date">{new Date(exam.date).toLocaleDateString()}</span>
+                    <span className={`exam-type ${exam.type}`}>{exam.type}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {profile.timeline.predicted_grades_date && (
+              <div className="predicted-grades">
+                <h4>Predicted Grades Date</h4>
+                <p>{new Date(profile.timeline.predicted_grades_date).toLocaleDateString()}</p>
+              </div>
+            )}
+
+            {profile.timeline.application_deadlines?.length > 0 && (
+              <div className="application-deadlines">
+                <h4>Application Deadlines</h4>
+                {profile.timeline.application_deadlines.map((deadline, index) => (
+                  <div key={index} className="deadline-item">
+                    <span className="university">{deadline.university}</span>
+                    <span className="date">{new Date(deadline.deadline).toLocaleDateString()}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          <p className="empty-section">No timeline information added yet</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Profile Form Component - Placeholder for now
+const ProfileForm = ({ 
+  profile, 
+  onSave, 
+  onCancel 
+}: { 
+  profile: UserProfile | null;
+  onSave: (data: Partial<UserProfile>) => void;
+  onCancel: () => void;
+}) => {
+  return (
+    <div className="profile-form">
+      <p>Profile editing form will be implemented here...</p>
+      <div className="form-actions">
+        <button className="cancel-btn" onClick={onCancel}>Cancel</button>
+        <button className="save-btn" onClick={() => onSave({})}>Save</button>
+      </div>
+    </div>
+  );
+};
