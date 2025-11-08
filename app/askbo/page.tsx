@@ -175,15 +175,17 @@ export default function StudyBookPage() {
     { id: 'academic-papers', label: 'Academic Papers', icon: '/icons/academic-paper.svg', count: getCategoryCount('academic-papers') }
   ];
 
-  // Auth protection - check if user is logged in
+  // Auth check - optional login (no redirect)
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push('/login');
-        return;
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          setUser(user);
+        }
+      } catch (error) {
+        console.log('No user logged in, continuing without auth');
       }
-      setUser(user);
       setLoading(false);
     };
     checkAuth();
@@ -639,7 +641,25 @@ export default function StudyBookPage() {
   };
 
   const sendMessage = async () => {
-    if (!currentMessage.trim() || !userId || isLoading) {
+    if (!currentMessage.trim() || isLoading) {
+      return;
+    }
+
+    // If no user is logged in, show a helpful message
+    if (!userId) {
+      const loginPromptMessage = {
+        id: Date.now().toString(),
+        role: 'assistant' as const,
+        content: 'Hi! To have full conversations and save your progress, please log in or sign up. You can still browse the interface and see how it works!',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        role: 'user',
+        content: currentMessage.trim(),
+        timestamp: new Date()
+      }, loginPromptMessage]);
+      setCurrentMessage('');
       return;
     }
 

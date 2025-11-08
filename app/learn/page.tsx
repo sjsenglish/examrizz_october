@@ -117,16 +117,18 @@ export default function LearnPage() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
 
-  // Auth protection - check if user is logged in
+  // Auth check - optional login (no redirect)
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push('/login');
-        return;
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          setUser(user);
+          setUserId(user.id);
+        }
+      } catch (error) {
+        console.log('No user logged in, continuing without auth');
       }
-      setUser(user);
-      setUserId(user.id);
       setLoading(false);
     };
     checkAuth();
@@ -134,7 +136,7 @@ export default function LearnPage() {
 
   // Load sessions and current session on mount
   useEffect(() => {
-    if (!userId) return;
+    // Load data regardless of auth status, but handle gracefully when no user
     loadSessions();
     loadCurrentSession();
     loadStudentProfile();
@@ -416,7 +418,25 @@ export default function LearnPage() {
   };
 
   const sendMessage = async () => {
-    if (!currentMessage.trim() || !userId || isLoading) {
+    if (!currentMessage.trim() || isLoading) {
+      return;
+    }
+
+    // If no user is logged in, show a helpful message
+    if (!userId) {
+      const loginPromptMessage = {
+        id: Date.now().toString(),
+        role: 'assistant' as const,
+        content: 'Hi! To have full conversations and save your progress, please log in or sign up. You can still browse the interface and see how it works!',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        role: 'user',
+        content: currentMessage.trim(),
+        timestamp: new Date()
+      }, loginPromptMessage]);
+      setCurrentMessage('');
       return;
     }
 
@@ -632,7 +652,16 @@ export default function LearnPage() {
                         <li>🎯 Personalized practice questions</li>
                         <li>📊 Progress tracking and feedback</li>
                       </ul>
-                      <p>Ask me anything about the Power Rule, or let me test you with a practice question!</p>
+                      {userId ? (
+                        <p>Ask me anything about the Power Rule, or let me test you with a practice question!</p>
+                      ) : (
+                        <div>
+                          <p>Try asking a question to see how it works!</p>
+                          <p style={{fontSize: '14px', color: '#6B7280', marginTop: '12px'}}>
+                            💡 <strong>Note:</strong> To save progress and have full conversations, please <Link href="/login" style={{color: '#2563EB', textDecoration: 'underline'}}>log in</Link> or <Link href="/signup" style={{color: '#2563EB', textDecoration: 'underline'}}>sign up</Link>.
+                          </p>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     [...messages].reverse().map(message => (
@@ -695,7 +724,12 @@ export default function LearnPage() {
             {/* Profile Summary */}
             <div className="profile-summary">
               <h3>Your Profile</h3>
-              {studentProfile ? (
+              {!userId ? (
+                <div className="empty-section">
+                  <p>Log in to track your personal progress and goals</p>
+                  <Link href="/login" style={{color: '#2563EB', textDecoration: 'underline', fontWeight: 'bold'}}>Log In</Link> or <Link href="/signup" style={{color: '#2563EB', textDecoration: 'underline', fontWeight: 'bold'}}>Sign Up</Link>
+                </div>
+              ) : studentProfile ? (
                 <div className="profile-info">
                   <div className="profile-item">
                     <span className="label">Target Grade:</span>
@@ -791,15 +825,26 @@ export default function LearnPage() {
             <div className="profile-header">
               <h2>👤 Your Profile</h2>
               <p>Manage your academic information and goals</p>
-              <button 
-                className="edit-profile-btn"
-                onClick={() => setIsEditingProfile(!isEditingProfile)}
-              >
-                {isEditingProfile ? 'Cancel' : 'Edit Profile'}
-              </button>
+              {userId && (
+                <button 
+                  className="edit-profile-btn"
+                  onClick={() => setIsEditingProfile(!isEditingProfile)}
+                >
+                  {isEditingProfile ? 'Cancel' : 'Edit Profile'}
+                </button>
+              )}
             </div>
 
-            {isEditingProfile ? (
+            {!userId ? (
+              <div className="empty-profile">
+                <h3>📝 Profile Access</h3>
+                <p>Create an account to build your personalized academic profile with subjects, university choices, and learning goals.</p>
+                <div style={{display: 'flex', gap: '16px', justifyContent: 'center', marginTop: '24px'}}>
+                  <Link href="/login" className="setup-profile-btn">Log In</Link>
+                  <Link href="/signup" className="setup-profile-btn">Sign Up</Link>
+                </div>
+              </div>
+            ) : isEditingProfile ? (
               <ProfileForm 
                 profile={userProfile}
                 onSave={saveUserProfile}
