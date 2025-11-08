@@ -441,7 +441,7 @@ Remember: You have access to comprehensive profile information about this studen
           try {
             const actualInputTokens = Math.ceil(message.length / 4);
             const actualOutputTokens = Math.ceil(fullResponse.length / 4);
-            await recordUsage(userId, 'learn_chat', actualInputTokens, actualOutputTokens);
+            await recordUsage(userId, 'other', actualInputTokens, actualOutputTokens);
           } catch (usageError) {
             console.error('Error recording usage:', usageError);
           }
