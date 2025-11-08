@@ -422,24 +422,6 @@ export default function LearnPage() {
       return;
     }
 
-    // If no user is logged in, show a helpful message
-    if (!userId) {
-      const loginPromptMessage = {
-        id: Date.now().toString(),
-        role: 'assistant' as const,
-        content: 'Hi! To have full conversations and save your progress, please log in or sign up. You can still browse the interface and see how it works!',
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, {
-        id: Date.now().toString(),
-        role: 'user',
-        content: currentMessage.trim(),
-        timestamp: new Date()
-      }, loginPromptMessage]);
-      setCurrentMessage('');
-      return;
-    }
-
     const userMessage = {
       id: Date.now().toString(),
       role: 'user' as const,
@@ -458,7 +440,7 @@ export default function LearnPage() {
         body: JSON.stringify({
           message: userMessage.content,
           sessionId: currentSessionId,
-          userId,
+          userId: userId || 'anonymous', // Use 'anonymous' if no user is logged in
           specPoint: '7.2' // Default to Power Rule for now
         })
       });
@@ -581,64 +563,9 @@ export default function LearnPage() {
         {/* Chat View */}
         {activeView === 'chat' && (
           <>
-            {/* Sessions Sidebar */}
-            <div className={`sessions-sidebar ${showSessionsSidebar ? 'open' : ''}`}>
-              <div className="sessions-header">
-                <h3>Learn Sessions</h3>
-                <button 
-                  className="close-sidebar"
-                  onClick={() => setShowSessionsSidebar(false)}
-                >
-                  ×
-                </button>
-              </div>
-              
-              <button 
-                className="new-session-btn"
-                onClick={createNewSession}
-              >
-                + New Maths Session
-              </button>
-              
-              <div className="sessions-list">
-                {sessions.map(session => (
-                  <div 
-                    key={session.id}
-                    className={`session-item ${session.id === currentSessionId ? 'active' : ''}`}
-                    onClick={() => {
-                      loadSession(session.id);
-                      setShowSessionsSidebar(false);
-                    }}
-                  >
-                    <div className="session-preview">{session.first_message}</div>
-                    <div className="session-meta">
-                      <span className="session-date">
-                        {new Date(session.updated_at).toLocaleDateString()}
-                      </span>
-                      {session.spec_point && (
-                        <span className="spec-point">Spec {session.spec_point}</span>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Chat Area */}
+            {/* Chat Area - removed sidebar */}
             <div className="chat-area">
-              {/* Chat Actions */}
-              <div className="chat-actions-bar">
-                <button 
-                  className="sessions-toggle"
-                  onClick={() => setShowSessionsSidebar(true)}
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                  </svg>
-                </button>
-              </div>
-
-              {/* Messages */}
+              {/* Messages - removed sidebar toggle */}
               <div className="messages-container">
                 <div className="messages-wrapper">
                   {messages.length === 0 ? (
@@ -652,16 +579,7 @@ export default function LearnPage() {
                         <li>🎯 Personalized practice questions</li>
                         <li>📊 Progress tracking and feedback</li>
                       </ul>
-                      {userId ? (
-                        <p>Ask me anything about the Power Rule, or let me test you with a practice question!</p>
-                      ) : (
-                        <div>
-                          <p>Try asking a question to see how it works!</p>
-                          <p style={{fontSize: '14px', color: '#6B7280', marginTop: '12px'}}>
-                            💡 <strong>Note:</strong> To save progress and have full conversations, please <Link href="/login" style={{color: '#2563EB', textDecoration: 'underline'}}>log in</Link> or <Link href="/signup" style={{color: '#2563EB', textDecoration: 'underline'}}>sign up</Link>.
-                          </p>
-                        </div>
-                      )}
+                      <p>Ask me anything about the Power Rule, or let me test you with a practice question!</p>
                     </div>
                   ) : (
                     [...messages].reverse().map(message => (

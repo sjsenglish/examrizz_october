@@ -211,87 +211,94 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Message and userId are required' }, { status: 400 });
     }
 
-    // Apply Redis rate limiting
-    const rateLimitResult = await rateLimitApiRequest(userId, 'chat', request);
-    if (!rateLimitResult.success) {
-      return NextResponse.json(
-        { 
-          error: `Rate limit exceeded for ${rateLimitResult.tier} tier. Upgrade for higher limits.`,
-          resetTime: rateLimitResult.resetTime,
-          tier: rateLimitResult.tier,
-          limit: rateLimitResult.limit,
-          remaining: rateLimitResult.remaining
-        }, 
-        { 
-          status: 429,
-          headers: {
-            'X-RateLimit-Limit': rateLimitResult.limit.toString(),
-            'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
-            'X-RateLimit-Reset': rateLimitResult.resetTime.toString(),
-            'X-RateLimit-Tier': rateLimitResult.tier
+    // Skip rate limiting for anonymous users
+    if (userId !== 'anonymous') {
+      // Apply Redis rate limiting
+      const rateLimitResult = await rateLimitApiRequest(userId, 'chat', request);
+      if (!rateLimitResult.success) {
+        return NextResponse.json(
+          { 
+            error: `Rate limit exceeded for ${rateLimitResult.tier} tier. Upgrade for higher limits.`,
+            resetTime: rateLimitResult.resetTime,
+            tier: rateLimitResult.tier,
+            limit: rateLimitResult.limit,
+            remaining: rateLimitResult.remaining
+          }, 
+          { 
+            status: 429,
+            headers: {
+              'X-RateLimit-Limit': rateLimitResult.limit.toString(),
+              'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+              'X-RateLimit-Reset': rateLimitResult.resetTime.toString(),
+              'X-RateLimit-Tier': rateLimitResult.tier
+            }
           }
-        }
-      );
+        );
+      }
     }
 
-    // Check usage limits
-    const estimatedInputTokens = Math.ceil(message.length / 4);
-    const estimatedOutputTokens = 500;
-    
-    const usageCheck = await canMakeRequest(userId, estimatedInputTokens, estimatedOutputTokens);
-    
-    if (!usageCheck.allowed) {
-      return NextResponse.json({ 
-        error: 'usage_limit_exceeded',
-        message: usageCheck.reason,
-        usage: usageCheck.usage
-      }, { status: 402 });
+    // Check usage limits (skip for anonymous users)
+    if (userId !== 'anonymous') {
+      const estimatedInputTokens = Math.ceil(message.length / 4);
+      const estimatedOutputTokens = 500;
+      
+      const usageCheck = await canMakeRequest(userId, estimatedInputTokens, estimatedOutputTokens);
+      
+      if (!usageCheck.allowed) {
+        return NextResponse.json({ 
+          error: 'usage_limit_exceeded',
+          message: usageCheck.reason,
+          usage: usageCheck.usage
+        }, { status: 402 });
+      }
     }
 
     let currentSessionId = sessionId;
 
-    // Handle session creation/retrieval
-    if (!currentSessionId) {
-      // Check for existing active session
-      const { data: existingSession } = await supabase
-        .from('learn_sessions')
-        .select('id')
-        .eq('user_id', userId)
-        .order('updated_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      if (existingSession) {
-        currentSessionId = existingSession.id;
-      } else {
-        // Create new learn session
-        const { data: newSession } = await supabase
+    // Handle session creation/retrieval (skip for anonymous users)
+    if (userId !== 'anonymous') {
+      if (!currentSessionId) {
+        // Check for existing active session
+        const { data: existingSession } = await supabase
           .from('learn_sessions')
-          .insert({
-            user_id: userId,
-            spec_point: specPoint || '7.2',
-            session_type: 'practice',
-            first_message: message.substring(0, 100)
-          })
           .select('id')
+          .eq('user_id', userId)
+          .order('updated_at', { ascending: false })
+          .limit(1)
           .single();
 
-        if (!newSession) {
-          throw new Error('Failed to create learn session');
-        }
-        currentSessionId = newSession.id;
-      }
-    }
+        if (existingSession) {
+          currentSessionId = existingSession.id;
+        } else {
+          // Create new learn session
+          const { data: newSession } = await supabase
+            .from('learn_sessions')
+            .insert({
+              user_id: userId,
+              spec_point: specPoint || '7.2',
+              session_type: 'practice',
+              first_message: message.substring(0, 100)
+            })
+            .select('id')
+            .single();
 
-    // Update session with first message if needed
-    if (message && message.trim()) {
-      await supabase
-        .from('learn_sessions')
-        .update({ 
-          first_message: message.substring(0, 100),
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', currentSessionId);
+          if (!newSession) {
+            throw new Error('Failed to create learn session');
+          }
+          currentSessionId = newSession.id;
+        }
+      }
+
+      // Update session with first message if needed
+      if (message && message.trim() && currentSessionId) {
+        await supabase
+          .from('learn_sessions')
+          .update({ 
+            first_message: message.substring(0, 100),
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', currentSessionId);
+      }
     }
 
     // Save user message (we'll create a simple message storage for learn sessions)
@@ -307,28 +314,33 @@ export async function POST(request: NextRequest) {
       }
     ];
 
-    // Get comprehensive user profile for context
-    const [studentProfileResponse, userProfileResponse] = await Promise.all([
-      supabase
-        .from('learn_student_subjects')
-        .select('target_grade, exam_date, current_topic')
-        .eq('user_id', userId)
-        .eq('subject', 'Mathematics')
-        .single(),
-      supabase
-        .from('user_profiles')
-        .select(`
-          subjects,
-          universities,
-          supercurriculars,
-          timeline
-        `)
-        .eq('id', userId)
-        .single()
-    ]);
-
-    const { data: studentProfile } = studentProfileResponse;
-    const { data: userProfile } = userProfileResponse;
+    // Get comprehensive user profile for context (skip for anonymous users)
+    let studentProfile = null;
+    let userProfile = null;
+    
+    if (userId !== 'anonymous') {
+      const [studentProfileResponse, userProfileResponse] = await Promise.all([
+        supabase
+          .from('learn_student_subjects')
+          .select('target_grade, exam_date, current_topic')
+          .eq('user_id', userId)
+          .eq('subject', 'Mathematics')
+          .single(),
+        supabase
+          .from('user_profiles')
+          .select(`
+            subjects,
+            universities,
+            supercurriculars,
+            timeline
+          `)
+          .eq('id', userId)
+          .single()
+      ]);
+      
+      studentProfile = studentProfileResponse.data;
+      userProfile = userProfileResponse.data;
+    }
 
     // Build context string with comprehensive profile information
     let contextString = '';
@@ -437,13 +449,15 @@ Remember: You have access to comprehensive profile information about this studen
             }
           }
 
-          // Record usage for billing/limits
-          try {
-            const actualInputTokens = Math.ceil(message.length / 4);
-            const actualOutputTokens = Math.ceil(fullResponse.length / 4);
-            await recordUsage(userId, 'other', actualInputTokens, actualOutputTokens);
-          } catch (usageError) {
-            console.error('Error recording usage:', usageError);
+          // Record usage for billing/limits (skip for anonymous users)
+          if (userId !== 'anonymous') {
+            try {
+              const actualInputTokens = Math.ceil(message.length / 4);
+              const actualOutputTokens = Math.ceil(fullResponse.length / 4);
+              await recordUsage(userId, 'other', actualInputTokens, actualOutputTokens);
+            } catch (usageError) {
+              console.error('Error recording usage:', usageError);
+            }
           }
 
           // Send completion signal
