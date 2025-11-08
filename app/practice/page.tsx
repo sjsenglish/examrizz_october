@@ -72,7 +72,8 @@ export default function PracticePage() {
       setSavingPack(packId);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        alert('Please log in to save packs');
+        // Silently skip saving if user not logged in - practice is still accessible
+        console.log('User not logged in - skipping pack save');
         return;
       }
 

@@ -20,7 +20,8 @@ export async function getCurrentUserSubscription(): Promise<UserSubscription | n
     const { data: { user } } = await supabase.auth.getUser();
     
     if (!user) {
-      throw new Error('No authenticated user');
+      // Return null instead of throwing error for unauthenticated users
+      return null;
     }
 
     // Check cache first

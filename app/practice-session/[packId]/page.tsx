@@ -405,22 +405,13 @@ export default function PracticeSessionPage({ params }: { params: Promise<{ pack
 
   const saveAttemptToSupabase = async (score: number, totalQuestions: number, timeTaken: number) => {
     try {
-      // Get current user (or use test account)
+      // Get current user - if not logged in, skip saving
       let { data: { user }, error: userError } = await supabase.auth.getUser();
       
       if (userError || !user) {
-        // Try to sign in with test account
-        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-          email: 'sjahn150@gmail.com',
-          password: 'password'
-        });
-        
-        if (signInError || !signInData.user) {
-          console.error('Authentication failed:', signInError);
-          return false;
-        }
-        
-        user = signInData.user;
+        // User not logged in - skip saving to database but allow practice to continue
+        console.log('User not logged in - skipping attempt save');
+        return true; // Return success to allow practice session to complete
       }
 
       // Prepare answers object with question_id as key
