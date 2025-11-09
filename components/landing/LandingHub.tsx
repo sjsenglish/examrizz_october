@@ -43,41 +43,42 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
           left: '50%',
           top: '55%',
           transform: 'translate(-50%, -50%)',
-          width: '1166px', /* Zoomed out even more: 1296px -> 1166px (10% smaller) */
-          height: '583px', /* Zoomed out even more: 648px -> 583px (10% smaller) */
+          width: '1440px', /* 10% smaller: 1600px -> 1440px */
+          height: '720px', /* 10% smaller: 800px -> 720px */
           zIndex: 15
         }}
       >
-        {/* ARENA - positioned based on reference image */}
+        {/* ARENA - top-left (20% from left, 25% from top) */}
         <div 
-          className="absolute"
+          className="absolute group"
           style={{
-            left: '35%',
-            top: '22%',
+            left: '32%',
+            top: '18%',
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <div className="block" style={{ cursor: 'not-allowed' }}>
+          <div className="relative">
             <Image 
               src="/icons/arena.svg"
               alt="ARENA"
-              width={180}
-              height={180}
-              className="drop-shadow-lg"
-              style={{ 
-                filter: 'grayscale(100%) opacity(0.6)',
-                pointerEvents: 'none'
-              }}
+              width={248} /* 10% smaller: 276 -> 248 */
+              height={248} /* 10% smaller: 276 -> 248 */
+              className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
             />
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <span className="bg-white/95 px-4 py-2 rounded-lg border-2 border-black shadow-lg font-['Madimi_One'] text-lg">
+                Coming Soon
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* VIDEO - positioned based on reference image */}
+        {/* VIDEO - top-right (75% from left, 25% from top) */}
         <div 
           className="absolute"
           style={{
-            left: '68%',
-            top: '18%',
+            left: '65%',
+            top: '15%',
             transform: 'translate(-50%, -50%)'
           }}
         >
@@ -85,19 +86,19 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             <Image 
               src="/icons/video.svg"
               alt="VIDEO"
-              width={160}
-              height={160}
+              width={207} /* 10% smaller: 230 -> 207 */
+              height={207} /* 10% smaller: 230 -> 207 */
               className="drop-shadow-lg"
             />
           </Link>
         </div>
 
-        {/* PRACTICE - center positioned based on reference image */}
+        {/* PRACTICE - dead center (50% horizontal, 50% vertical) */}
         <div 
           className="absolute"
           style={{
             left: '50%',
-            top: '48%',
+            top: '50%',
             transform: 'translate(-50%, -50%)'
           }}
         >
@@ -105,43 +106,44 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             <Image 
               src="/icons/practice.svg"
               alt="PRACTICE"
-              width={170}
-              height={170}
+              width={207} /* 10% smaller: 230 -> 207 */
+              height={207} /* 10% smaller: 230 -> 207 */
               className="drop-shadow-lg"
             />
           </Link>
         </div>
 
-        {/* TEACHER - positioned based on reference image */}
+        {/* TEACHER - bottom-left (25% from left, 55% from top) - MOVED UP */}
+        <div 
+          className="absolute group"
+          style={{
+            left: '25%',
+            top: '55%',
+            transform: 'translate(-50%, -50%)'
+          }}
+        >
+          <div className="relative">
+            <Image 
+              src="/icons/teacher.svg"
+              alt="TEACHER"
+              width={228} /* 10% smaller: 253 -> 228 */
+              height={228} /* 10% smaller: 253 -> 228 */
+              className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
+            />
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <span className="bg-white/95 px-4 py-2 rounded-lg border-2 border-black shadow-lg font-['Madimi_One'] text-lg">
+                Coming Soon
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* ASK BO - moved further left (18% from left, 25% from top) */}
         <div 
           className="absolute"
           style={{
             left: '18%',
-            top: '65%',
-            transform: 'translate(-50%, -50%)'
-          }}
-        >
-          <div className="block" style={{ cursor: 'not-allowed' }}>
-            <Image 
-              src="/icons/teacher.svg"
-              alt="TEACHER"
-              width={160}
-              height={160}
-              className="drop-shadow-lg"
-              style={{ 
-                filter: 'grayscale(100%) opacity(0.6)',
-                pointerEvents: 'none'
-              }}
-            />
-          </div>
-        </div>
-
-        {/* ASK BO - positioned based on reference image */}
-        <div 
-          className="absolute"
-          style={{
-            left: '25%',
-            top: '32%',
+            top: '25%',
             transform: 'translate(-50%, -50%)'
           }}
         >
@@ -149,18 +151,18 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             <Image 
               src="/icons/island-ask-bo.svg"
               alt="ASK BO"
-              width={155}
-              height={155}
+              width={207}
+              height={207}
               className="drop-shadow-lg"
             />
           </Link>
         </div>
 
-        {/* LEARN - positioned based on reference image */}
+        {/* LEARN - bottom-right (70% from left, 45% from top) - MOVED UP */}
         <div 
           className="absolute"
           style={{
-            left: '75%',
+            left: '70%',
             top: '45%',
             transform: 'translate(-50%, -50%)'
           }}
@@ -169,19 +171,19 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             <Image 
               src="/icons/learn.svg"
               alt="LEARN"
-              width={145}
-              height={145}
+              width={186} /* 10% smaller: 207 -> 186 */
+              height={186} /* 10% smaller: 207 -> 186 */
               className="drop-shadow-lg"
             />
           </Link>
         </div>
 
-        {/* SEARCH - positioned based on reference image */}
+        {/* SEARCH - between video and learn icons on the right edge */}
         <div 
           className="absolute"
           style={{
-            left: '42%',
-            top: '75%',
+            left: '82%',
+            top: '30%',
             transform: 'translate(-50%, -50%)'
           }}
         >
@@ -189,8 +191,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             <Image 
               src="/icons/search-island-icon.svg"
               alt="SEARCH"
-              width={140}
-              height={140}
+              width={186} /* 10% smaller: 207 -> 186 */
+              height={186} /* 10% smaller: 207 -> 186 */
               className="drop-shadow-lg"
             />
           </Link>
@@ -204,8 +206,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
         <Image 
           src="/svg/island-cloud-big.svg"
           alt="Cloud"
-          width={131} /* Zoomed out even more: 146 -> 131 (10% smaller) */
-          height={87} /* Zoomed out even more: 97 -> 87 (10% smaller) */
+          width={162} /* 10% smaller: 180 -> 162 */
+          height={108} /* 10% smaller: 120 -> 108 */
         />
       </div>
       
@@ -214,8 +216,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
         <Image 
           src="/svg/island-cloud-big.svg"
           alt="Cloud"
-          width={131} /* Zoomed out even more: 146 -> 131 (10% smaller) */
-          height={87} /* Zoomed out even more: 97 -> 87 (10% smaller) */
+          width={162} /* 10% smaller: 180 -> 162 */
+          height={108} /* 10% smaller: 120 -> 108 */
         />
       </div>
       
@@ -224,8 +226,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
         <Image 
           src="/svg/island-cloud-medium.svg"
           alt="Cloud"
-          width={87} /* Zoomed out even more: 97 -> 87 (10% smaller) */
-          height={59} /* Zoomed out even more: 65 -> 59 (10% smaller) */
+          width={108} /* 10% smaller: 120 -> 108 */
+          height={72} /* 10% smaller: 80 -> 72 */
         />
       </div>
       
@@ -234,8 +236,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
         <Image 
           src="/svg/island-cloud-medium.svg"
           alt="Cloud"
-          width={87} /* Zoomed out even more: 97 -> 87 (10% smaller) */
-          height={59} /* Zoomed out even more: 65 -> 59 (10% smaller) */
+          width={108} /* 10% smaller: 120 -> 108 */
+          height={72} /* 10% smaller: 80 -> 72 */
         />
       </div>
 
