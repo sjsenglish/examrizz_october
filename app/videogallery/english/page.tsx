@@ -7,11 +7,27 @@ import Navbar from '@/components/Navbar';
 import '../videogallery.css';
 
 export default function EnglishVideoGalleryPage() {
-  // Mock data for only 3 videos
-  const videos = Array(3).fill(null).map((_, index) => ({
-    id: index + 1,
-    title: `Video Description Topic or something`
-  }));
+  // Video data for the three episodes
+  const videos = [
+    {
+      id: 'english-episode-1',
+      title: 'How to Read - Episode 1',
+      description: 'Introduction to reading techniques and analysis',
+      videoUrl: 'https://exsearchvideos.s3.eu-central-1.amazonaws.com/quentin/How+to+Read+Episode+1.mov'
+    },
+    {
+      id: 'english-episode-2', 
+      title: 'How to Read - Episode 2',
+      description: 'Advanced reading strategies and comprehension',
+      videoUrl: 'https://exsearchvideos.s3.eu-central-1.amazonaws.com/quentin/How+to+Read+Episode+2.mov'
+    },
+    {
+      id: 'english-episode-3',
+      title: 'How to Read - Episode 3', 
+      description: 'Critical analysis and interpretation methods',
+      videoUrl: 'https://exsearchvideos.s3.eu-central-1.amazonaws.com/quentin/How+to+Read+Episode+3.mov'
+    }
+  ];
 
   return (
     <div style={{ 
@@ -30,16 +46,30 @@ export default function EnglishVideoGalleryPage() {
           width: '100vw',
           marginLeft: 'calc(-50vw + 50%)',
           height: '600px',
-          backgroundColor: '#d0d0d0',
+          backgroundColor: '#000000',
           marginBottom: '80px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontFamily: "'Figtree', sans-serif",
-          fontSize: '24px',
-          color: '#666666',
           boxShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
         }}>
+          {/* Video Player */}
+          <video
+            width="100%"
+            height="100%"
+            autoPlay
+            muted
+            loop
+            playsInline
+            style={{
+              objectFit: 'cover',
+              width: '100%',
+              height: '100%'
+            }}
+          >
+            <source src="https://exsearchvideos.s3.eu-central-1.amazonaws.com/quentin/How+to+Read+Episode+1.mov" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
           {/* Info Box in Bottom Left Corner */}
           <div style={{
             position: 'absolute',
@@ -191,25 +221,24 @@ export default function EnglishVideoGalleryPage() {
               marginBottom: '40px'
             }}>
               {videos.map((video, index) => (
-                <Link key={video.id} href={`/video/${video.id}`} style={{ textDecoration: 'none' }}>
+                <Link key={video.id} href={`/videogallery/english/${video.id}`} style={{ textDecoration: 'none' }}>
                   <div style={{
                     display: 'flex',
                     flexDirection: 'column',
                     cursor: 'pointer'
                   }}>
                     <div style={{
-                      backgroundColor: '#d0d0d0',
+                      backgroundColor: '#000000',
                       border: '1px solid #000000',
                       borderRadius: '4px',
-                      padding: '20px',
                       height: '200px',
                       display: 'flex',
-                      flexDirection: 'column',
                       justifyContent: 'center',
                       alignItems: 'center',
                       position: 'relative',
                       marginBottom: '10px',
-                      transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+                      transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                      overflow: 'hidden'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-4px)';
@@ -219,24 +248,67 @@ export default function EnglishVideoGalleryPage() {
                       e.currentTarget.style.transform = 'translateY(0)';
                       e.currentTarget.style.boxShadow = 'none';
                     }}>
+                      {/* Video Thumbnail */}
+                      <video
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover'
+                        }}
+                        muted
+                      >
+                        <source src={video.videoUrl} type="video/mp4" />
+                      </video>
+                      
+                      {/* Play Button Overlay */}
                       <div style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '24px',
-                        color: '#666666',
-                        textAlign: 'center'
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '60px',
+                        height: '60px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease'
                       }}>
-                        Video Player
+                        <svg 
+                          width="24" 
+                          height="24" 
+                          viewBox="0 0 24 24" 
+                          fill="none"
+                          style={{ marginLeft: '3px' }}
+                        >
+                          <polygon 
+                            points="8,5 19,12 8,19" 
+                            fill="#000000"
+                          />
+                        </svg>
                       </div>
                     </div>
                     
                     <div style={{
                       fontFamily: "'Figtree', sans-serif",
-                      fontSize: '12px',
+                      fontSize: '14px',
                       color: '#000000',
                       letterSpacing: '0.04em',
-                      textAlign: 'left'
+                      textAlign: 'left',
+                      fontWeight: '500'
                     }}>
                       {video.title}
+                    </div>
+                    <div style={{
+                      fontFamily: "'Figtree', sans-serif",
+                      fontSize: '12px',
+                      color: '#666666',
+                      textAlign: 'left',
+                      marginTop: '4px'
+                    }}>
+                      {video.description}
                     </div>
                   </div>
                 </Link>
