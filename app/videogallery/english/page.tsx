@@ -79,7 +79,7 @@ export default function EnglishVideoGalleryPage() {
                 boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.2)'
               }}>
                 Start video series
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="https://exsearchvideos.s3.eu-central-1.amazonaws.com/quentin/How+to+Read+Episode+1.mov">
                   <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
@@ -123,7 +123,7 @@ export default function EnglishVideoGalleryPage() {
               zIndex: 10
             }}
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="https://exsearchvideos.s3.eu-central-1.amazonaws.com/quentin/How+to+Read+Episode+1.mov">
               <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             Back
@@ -168,7 +168,7 @@ export default function EnglishVideoGalleryPage() {
                 boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.2)'
               }}>
                 start topic
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="https://exsearchvideos.s3.eu-central-1.amazonaws.com/quentin/How+to+Read+Episode+2.mov">
                   <polygon points="9,6 9,18 17,12" fill="#000000"/>
                 </svg>
               </button>

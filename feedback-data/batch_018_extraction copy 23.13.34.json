@@ -1,0 +1,583 @@
+[
+  {
+    "filename": "Louis.docx",
+    "batch_id": "018",
+    "processed_by": "claude-sonnet-4-5",
+    "processing_date": "2025-10-29",
+    "subject": "PPE",
+    "character_count": 2847,
+    "universities": ["Oxford", "Oxbridge"],
+    "university_tier": "Oxbridge",
+    "year_group": null,
+    "feedback_format": "transcript",
+    "statement_full_text": "It is alarming that despite unprecedented access to information, solutions to pressing issues remain elusive. This gap draws me to PPE as it unites economic, political, and philosophical perspectives to find these solutions. Wealth inequality demonstrates this: whilst widely acknowledged as a problem, solutions are polarised. Byrne's 'The Inequality of Wealth' proposed reforms such as sovereign wealth funds, pension reform, and employee share schemes, which struck me as more creative than the sloganised call to 'tax the rich'. I realised that tackling inequality requires not just technical fixes but reimagining ownership and opportunity. While Byrne's support for a larger state made me reconsider the role of government, my time at the Eton Summer School taught me the practical realities of a free market. I analyzed how bond yields directly impact mortgage rates, deepening my understanding of how macroeconomic factors shape individual lives. It became clear to me that any policy solution must balance ideological goals with practical considerations as loss in confidence of a government could erode trust, raising yields and worsening housing affordability. Wanting to test the optimism of Byrne's reforms further, I attended the Marxism Festival 2025. I interviewed a SWP organiser but the interaction left me sceptical of the belief that workers and firms would prioritise moral over profit motives, and I noticed how some proposals risked eroding freedom through enforced equality. Reading Mill's 'On Liberty' clarified my views: I admired his defence of liberty and the harm principle, but questioned what constitutes harm; a question which I hope studying political philosophy will help answer. To explore these tensions, I presented at school on whether, as Friedman claims, free markets maximise freedom, or whether state involvement is essential to secure equal opportunity and reduce inequality. I also examined taxation - whether redistribution increases liberty or reduces economic freedom. This led to my Oxplore competition entry, where I argued in favour of a wealth cap, challenging assumptions about wealth migration. Despite Friedman's ideas of economic liberty being convincing, the widening wealth divide provides evidence that capitalism in its current form struggles to address inequality, suggesting the need for new solutions. Studying public economics in PPE will mature these opinions so I may address these issues further. Researching wealth caps, I encountered criticisms of state inefficiency. Consequently, I read Freedman's 'Failed State'. He exposed the dangers of over-centralisation and outsourcing, deepening my scepticism of current government institutions. Like Byrne, Freedman discussed issues and solutions often absent from mainstream debate. I explored this disconnect in my Kavitah Singh PPE essay on populist right support. Real economic issues, like those caused by outsourcing failures, are often ignored in favour of simpler social issues around immigration. Without understanding the economic underpinnings of social issues, any political solution risks being incomplete, emphasising how crucial studying politics and economics in tandem is. This inquiry into institutional failure continued in my John Locke essay, shortlisted for best economics entry, which addressed whether state or charity management could offset profit-driven behaviour. Despite my concerns with socialism at Marxism 2025, I concluded that democratic accountability could substitute for the price mechanism to guarantee fair pricing and quality, justifying state ownership. Machiavelli demonstrated the historical importance of this accountability when he warned that dissatisfied people replacing their rulers often find little change, a concept resonating with the recent change of governing party failing to improve public satisfaction. Only PPE equips me with the tools to test ideas against reality, moving beyond ideological gridlock and towards pragmatic solutions.",
+    "feedback_items": [
+      {
+        "section": "overall",
+        "weak_passage": null,
+        "issue_type": "standard_content",
+        "severity": "moderate",
+        "your_feedback": "This won't be a red flag that stops you from getting an interview, but it's not differentiated enough. Most of the content appears in 60% of other PPE statements - wealth inequality, Byrne, Mill, Friedman, and John Locke essay are all very standard. While it's absolutely fine and clearly shows a lot of work, it doesn't stand out from the pack.",
+        "improvement_suggested": "Share additional content you couldn't include so tutor can identify sections that would help you stand out more. Push the technical understanding further upwards.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["PPE", "standard_content", "moderate", "overall", "differentiation_needed", "oxbridge"]
+      },
+      {
+        "section": "paragraph_3",
+        "weak_passage": "I examined taxation - whether redistribution increases liberty or reduces economic freedom. This led to my Oxplore competition entry, where I argued in favour of a wealth cap, challenging assumptions about wealth migration. Despite Friedman's ideas of economic liberty being convincing, the widening wealth divide provides evidence that capitalism in its current form struggles to address inequality, suggesting the need for new solutions.",
+        "issue_type": "obvious_conclusion",
+        "severity": "moderate",
+        "your_feedback": "The conclusion seems fairly obvious - it's just saying the wealth divide shows capitalism isn't addressing inequality and we need new solutions. This reads as an obvious conclusion without much development beyond surface level.",
+        "improvement_suggested": "Develop this conclusion further with more technical detail rather than stating the obvious observation.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["PPE", "obvious_conclusion", "moderate", "needs_development", "economics", "technical_depth"]
+      },
+      {
+        "section": "paragraph_2",
+        "weak_passage": "I admired his defence of liberty and the harm principle, but questioned what constitutes harm; a question which I hope studying political philosophy will help answer.",
+        "issue_type": "underdeveloped",
+        "severity": "moderate",
+        "your_feedback": "You've understood and read Mill, got an interesting question about what constitutes harm, but then you just stop. You don't develop it. This never gets pushed to that level of showing what happens when you hit a wall in your learning journey - you need to show how you push through, not just acknowledge the question exists.",
+        "improvement_suggested": "Don't stop at identifying the interesting question - develop your thinking about it further, show your intellectual process.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["PPE", "underdeveloped", "moderate", "philosophy", "mill", "needs_development", "intellectual_depth"]
+      },
+      {
+        "section": "paragraph_4",
+        "weak_passage": "He exposed the dangers of over-centralisation and outsourcing, deepening my scepticism of current government institutions.",
+        "issue_type": "summary_level",
+        "severity": "moderate",
+        "your_feedback": "This reads like something you'd expect from a reviewer or interested person saying 'there are dangers here of over-centralization, this has deepened my scepticism.' It's at summary level rather than being more developed and interesting. You're just saying the book exposed dangers and it made you more skeptical.",
+        "improvement_suggested": "Make this more developed and interesting - go beyond summarizing what the book said and your reaction to it.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["PPE", "summary_level", "moderate", "needs_development", "politics", "institutional_failure"]
+      },
+      {
+        "section": "paragraph_4",
+        "weak_passage": "Without understanding the economic underpinnings of social issues, any political solution risks being incomplete, emphasising how crucial studying politics and economics in tandem is.",
+        "issue_type": "obvious_conclusion",
+        "severity": "moderate",
+        "your_feedback": "This is an obvious summary point - of course political solutions need to understand economic underpinnings. You're not wrong, but there's not a lot of technical development. It's just a safe, obvious observation.",
+        "improvement_suggested": "Provide more technical development rather than stating obvious connections between politics and economics.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["PPE", "obvious_conclusion", "moderate", "summary_level", "politics", "economics"]
+      },
+      {
+        "section": "overall",
+        "weak_passage": null,
+        "issue_type": "safe_approach",
+        "severity": "minor",
+        "your_feedback": "The pattern throughout is: book, reasonable conclusion, then acknowledging you need to understand more at university. It's not a very risky statement - you play it safe by always hedging with 'I need to learn more' rather than pushing your thinking further now.",
+        "improvement_suggested": "Take more intellectual risks - develop your thinking further rather than always deferring deeper analysis to future university study.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["PPE", "safe_approach", "minor", "overall", "intellectual_risk", "development_needed"]
+      },
+      {
+        "section": "overall",
+        "weak_passage": null,
+        "issue_type": "general_positive",
+        "severity": "minor",
+        "your_feedback": "If you left this as is, I do not anticipate this statement becoming a problem for you. It's good, well done. You clearly put a lot of work into this. The conclusions are all correct and good.",
+        "improvement_suggested": null,
+        "strong_passage": "The statement covers politics, philosophy, and economics nicely with appropriate content like John Locke essay, wealth inequality discussions, and engagement with major thinkers.",
+        "why_strong": "Shows engagement with appropriate PPE content and covers all three disciplines effectively.",
+        "tags": ["PPE", "general_positive", "minor", "overall", "acceptable_standard"]
+      },
+      {
+        "section": "overall",
+        "weak_passage": null,
+        "issue_type": "contextual_advice",
+        "severity": "minor",
+        "your_feedback": "With your excellent grades, both parents having gone to Oxbridge, and likely highest converted GCSE grade with 9s at A9 levels, it's going to come down to your TSA performance. The problem solving section is probably what you need to focus on more than anything, judging by your writing quality here.",
+        "improvement_suggested": "Focus preparation efforts on the TSA problem solving section as that will likely be the determining factor for interview.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["PPE", "contextual_advice", "minor", "admissions_strategy", "TSA", "oxbridge"]
+      }
+    ]
+  },
+  {
+    "filename": "lucy_109.docx",
+    "batch_id": "018",
+    "processed_by": "claude-sonnet-4-5",
+    "processing_date": "2025-10-29",
+    "subject": "Engineering",
+    "character_count": 2891,
+    "universities": ["Competitive Engineering"],
+    "university_tier": "Competitive",
+    "year_group": null,
+    "feedback_format": "transcript",
+    "statement_full_text": "The unique ability engineering has to shape our planet's future, through bold ideas and creative solutions, is what I admire most about the subject. My fascination began with the LEAF course 'Mathematics of Morality', which introduced me to effective altruism – how we can maximise our impact by tackling problems with both scale and severity. This drew me to the climate crisis, and through the BBC's podcast 'The Climate Question' I discovered the key role engineers play in reinventing technologies to reduce emissions. It fascinates me how one engineer's vision can spark global change, like Stiesdal creating the wind turbine that led Denmark to become a leader in renewable energy. His work inspired me to complete a research project with SATRO, investigating challenges with wind turbines, like fluctuating output and increasing size, and how engineers address these with solutions like smart grids and floating wind farms. The project also introduced me to Bernoulli's principle and catalysed my interest in fluid mechanics, which I look forward to studying in greater depth.\nThrough A-Level Maths and Physics, I have built problem-solving and critical thinking skills, showcased in Olympiads like the MOG (Merit) and SMC (Gold). These have been developed when tutoring Year 8 students, where I felt my ability to adapt was refined. As a head prefect, I have strengthened my communication and organisation skills by planning and executing events with my team, preparing me for collaborative work at university. Earning a Merit in the Immerse Education Essay Competition enabled me to gain researching and analysis skills. I answered the question 'How can engineering design foster innovation and sustainability?' and recognised how prioritising sustainability enhances innovation – for example if engineering companies spend more money on clean products; they are motivated to innovate more cost-effective designs.\nTo explore engineering and the climate crisis further, I completed a MOOC on electric cars, studying the challenges they face and their role in the energy transition. This sparked my curiosity in the future of transport. Intrigued to understand how EVs work, I read Larminie's book 'Electric Vehicle Technology Explained', where I particularly enjoyed learning the power electronics of motors. It fascinates me how engineers are able to make uses for wasted energy, for example in regenerative braking, and I want to be able to contribute to designing solutions where challenges are turned into opportunities. Discovering different electric cars inspired me to design my own in an extended project, using TinkerCAD to plan the chassis and coding a remote-controlled steering system. I built a solar powered charging station to model how cars can be powered from renewable energy. I found it rewarding to transform a simple idea into a functioning project, and this creative process draws me to a degree in engineering.\nDuring a week of work experience at Air Products, I was introduced to hydrogen as an energy store and a fuel for cars. This led me to question why engineers favour manufacturing battery electric cars over fuel cell powered cars, when the latter have a longer range. However, reading Larminie's book allowed me to discover the complexity of providing the right conditions for fuel cells and storing hydrogen. I concluded that it would be more economical to continue improving infrastructure for BEVs, which can be charged in more places - hydrogen is a better option for bus or tram networks.\nLearning the challenges of wind turbines, electric cars and the wider barriers to climate action has strengthened my desire to study engineering, a field with potential for meaningful impact. Reading MacKay's argument that we can't rely purely on renewable energy and will have to look to alternatives in his book 'Sustainable Energy – Without the Hot Air', was thought provoking. It highlighted to me not only the scale of the challenges ahead, but also the vast realm of possibilities available. Through engineering, I hope to turn these ideas into practical solutions that shape a sustainable future.",
+    "feedback_items": [
+      {
+        "section": "overall",
+        "weak_passage": null,
+        "issue_type": "standard_content",
+        "severity": "moderate",
+        "your_feedback": "Your personal statement is fine and won't work against you, but it's very standard. You mention a lot of the same content that appears in many engineering statements - Bernoulli's principle, Olympiad achievements, tutoring, MacKay's book, and EV cars. Because you're using the same content as many others, you'll be compared to them, and your insights are pretty surface level.",
+        "improvement_suggested": "If you want to strengthen it, focus on bringing in more university-level knowledge and technical depth rather than standard Year 12/13 content.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["engineering", "standard_content", "moderate", "overall", "differentiation_needed", "surface_level"]
+      },
+      {
+        "section": "overall",
+        "weak_passage": null,
+        "issue_type": "descriptive_writing",
+        "severity": "moderate",
+        "your_feedback": "Your statement is much more on the descriptive side - there's not a lot of technically difficult knowledge, no university-level understanding, and it's very standard Year 12 level. You're focusing more on storytelling about what you did rather than technical analysis of how things work. It reads more like an environmental or management degree statement than a highly academic engineering one.",
+        "improvement_suggested": "Shift from descriptive storytelling to technical analysis. Instead of just describing projects and conclusions, explain the engineering processes and physics/maths at a deeper level.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["engineering", "descriptive_writing", "moderate", "overall", "technical_depth", "needs_development"]
+      },
+      {
+        "section": "paragraph_1",
+        "weak_passage": "The project also introduced me to Bernoulli's principle and catalysed my interest in fluid mechanics, which I look forward to studying in greater depth.",
+        "issue_type": "underdeveloped",
+        "severity": "moderate",
+        "your_feedback": "This is the only time you mention something vaguely physics-related, and you just mention it - 'it introduced me to it and catalysed an interest' and that's it, full stop. You don't actually develop the physics or explain anything about it.",
+        "improvement_suggested": "Don't just name-drop Bernoulli's principle - explain what you learned about it, how it applies to wind turbines, what the technical aspects are.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["engineering", "underdeveloped", "moderate", "physics", "technical_depth", "paragraph_level", "bernoulli"]
+      },
+      {
+        "section": "paragraph_2",
+        "weak_passage": "Earning a Merit in the Immerse Education Essay Competition enabled me to gain researching and analysis skills. I answered the question 'How can engineering design foster innovation and sustainability?' and recognised how prioritising sustainability enhances innovation – for example if engineering companies spend more money on clean products; they are motivated to innovate more cost-effective designs.",
+        "issue_type": "management_level",
+        "severity": "moderate",
+        "your_feedback": "This conclusion about sustainability enhancing innovation is almost management-level thinking - it's about cost-benefit analysis rather than actual engineering. The insight is about business motivation and efficiency rather than technical engineering processes.",
+        "improvement_suggested": "If you expand on this, focus on the technical engineering aspects rather than business/management perspectives. Or consider cutting it if other content is more technical.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["engineering", "management_level", "moderate", "sustainability", "wrong_perspective", "paragraph_level"]
+      },
+      {
+        "section": "paragraph_4",
+        "weak_passage": "However, reading Larminie's book allowed me to discover the complexity of providing the right conditions for fuel cells and storing hydrogen. I concluded that it would be more economical to continue improving infrastructure for BEVs, which can be charged in more places - hydrogen is a better option for bus or tram networks.",
+        "issue_type": "efficiency_focus",
+        "severity": "moderate",
+        "your_feedback": "You're comparing battery versus fuel from an efficiency point of view rather than from a 'what's going on inside' engineering perspective. This is more about practical economics than technical engineering. Two statements can talk about the same thing but you need an engineering perspective, not just comparing outcomes.",
+        "improvement_suggested": "Instead of just comparing which is more economical, explain the technical engineering challenges - what are the processes involved in fuel cells, what makes hydrogen storage complex from an engineering standpoint.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["engineering", "efficiency_focus", "moderate", "wrong_perspective", "technical_depth", "hydrogen", "EVs"]
+      },
+      {
+        "section": "paragraph_2",
+        "weak_passage": "Through A-Level Maths and Physics, I have built problem-solving and critical thinking skills, showcased in Olympiads like the MOG (Merit) and SMC (Gold). These have been developed when tutoring Year 8 students, where I felt my ability to adapt was refined. As a head prefect, I have strengthened my communication and organisation skills by planning and executing events with my team, preparing me for collaborative work at university.",
+        "issue_type": "supercurricular_list",
+        "severity": "moderate",
+        "your_feedback": "This middle paragraph just lists out your supercurriculars. It's fine but it's too long for what it is - just achievements without much technical depth or development.",
+        "improvement_suggested": "Consider shortening this section significantly to make room for more technical engineering content.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["engineering", "supercurricular_list", "moderate", "inefficient_writing", "paragraph_level", "too_long"]
+      },
+      {
+        "section": "paragraph_3",
+        "weak_passage": "I found it rewarding to transform a simple idea into a functioning project, and this creative process draws me to a degree in engineering.",
+        "issue_type": "fluff",
+        "severity": "moderate",
+        "your_feedback": "This is the kind of sentence that I would not hate if you had developed other things technically. But there are too many sentences like this with other places not being high level enough - it's generic reflection without substance.",
+        "improvement_suggested": "Replace generic reflection sentences with more technical detail about how you actually built the project, the engineering challenges you faced, the processes you used.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["engineering", "fluff", "moderate", "generic", "needs_replacement", "paragraph_level"]
+      },
+      {
+        "section": "paragraph_5",
+        "weak_passage": "It highlighted to me not only the scale of the challenges ahead, but also the vast realm of possibilities available.",
+        "issue_type": "meaningless",
+        "severity": "critical",
+        "your_feedback": "What does this actually mean? It doesn't actually mean anything - you could say this for any subject. It's completely generic and adds nothing specific to engineering.",
+        "improvement_suggested": "Delete this vague statement or replace with specific technical insights from MacKay's book.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["engineering", "meaningless", "critical", "generic", "delete", "conclusion"]
+      },
+      {
+        "section": "paragraph_5",
+        "weak_passage": "Learning the challenges of wind turbines, electric cars and the wider barriers to climate action has strengthened my desire to study engineering, a field with potential for meaningful impact.",
+        "issue_type": "summary_conclusion",
+        "severity": "moderate",
+        "your_feedback": "This whole last paragraph is just a summary - 'learning about these things has strengthened my desire.' It lacks specific technical content and reads as generic conclusion filler.",
+        "improvement_suggested": "The conclusion needs more specific technical insights rather than just summarizing that you've learned things and are interested.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["engineering", "summary_conclusion", "moderate", "generic", "conclusion", "paragraph_level"]
+      },
+      {
+        "section": "paragraph_5",
+        "weak_passage": "Reading MacKay's argument that we can't rely purely on renewable energy and will have to look to alternatives in his book 'Sustainable Energy – Without the Hot Air', was thought provoking.",
+        "issue_type": "underdeveloped",
+        "severity": "moderate",
+        "your_feedback": "You say MacKay's argument is thought provoking, but how? You just tack on the reference without explaining what was thought-provoking about it or developing the technical aspects of his argument.",
+        "improvement_suggested": "Explain specifically what was thought-provoking about MacKay's argument and engage with the technical details of his analysis.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["engineering", "underdeveloped", "moderate", "mackay", "needs_development", "conclusion"]
+      },
+      {
+        "section": "paragraph_3",
+        "weak_passage": null,
+        "issue_type": "positive_example",
+        "severity": "minor",
+        "your_feedback": "Using TinkerCAD to plan the chassis and coding a remote-controlled steering system shows good practical application. This is positive technical content that could potentially be expanded.",
+        "improvement_suggested": "Consider expanding on some of the technical 'how' of your extended project - the processes you used, challenges you faced, engineering decisions you made.",
+        "strong_passage": "Discovering different electric cars inspired me to design my own in an extended project, using TinkerCAD to plan the chassis and coding a remote-controlled steering system.",
+        "why_strong": "Shows practical engineering skills and hands-on technical work with specific tools.",
+        "tags": ["engineering", "positive_example", "minor", "technical_skills", "tinkercad", "project"]
+      },
+      {
+        "section": "overall",
+        "weak_passage": null,
+        "issue_type": "general_positive",
+        "severity": "minor",
+        "your_feedback": "There's nothing majorly wrong with it and it won't work against you. It was a nice read. If you want to leave it as is and focus on admissions exams instead, that's fine because the personal statement isn't the end of the world.",
+        "improvement_suggested": "It's acceptable to submit as-is if you want to prioritize exam preparation, but if you have time, making it more technical would strengthen it.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["engineering", "general_positive", "minor", "overall", "acceptable_standard"]
+      }
+    ]
+  },
+  {
+    "filename": "marcus_199.docx",
+    "batch_id": "018",
+    "processed_by": "claude-sonnet-4-5",
+    "processing_date": "2025-10-29",
+    "subject": "Medicine",
+    "character_count": 2489,
+    "universities": ["Medicine"],
+    "university_tier": "Competitive",
+    "year_group": null,
+    "feedback_format": "transcript",
+    "statement_full_text": "Studying medicine is a lifelong fundamental goal of mine. My journey towards preparing for a medical career has ranged from times of triumph and fascination, to times of failure, but it always ultimately concludes with further commitment, further aspiration, never diminishing my ambitious medical mindset. My interest in general practice initially sparked through the experience of patient care and consideration. From past experiences, the care I had received was phenomenally effective at minimizing consistent fears of my health whilst remaining respectable, a feature which I have deep admiration for and I believe is a core component of general practice, as every patient is entitled to empathetic and personalised care. Two further factors would be my fascination with the human body, with its consistency of functionality, despite endless complexities, and its response to viruses and diseases, two factors constantly progressing due to education. All these factors make up what I view as a trinity of my medical ambitions, all areas of interest which I believe correspond perfectly and exclusively to a career in general practice.\n__\nInitially my pursuit for a medical career began with up-taking medical society within my school. Within this activity, I would partake in further medical practical work beyond my current curriculum, such as experimentation with blood antigens. Within these practical works I would develop a range of skills such as communication with peers, listening and precisely following instructions, and furthermore deepening my medical knowledge. It is vital to develop these skills as are all aspects which will required and tested within a medical degree.\n\nFurthermore, to expand my knowledge in human response to disease, which is a fundamental topic within medicine, I researched topics such as the rabies virus, such as the article \"Rabies is still a fatal but neglected disease: a case report\" published by The Journal of Medical Case Reports. Within this article it describes the origins of the rabies virus and people most affected by the virus by presenting examples of the fatality of this virus and its global severity through statistics and descriptions of countries most susceptible to the virus, such as low income countries. In my opinion, although this case is factual in presenting the fatality of rabies, I believe it lacks the demonstration of the major neglection of the disease.\n__\nFirstly, I take up boxing two times a week, a sport I am very passionate about, and piano lessons once a week. These activities severely tested my listening abilities, a skill essential for general practice for effective and respectful patient care which is the key to minimising time pressure of continuous appointments. Furthermore I take up volunteering for 2 hours a week in my local children's charity, a significantly beneficial activity to my pursuit of a career in general practice. This is colossal as it trains the skill of communication, through conduct of customers, the most vital skill into general practice, as i believe the most important aspect of general practice is the promise of compassionate and considerate care to patients, and without this, success of general practice could not happen.\n\nAdditionally I took up work experience within the King Norton's surgery. Within this i shadowed general practioners and nurses, observing their conduct with patients, online and in person. During these confrontations I observed distressed patients with fears of diseases such as cancers and the effective minimisation of these fears via effective communication and consideration. Furthermore I observed the analysis of pictures sent by patients, which used application of memory and effectual judgement of the general practioners. Then, I observed the general practioners ability to use complex computer applications to handle appointment upscaling and booking, which demonstrates the general practioner's ability to effectively adapt to difficult environments quickly and efficiency. These observations were extremely effective in giving me an insight to a typical day within a GP surgery, furthermore solidifying my ambition and passion for a career in general practice.",
+    "feedback_items": [
+      {
+        "section": "overall",
+        "weak_passage": null,
+        "issue_type": "fundamental_failure",
+        "severity": "critical",
+        "your_feedback": "You cannot leave this as is. This is barely a personal statement - it almost has nothing in it. I'm assuming nobody has told you how to write a personal statement because there's virtually nothing here in terms of evidence, analysis, or development. You need to do this again, and you need to work pretty quickly since your medicine deadline is soon.",
+        "improvement_suggested": "Start completely over. Learn what goes into a medicine personal statement - it needs evidence at every step, supported by readings and work experience, with technical medical knowledge and analysis throughout.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["medicine", "fundamental_failure", "critical", "overall", "complete_rewrite", "urgent"]
+      },
+      {
+        "section": "paragraph_1",
+        "weak_passage": "Studying medicine is a lifelong fundamental goal of mine. My journey towards preparing for a medical career has ranged from times of triumph and fascination, to times of failure, but it always ultimately concludes with further commitment, further aspiration, never diminishing my ambitious medical mindset.",
+        "issue_type": "meaningless_fluff",
+        "severity": "critical",
+        "your_feedback": "This entire first paragraph could be boiled down to one sentence: 'I like medicine.' There's no evidence, no work experience, no analysis, no development. The opening about triumph, fascination, failure, and commitment means absolutely nothing - these are just your thoughts and feelings without any supporting evidence. You can't write conclusions like this without providing the specific cases of when triumph, failure, and commitment happened.",
+        "improvement_suggested": "Delete this entire opening. Start with specific evidence - something you read, observed, or did that sparked your interest, then build from there with analysis.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["medicine", "meaningless_fluff", "critical", "opening", "no_evidence", "delete", "unsupported_claims"]
+      },
+      {
+        "section": "paragraph_2",
+        "weak_passage": "Initially my pursuit for a medical career began with up-taking medical society within my school. Within this activity, I would partake in further medical practical work beyond my current curriculum, such as experimentation with blood antigens. Within these practical works I would develop a range of skills such as communication with peers, listening and precisely following instructions, and furthermore deepening my medical knowledge.",
+        "issue_type": "no_substance",
+        "severity": "critical",
+        "your_feedback": "Again, this is absolutely nothing. It's just 'I like medicine' restated. You mention blood antigens but that's just a name-drop with no analysis, no explanation of what you learned, no technical depth. The entire second paragraph says nothing of substance.",
+        "improvement_suggested": "Don't just say you did practical work - explain what you learned from it, what the science was, what you observed, what questions it raised, what you read to learn more.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["medicine", "no_substance", "critical", "paragraph_level", "name_dropping", "no_analysis"]
+      },
+      {
+        "section": "paragraph_3",
+        "weak_passage": "Furthermore, to expand my knowledge in human response to disease, which is a fundamental topic within medicine, I researched topics such as the rabies virus, such as the article \"Rabies is still a fatal but neglected disease: a case report\" published by The Journal of Medical Case Reports. Within this article it describes the origins of the rabies virus and people most affected by the virus by presenting examples of the fatality of this virus and its global severity through statistics and descriptions of countries most susceptible to the virus, such as low income countries. In my opinion, although this case is factual in presenting the fatality of rabies, I believe it lacks the demonstration of the major neglection of the disease.",
+        "issue_type": "meaningless_conclusion",
+        "severity": "critical",
+        "your_feedback": "You describe what the report says, then have this conclusion: 'this case is factual in presenting the fatality but I believe it lacks demonstration of the major neglection of the disease.' I don't know what that means, and you can't write that sort of conclusion. It's meaningless and shows no real engagement with the medical content.",
+        "improvement_suggested": "Don't just summarize what an article says. Explain the medical processes, what you learned about how rabies works biologically, what treatment challenges exist, what you then read to understand it better.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["medicine", "meaningless_conclusion", "critical", "no_analysis", "rabies", "paragraph_level"]
+      },
+      {
+        "section": "paragraph_4",
+        "weak_passage": "Firstly, I take up boxing two times a week, a sport I am very passionate about, and piano lessons once a week. These activities severely tested my listening abilities, a skill essential for general practice for effective and respectful patient care which is the key to minimising time pressure of continuous appointments. Furthermore I take up volunteering for 2 hours a week in my local children's charity, a significantly beneficial activity to my pursuit of a career in general practice. This is colossal as it trains the skill of communication, through conduct of customers, the most vital skill into general practice, as i believe the most important aspect of general practice is the promise of compassionate and considerate care to patients, and without this, success of general practice could not happen.",
+        "issue_type": "supercurricular_too_long",
+        "severity": "critical",
+        "your_feedback": "This supercurricular section is obviously far too long and takes up valuable space that should be used for medical knowledge and work experience analysis. Boxing and piano are mentioned but not meaningfully connected to medicine beyond vague claims about listening skills.",
+        "improvement_suggested": "Cut this section dramatically. Medicine statements need minimal supercurricular content - focus almost entirely on work experience and medical knowledge development.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["medicine", "supercurricular_too_long", "critical", "inefficient_writing", "paragraph_level", "wrong_focus"]
+      },
+      {
+        "section": "paragraph_5",
+        "weak_passage": "Additionally I took up work experience within the King Norton's surgery. Within this i shadowed general practioners and nurses, observing their conduct with patients, online and in person. During these confrontations I observed distressed patients with fears of diseases such as cancers and the effective minimisation of these fears via effective communication and consideration.",
+        "issue_type": "too_vague",
+        "severity": "critical",
+        "your_feedback": "This is when you finally start talking about work experience, but you do not really talk about what actually happened. It's too vague. You need specific examples: what disease did the doctor diagnose, what symptoms did they observe, what was interesting about it, what did you learn about the medical process, what did you then read to understand it better.",
+        "improvement_suggested": "Be specific. Describe actual cases: the patient had X symptoms, the doctor diagnosed Y based on Z, you found this interesting because those symptoms aren't typical for that condition, so you read a textbook that explained the disease process works like ABC.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["medicine", "too_vague", "critical", "work_experience", "no_specifics", "needs_development"]
+      },
+      {
+        "section": "overall",
+        "weak_passage": null,
+        "issue_type": "missing_structure",
+        "severity": "critical",
+        "your_feedback": "A medicine statement needs evidence at every single step. You need: 1) A section about doctor traits supported by work experience observations and readings, 2) Sections on areas of medicine that interest you with technical knowledge from textbooks and academic articles, 3) Work experience that's analyzed in detail with specific cases and medical processes explained. There's almost zero you can salvage from this current version.",
+        "improvement_suggested": "Look at example medicine statements to understand the structure needed. Every claim must be supported by evidence - things you've read, observed, done. No generic reflections without substance.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["medicine", "missing_structure", "critical", "overall", "evidence_required", "complete_rewrite"]
+      },
+      {
+        "section": "overall",
+        "weak_passage": null,
+        "issue_type": "contextual_concern",
+        "severity": "critical",
+        "your_feedback": "You have good GCSE grades and AR predictions, so it would be such a shame if the personal statement is what lets you down. I'm guessing you're doing well in UCAT or other admissions exams. With probably 10 hours of work (5 hours Saturday, 5 hours Sunday), you could get this to an acceptable standard. It doesn't have to be incredible, but it has to at least be a 7/10 - it has to fulfill minimum requirements.",
+        "improvement_suggested": "Dedicate focused time this weekend to completely rewrite using proper structure. Send one section for quick feedback to ensure you're on the right track, then duplicate that approach for other sections.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["medicine", "contextual_concern", "critical", "overall", "urgent_rewrite", "admissions_risk"]
+      },
+      {
+        "section": "overall",
+        "weak_passage": null,
+        "issue_type": "empathetic_delivery",
+        "severity": "minor",
+        "your_feedback": "I really hope you don't feel disheartened by this. I'd rather be the one to tell you now that there's a problem while it's still fixable, rather than you wondering later why you didn't get interviews. You clearly are interested and work hard based on your grades. I'm surprised nobody has told you this until now - they've done you a disservice by not telling you earlier.",
+        "improvement_suggested": "Send revised sections for feedback as you work through the rewrite. The tutor wants to help you succeed and will try their best to give feedback in time.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["medicine", "empathetic_delivery", "minor", "overall", "supportive_feedback", "encouragement"]
+      }
+    ]
+  },
+  {
+    "filename": "maya_110.docx",
+    "batch_id": "018",
+    "processed_by": "claude-sonnet-4-5",
+    "processing_date": "2025-10-29",
+    "subject": "Economics",
+    "character_count": 2516,
+    "universities": ["Economics"],
+    "university_tier": null,
+    "year_group": null,
+    "feedback_format": "written",
+    "statement_full_text": "I was introduced to the idea of economic interdependence through a TedTalk by Ian Bremmer. His argument that the US economy can no longer use its economic power to directly control others made me curious on how the US can even affect other economies. Looking through financial markets, I explored how the US elections can impact Egyptian markets in an internship at Naeem Holding (9/24). I analysed major indices and market reports to get a general idea on how markets behaved around elections, observing that prices are more volatile pre-election but rise after, regardless of which party takes office. Then I categorised the best performing sectors under various election outcomes and used technical analysis on firms from each sector to predict the firm's behaviour during the election. I found that large firms like Orascom outperform smaller firms because they are more diversified, handling shocks better which investors look for in uncertain times. Additionally, their international exposure means they're more responsive to foreign markets, boosting return when foreign markets rise post election.\n\nWith my interest in global networks, I wanted to explore global trade in our world model. So, I read a paper by the OECD on GVCs. I noted how tariffs in fragmented production processes are cumulative, making minimal tariffs costly downstream and that open trade laws are needed to promote GVC development in economies. This made me question the US' role in world trade and how that could change after it set costly tariffs. Drawing on Wolff and Krugman on The Economics Show, I saw how the US is a net importer where it absorbs trade surpluses of economies like China. This means that with the US stepping back from open trade, there will be a big surplus in the market. However, I realised that if economic powers like the EU and China promote trade by making new trade agreements, new consumers can be found in emerging economies to fill the loss in demand, allowing world trade to evolve.\n\nI was first drawn to Nudge theory from a MOOC on behavioural economics and public policy which showed me how small changes in framing can greatly affect outcome, challenging rational choice. Exploring further, I read Sunstein's Why Nudge which argued for libertarian paternalism to guide choices while preserving autonomy. While I was persuaded by his argument that people's errors due to their biases harm welfare, so governments should try to correct these losses, I also agreed with Sugden's critique that although nudges aim to keep freedom, the act of choosing a default isn't neutral and that policymakers can't claim to know people's 'true' choices. Overall though, I found myself agreeing more with Sunstein as in practice there is no neutral choice, so policy makers should use nudges to improve welfare.\n\nReading Less is More by Jason Hickel, I was struck by his argument that our capitalistic economy is worsening global warming, which challenged how free markets lead to maximum benefits through the incentive function. This led me to watching the lecture \"Climate capitalism: can market-based solutions save the planet?\" where speakers discussed how if policies like carbon pricing were implemented correctly a steep increase in the price of daily life would occur, driving hyperinflation. This made me question how effective current policies are with central banks prioritising inflation goals, so I researched how the EU ETS has influenced carbon reduction strategies of different size firms in high emission sectors. I found that mid-size firms respond better to the ETS, likely because the ETS' costs strongly affect them (unlike large firms which can absorb the costs) while having the ability to invest in new technologies and strategies which small firms lack. This led me to consider if a mix of market mechanisms and direct investment would best solve market failures.\n\nActing as head of the fundraising committee for my student council has developed my leadership and problem solving skills. Alongside this, engaging with topics like economic integration has deepened my appreciation of political systems and economics models. These experiences have strengthened my desire to explore and analyse the forces shaping global markets and society at university.",
+    "feedback_items": [
+      {
+        "section": "Q1_opening",
+        "weak_passage": "His argument that the US economy can no longer use its economic power to directly control others made me curious on how the US can even affect other economies.",
+        "issue_type": "confusing",
+        "severity": "critical",
+        "your_feedback": "This is very confusing!! What do you mean by 'directly control others'? You need to re-write this section to clarify what power the US had in the past and what specifically Bremmer was arguing.",
+        "improvement_suggested": "Clarify what you mean: His argument that the US (government? laws? stock market? companies?) can no longer wield its power to control other economies/trading relationships... and what power they might have had in the past.",
+        "strong_passage": "I was introduced to the idea of economic interdependence through a TedTalk by Ian Bremmer.",
+        "why_strong": "Nice and clean opening that's clear and direct.",
+        "tags": ["economics", "confusing", "critical", "opening", "clarity_needed", "US_power"]
+      },
+      {
+        "section": "Q1_internship",
+        "weak_passage": "Looking through financial markets, I explored how the US elections can impact Egyptian markets in an internship at Naeem Holding (9/24). I analysed major indices and market reports to get a general idea on how markets behaved around elections",
+        "issue_type": "vague",
+        "severity": "moderate",
+        "your_feedback": "How are you 'looking through' financial markets? Just cut it if it's pointless filler. You can be more specific than 'get a general idea on' - what specific indices and sources did you analyze?",
+        "improvement_suggested": "Suggested: I analysed the S&P 500 between 2001 and 2025 as well as historical election data from Goldman Sachs... and learned that there was X% more volatility pre-election and a Y% rise after, regardless of which party takes office. Use actual details and stats.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["economics", "vague", "moderate", "needs_specifics", "internship", "statistics", "paragraph_level"]
+      },
+      {
+        "section": "Q1_technical_analysis",
+        "weak_passage": "Then I categorised the best performing sectors under various election outcomes and used technical analysis on firms from each sector to predict the firm's behaviour during the election.",
+        "issue_type": "underdeveloped",
+        "severity": "moderate",
+        "your_feedback": "Same problem as above - need actual details here. What election outcomes? What technical analysis? This is an interesting section but massively underexplained. You need to be specific about your methodology and findings.",
+        "improvement_suggested": "Specify which election outcomes (presidential vs senate vs house combinations?), what technical analysis methods you used (chart patterns? moving averages? specific indicators?), and what you found.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["economics", "underdeveloped", "moderate", "needs_specifics", "technical_analysis", "methodology"]
+      },
+      {
+        "section": "Q1_conclusion",
+        "weak_passage": "I found that large firms like Orascom outperform smaller firms because they are more diversified, handling shocks better which investors look for in uncertain times. Additionally, their international exposure means they're more responsive to foreign markets, boosting return when foreign markets rise post election.",
+        "issue_type": "obvious",
+        "severity": "minor",
+        "your_feedback": "This is fine but a little bit of an obvious result - something else would be more interesting (but don't worry too much, leave this to end... other stuff needs to change first).",
+        "improvement_suggested": "Consider finding a less obvious insight from your analysis, but this is lower priority than fixing the vague sections above.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["economics", "obvious", "minor", "conclusion", "firm_performance"]
+      },
+      {
+        "section": "Q2_opening",
+        "weak_passage": "So, I read a paper by the OECD on GVCs.",
+        "issue_type": "no_source",
+        "severity": "moderate",
+        "your_feedback": "Specifically which paper? You need to cite the specific source.",
+        "improvement_suggested": "Include the full title or specific identification of which OECD paper on GVCs you read.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["economics", "no_source", "moderate", "citation_needed", "GVCs", "OECD"]
+      },
+      {
+        "section": "Q2_trade",
+        "weak_passage": "This means that with the US stepping back from open trade, there will be a big surplus in the market.",
+        "issue_type": "unclear_conclusion",
+        "severity": "moderate",
+        "your_feedback": "What is this conclusion supposed to be saying? Yes, the US is a net importer, sure. Will there continue to be a big surplus? The logic here is unclear.",
+        "improvement_suggested": "Clarify your economic reasoning - what exactly happens to global supply/demand when the US reduces imports? Be more precise about the market dynamics.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["economics", "unclear_conclusion", "moderate", "trade", "US_imports", "logic"]
+      },
+      {
+        "section": "Q2_trade",
+        "weak_passage": "However, I realised that if economic powers like the EU and China promote trade by making new trade agreements, new consumers can be found in emerging economies to fill the loss in demand, allowing world trade to evolve.",
+        "issue_type": "oversimplified",
+        "severity": "moderate",
+        "your_feedback": "Yes this is true I suppose but oversimplified. Maybe production would be reduced, currency adjustments, etc. A bit simple/uninspired to say China will make new trade agreements. Plus the EU sort of came out of nowhere there!",
+        "improvement_suggested": "Develop the economic complexity - consider production adjustments, currency effects, why the EU specifically, and whether demand can actually be replaced one-to-one. Add nuance about production decreases due to large size of US market that will be lost.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["economics", "oversimplified", "moderate", "trade", "needs_complexity", "EU", "China"]
+      },
+      {
+        "section": "Q3",
+        "weak_passage": null,
+        "issue_type": "general_positive",
+        "severity": "minor",
+        "your_feedback": "Solid section on Nudge theory. Good engagement with Sunstein and Sugden, showing ability to evaluate competing perspectives and reach a reasoned conclusion.",
+        "improvement_suggested": null,
+        "strong_passage": "I was first drawn to Nudge theory from a MOOC on behavioural economics and public policy which showed me how small changes in framing can greatly affect outcome, challenging rational choice. Exploring further, I read Sunstein's Why Nudge which argued for libertarian paternalism to guide choices while preserving autonomy. While I was persuaded by his argument that people's errors due to their biases harm welfare, so governments should try to correct these losses, I also agreed with Sugden's critique that although nudges aim to keep freedom, the act of choosing a default isn't neutral and that policymakers can't claim to know people's 'true' choices.",
+        "why_strong": "Shows good critical engagement with competing academic perspectives and demonstrates ability to synthesize arguments to reach own conclusion.",
+        "tags": ["economics", "general_positive", "minor", "nudge_theory", "behavioral_economics", "critical_thinking"]
+      },
+      {
+        "section": "Q4",
+        "weak_passage": "driving hyperinflation",
+        "issue_type": "overstatement",
+        "severity": "minor",
+        "your_feedback": "Solid section overall but hyperinflation might be slightly overstating from just what you're discussing. Regular inflation or steep inflation would be more accurate.",
+        "improvement_suggested": "Change 'hyperinflation' to 'inflation' or 'steep inflation' to be more economically precise.",
+        "strong_passage": "I researched how the EU ETS has influenced carbon reduction strategies of different size firms in high emission sectors. I found that mid-size firms respond better to the ETS, likely because the ETS' costs strongly affect them (unlike large firms which can absorb the costs) while having the ability to invest in new technologies and strategies which small firms lack.",
+        "why_strong": "Shows good independent research with nuanced understanding of how carbon pricing affects different firm sizes differently.",
+        "tags": ["economics", "overstatement", "minor", "carbon_pricing", "terminology", "ETS", "climate"]
+      },
+      {
+        "section": "Q5_conclusion",
+        "weak_passage": "Acting as head of the fundraising committee for my student council has developed my leadership and problem solving skills. Alongside this, engaging with topics like economic integration has deepened my appreciation of political systems and economics models.",
+        "issue_type": "irrelevant",
+        "severity": "moderate",
+        "your_feedback": "The sentence about engaging with topics like economic integration is very random and not useful. It doesn't add anything meaningful. The fundraising committee mention is also weak and takes up valuable space.",
+        "improvement_suggested": "Cut these sentences - they're unclear and don't add much. Replace with something more substantive or just end with your climate economics section.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["economics", "irrelevant", "moderate", "conclusion", "generic", "delete", "supercurricular"]
+      },
+      {
+        "section": "Q5_conclusion",
+        "weak_passage": "These experiences have strengthened my desire to explore and analyse the forces shaping global markets and society at university.",
+        "issue_type": "generic_ending",
+        "severity": "minor",
+        "your_feedback": "Change to 'This has...' instead of 'these experiences have' for better flow since you should cut the previous sentences.",
+        "improvement_suggested": "If you keep this ending (after cutting the weak sentences above), change to singular 'This has' to refer to your economic analysis work.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["economics", "generic_ending", "minor", "conclusion", "grammar"]
+      }
+    ]
+  },
+  {
+    "filename": "maya_no2_310.docx",
+    "batch_id": "018",
+    "processed_by": "claude-sonnet-4-5",
+    "processing_date": "2025-10-29",
+    "subject": "Economics",
+    "character_count": 2683,
+    "universities": ["Economics"],
+    "university_tier": null,
+    "year_group": null,
+    "feedback_format": "written",
+    "statement_full_text": "I was introduced to the idea of economic interdependence through a TedTalk by Ian Bremmer; he argued that the US financial system can no longer affect global markets like during the 2008 financial crisis, making me curious on how the US can affect other economies today. I explored how the US elections can impact Egyptian markets in an internship at Naeem Holding's asset management division. I analysed S&P 500 and Nasdaq from 2004-2024 and historical election data from Morgan Stanley, learning that prices are more volatile before elections but rise after, regardless of which party takes office. Then I categorised the best performing sectors under different presidential, senate and house combinations and used technical analysis like chart patterns and moving averages on firms' stocks from each sector to predict the firm's behaviour during the elections. I found that large firms like Orascom outperform smaller firms because they are more diversified, handling shocks better which investors look for during uncertain times. Additionally, their international exposure means they're more sensitive to foreign markets, boosting return when foreign markets rise post election.\n\nWith my interest drawn to global networks, I wanted to explore how global trade occurred in our current world model. So, I read a report by the OECD on benefits of GVCs. I noted how tariffs in fragmented production processes are cumulative, making minimal tariffs costly downstream and that open trade laws are needed to promote GVC development in an economy. This made me question the role of the US' role in world trade and how that could change after it set costly tariffs. Drawing on Wolff and Krugman on 'The Economics Show', I saw how the US is a net importer where it absorbs trade surpluses of economies like China. This means that with the US stepping back from open trade, a big surplus will occur as they won't import as much so there will be excess supply. However, I realised that if economic powers like China promote open trade by making new trade agreements, then new consumers can be found in emerging economies which can fill the loss of demand, allowing world trade to evolve. Though there will still have to be a decrease in production due to the large size of the US market which will be lost.\n\nI was first drawn to Nudge theory from a MOOC on behavioural economics and public policy which showed me how small changes in framing can affect outcome, challenging rational choice. Exploring further, I read Sunstein's Why Nudge which argued for libertarian paternalism to guide choices while preserving autonomy. While I was persuaded by his argument that people's errors due to their biases harm welfare, so governments should try to correct these losses, I also agreed with Sudgen's critique that although nudges aim to keep freedom, the act of choosing a default isn't neutral and that policymakers can't claim to know people's 'true' choices. Overall though, I found myself agreeing more with Sunstein as in practice there is no neutral choice, so policy makers should use nudges to improve welfare.\n\nReading Less is More by Jason Hickel, I was struck by his argument that our capitalistic economy is worsening global warming, which challenged how free markets lead to maximum benefits through the incentive function. This led me to watching the lecture \"Climate capitalism: can market-based solutions save the planet?\" where speakers discussed how if policies like carbon pricing were implemented correctly a steep increase in the price of daily life would occur, driving inflation. This made me question how effective current policies are with central banks prioritising inflation goals, so I researched how the EU ETS has influenced carbon reduction strategies of different size firms in high emission sectors. I found that mid-size firms respond better to the ETS, likely because the ETS' costs strongly affect them (unlike large firms which can absorb the costs) while having the ability to invest in new technologies and strategies which small firms lack. This led me to consider if a mix of market mechanisms and direct investment would best solve market failures.\n\nActing as head of the fundraising committee for my student council has developed my leadership and problem solving skills. Alongside this, engaging with topics like economic integration has deepened my appreciation of political systems and economics models. This has strengthened my desire to explore and analyse the forces shaping global markets and society at university.",
+    "feedback_items": [
+      {
+        "section": "Q1_opening",
+        "weak_passage": null,
+        "issue_type": "general_positive",
+        "severity": "minor",
+        "your_feedback": "Much improved from previous version. The opening is now clearer about what Bremmer argued - that the US financial system can no longer affect global markets like during 2008.",
+        "improvement_suggested": "Consider adding stats or examples to strengthen the opening further.",
+        "strong_passage": "I was introduced to the idea of economic interdependence through a TedTalk by Ian Bremmer; he argued that the US financial system can no longer affect global markets like during the 2008 financial crisis, making me curious on how the US can affect other economies today.",
+        "why_strong": "Clear, specific reference to Bremmer's argument with concrete example (2008 crisis) that explains what changed.",
+        "tags": ["economics", "general_positive", "minor", "opening", "improved", "clarity"]
+      },
+      {
+        "section": "Q1_internship",
+        "weak_passage": null,
+        "issue_type": "general_positive",
+        "severity": "minor",
+        "your_feedback": "Much better specificity! You now mention S&P 500 and Nasdaq from 2004-2024, historical election data from Morgan Stanley, and specific technical analysis methods like chart patterns and moving averages. You also clarify different presidential, senate and house combinations.",
+        "improvement_suggested": null,
+        "strong_passage": "I analysed S&P 500 and Nasdaq from 2004-2024 and historical election data from Morgan Stanley, learning that prices are more volatile before elections but rise after, regardless of which party takes office. Then I categorised the best performing sectors under different presidential, senate and house combinations and used technical analysis like chart patterns and moving averages on firms' stocks from each sector to predict the firm's behaviour during the elections.",
+        "why_strong": "Provides specific data sources, timeframes, methodologies, and variables analyzed - demonstrates rigor and depth of internship work.",
+        "tags": ["economics", "general_positive", "minor", "internship", "specificity", "technical_analysis", "improved"]
+      },
+      {
+        "section": "Q2_trade",
+        "weak_passage": null,
+        "issue_type": "general_positive",
+        "severity": "minor",
+        "your_feedback": "Good addition of nuance with the acknowledgment that there will still have to be a decrease in production due to the large size of the US market that will be lost. This shows more sophisticated economic thinking than the previous version.",
+        "improvement_suggested": null,
+        "strong_passage": "Though there will still have to be a decrease in production due to the large size of the US market which will be lost.",
+        "why_strong": "Adds economic realism and nuance - acknowledges that substitution isn't perfect and there are real costs to losing the US market.",
+        "tags": ["economics", "general_positive", "minor", "trade", "nuance", "improved", "production"]
+      },
+      {
+        "section": "Q4_climate",
+        "weak_passage": null,
+        "issue_type": "general_positive",
+        "severity": "minor",
+        "your_feedback": "Changed from 'hyperinflation' to just 'inflation' which is more economically accurate for the scenario being described. Good correction.",
+        "improvement_suggested": null,
+        "strong_passage": "where speakers discussed how if policies like carbon pricing were implemented correctly a steep increase in the price of daily life would occur, driving inflation.",
+        "why_strong": "Uses more accurate economic terminology - steep inflation rather than hyperinflation.",
+        "tags": ["economics", "general_positive", "minor", "terminology", "improved", "carbon_pricing"]
+      },
+      {
+        "section": "Q5_conclusion",
+        "weak_passage": "Acting as head of the fundraising committee for my student council has developed my leadership and problem solving skills. Alongside this, engaging with topics like economic integration has deepened my appreciation of political systems and economics models.",
+        "issue_type": "irrelevant",
+        "severity": "moderate",
+        "your_feedback": "These sentences should be cut - they are unclear, don't add much value, and take up space that could be used for stronger economic content. The fundraising committee is generic supercurricular filler, and the sentence about 'engaging with topics' is vague and random.",
+        "improvement_suggested": "Delete these two sentences entirely. Either end with your climate economics section or replace with something more substantive.",
+        "strong_passage": null,
+        "why_strong": null,
+        "tags": ["economics", "irrelevant", "moderate", "conclusion", "delete", "generic", "supercurricular"]
+      },
+      {
+        "section": "Q5_conclusion",
+        "weak_passage": null,
+        "issue_type": "minor_improvement",
+        "severity": "minor",
+        "your_feedback": "Good that you changed to 'This has...' instead of 'These experiences have' which flows better if you cut the previous sentences as recommended.",
+        "improvement_suggested": "Keep this ending after deleting the weak sentences above it.",
+        "strong_passage": "This has strengthened my desire to explore and analyse the forces shaping global markets and society at university.",
+        "why_strong": "Better grammar and flow than previous version with singular 'This has' construction.",
+        "tags": ["economics", "minor_improvement", "minor", "conclusion", "grammar", "improved"]
+      }
+    ]
+  }
+]

@@ -167,7 +167,7 @@ export default function VideoGalleryPage() {
         
         {/* Back Button on top of video */}
         <Link 
-          href="/" 
+          href="/video" 
           style={{
             position: 'absolute',
             top: '30px',

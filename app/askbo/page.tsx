@@ -117,6 +117,12 @@ export default function StudyBookPage() {
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   
+  // Interview chat state
+  const [interviewMessages, setInterviewMessages] = useState<Array<{id: string, role: 'user' | 'assistant', content: string, timestamp: Date}>>([]);
+  const [currentInterviewMessage, setCurrentInterviewMessage] = useState('');
+  const [isInterviewLoading, setIsInterviewLoading] = useState(false);
+  const [interviewConversationId, setInterviewConversationId] = useState<string | null>(null);
+  
   // Teacher help state
   const [isCreatingTicket, setIsCreatingTicket] = useState(false);
   const [ticketResult, setTicketResult] = useState<{success: boolean, message: string, ticketId?: string} | null>(null);
@@ -770,6 +776,137 @@ export default function StudyBookPage() {
       sendMessage();
     }
   };
+  
+  const sendInterviewMessage = async () => {
+    if (!currentInterviewMessage.trim() || isInterviewLoading) {
+      return;
+    }
+
+    // If no user is logged in, show a helpful message
+    if (!userId) {
+      const loginPromptMessage = {
+        id: Date.now().toString(),
+        role: 'assistant' as const,
+        content: 'Hi! To have full conversations and save your progress, please log in or sign up. You can still browse the interface and see how it works!',
+        timestamp: new Date()
+      };
+      setInterviewMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        role: 'user',
+        content: currentInterviewMessage.trim(),
+        timestamp: new Date()
+      }, loginPromptMessage]);
+      setCurrentInterviewMessage('');
+      return;
+    }
+
+    const userMessage = {
+      id: Date.now().toString(),
+      role: 'user' as const,
+      content: currentInterviewMessage.trim(),
+      timestamp: new Date()
+    };
+
+    setInterviewMessages(prev => [...prev, userMessage]);
+    setCurrentInterviewMessage('');
+    setIsInterviewLoading(true);
+
+    try {
+      const response = await fetch('/api/chat/interview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userMessage.content,
+          conversationId: interviewConversationId,
+          userId
+        })
+      });
+
+      if (!response.ok) {
+        if (response.status === 402) {
+          // Usage limit exceeded
+          const errorData = await response.json();
+          setUsageError(errorData.message);
+          setUsageInfo(errorData.usage);
+          setShowUsageLimitModal(true);
+          return;
+        }
+        throw new Error('Failed to send message');
+      }
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let assistantMessage = '';
+
+      const assistantId = (Date.now() + 1).toString();
+      setInterviewMessages(prev => [...prev, {
+        id: assistantId,
+        role: 'assistant',
+        content: '',
+        timestamp: new Date()
+      }]);
+
+      while (reader) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n');
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              
+              if (data.type === 'token') {
+                assistantMessage += data.content;
+                setInterviewMessages(prev => prev.map(msg => 
+                  msg.id === assistantId 
+                    ? { ...msg, content: assistantMessage }
+                    : msg
+                ));
+                
+                if (data.conversationId && !interviewConversationId) {
+                  setInterviewConversationId(data.conversationId);
+                }
+              } else if (data.type === 'complete') {
+                if (data.conversationId && !interviewConversationId) {
+                  setInterviewConversationId(data.conversationId);
+                }
+                // Refresh usage info after successful message
+                fetchUsageInfo();
+              } else if (data.type === 'error') {
+                setInterviewMessages(prev => prev.map(msg => 
+                  msg.id === assistantId 
+                    ? { ...msg, content: data.content }
+                    : msg
+                ));
+              }
+            } catch (e) {
+              console.error('Error parsing SSE data:', e);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error sending interview message:', error);
+      setInterviewMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again.',
+        timestamp: new Date()
+      }]);
+    } finally {
+      setIsInterviewLoading(false);
+    }
+  };
+
+  const handleInterviewKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendInterviewMessage();
+    }
+  };
 
   const checkDiscordAuth = async () => {
     // Check if user has Discord linked in their Supabase auth
@@ -1291,23 +1428,10 @@ export default function StudyBookPage() {
             Ask Bo
           </button>
           <button 
-            className="nav-item disabled"
-            style={{
-              cursor: 'not-allowed',
-              opacity: '0.6',
-              position: 'relative'
-            }}
+            className={`nav-item ${activeTab === 'interview' ? 'active' : ''}`}
+            onClick={() => setActiveTab('interview')}
           >
-            <span>Interview Prep</span>
-            <span style={{
-              fontFamily: "'Madimi One', cursive",
-              fontSize: '11px',
-              color: '#666',
-              marginLeft: '8px',
-              fontWeight: '400'
-            }}>
-              Coming Soon
-            </span>
+            Interview Prep
           </button>
           <button 
             className={`nav-item ${activeTab === 'profile' ? 'active' : ''}`}
@@ -1491,6 +1615,105 @@ export default function StudyBookPage() {
                       className="send-btn"
                     >
                       {isLoading ? 'Sending...' : 'Send'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'interview' && (
+          <div className="chat-page">
+            <div className="chat-container">
+              <div className="messages-area">
+                {interviewMessages.length === 0 ? (
+                  <div className="welcome-message">
+                    <h2>Interview Prep with Gabe</h2>
+                    <p>I'm Gabe, your Oxford/Cambridge interview coach. I'll test your analytical thinking using your personal statement as the foundation.</p>
+                  </div>
+                ) : (
+                  interviewMessages.map(message => (
+                    <div key={message.id} className={`message ${message.role}`}>
+                      <div className="message-content">
+                        {message.role === 'assistant' ? (
+                          <ReactMarkdown>{message.content}</ReactMarkdown>
+                        ) : (
+                          message.content
+                        )}
+                      </div>
+                      <div className="message-time">
+                        {message.timestamp.toLocaleTimeString()}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* Teacher Ticket Feedback */}
+              {ticketResult && (
+                <div style={{
+                  margin: '16px 40px',
+                  padding: '12px 16px',
+                  borderRadius: '8px',
+                  backgroundColor: ticketResult.success ? '#D1FAE5' : '#FEE2E2',
+                  border: `1px solid ${ticketResult.success ? '#10B981' : '#EF4444'}`,
+                  color: ticketResult.success ? '#065F46' : '#B91C1C',
+                  fontFamily: "'Figtree', sans-serif",
+                  fontSize: '14px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}>
+                  <div>
+                    <strong>{ticketResult.success ? '✅ Success!' : '❌ Error'}</strong>
+                    <br />
+                    {ticketResult.message}
+                  </div>
+                  <button
+                    onClick={() => setTicketResult(null)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      fontSize: '18px',
+                      cursor: 'pointer',
+                      color: 'inherit',
+                      marginLeft: '16px'
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+
+              <div className="chat-input-fixed">
+                <div className="input-container">
+                  <textarea
+                    value={currentInterviewMessage}
+                    onChange={(e) => setCurrentInterviewMessage(e.target.value)}
+                    onKeyPress={handleInterviewKeyPress}
+                    placeholder="Practice with Gabe..."
+                    disabled={isInterviewLoading}
+                    rows={3}
+                  />
+                  <div className="button-group">
+                    <button 
+                      onClick={handleAskTeacher}
+                      disabled={isCreatingTicket}
+                      className="ask-teacher-btn"
+                      style={{
+                        opacity: isCreatingTicket ? 0.6 : 1,
+                        cursor: isCreatingTicket ? 'not-allowed' : 'pointer'
+                      }}
+                    >
+                      {isCreatingTicket ? 'Creating Ticket...' : 'Ask a teacher'}
+                    </button>
+                    <button 
+                      onClick={sendInterviewMessage}
+                      disabled={isInterviewLoading || !currentInterviewMessage.trim()}
+                      className="send-btn"
+                    >
+                      {isInterviewLoading ? 'Sending...' : 'Send'}
                     </button>
                   </div>
                 </div>
