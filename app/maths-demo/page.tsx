@@ -27,8 +27,8 @@ export default function MathsDemoPage() {
               <Image 
                 src="/icons/pixel-ghost-w-sword-yellow.svg" 
                 alt="Ghost Character" 
-                width={80} 
-                height={80}
+                width={160} 
+                height={160}
                 className="ghost-icon"
               />
               <div className="speech-bubble">
@@ -48,85 +48,95 @@ export default function MathsDemoPage() {
 
             {/* Purple toasts (completed levels) */}
             <div className="toast purple toast-1">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={40} height={40} />
+              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
             </div>
             <div className="toast purple toast-2">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={40} height={40} />
+              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
             </div>
             <div className="toast purple toast-3">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={40} height={40} />
+              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
             </div>
             <div className="toast purple toast-4">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={40} height={40} />
+              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
             </div>
             <div className="toast purple toast-5">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={40} height={40} />
+              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
             </div>
             <div className="toast purple toast-6">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={40} height={40} />
+              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
             </div>
             <div className="toast purple toast-7">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={40} height={40} />
+              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
             </div>
             <div className="toast purple toast-8">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={40} height={40} />
+              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
             </div>
             <div className="toast purple toast-9">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={40} height={40} />
+              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
             </div>
             <div className="toast purple toast-10">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={40} height={40} />
+              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
             </div>
 
             {/* Blue toasts (available levels) */}
             <div className="toast blue toast-11">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={40} height={40} />
+              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
             </div>
             <div className="toast blue toast-12">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={40} height={40} />
+              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
             </div>
             <div className="toast blue toast-13">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={40} height={40} />
+              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
             </div>
             <div className="toast blue toast-14">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={40} height={40} />
+              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
             </div>
             <div className="toast blue toast-15">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={40} height={40} />
+              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
             </div>
             <div className="toast blue toast-16">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={40} height={40} />
+              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
             </div>
             <div className="toast blue toast-17">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={40} height={40} />
+              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
             </div>
             <div className="toast blue toast-18">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={40} height={40} />
+              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
             </div>
             <div className="toast blue toast-19">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={40} height={40} />
+              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
             </div>
             <div className="toast blue toast-20">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={40} height={40} />
+              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
             </div>
 
             {/* Decorative clouds */}
-            <div className="cloud cloud-1"></div>
-            <div className="cloud cloud-2"></div>
-            <div className="cloud cloud-3"></div>
-            <div className="cloud cloud-4"></div>
+            <div className="cloud cloud-1">
+              <Image src="/icons/cloud.svg" alt="Cloud" width={100} height={60} />
+            </div>
+            <div className="cloud cloud-2">
+              <Image src="/icons/cloud.svg" alt="Cloud" width={80} height={48} />
+            </div>
+            <div className="cloud cloud-3">
+              <Image src="/icons/cloud.svg" alt="Cloud" width={90} height={54} />
+            </div>
+            <div className="cloud cloud-4">
+              <Image src="/icons/cloud.svg" alt="Cloud" width={70} height={42} />
+            </div>
 
-            {/* Ground/water elements */}
-            <div className="water-pool pool-1"></div>
-            <div className="water-pool pool-2"></div>
-            <div className="mountain mountain-1"></div>
-            <div className="mountain mountain-2"></div>
-            <div className="mountain mountain-3"></div>
-            <div className="mountain mountain-4"></div>
+            {/* Grass pattern at bottom */}
+            <div className="grass-pattern">
+              <Image 
+                src="/icons/grass-pattern.svg" 
+                alt="Grass" 
+                fill
+                className="grass-image"
+              />
+            </div>
           </div>
 
-          {/* Progress sidebar */}
-          <div className="progress-sidebar">
+          {/* Progress floating box */}
+          <div className="progress-floating-box">
             <button 
               className="close-btn"
               onClick={() => setShowProgressModal(false)}
