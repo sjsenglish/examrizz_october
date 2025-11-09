@@ -43,8 +43,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
           left: '50%',
           top: '55%',
           transform: 'translate(-50%, -50%)',
-          width: '1296px', /* Zoomed out further: 1440px -> 1296px (10% smaller) */
-          height: '648px', /* Zoomed out further: 720px -> 648px (10% smaller) */
+          width: '1166px', /* Zoomed out even more: 1296px -> 1166px (10% smaller) */
+          height: '583px', /* Zoomed out even more: 648px -> 583px (10% smaller) */
           zIndex: 15
         }}
       >
@@ -57,15 +57,34 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <Link href="/arena" className="block">
+          <div className="block" style={{ position: 'relative', cursor: 'not-allowed' }}>
             <Image 
               src="/icons/arena.svg"
               alt="ARENA"
-              width={223} /* Zoomed out further: 248 -> 223 (10% smaller) */
-              height={223} /* Zoomed out further: 248 -> 223 (10% smaller) */
+              width={201} /* Zoomed out even more: 223 -> 201 (10% smaller) */
+              height={201} /* Zoomed out even more: 223 -> 201 (10% smaller) */
               className="drop-shadow-lg"
+              style={{ 
+                filter: 'grayscale(100%) opacity(0.6)',
+                pointerEvents: 'none'
+              }}
             />
-          </Link>
+            <div style={{
+              position: 'absolute',
+              bottom: '-5px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              backgroundColor: '#666',
+              color: '#fff',
+              padding: '2px 8px',
+              borderRadius: '4px',
+              fontSize: '11px',
+              fontFamily: "'Madimi One', cursive",
+              whiteSpace: 'nowrap'
+            }}>
+              Coming Soon
+            </div>
+          </div>
         </div>
 
         {/* VIDEO - top-right (75% from left, 25% from top) */}
@@ -81,8 +100,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             <Image 
               src="/icons/video.svg"
               alt="VIDEO"
-              width={186} /* Zoomed out further: 207 -> 186 (10% smaller) */
-              height={186} /* Zoomed out further: 207 -> 186 (10% smaller) */
+              width={167} /* Zoomed out even more: 186 -> 167 (10% smaller) */
+              height={167} /* Zoomed out even more: 186 -> 167 (10% smaller) */
               className="drop-shadow-lg"
             />
           </Link>
@@ -101,31 +120,50 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             <Image 
               src="/icons/practice.svg"
               alt="PRACTICE"
-              width={186} /* Zoomed out further: 207 -> 186 (10% smaller) */
-              height={186} /* Zoomed out further: 207 -> 186 (10% smaller) */
+              width={167} /* Zoomed out even more: 186 -> 167 (10% smaller) */
+              height={167} /* Zoomed out even more: 186 -> 167 (10% smaller) */
               className="drop-shadow-lg"
             />
           </Link>
         </div>
 
-        {/* TEACHER - moved left and up */}
+        {/* TEACHER - moved further left */}
         <div 
           className="absolute"
           style={{
-            left: '22%', /* moved left from 25% */
+            left: '12%', /* moved left by 10% from 22% */
             top: '50%', /* moved up from 55% */
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <Link href="/teacher" className="block">
+          <div className="block" style={{ position: 'relative', cursor: 'not-allowed' }}>
             <Image 
               src="/icons/teacher.svg"
               alt="TEACHER"
-              width={205} /* Zoomed out further: 228 -> 205 (10% smaller) */
-              height={205} /* Zoomed out further: 228 -> 205 (10% smaller) */
+              width={184} /* Zoomed out even more: 205 -> 184 (10% smaller) */
+              height={184} /* Zoomed out even more: 205 -> 184 (10% smaller) */
               className="drop-shadow-lg"
+              style={{ 
+                filter: 'grayscale(100%) opacity(0.6)',
+                pointerEvents: 'none'
+              }}
             />
-          </Link>
+            <div style={{
+              position: 'absolute',
+              bottom: '-5px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              backgroundColor: '#666',
+              color: '#fff',
+              padding: '2px 8px',
+              borderRadius: '4px',
+              fontSize: '11px',
+              fontFamily: "'Madimi One', cursive",
+              whiteSpace: 'nowrap'
+            }}>
+              Coming Soon
+            </div>
+          </div>
         </div>
 
         {/* ASK BO - moved to the right */}
@@ -141,8 +179,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             <Image 
               src="/icons/island-ask-bo.svg"
               alt="ASK BO"
-              width={186} /* Zoomed out further: 207 -> 186 (10% smaller) */
-              height={186} /* Zoomed out further: 207 -> 186 (10% smaller) */
+              width={167} /* Zoomed out even more: 186 -> 167 (10% smaller) */
+              height={167} /* Zoomed out even more: 186 -> 167 (10% smaller) */
               className="drop-shadow-lg"
             />
           </Link>
@@ -161,19 +199,19 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             <Image 
               src="/icons/learn.svg"
               alt="LEARN"
-              width={167} /* Zoomed out further: 186 -> 167 (10% smaller) */
-              height={167} /* Zoomed out further: 186 -> 167 (10% smaller) */
+              width={150} /* Zoomed out even more: 167 -> 150 (10% smaller) */
+              height={150} /* Zoomed out even more: 167 -> 150 (10% smaller) */
               className="drop-shadow-lg"
             />
           </Link>
         </div>
 
-        {/* SEARCH - moved up and slightly right */}
+        {/* SEARCH - moved up further */}
         <div 
           className="absolute"
           style={{
             left: '39%', /* moved right from 35% */
-            top: '68%', /* moved up from 75% */
+            top: '63%', /* moved up by 5% from 68% */
             transform: 'translate(-50%, -50%)'
           }}
         >
@@ -181,8 +219,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             <Image 
               src="/icons/search-island-icon.svg"
               alt="SEARCH"
-              width={167} /* Zoomed out further: 186 -> 167 (10% smaller) */
-              height={167} /* Zoomed out further: 186 -> 167 (10% smaller) */
+              width={150} /* Zoomed out even more: 167 -> 150 (10% smaller) */
+              height={150} /* Zoomed out even more: 167 -> 150 (10% smaller) */
               className="drop-shadow-lg"
             />
           </Link>
@@ -196,8 +234,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
         <Image 
           src="/svg/island-cloud-big.svg"
           alt="Cloud"
-          width={146} /* Zoomed out further: 162 -> 146 (10% smaller) */
-          height={97} /* Zoomed out further: 108 -> 97 (10% smaller) */
+          width={131} /* Zoomed out even more: 146 -> 131 (10% smaller) */
+          height={87} /* Zoomed out even more: 97 -> 87 (10% smaller) */
         />
       </div>
       
@@ -206,8 +244,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
         <Image 
           src="/svg/island-cloud-big.svg"
           alt="Cloud"
-          width={146} /* Zoomed out further: 162 -> 146 (10% smaller) */
-          height={97} /* Zoomed out further: 108 -> 97 (10% smaller) */
+          width={131} /* Zoomed out even more: 146 -> 131 (10% smaller) */
+          height={87} /* Zoomed out even more: 97 -> 87 (10% smaller) */
         />
       </div>
       
@@ -216,8 +254,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
         <Image 
           src="/svg/island-cloud-medium.svg"
           alt="Cloud"
-          width={97} /* Zoomed out further: 108 -> 97 (10% smaller) */
-          height={65} /* Zoomed out further: 72 -> 65 (10% smaller) */
+          width={87} /* Zoomed out even more: 97 -> 87 (10% smaller) */
+          height={59} /* Zoomed out even more: 65 -> 59 (10% smaller) */
         />
       </div>
       
@@ -226,8 +264,8 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
         <Image 
           src="/svg/island-cloud-medium.svg"
           alt="Cloud"
-          width={97} /* Zoomed out further: 108 -> 97 (10% smaller) */
-          height={65} /* Zoomed out further: 72 -> 65 (10% smaller) */
+          width={87} /* Zoomed out even more: 97 -> 87 (10% smaller) */
+          height={59} /* Zoomed out even more: 65 -> 59 (10% smaller) */
         />
       </div>
 

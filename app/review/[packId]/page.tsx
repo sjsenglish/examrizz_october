@@ -65,6 +65,37 @@ function getFirebaseImageUrl(gsUrl: string): string {
   return `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodedPath}?alt=media`;
 }
 
+// YouTube URL conversion function
+function getYouTubeEmbedUrl(url: string): string {
+  if (!url) return '';
+  
+  // If it's already an embed URL, return as is
+  if (url.includes('youtube.com/embed/')) {
+    return url;
+  }
+  
+  // Handle various YouTube URL formats
+  const patterns = [
+    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/,
+    /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]+)/,
+    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]+)/
+  ];
+  
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) {
+      const videoId = match[1];
+      // Remove any additional parameters after the video ID
+      const cleanVideoId = videoId.split('&')[0].split('?')[0];
+      return `https://www.youtube.com/embed/${cleanVideoId}`;
+    }
+  }
+  
+  // If it's not a recognized YouTube URL, return the original
+  // This allows for other video platforms or direct links
+  return url;
+}
+
 // =============================================================================
 // SUBJECT-SPECIFIC REVIEW RENDERERS
 // =============================================================================
@@ -634,11 +665,12 @@ export default function ReviewPage({ params }: { params: Promise<{ packId: strin
             <div className="review-video-player">
               {currentQuestion.video_url ? (
                 <iframe
-                  src={currentQuestion.video_url}
+                  src={getYouTubeEmbedUrl(currentQuestion.video_url)}
                   width="100%"
                   height="300"
                   frameBorder="0"
                   allowFullScreen
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 />
               ) : (
                 <div className="review-video-placeholder">
