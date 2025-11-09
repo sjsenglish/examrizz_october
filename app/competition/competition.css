@@ -1,215 +1,224 @@
-/* Competition Page Styles */
+/* Competition Page Styles - Scoped to competition page */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Madimi+One&display=swap');
 
-* {
+/* Scope all styles to competition page specifically */
+.competition-page * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-.page-background {
-  background-color: #F5F5F5;
-  min-height: 100vh;
-  padding-top: 60px;
+/* Ensure navbar font is properly loaded for examrizzsearch */
+.competition-page nav h1 {
+  font-family: 'Madimi One', 'Comic Sans MS', cursive, system-ui, sans-serif !important;
 }
 
-.main-content {
+.competition-page .page-background {
+  background-color: #F5F5F5;
+  min-height: 100vh;
+  padding-top: 48px; /* 60px * 0.8 */
+}
+
+.competition-page .main-content {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 60px);
-  padding: 40px 20px;
+  min-height: calc(100vh - 48px); /* (100vh - 60px) * 0.8 */
+  padding: 32px 16px; /* 40px * 0.8, 20px * 0.8 */
 }
 
-.content-container {
+.competition-page .content-container {
   background-color: #FFFFFF;
-  border-radius: 24px;
-  border: 2px solid #E0E0E0;
-  padding: 60px;
-  max-width: 1200px;
+  border-radius: 19.2px; /* 24px * 0.8 */
+  border: 1.6px solid #E0E0E0; /* 2px * 0.8 */
+  padding: 48px; /* 60px * 0.8 */
+  max-width: 960px; /* 1200px * 0.8 */
   width: 100%;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 3.2px 16px rgba(0, 0, 0, 0.08); /* shadow values * 0.8 */
 }
 
-.main-title {
+.competition-page .main-title {
   font-family: 'Inter', sans-serif;
-  font-size: 36px;
+  font-size: 28.8px; /* 36px * 0.8 */
   font-weight: 700;
   color: #1A1A1A;
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 19.2px; /* 24px * 0.8 */
   line-height: 1.2;
 }
 
-.subtitle {
+.competition-page .subtitle {
   font-family: 'Inter', sans-serif;
-  font-size: 18px;
+  font-size: 14.4px; /* 18px * 0.8 */
   font-weight: 400;
   color: #4A4A4A;
   text-align: center;
-  margin-bottom: 16px;
+  margin-bottom: 12.8px; /* 16px * 0.8 */
   line-height: 1.6;
 }
 
-.description {
+.competition-page .description {
   font-family: 'Inter', sans-serif;
-  font-size: 16px;
+  font-size: 12.8px; /* 16px * 0.8 */
   font-weight: 400;
   color: #4A4A4A;
   text-align: center;
-  margin-bottom: 16px;
+  margin-bottom: 12.8px; /* 16px * 0.8 */
   line-height: 1.5;
 }
 
-.tagline {
+.competition-page .tagline {
   font-family: 'Inter', sans-serif;
-  font-size: 16px;
+  font-size: 12.8px; /* 16px * 0.8 */
   font-weight: 600;
   color: #1A1A1A;
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 40px; /* 50px * 0.8 */
   line-height: 1.5;
 }
 
-.features-grid {
+.competition-page .features-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  margin-bottom: 50px;
+  gap: 24px; /* 30px * 0.8 */
+  margin-bottom: 40px; /* 50px * 0.8 */
 }
 
-.feature-card {
+.competition-page .feature-card {
   background-color: #E6F7F8;
-  border-radius: 16px;
-  border: 2px solid #B8E4E6;
-  padding: 30px 20px;
+  border-radius: 12.8px; /* 16px * 0.8 */
+  border: 1.6px solid #B8E4E6; /* 2px * 0.8 */
+  padding: 24px 16px; /* 30px * 0.8, 20px * 0.8 */
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  min-height: 280px;
+  /* Remove hover transform and box-shadow transition */
+  min-height: 224px; /* 280px * 0.8 */
 }
 
-.feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+/* Remove hover effects */
+.competition-page .feature-card:hover {
+  /* No transform or box-shadow changes */
 }
 
-.icon-container {
-  width: 100px;
-  height: 100px;
+.competition-page .icon-container {
+  width: 100px; /* Keep icons original size */
+  height: 100px; /* Keep icons original size */
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px; /* 20px * 0.8 */
 }
 
-.feature-icon {
-  width: 100%;
-  height: 100%;
+.competition-page .feature-icon {
+  width: 100%; /* Keep icons original size */
+  height: 100%; /* Keep icons original size */
   object-fit: contain;
 }
 
-.feature-title {
+.competition-page .feature-title {
   font-family: 'Inter', sans-serif;
-  font-size: 20px;
+  font-size: 16px; /* 20px * 0.8 */
   font-weight: 600;
   color: #1A1A1A;
-  margin-bottom: 12px;
+  margin-bottom: 9.6px; /* 12px * 0.8 */
 }
 
-.feature-description {
+.competition-page .feature-description {
   font-family: 'Inter', sans-serif;
-  font-size: 14px;
+  font-size: 11.2px; /* 14px * 0.8 */
   font-weight: 400;
   color: #4A4A4A;
   line-height: 1.5;
 }
 
-.demo-button {
-  display: block;
+.competition-page .demo-button {
+  display: inline-block;
   margin: 0 auto;
-  padding: 14px 32px;
+  padding: 11.2px 25.6px; /* 14px * 0.8, 32px * 0.8 */
   background-color: #E8E5FF;
-  border: 2px solid #C9C3FF;
-  border-radius: 12px;
+  border: 1.6px solid #C9C3FF; /* 2px * 0.8 */
+  border-radius: 9.6px; /* 12px * 0.8 */
   font-family: 'Inter', sans-serif;
-  font-size: 16px;
+  font-size: 12.8px; /* 16px * 0.8 */
   font-weight: 600;
   color: #5A4FCF;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(90, 79, 207, 0.15);
+  box-shadow: 0 3.2px 9.6px rgba(90, 79, 207, 0.15); /* shadow values * 0.8 */
+  text-decoration: none;
+  text-align: center;
 }
 
-.demo-button:hover {
+.competition-page .demo-button:hover {
   background-color: #DDD8FF;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(90, 79, 207, 0.25);
+  transform: translateY(-1.6px); /* -2px * 0.8 */
+  box-shadow: 0 4.8px 12.8px rgba(90, 79, 207, 0.25); /* shadow values * 0.8 */
 }
 
-.demo-button:active {
+.competition-page .demo-button:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(90, 79, 207, 0.15);
+  box-shadow: 0 1.6px 6.4px rgba(90, 79, 207, 0.15); /* shadow values * 0.8 */
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .features-grid {
+  .competition-page .features-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 768px) {
-  .content-container {
-    padding: 40px 30px;
+  .competition-page .content-container {
+    padding: 32px 24px; /* 40px * 0.8, 30px * 0.8 */
   }
   
-  .main-title {
-    font-size: 28px;
+  .competition-page .main-title {
+    font-size: 22.4px; /* 28px * 0.8 */
   }
   
-  .subtitle {
-    font-size: 16px;
+  .competition-page .subtitle {
+    font-size: 12.8px; /* 16px * 0.8 */
   }
   
-  .features-grid {
+  .competition-page .features-grid {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px; /* 20px * 0.8 */
   }
   
-  .feature-card {
-    padding: 25px 20px;
+  .competition-page .feature-card {
+    padding: 20px 16px; /* 25px * 0.8, 20px * 0.8 */
     min-height: auto;
   }
 }
 
 @media (max-width: 480px) {
-  .content-container {
-    padding: 30px 20px;
+  .competition-page .content-container {
+    padding: 24px 16px; /* 30px * 0.8, 20px * 0.8 */
   }
   
-  .main-title {
-    font-size: 24px;
+  .competition-page .main-title {
+    font-size: 19.2px; /* 24px * 0.8 */
   }
   
-  .subtitle,
-  .description,
-  .tagline {
-    font-size: 14px;
+  .competition-page .subtitle,
+  .competition-page .description,
+  .competition-page .tagline {
+    font-size: 11.2px; /* 14px * 0.8 */
   }
   
-  .feature-title {
-    font-size: 18px;
+  .competition-page .feature-title {
+    font-size: 14.4px; /* 18px * 0.8 */
   }
   
-  .feature-description {
-    font-size: 13px;
+  .competition-page .feature-description {
+    font-size: 10.4px; /* 13px * 0.8 */
   }
   
-  .demo-button {
-    padding: 12px 24px;
-    font-size: 14px;
+  .competition-page .demo-button {
+    padding: 9.6px 19.2px; /* 12px * 0.8, 24px * 0.8 */
+    font-size: 11.2px; /* 14px * 0.8 */
   }
 }

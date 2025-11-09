@@ -8,10 +8,11 @@ import './competition.css';
 
 export default function CompetitionPage() {
   return (
-    <div className="page-background">
-      <Navbar />
-      
-      <div className="main-content">
+    <div className="competition-page">
+      <div className="page-background">
+        <Navbar />
+        
+        <div className="main-content">
         <div className="content-container">
           <h1 className="main-title">100% A*AA or better. 100%<br />Oxbridge/Russell Group.</h1>
           
@@ -77,8 +78,11 @@ export default function CompetitionPage() {
             </div>
           </div>
           
-          <button className="demo-button">Maths Edexcel A Level Demo</button>
+          <Link href="/maths-demo" className="demo-button">
+            Maths Edexcel A Level Demo
+          </Link>
         </div>
+      </div>
       </div>
     </div>
   );

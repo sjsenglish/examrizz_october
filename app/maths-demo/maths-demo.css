@@ -1,0 +1,379 @@
+/* Maths Demo Page Styles - Scoped to demo page */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Madimi+One&display=swap');
+
+/* Scope all styles to maths demo page specifically */
+.maths-demo-page * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.maths-demo-page .page-background {
+  background-color: #87CEEB;
+  min-height: 100vh;
+  padding-top: 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.maths-demo-page .demo-container {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 60px);
+  display: flex;
+}
+
+.maths-demo-page .level-map {
+  flex: 1;
+  position: relative;
+  background: linear-gradient(180deg, #87CEEB 0%, #98E4FF 50%, #B0F0FF 100%);
+  border-bottom: 4px solid #2F4F4F;
+}
+
+/* Title badge */
+.maths-demo-page .title-badge {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #FFFFFF;
+  border: 2px solid #000000;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+/* Ghost character */
+.maths-demo-page .ghost-character {
+  position: absolute;
+  bottom: 40px;
+  left: 60px;
+  z-index: 15;
+}
+
+.maths-demo-page .speech-bubble {
+  position: absolute;
+  top: -60px;
+  left: 100px;
+  background-color: #FFFFFF;
+  border: 2px solid #000000;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+  max-width: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.maths-demo-page .speech-bubble::before {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 20px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #FFFFFF;
+}
+
+/* Treasure box */
+.maths-demo-page .treasure-box {
+  position: absolute;
+  z-index: 12;
+}
+
+.maths-demo-page .treasure-box.center-top {
+  top: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Toast levels positioning */
+.maths-demo-page .toast {
+  position: absolute;
+  z-index: 10;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.maths-demo-page .toast:hover {
+  transform: scale(1.1);
+}
+
+/* Purple toasts (completed) - scattered around left and center */
+.maths-demo-page .toast-1 { top: 15%; left: 10%; }
+.maths-demo-page .toast-2 { top: 25%; left: 25%; }
+.maths-demo-page .toast-3 { top: 35%; left: 15%; }
+.maths-demo-page .toast-4 { top: 45%; left: 30%; }
+.maths-demo-page .toast-5 { top: 55%; left: 20%; }
+.maths-demo-page .toast-6 { top: 30%; left: 45%; }
+.maths-demo-page .toast-7 { top: 50%; left: 45%; }
+.maths-demo-page .toast-8 { top: 65%; left: 35%; }
+.maths-demo-page .toast-9 { top: 75%; left: 25%; }
+.maths-demo-page .toast-10 { top: 85%; left: 40%; }
+
+/* Blue toasts (available) - scattered around right side */
+.maths-demo-page .toast-11 { top: 20%; right: 15%; }
+.maths-demo-page .toast-12 { top: 35%; right: 25%; }
+.maths-demo-page .toast-13 { top: 25%; right: 35%; }
+.maths-demo-page .toast-14 { top: 45%; right: 20%; }
+.maths-demo-page .toast-15 { top: 55%; right: 30%; }
+.maths-demo-page .toast-16 { top: 40%; right: 45%; }
+.maths-demo-page .toast-17 { top: 60%; right: 40%; }
+.maths-demo-page .toast-18 { top: 70%; right: 25%; }
+.maths-demo-page .toast-19 { top: 80%; right: 35%; }
+.maths-demo-page .toast-20 { top: 90%; right: 20%; }
+
+/* Clouds */
+.maths-demo-page .cloud {
+  position: absolute;
+  background-color: #FFFFFF;
+  border-radius: 50px;
+  opacity: 0.8;
+  z-index: 5;
+}
+
+.maths-demo-page .cloud::before,
+.maths-demo-page .cloud::after {
+  content: '';
+  position: absolute;
+  background-color: #FFFFFF;
+  border-radius: 50px;
+}
+
+.maths-demo-page .cloud-1 {
+  width: 80px;
+  height: 40px;
+  top: 10%;
+  left: 20%;
+}
+
+.maths-demo-page .cloud-1::before {
+  width: 50px;
+  height: 50px;
+  top: -25px;
+  left: 10px;
+}
+
+.maths-demo-page .cloud-1::after {
+  width: 60px;
+  height: 40px;
+  top: -15px;
+  right: 10px;
+}
+
+.maths-demo-page .cloud-2 {
+  width: 60px;
+  height: 30px;
+  top: 20%;
+  right: 20%;
+}
+
+.maths-demo-page .cloud-2::before {
+  width: 40px;
+  height: 40px;
+  top: -20px;
+  left: 10px;
+}
+
+.maths-demo-page .cloud-3 {
+  width: 70px;
+  height: 35px;
+  bottom: 30%;
+  left: 15%;
+}
+
+.maths-demo-page .cloud-3::before {
+  width: 45px;
+  height: 45px;
+  top: -22px;
+  left: 12px;
+}
+
+.maths-demo-page .cloud-4 {
+  width: 50px;
+  height: 25px;
+  bottom: 20%;
+  right: 30%;
+}
+
+/* Water pools */
+.maths-demo-page .water-pool {
+  position: absolute;
+  background-color: #4682B4;
+  border-radius: 50%;
+  opacity: 0.7;
+  z-index: 3;
+}
+
+.maths-demo-page .pool-1 {
+  width: 120px;
+  height: 60px;
+  bottom: 5%;
+  left: 30%;
+}
+
+.maths-demo-page .pool-2 {
+  width: 100px;
+  height: 50px;
+  bottom: 10%;
+  right: 25%;
+}
+
+/* Mountains/ground elements */
+.maths-demo-page .mountain {
+  position: absolute;
+  bottom: 0;
+  z-index: 2;
+}
+
+.maths-demo-page .mountain::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.maths-demo-page .mountain-1::before {
+  border-left: 40px solid transparent;
+  border-right: 40px solid transparent;
+  border-bottom: 60px solid #2F4F4F;
+  left: 0%;
+}
+
+.maths-demo-page .mountain-2::before {
+  border-left: 60px solid transparent;
+  border-right: 60px solid transparent;
+  border-bottom: 80px solid #2F4F4F;
+  left: 20%;
+}
+
+.maths-demo-page .mountain-3::before {
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-bottom: 70px solid #2F4F4F;
+  right: 30%;
+}
+
+.maths-demo-page .mountain-4::before {
+  border-left: 45px solid transparent;
+  border-right: 45px solid transparent;
+  border-bottom: 65px solid #2F4F4F;
+  right: 0%;
+}
+
+/* Progress sidebar */
+.maths-demo-page .progress-sidebar {
+  position: fixed;
+  top: 60px;
+  right: 0;
+  width: 300px;
+  height: calc(100vh - 60px);
+  background-color: #FFFFFF;
+  border-left: 2px solid #E0E0E0;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+  z-index: 20;
+  padding: 20px;
+}
+
+.maths-demo-page .close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  font-weight: bold;
+  color: #666;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.maths-demo-page .close-btn:hover {
+  color: #000;
+  background-color: #F0F0F0;
+  border-radius: 50%;
+}
+
+.maths-demo-page .progress-content {
+  margin-top: 50px;
+}
+
+.maths-demo-page .progress-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #E5E5E5;
+}
+
+.maths-demo-page .progress-item:last-child {
+  border-bottom: none;
+}
+
+.maths-demo-page .label {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.maths-demo-page .value {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .maths-demo-page .progress-sidebar {
+    width: 250px;
+  }
+  
+  .maths-demo-page .speech-bubble {
+    font-size: 10px;
+    max-width: 150px;
+    padding: 8px 12px;
+  }
+  
+  .maths-demo-page .title-badge {
+    font-size: 14px;
+    padding: 6px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .maths-demo-page .progress-sidebar {
+    width: 100%;
+    left: 0;
+  }
+  
+  .maths-demo-page .ghost-character {
+    bottom: 20px;
+    left: 20px;
+  }
+  
+  .maths-demo-page .speech-bubble {
+    position: relative;
+    top: 10px;
+    left: 0;
+    margin-top: 10px;
+  }
+}
