@@ -20,7 +20,7 @@ export default function SearchPage() {
         style={{
           position: 'absolute',
           top: '90px',
-          right: '45px',
+          left: '45px',
           display: 'flex',
           alignItems: 'center',
           gap: '6px',
