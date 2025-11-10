@@ -129,3 +129,26 @@
 - **Files**:
   - Page: `app/spec-topic/page.tsx`
   - Styles: `app/spec-topic/spec-topic.css`
+
+## Usage Tracking and Limits (Updated Nov 2024)
+- **Monthly Cost Limits** (defined in `lib/usage-tracking.ts`):
+  - Free tier: **$1.00** per month (reduced from $2.00)
+  - Plus tier: $6.00 per month
+  - Max tier: $12.00 per month
+
+- **Important**: Limits are **COMBINED** for ALL services (AskBo, Interview prep, etc.) per user per month
+  - Not separate limits per service
+  - All AI interactions count toward the single monthly limit
+
+- **Bug Fixes Applied** (Nov 2024):
+  1. **Comparison operator consistency**: Changed from `>` to `>=` in `canMakeRequest()` to match `hasExceededLimit()`
+  2. **Database error handling**: On errors, system now assumes limit is reached (conservative approach) instead of allowing unlimited usage
+  3. **Race condition protection**: Added `verifyUsageWithinLimit()` function to detect when concurrent requests cause limit breach
+     - API endpoints should call this function AFTER recording usage
+     - Logs warning when overage is detected with exact overage amount
+
+- **Key Functions**:
+  - `canMakeRequest()`: Pre-flight check before allowing AI requests
+  - `recordUsage()`: Records actual token usage after completion
+  - `verifyUsageWithinLimit()`: Post-recording verification to catch race conditions
+  - `getMonthlyUsage()`: Gets current month's total usage for a user

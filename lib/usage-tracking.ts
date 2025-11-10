@@ -6,8 +6,9 @@ const supabase = createClient(
 )
 
 // Usage limits per tier (in USD)
+// NOTE: Limits are combined for ALL services (askbo, interview, etc.) per user per month
 export const USAGE_LIMITS = {
-  free: 2.00,
+  free: 1.00,
   plus: 6.00,
   max: 12.00
 } as const
@@ -166,9 +167,9 @@ function invalidateFeatureUsageCache(userId: string, feature: 'submit_answer' | 
 
 // Record usage for a user
 export async function recordUsage(
-  userId: string, 
+  userId: string,
   service: 'askbo' | 'other',
-  inputTokens: number, 
+  inputTokens: number,
   outputTokens: number
 ): Promise<void> {
   const inputCost = (inputTokens / 1000) * COST_PER_1K_TOKENS.input
@@ -195,6 +196,33 @@ export async function recordUsage(
   }
 }
 
+// Verify usage after recording to catch race conditions
+// This should be called AFTER recording usage to check if concurrent requests caused limit breach
+export async function verifyUsageWithinLimit(userId: string): Promise<{
+  withinLimit: boolean;
+  usage: MonthlyUsage;
+  overage?: number;
+}> {
+  const usage = await getMonthlyUsage(userId)
+  const withinLimit = usage.total_cost < usage.limit
+
+  if (!withinLimit) {
+    const overage = usage.total_cost - usage.limit
+    console.warn(`User ${userId} exceeded monthly limit. Total: $${usage.total_cost.toFixed(4)}, Limit: $${usage.limit.toFixed(2)}, Overage: $${overage.toFixed(4)}`)
+
+    return {
+      withinLimit: false,
+      usage,
+      overage
+    }
+  }
+
+  return {
+    withinLimit: true,
+    usage
+  }
+}
+
 // Get user's monthly usage
 export async function getMonthlyUsage(userId: string): Promise<MonthlyUsage> {
   const now = new Date()
@@ -213,12 +241,14 @@ export async function getMonthlyUsage(userId: string): Promise<MonthlyUsage> {
 
   if (error) {
     console.error('Error getting monthly usage:', error)
+    // SECURITY: On database errors, assume limit is reached to prevent abuse
+    // This is more conservative than returning 0 cost which would allow unlimited usage
     return {
-      total_cost: 0,
+      total_cost: limit,
       total_tokens: 0,
       limit,
-      remaining: limit,
-      percentage_used: 0
+      remaining: 0,
+      percentage_used: 100
     }
   }
 
@@ -256,7 +286,8 @@ export async function canMakeRequest(
 
   const projectedCost = usage.total_cost + estimatedTotalCost
 
-  if (projectedCost > usage.limit) {
+  // Use >= for consistency with hasExceededLimit() function
+  if (projectedCost >= usage.limit) {
     return {
       allowed: false,
       reason: `This request would exceed your monthly limit of $${usage.limit.toFixed(2)}. Current usage: $${usage.total_cost.toFixed(2)}`,
