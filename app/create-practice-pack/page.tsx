@@ -304,7 +304,7 @@ export default function CreatePracticePackPage() {
                   {showSubjectDropdown && (
                     <div className="dropdown-menu">
                       {subjects.map((subject) => {
-                        const isEnabled = subject === 'TSA' || subject === 'BMAT';
+                        const isEnabled = subject === 'TSA';
                         return (
                           <button
                             key={subject}
