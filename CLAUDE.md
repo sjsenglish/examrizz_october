@@ -57,6 +57,17 @@
   - Shrank grass pattern from 100px to 60px, then further reduced to 54px (10% reduction)
   - Added 2px solid black border line across top of grass to show where grass ends
 
+## AskBo Page Layout Fix (Nov 2024)
+- **Issue**: Page experienced layout shift on initial load - loading screen had different structure than actual content
+- **Root cause**: Loading spinner showed full-page centered layout, then jumped to Navbar + sidebar layout when loaded
+- **Fix implemented** in `/app/askbo/page.tsx` and `/app/askbo/study-book.css`:
+  - Changed loading pattern to conditionally render content instead of early return
+  - Navbar now remains visible during loading state
+  - Loading spinner positioned below navbar (margin-top: 60px, min-height: calc(100vh - 60px))
+  - Loading container uses transparent background to match page background
+  - Main content wrapped in fragment that only renders when loading completes
+  - This eliminates visual "jump" and provides smooth transition from loading to loaded state
+- **Note**: This fix does NOT affect any functionality - only improves visual experience
 ## Practice Pages UI Changes (Nov 2024)
 - **Practice page** (`/practice`):
   - Admissions dropdown now excludes English Lit, Maths, Chemistry, Biology (only shows TSA, BMAT, Interview)
