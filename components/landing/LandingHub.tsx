@@ -197,38 +197,38 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
 
       {/* Decorative clouds - new layout */}
       {/* Big cloud top left */}
-      <div className="absolute left-[15%] top-[20%] opacity-70 pointer-events-none" style={{ zIndex: 5 }}>
-        <Image 
+      <div className="absolute left-[20%] top-[30%] opacity-70 pointer-events-none" style={{ zIndex: 5 }}>
+        <Image
           src="/svg/island-cloud-big.svg"
           alt="Cloud"
           width={122} /* 75% of 162 -> 122 */
           height={81} /* 75% of 108 -> 81 */
         />
       </div>
-      
+
       {/* Big cloud top right */}
-      <div className="absolute right-[15%] top-[35%] opacity-70 pointer-events-none" style={{ zIndex: 5 }}>
-        <Image 
+      <div className="absolute right-[20%] top-[45%] opacity-70 pointer-events-none" style={{ zIndex: 5 }}>
+        <Image
           src="/svg/island-cloud-big.svg"
           alt="Cloud"
           width={122} /* 75% of 162 -> 122 */
           height={81} /* 75% of 108 -> 81 */
         />
       </div>
-      
+
       {/* Medium cloud top middle left */}
-      <div className="absolute left-[35%] top-[15%] opacity-60 pointer-events-none" style={{ zIndex: 5 }}>
-        <Image 
+      <div className="absolute left-[38%] top-[25%] opacity-60 pointer-events-none" style={{ zIndex: 5 }}>
+        <Image
           src="/svg/island-cloud-medium.svg"
           alt="Cloud"
           width={81} /* 75% of 108 -> 81 */
           height={54} /* 75% of 72 -> 54 */
         />
       </div>
-      
+
       {/* Medium cloud top middle right */}
-      <div className="absolute right-[35%] top-[17%] opacity-60 pointer-events-none" style={{ zIndex: 5 }}>
-        <Image 
+      <div className="absolute right-[38%] top-[27%] opacity-60 pointer-events-none" style={{ zIndex: 5 }}>
+        <Image
           src="/svg/island-cloud-medium.svg"
           alt="Cloud"
           width={81} /* 75% of 108 -> 81 */
