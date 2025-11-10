@@ -73,13 +73,20 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   const isInterviewResourcesQuestion = useMemo(() => hit?.subject && hit?.subjectArea && hit?.sectionCategory && hit?.overview, [hit]);
   const isBiologyQuestion = useMemo(() => hit?.Subject === 'Biology' && hit?.Parts && Array.isArray(hit.Parts), [hit]);
 
-  // Check if content should be blurred (premium Interview Resources for free users)
+  // Check if content should be blurred (premium Interview Resources for non-Plus/Max users)
   const shouldBlurContent = useMemo(() => {
     if (!isInterviewResourcesQuestion) return false;
     if (!hit?.isPremium) return false;
-    if (!featureUsage) return false; // If we don't have usage data yet, don't blur
+
+    // If user is not logged in, blur premium content immediately
+    if (!user) return true;
+
+    // If user is logged in but we don't have feature usage yet, blur by default (safer)
+    if (!featureUsage) return true;
+
+    // If user has plus or max tier, don't blur
     return featureUsage.tier === 'free';
-  }, [isInterviewResourcesQuestion, hit?.isPremium, featureUsage]);
+  }, [isInterviewResourcesQuestion, hit?.isPremium, user, featureUsage]);
 
   // Memoize array calculations to prevent re-renders
   const englishLitFilters = useMemo(() => 
@@ -711,79 +718,18 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
 
         {/* Show overview for Interview Resources with markdown formatting */}
         {isInterviewResourcesQuestion && normalizedData.questionContent && (
-          <div style={{ position: 'relative', marginBottom: '20px' }}>
-            <div
-              className={styles.questionText}
-              style={{
-                filter: shouldBlurContent ? 'blur(8px)' : 'none',
-                userSelect: shouldBlurContent ? 'none' : 'auto',
-                pointerEvents: shouldBlurContent ? 'none' : 'auto'
-              }}
-            >
-              <ReactMarkdown>
-                {normalizedData.questionContent.replace(/\\n\\n/g, '\n\n').replace(/\\n/g, '\n')}
-              </ReactMarkdown>
-            </div>
-            {/* Upgrade overlay for blurred content */}
-            {shouldBlurContent && (
-              <div style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                textAlign: 'center',
-                zIndex: 10,
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                padding: '20px 30px',
-                borderRadius: '12px',
-                border: '2px solid #FFD700',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
-              }}>
-                <div style={{
-                  fontSize: '32px',
-                  marginBottom: '8px'
-                }}>🔒</div>
-                <div style={{
-                  fontFamily: "'Madimi One', cursive",
-                  fontSize: '16px',
-                  fontWeight: '600',
-                  color: '#000',
-                  marginBottom: '8px'
-                }}>
-                  Premium Content
-                </div>
-                <div style={{
-                  fontSize: '13px',
-                  color: '#666',
-                  marginBottom: '12px'
-                }}>
-                  Upgrade to Plus or Max to unlock
-                </div>
-                <a
-                  href="/payment"
-                  style={{
-                    display: 'inline-block',
-                    backgroundColor: '#FFD700',
-                    color: '#000',
-                    padding: '8px 20px',
-                    borderRadius: '6px',
-                    textDecoration: 'none',
-                    fontWeight: '600',
-                    fontSize: '13px',
-                    border: '1px solid #FFA500',
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#FFA500';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#FFD700';
-                  }}
-                >
-                  View Plans
-                </a>
-              </div>
-            )}
+          <div
+            className={styles.questionText}
+            style={{
+              marginBottom: '20px',
+              filter: shouldBlurContent ? 'blur(8px)' : 'none',
+              userSelect: shouldBlurContent ? 'none' : 'auto',
+              pointerEvents: shouldBlurContent ? 'none' : 'auto'
+            }}
+          >
+            <ReactMarkdown>
+              {normalizedData.questionContent.replace(/\\n\\n/g, '\n\n').replace(/\\n/g, '\n')}
+            </ReactMarkdown>
           </div>
         )}
 
@@ -791,89 +737,27 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         {isInterviewResourcesQuestion && normalizedData.practiceQuestions && normalizedData.practiceQuestions.length > 0 && (
           <div style={{ marginTop: '20px' }}>
             <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '12px' }}>Practice Questions:</h3>
-            <div style={{ position: 'relative' }}>
-              <div
-                style={{
-                  filter: shouldBlurContent ? 'blur(8px)' : 'none',
-                  userSelect: shouldBlurContent ? 'none' : 'auto',
-                  pointerEvents: shouldBlurContent ? 'none' : 'auto'
-                }}
-              >
-                {normalizedData.practiceQuestions.map((q: any, index: number) => (
-                  <div key={index} style={{ marginBottom: '16px', paddingLeft: '16px', borderLeft: '3px solid #E5E7EB' }}>
-                    <div style={{ fontWeight: '500', marginBottom: '8px' }}>
-                      {q.number}. <ReactMarkdown>
-                        {q.question.replace(/\\n\\n/g, '\n\n').replace(/\\n/g, '\n')}
-                      </ReactMarkdown>
-                    </div>
-                    {q.type && (
-                      <span style={{ fontSize: '12px', color: '#6B7280', fontStyle: 'italic' }}>
-                        [{q.type}]
-                      </span>
-                    )}
+            <div
+              style={{
+                filter: shouldBlurContent ? 'blur(8px)' : 'none',
+                userSelect: shouldBlurContent ? 'none' : 'auto',
+                pointerEvents: shouldBlurContent ? 'none' : 'auto'
+              }}
+            >
+              {normalizedData.practiceQuestions.map((q: any, index: number) => (
+                <div key={index} style={{ marginBottom: '16px', paddingLeft: '16px', borderLeft: '3px solid #E5E7EB' }}>
+                  <div style={{ fontWeight: '500', marginBottom: '8px' }}>
+                    {q.number}. <ReactMarkdown>
+                      {q.question.replace(/\\n\\n/g, '\n\n').replace(/\\n/g, '\n')}
+                    </ReactMarkdown>
                   </div>
-                ))}
-              </div>
-              {/* Upgrade overlay for blurred practice questions */}
-              {shouldBlurContent && (
-                <div style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  textAlign: 'center',
-                  zIndex: 10,
-                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                  padding: '20px 30px',
-                  borderRadius: '12px',
-                  border: '2px solid #FFD700',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
-                }}>
-                  <div style={{
-                    fontSize: '32px',
-                    marginBottom: '8px'
-                  }}>🔒</div>
-                  <div style={{
-                    fontFamily: "'Madimi One', cursive",
-                    fontSize: '16px',
-                    fontWeight: '600',
-                    color: '#000',
-                    marginBottom: '8px'
-                  }}>
-                    Premium Content
-                  </div>
-                  <div style={{
-                    fontSize: '13px',
-                    color: '#666',
-                    marginBottom: '12px'
-                  }}>
-                    Upgrade to Plus or Max to unlock
-                  </div>
-                  <a
-                    href="/payment"
-                    style={{
-                      display: 'inline-block',
-                      backgroundColor: '#FFD700',
-                      color: '#000',
-                      padding: '8px 20px',
-                      borderRadius: '6px',
-                      textDecoration: 'none',
-                      fontWeight: '600',
-                      fontSize: '13px',
-                      border: '1px solid #FFA500',
-                      transition: 'all 0.3s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#FFA500';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = '#FFD700';
-                    }}
-                  >
-                    View Plans
-                  </a>
+                  {q.type && (
+                    <span style={{ fontSize: '12px', color: '#6B7280', fontStyle: 'italic' }}>
+                      [{q.type}]
+                    </span>
+                  )}
                 </div>
-              )}
+              ))}
             </div>
           </div>
         )}

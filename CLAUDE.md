@@ -178,27 +178,25 @@
 
 ## Interview Resources Premium Content (Nov 2024)
 - **Premium Access Control**: Interview Resources with `isPremium: true` are restricted to Plus and Max tier users
-- **Free User Experience**:
+- **Logged Out and Free User Experience**:
   - Question number, title, and filter tags remain **visible** (not blurred)
   - Overview content is **blurred** with 8px blur filter
   - Practice questions are **blurred** with 8px blur filter
   - Content is non-selectable and non-interactive when blurred (userSelect: none, pointerEvents: none)
   - **Premium badge** displays "⭐ PREMIUM" in gold next to question number for all premium resources
-  - **Upgrade overlay** appears centered over blurred content with:
-    - Lock icon (🔒)
-    - "Premium Content" heading
-    - "Upgrade to Plus or Max to unlock" message
-    - "View Plans" button linking to `/payment` page
-    - Semi-transparent white background with gold border
+  - **No overlay or upgrade prompts** - just clean blur effect
+  - Blur applies immediately on page load (no delay)
 - **Plus and Max User Experience**:
   - All content fully accessible with no blur
   - Premium badge still visible to indicate premium quality content
-  - No upgrade prompts shown
 - **Implementation** (`components/ExamSearch/QuestionCard.tsx`):
-  - `shouldBlurContent` logic checks: isInterviewResourcesQuestion + isPremium + user tier = 'free'
+  - `shouldBlurContent` logic:
+    - Returns `true` for logged out users (no delay)
+    - Returns `true` while loading user tier (safer default during load)
+    - Returns `true` for free tier users
+    - Returns `false` for plus/max tier users
   - Blur styling applied via inline styles (filter: blur(8px))
   - Premium badge always shown for isPremium resources
-  - Upgrade overlay conditionally rendered when shouldBlurContent is true
 
 ## Usage Tracking and Limits (Updated Nov 2024)
 - **Monthly Cost Limits** (defined in `lib/usage-tracking.ts`):
