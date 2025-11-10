@@ -1,21 +1,28 @@
 import type { Metadata } from 'next';
-import { Inter, Figtree } from 'next/font/google';
+import { Inter, Figtree, Madimi_One } from 'next/font/google';
 import './globals.css';
 import { PostHogProvider, PostHogPageView } from '../components/PostHogProvider';
 import { ProfileProvider } from '../contexts/ProfileContext';
 import { Suspense } from 'react';
 
 // Optimize font loading with proper fallbacks
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif']
 });
 
-const figtree = Figtree({ 
+const figtree = Figtree({
   subsets: ['latin'],
   display: 'swap',
   fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif']
+});
+
+const madimiOne = Madimi_One({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: '400',
+  variable: '--font-madimi'
 });
 
 export const metadata: Metadata = {
@@ -44,7 +51,7 @@ export default function RootLayout({
       <head>
         {/* Font preloading handled by Next.js font optimization */}
       </head>
-      <body className={`${inter.className} ${figtree.className} antialiased`}>
+      <body className={`${inter.className} ${figtree.className} ${madimiOne.variable} antialiased`}>
         <PostHogProvider>
           <ProfileProvider>
             <Suspense fallback={null}>
