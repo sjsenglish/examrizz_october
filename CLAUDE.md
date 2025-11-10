@@ -73,6 +73,16 @@
   - Main content wrapped in fragment that only renders when loading completes
   - This eliminates visual "jump" and provides smooth transition from loading to loaded state
 - **Note**: This fix does NOT affect any functionality - only improves visual experience
+
+## AskBo Authentication Required (Nov 2024)
+- **Authentication**: `/askbo` page now requires user login
+- **Behavior**: Unauthenticated users are automatically redirected to `/login` page
+- **Implementation** in `/app/askbo/page.tsx`:
+  - Auth check runs on page mount via useEffect
+  - If `supabase.auth.getUser()` returns no user, redirect to `/login`
+  - If auth error occurs, redirect to `/login`
+  - Loading state prevents content flash before redirect
+- **Note**: This ensures all AskBo interactions are properly tracked and associated with user accounts
 ## Practice Pages UI Changes (Nov 2024)
 - **Practice page** (`/practice`):
   - Admissions dropdown now excludes English Lit, Maths, Chemistry, Biology (only shows TSA, BMAT, Interview)
