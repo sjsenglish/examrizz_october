@@ -23,6 +23,8 @@
   - Medium clouds: left-[38%] top-[25%], right-[38%] top-[27%]
 - **Teacher icon**: Removed "Coming Soon" hover tooltip (now just shows greyed-out icon)
 - **Learn icon**: Greyed out with opacity-40 and grayscale, made non-clickable
+- **Video icon**: Greyed out with opacity-40 and grayscale, made non-clickable (Nov 2024)
+- **Arena icon**: Greyed out with opacity-40 and grayscale, made non-clickable (Nov 2024)
 
 ## Practice Page Design (Updated Nov 2024)
 - Cloud decorations moved closer to title for better visual hierarchy

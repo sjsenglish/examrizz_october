@@ -49,7 +49,7 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
         }}
       >
         {/* ARENA - top-left (20% from left, 25% from top) */}
-        <div 
+        <div
           className="absolute"
           style={{
             left: '32%',
@@ -57,19 +57,17 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <Link href="/competition" className="block">
-            <Image 
-              src="/icons/arena.svg"
-              alt="ARENA"
-              width={186} /* 75% of 248 -> 186 */
-              height={186} /* 75% of 248 -> 186 */
-              className="drop-shadow-lg"
-            />
-          </Link>
+          <Image
+            src="/icons/arena.svg"
+            alt="ARENA"
+            width={186} /* 75% of 248 -> 186 */
+            height={186} /* 75% of 248 -> 186 */
+            className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
+          />
         </div>
 
         {/* VIDEO - top-right (75% from left, 25% from top) */}
-        <div 
+        <div
           className="absolute"
           style={{
             left: '65%',
@@ -77,15 +75,13 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <Link href="/video" className="block">
-            <Image 
-              src="/icons/video.svg"
-              alt="VIDEO"
-              width={155} /* 75% of 207 -> 155 */
-              height={155} /* 75% of 207 -> 155 */
-              className="drop-shadow-lg"
-            />
-          </Link>
+          <Image
+            src="/icons/video.svg"
+            alt="VIDEO"
+            width={155} /* 75% of 207 -> 155 */
+            height={155} /* 75% of 207 -> 155 */
+            className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
+          />
         </div>
 
         {/* PRACTICE - dead center (50% horizontal, 50% vertical) */}
