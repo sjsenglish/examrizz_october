@@ -64,8 +64,8 @@
     - Modified yellow ghost speech bubble: removed arrow pointer, changed to clean oval shape (border-radius: 30px)
     - Repositioned yellow ghost speech bubble to the left side (right: 180px, bottom: 50px)
     - Added loveletter icon (love-letter.svg) at bottom left with clean oval speech bubble above it
-    - Added pulsing arrow above toast-11 (first blue toast) to indicate which icon to click
-    - Arrow uses red color (#FF6B6B) and pulses with opacity and vertical movement animation
+    - Added pulsing arrow above toast-1 (top left purple toast) to indicate which icon to click
+    - Arrow is black with a tail (vertical line + arrowhead) and pulses with opacity and vertical movement animation
 
 ## AskBo Page Layout Fix (Nov 2024)
 - **Issue**: Page experienced layout shift on initial load - loading screen had different structure than actual content

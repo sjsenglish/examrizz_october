@@ -93,6 +93,15 @@ export default function MathsDemoPage() {
             {/* Purple toasts (completed levels) */}
             <div className="toast purple toast-1">
               <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
+              {/* Pulsing arrow pointing at this toast */}
+              <div className="pulse-arrow">
+                <svg width="60" height="80" viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {/* Arrow tail (line) */}
+                  <line x1="30" y1="5" x2="30" y2="50" stroke="#000000" strokeWidth="3" strokeLinecap="round"/>
+                  {/* Arrow head */}
+                  <path d="M15 40L30 55L45 40" stroke="#000000" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
             </div>
             <div className="toast purple toast-2">
               <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
@@ -125,12 +134,6 @@ export default function MathsDemoPage() {
             {/* Blue toasts (available levels) */}
             <div className="toast blue toast-11">
               <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
-              {/* Pulsing arrow pointing at this toast */}
-              <div className="pulse-arrow">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M7 10L12 15L17 10" stroke="#FF6B6B" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
             </div>
             <div className="toast blue toast-12">
               <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />

@@ -144,7 +144,11 @@
 }
 
 /* Purple toasts (completed) - scattered around left and center */
-.maths-demo-page .toast-1 { top: 15%; left: 10%; }
+.maths-demo-page .toast-1 {
+  top: 15%;
+  left: 10%;
+  position: relative;
+}
 .maths-demo-page .toast-2 { top: 25%; left: 25%; }
 .maths-demo-page .toast-3 { top: 35%; left: 15%; }
 .maths-demo-page .toast-4 { top: 45%; left: 30%; }
@@ -156,11 +160,7 @@
 .maths-demo-page .toast-10 { top: 70%; left: 40%; }
 
 /* Blue toasts (available) - scattered around right side */
-.maths-demo-page .toast-11 {
-  top: 20%;
-  right: 15%;
-  position: relative;
-}
+.maths-demo-page .toast-11 { top: 20%; right: 15%; }
 .maths-demo-page .toast-12 { top: 35%; right: 25%; }
 .maths-demo-page .toast-13 { top: 25%; right: 35%; }
 .maths-demo-page .toast-14 { top: 45%; right: 20%; }
