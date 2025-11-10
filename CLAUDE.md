@@ -78,3 +78,49 @@
   - Subject dropdown displays all subjects but only TSA and BMAT are enabled
   - Other subjects (English Lit, Maths, Chemistry, Biology, Interview) are greyed out (opacity: 0.4, color: #999999)
   - Disabled subjects have cursor: not-allowed and cannot be selected
+
+## Maths Demo Page Interactive Elements (Nov 2024)
+- **Toast Icons** (`/maths-demo`):
+  - Disabled popout effect (hover scale) on all toast icons except toast-1 (top-left corner)
+  - Only toast-1 maintains the `transform: scale(1.1)` on hover
+  - Toast-1 is clickable and links to `/spec-topic` page
+
+- **Love Letter Ghost Guide** (`/maths-demo`):
+  - Added love-letter.svg icon next to toast-1 at position (top: 15%, left: 16%)
+  - Ghost has floating animation (10px vertical movement over 3s)
+  - Speech bubble positioned at (top: 12%, left: 20%) with text "skip straight to spec topic"
+  - Speech bubble has left-pointing arrow connecting to the ghost icon
+  - Styles defined in `app/maths-demo/maths-demo.css` with `.love-letter-ghost` and `.love-letter-speech` classes
+
+## Spec Topic Page (Nov 2024)
+- **New Page**: `/spec-topic` - "7.2 Differentiating Functions"
+- **Purpose**: Dedicated topic page for specific spec point practice and learning
+- **Layout**: Based on `/practice` page structure but with custom tabs and no "Create Pack" functionality
+- **Three Tabs**:
+  1. **Video Content** (replaces "A Level" tab):
+     - Shows 3 placeholder video containers
+     - Each container has 300px height with space for embedded video players
+     - Designed for future video lesson integration
+
+  2. **Question Packs** (replaces "Admissions" tab):
+     - Shows 5 mock question packs related to differentiation
+     - Packs include: Differentiating Polynomials, Chain Rule Practice, Product & Quotient Rules, Implicit Differentiation, Applications of Differentiation
+     - Each pack has full functionality: View Pack, Practice, and Review buttons
+     - Includes save/bookmark, share, and send-to-friend icons
+     - Uses same question pack SVG styling as main practice page
+
+  3. **Notes** (replaces "Saved" tab):
+     - Shows 3 PDF/note containers
+     - Each container has upload button for PDF functionality
+     - 200px height placeholder with dashed border for drag-and-drop area
+     - Designed for students to upload and store topic-specific notes
+
+- **Navigation**:
+  - Back button in top-left links to `/maths-demo`
+  - Page title: "7.2 Differentiating Functions"
+  - Search bar for filtering resources
+  - Cloud decorations matching practice page aesthetic
+
+- **Files**:
+  - Page: `app/spec-topic/page.tsx`
+  - Styles: `app/spec-topic/spec-topic.css`
