@@ -303,18 +303,29 @@ export default function CreatePracticePackPage() {
                   </button>
                   {showSubjectDropdown && (
                     <div className="dropdown-menu">
-                      {subjects.map((subject) => (
-                        <button
-                          key={subject}
-                          onClick={() => {
-                            setSelectedSubject(subject);
-                            setShowSubjectDropdown(false);
-                          }}
-                          className="dropdown-item"
-                        >
-                          {subject}
-                        </button>
-                      ))}
+                      {subjects.map((subject) => {
+                        const isEnabled = subject === 'TSA' || subject === 'BMAT';
+                        return (
+                          <button
+                            key={subject}
+                            onClick={() => {
+                              if (isEnabled) {
+                                setSelectedSubject(subject);
+                                setShowSubjectDropdown(false);
+                              }
+                            }}
+                            className="dropdown-item"
+                            style={{
+                              opacity: isEnabled ? 1 : 0.4,
+                              cursor: isEnabled ? 'pointer' : 'not-allowed',
+                              color: isEnabled ? '#000000' : '#999999'
+                            }}
+                            disabled={!isEnabled}
+                          >
+                            {subject}
+                          </button>
+                        );
+                      })}
                     </div>
                   )}
                 </div>

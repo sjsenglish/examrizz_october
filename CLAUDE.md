@@ -21,6 +21,14 @@
 - Cloud positioning in `components/landing/LandingHub.tsx`:
   - Big clouds: left-[20%] top-[30%], right-[20%] top-[45%]
   - Medium clouds: left-[38%] top-[25%], right-[38%] top-[27%]
+- **Teacher icon**: Removed "Coming Soon" hover tooltip (now just shows greyed-out icon)
+- **Learn icon**: Greyed out with opacity-40 and grayscale, made non-clickable
+
+## Practice Page Design (Updated Nov 2024)
+- Cloud decorations moved closer to title for better visual hierarchy
+- Cloud positioning in `app/practice/page.tsx`:
+  - Left cloud: left: 5%, top: 3%
+  - Right cloud: right: 5%, top: 5%
 ## Video Page UI Changes (Nov 2024)
 - The "Start maths series" button on `/video` page has been **disabled** (opacity: 0.5, cursor: not-allowed)
 - The following buttons are **hidden** (display: none) but remain in code for potential future use:
@@ -60,3 +68,13 @@
   - Main content wrapped in fragment that only renders when loading completes
   - This eliminates visual "jump" and provides smooth transition from loading to loaded state
 - **Note**: This fix does NOT affect any functionality - only improves visual experience
+## Practice Pages UI Changes (Nov 2024)
+- **Practice page** (`/practice`):
+  - Admissions dropdown now excludes English Lit, Maths, Chemistry, Biology (only shows TSA, BMAT, Interview)
+  - A Level button is now disabled and greyed out (opacity: 0.5, cursor: not-allowed)
+  - A Level dropdown no longer appears on hover - button is completely disabled
+
+- **Create Practice Pack page** (`/create-practice-pack`):
+  - Subject dropdown displays all subjects but only TSA and BMAT are enabled
+  - Other subjects (English Lit, Maths, Chemistry, Biology, Interview) are greyed out (opacity: 0.4, color: #999999)
+  - Disabled subjects have cursor: not-allowed and cannot be selected

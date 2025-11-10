@@ -109,28 +109,21 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
         </div>
 
         {/* TEACHER - bottom-left (25% from left, 55% from top) - MOVED UP */}
-        <div 
-          className="absolute group"
+        <div
+          className="absolute"
           style={{
             left: '25%',
             top: '55%',
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <div className="relative">
-            <Image 
-              src="/icons/teacher.svg"
-              alt="TEACHER"
-              width={171} /* 75% of 228 -> 171 */
-              height={171} /* 75% of 228 -> 171 */
-              className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
-            />
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <span className="bg-white/95 px-4 py-2 rounded-lg border-2 border-black shadow-lg font-['Madimi_One'] text-lg">
-                Coming Soon
-              </span>
-            </div>
-          </div>
+          <Image
+            src="/icons/teacher.svg"
+            alt="TEACHER"
+            width={171} /* 75% of 228 -> 171 */
+            height={171} /* 75% of 228 -> 171 */
+            className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
+          />
         </div>
 
         {/* ASK BO - moved further left (18% from left, 25% from top) */}
@@ -154,7 +147,7 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
         </div>
 
         {/* LEARN - bottom-right (70% from left, 45% from top) - MOVED UP */}
-        <div 
+        <div
           className="absolute"
           style={{
             left: '70%',
@@ -162,15 +155,13 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <Link href="/learn" className="block">
-            <Image 
-              src="/icons/learn.svg"
-              alt="LEARN"
-              width={140} /* 75% of 186 -> 140 */
-              height={140} /* 75% of 186 -> 140 */
-              className="drop-shadow-lg"
-            />
-          </Link>
+          <Image
+            src="/icons/learn.svg"
+            alt="LEARN"
+            width={140} /* 75% of 186 -> 140 */
+            height={140} /* 75% of 186 -> 140 */
+            className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
+          />
         </div>
 
         {/* SEARCH - between video and learn icons on the right edge */}
