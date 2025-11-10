@@ -77,8 +77,23 @@ export default function MathsDemoPage() {
             </div>
 
             {/* Purple toasts (completed levels) */}
-            <div className="toast purple toast-1">
+            <Link href="/spec-topic" className="toast purple toast-1">
               <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
+            </Link>
+
+            {/* Love letter ghost next to toast-1 */}
+            <div className="love-letter-ghost">
+              <Image
+                src="/icons/love-letter.svg"
+                alt="Love Letter Ghost"
+                width={50}
+                height={50}
+              />
+            </div>
+
+            {/* Speech bubble for love letter ghost */}
+            <div className="love-letter-speech">
+              skip straight to spec topic
             </div>
             <div className="toast purple toast-2">
               <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
