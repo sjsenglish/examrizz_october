@@ -256,7 +256,7 @@ export default function HowToVideoGalleryPage() {
                 }}
               >
                 {topic1Videos.map((video, index) => (
-                  <Link key={video.id} href={`/video/${video.id}`} style={{ textDecoration: 'none', minWidth: 'calc(25% - 30px)', flexShrink: 0 }}>
+                  <Link key={video.id} href={`/videogallery/howto/${video.id}`} style={{ textDecoration: 'none', minWidth: 'calc(25% - 30px)', flexShrink: 0 }}>
                     <div style={{
                       display: 'flex',
                       flexDirection: 'column',
@@ -420,7 +420,7 @@ export default function HowToVideoGalleryPage() {
                 }}
               >
                 {topic2Videos.map((video, index) => (
-                  <Link key={video.id} href={`/video/${video.id}`} style={{ textDecoration: 'none', minWidth: 'calc(25% - 30px)', flexShrink: 0 }}>
+                  <Link key={video.id} href={`/videogallery/howto/${video.id}`} style={{ textDecoration: 'none', minWidth: 'calc(25% - 30px)', flexShrink: 0 }}>
                     <div style={{
                       display: 'flex',
                       flexDirection: 'column',
@@ -583,7 +583,7 @@ export default function HowToVideoGalleryPage() {
                 }}
               >
                 {topic3Videos.map((video, index) => (
-                  <Link key={video.id} href={`/video/${video.id}`} style={{ textDecoration: 'none', minWidth: 'calc(25% - 30px)', flexShrink: 0 }}>
+                  <Link key={video.id} href={`/videogallery/howto/${video.id}`} style={{ textDecoration: 'none', minWidth: 'calc(25% - 30px)', flexShrink: 0 }}>
                     <div style={{
                       display: 'flex',
                       flexDirection: 'column',
@@ -746,7 +746,7 @@ export default function HowToVideoGalleryPage() {
                 }}
               >
                 {topic4Videos.map((video, index) => (
-                  <Link key={video.id} href={`/video/${video.id}`} style={{ textDecoration: 'none', minWidth: 'calc(25% - 30px)', flexShrink: 0 }}>
+                  <Link key={video.id} href={`/videogallery/howto/${video.id}`} style={{ textDecoration: 'none', minWidth: 'calc(25% - 30px)', flexShrink: 0 }}>
                     <div style={{
                       display: 'flex',
                       flexDirection: 'column',
@@ -909,7 +909,7 @@ export default function HowToVideoGalleryPage() {
                 }}
               >
                 {topic5Videos.map((video, index) => (
-                  <Link key={video.id} href={`/video/${video.id}`} style={{ textDecoration: 'none', minWidth: 'calc(25% - 30px)', flexShrink: 0 }}>
+                  <Link key={video.id} href={`/videogallery/howto/${video.id}`} style={{ textDecoration: 'none', minWidth: 'calc(25% - 30px)', flexShrink: 0 }}>
                     <div style={{
                       display: 'flex',
                       flexDirection: 'column',

@@ -54,3 +54,18 @@
   - Smooth scrolling behavior
   - Shows 4 videos at a time, scroll to see more
 - Implementation uses React refs and scroll functionality for smooth navigation
+- All videos now route to individual video pages at `/videogallery/howto/[videoId]`
+  - Dynamic route handles all 40 how-to videos (IDs 4-43)
+  - Video player pages styled to match english-episode pages
+  - Custom video controls with play/pause, progress bar, volume, and fullscreen
+  - Right sidebar with difficulty indicator, tags, and helpful ghost character
+
+### `/video` Page Video Links (Nov 2024)
+- **English Lit Fundamentals** section (3 videos):
+  - Video 1 → `/videogallery/english/english-episode-1`
+  - Video 2 → `/videogallery/english/english-episode-2`
+  - Video 3 → `/videogallery/english/english-episode-3`
+- **The How To Series** section (3 videos):
+  - Video 4 → `/videogallery/howto/4`
+  - Video 5 → `/videogallery/howto/5`
+  - Video 6 → `/videogallery/howto/6`

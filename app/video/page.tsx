@@ -565,7 +565,7 @@ export default function VideoPage() {
             
             <div style={{ display: 'flex', gap: '20px', flex: '1', justifyContent: 'space-between' }}>
               {videoPlaceholders.map((_, index) => (
-                <Link key={index} href={`/video/${index + 1}`} style={{ textDecoration: 'none' }}>
+                <Link key={index} href={`/videogallery/english/english-episode-${index + 1}`} style={{ textDecoration: 'none' }}>
                   <div style={{ 
                     backgroundColor: '#d0d0d0',
                     border: '1px solid #000000',
@@ -702,7 +702,7 @@ export default function VideoPage() {
             
             <div style={{ display: 'flex', gap: '20px', flex: '1', justifyContent: 'space-between' }}>
               {videoPlaceholders.map((_, index) => (
-                <Link key={index} href={`/video/${index + 4}`} style={{ textDecoration: 'none' }}>
+                <Link key={index} href={`/videogallery/howto/${index + 4}`} style={{ textDecoration: 'none' }}>
                   <div style={{ 
                     backgroundColor: '#d0d0d0',
                     border: '1px solid #000000',
