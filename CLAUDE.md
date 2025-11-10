@@ -33,10 +33,13 @@
   - Added back button linking to `/competition` in top left corner
   - Moved treasure chest icon from 60x60 to 150x150 (2.5x bigger)
   - Relocated ghost character to bottom right corner (changed from `left: 60px` to `right: 60px`)
-  - Repositioned speech bubble to left of ghost (changed from `left: 180px` to `right: 180px`)
-  - Moved achievements sidebar (progress floating box) from top right to top left corner
-  - Made achievements sidebar more compact: width reduced from 280px to 220px, padding from 20px to 12px
-  - Reduced font sizes in sidebar for compactness (label: 10px, value: 11px)
+  - Repositioned speech bubble above ghost (changed from side positioning to `bottom: 180px` above ghost)
+  - Speech bubble now has centered arrow pointer below it pointing down to ghost
+  - Moved achievements sidebar (progress floating box) from top right to **bottom left corner**
+  - Made achievements sidebar more compact: width reduced to 200px, padding to 10px
+  - Reduced font sizes in sidebar for compactness (label: 9px, value: 10px)
+  - Reduced spacing between progress items (margin-bottom: 6px, padding-bottom: 4px)
   - Adjusted toast icon positions to be higher up on screen (moved bottom toasts from 85-90% to 70-75%)
-  - Shrank grass pattern from 100px to 60px height
+  - Moved toast-6 from left: 45% to left: 35% to avoid obscuring treasure chest
+  - Shrank grass pattern from 100px to 60px, then further reduced to 54px (10% reduction)
   - Added 2px solid black border line across top of grass to show where grass ends
