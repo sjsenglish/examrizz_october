@@ -21,3 +21,10 @@
 - Cloud positioning in `components/landing/LandingHub.tsx`:
   - Big clouds: left-[20%] top-[30%], right-[20%] top-[45%]
   - Medium clouds: left-[38%] top-[25%], right-[38%] top-[27%]
+## Video Page UI Changes (Nov 2024)
+- The "Start maths series" button on `/video` page has been **disabled** (opacity: 0.5, cursor: not-allowed)
+- The following buttons are **hidden** (display: none) but remain in code for potential future use:
+  - "Select subject" dropdown
+  - "Watch later" button
+  - "Saved" button
+- These elements can be re-enabled by removing the `display: 'none'` or `disabled` properties

@@ -319,8 +319,9 @@ export default function VideoPage() {
             }}>
               Start learning with bitesized videos!
             </p>
-            <Link href="/videogallery/maths" style={{ textDecoration: 'none' }}>
-              <button style={{
+            <button
+              disabled
+              style={{
                 padding: '8px 21px',
                 backgroundColor: '#00CED1',
                 color: '#000000',
@@ -329,20 +330,20 @@ export default function VideoPage() {
                 fontFamily: "'Madimi One', cursive",
                 fontSize: '13px',
                 fontWeight: '400',
-                cursor: 'pointer',
+                cursor: 'not-allowed',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '7px',
                 margin: '0 auto',
                 transition: 'all 0.3s ease',
-                boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.2)'
+                boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.2)',
+                opacity: 0.5
               }}>
-                Start maths series
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-            </Link>
+              Start maths series
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
           </div>
         </div>
         
@@ -367,7 +368,7 @@ export default function VideoPage() {
         {/* Subject Selection and Actions */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '30px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <div ref={dropdownRef} style={{ position: 'relative', marginLeft: '40px' }}>
+            <div ref={dropdownRef} style={{ position: 'relative', marginLeft: '40px', display: 'none' }}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 style={{
@@ -388,12 +389,12 @@ export default function VideoPage() {
                 }}
               >
                 {selectedSubject || 'Select subject'}
-                <svg 
-                  width="12" 
-                  height="12" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  style={{ 
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  style={{
                     transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                     transition: 'transform 0.2s ease'
                   }}
@@ -401,7 +402,7 @@ export default function VideoPage() {
                   <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
-              
+
               {isDropdownOpen && (
                 <div style={{
                   position: 'absolute',
@@ -453,7 +454,7 @@ export default function VideoPage() {
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             <button style={{
-              display: 'flex',
+              display: 'none',
               alignItems: 'center',
               gap: '8px',
               padding: '8px 20px',
@@ -479,7 +480,7 @@ export default function VideoPage() {
               </div>
             </button>
             <button style={{
-              display: 'flex',
+              display: 'none',
               alignItems: 'center',
               gap: '8px',
               padding: '12px 20px',
