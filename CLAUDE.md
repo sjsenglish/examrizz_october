@@ -213,6 +213,24 @@
   - Blur styling applied via inline styles (filter: blur(8px))
   - Premium badge always shown for isPremium resources
 
+## Interview Questions Access Control (Nov 2024)
+- **Login Required**: ALL interview questions in the Interview index now require user login to view
+- **Logged Out User Experience**:
+  - Question number, year, time, and filter tags remain **visible** (not blurred)
+  - Question content (the actual interview question text) is **blurred** with 8px blur filter
+  - Content is non-selectable and non-interactive when blurred (userSelect: none, pointerEvents: none)
+  - **No overlay or upgrade prompts** - just clean blur effect
+  - Blur applies immediately on page load (no delay)
+- **Logged In User Experience**:
+  - All content fully accessible with no blur
+  - Works for ALL tiers (free, plus, max) - only login is required
+- **Implementation** (`components/ExamSearch/QuestionCard.tsx`):
+  - `shouldBlurInterviewContent` logic:
+    - Returns `true` for logged out users (no delay)
+    - Returns `false` for all logged in users (regardless of tier)
+  - Blur styling applied via inline styles (filter: blur(8px))
+  - Only applies to Interview questions (not Interview Resources or other question types)
+
 ## Usage Tracking and Limits (Updated Nov 2024)
 - **Monthly Cost Limits** (defined in `lib/usage-tracking.ts`):
   - Free tier: **$1.00** per month (reduced from $2.00)
