@@ -15,7 +15,7 @@ export default function HowToVideoGalleryPage() {
   const topic5Ref = useRef<HTMLDivElement>(null);
 
   // Scroll function
-  const scroll = (ref: React.RefObject<HTMLDivElement>, direction: 'left' | 'right') => {
+  const scroll = (ref: React.RefObject<HTMLDivElement | null>, direction: 'left' | 'right') => {
     if (ref.current) {
       const scrollAmount = direction === 'left' ? -400 : 400;
       ref.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
