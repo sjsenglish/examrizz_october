@@ -149,12 +149,13 @@ const ExamSearch: React.FC = () => {
   };
 
   const aLevelSubjects = ['Maths', 'English Lit', 'Biology', 'Chemistry'];
-  const admissionsTests = ['BMAT', 'TSA', 'Interview'];
+  const admissionsTests = ['BMAT', 'TSA', 'Interview', 'Interview Resources'];
 
   const showTSAResults = activeTab === 'Admissions' && selectedAdmissionsTest === 'TSA';
   const showBMATResults = activeTab === 'Admissions' && selectedAdmissionsTest === 'BMAT';
   const showALevelResults = activeTab === 'A Level' && selectedSubject;
   const showInterviewResults = activeTab === 'Admissions' && selectedAdmissionsTest === 'Interview';
+  const showInterviewResourcesResults = activeTab === 'Admissions' && selectedAdmissionsTest === 'Interview Resources';
   
   // Get the appropriate index name based on selection
   const getCurrentIndexName = () => {
@@ -171,7 +172,11 @@ const ExamSearch: React.FC = () => {
       const config = getSubjectConfig('Interview');
       return config?.indexName || INDEX_NAME;
     }
-    
+    if (showInterviewResourcesResults) {
+      const config = getSubjectConfig('Interview Resources');
+      return config?.indexName || INDEX_NAME;
+    }
+
     // Preserve current selection based on state, don't default to TSA
     if (activeTab === 'A Level' && selectedSubject) {
       const config = getSubjectConfig(selectedSubject);
@@ -181,7 +186,7 @@ const ExamSearch: React.FC = () => {
       const config = getSubjectConfig(selectedAdmissionsTest);
       return config?.indexName || INDEX_NAME;
     }
-    
+
     return INDEX_NAME; // Only fallback to TSA if nothing is selected
   };
 
@@ -191,7 +196,8 @@ const ExamSearch: React.FC = () => {
     if (showBMATResults) return 'BMAT';
     if (showALevelResults) return selectedSubject;
     if (showInterviewResults) return 'Interview';
-    
+    if (showInterviewResourcesResults) return 'Interview Resources';
+
     // Preserve current selection based on state
     if (activeTab === 'A Level' && selectedSubject) {
       return selectedSubject;
@@ -199,13 +205,13 @@ const ExamSearch: React.FC = () => {
     if (activeTab === 'Admissions' && selectedAdmissionsTest) {
       return selectedAdmissionsTest;
     }
-    
+
     return null;
   };
 
   const currentIndexName = getCurrentIndexName();
   const currentSubject = getCurrentSubject();
-  const showResults = showTSAResults || showBMATResults || showALevelResults || showInterviewResults;
+  const showResults = showTSAResults || showBMATResults || showALevelResults || showInterviewResults || showInterviewResourcesResults;
 
 
   return (
@@ -546,8 +552,8 @@ const ExamSearch: React.FC = () => {
               )}
             </div>
 
-            {/* Use custom InterviewQuestionsList for interview questions, regular Hits for others */}
-            {showInterviewResults ? (
+            {/* Use custom InterviewQuestionsList for interview questions and interview resources, regular Hits for others */}
+            {(showInterviewResults || showInterviewResourcesResults) ? (
               <InterviewQuestionsList />
             ) : (
               <Hits hitComponent={({ hit }) => <QuestionCard hit={hit as any} />} />

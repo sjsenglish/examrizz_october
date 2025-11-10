@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { Button } from '../ui/Button';
 import { QuestionCardProps, Question } from '@/types/question';
 import { VideoModal } from '../VideoModal';
@@ -69,6 +70,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   const isMathsQuestion = useMemo(() => hit?.paper_info && hit?.spec_topic, [hit]);
   const isEnglishLitQuestion = useMemo(() => hit?.QualificationLevel === 'A Level' && hit?.Subject === 'English Literature', [hit]);
   const isInterviewQuestion = useMemo(() => hit?.QuestionID && hit?.Time && hit?.QuestionPromptText, [hit]);
+  const isInterviewResourcesQuestion = useMemo(() => hit?.subject && hit?.subjectArea && hit?.sectionCategory && hit?.overview, [hit]);
   const isBiologyQuestion = useMemo(() => hit?.Subject === 'Biology' && hit?.Parts && Array.isArray(hit.Parts), [hit]);
 
   // Memoize array calculations to prevent re-renders
@@ -201,10 +203,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   const handleShowAnswer = () => {
     if (isMathsQuestion || isEnglishLitQuestion || isBiologyQuestion) {
       setIsPdfModalOpen(true);
-    } else if (!isInterviewQuestion) {
+    } else if (!isInterviewQuestion && !isInterviewResourcesQuestion) {
       setIsAnswerRevealed(true);
     }
-    // Interview questions don't have answers - they're discussion questions
+    // Interview questions and Interview Resources don't have answers - they're discussion questions
   };
 
   const handleVideoSolutionClick = async () => {
@@ -358,6 +360,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       if (isInterviewQuestion) {
         questionType = 'Interview Question';
         submissionType = 'interview-question';
+      } else if (isInterviewResourcesQuestion) {
+        questionType = 'Interview Resources Question';
+        submissionType = 'interview-resources-question';
       } else if (isEnglishLitQuestion) {
         questionType = 'English Literature Question';
         submissionType = 'english-lit-question';
@@ -559,28 +564,29 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
 
   // Check if video solutions are available for this question type
   const isVideoSolutionAvailable = () => {
-    return normalizedData.videoUrl && (isMathsQuestion || (!isInterviewQuestion && !isEnglishLitQuestion && !isBiologyQuestion));
+    return normalizedData.videoUrl && (isMathsQuestion || (!isInterviewQuestion && !isInterviewResourcesQuestion && !isEnglishLitQuestion && !isBiologyQuestion));
   };
   
   // Get normalized data based on question type - memoized to prevent re-renders
   const normalizedData = useMemo(() => ({
-    questionNumber: isInterviewQuestion ? hit?.QuestionID : (isEnglishLitQuestion ? hit?.QuestionNo : (isBiologyQuestion ? hit?.QuestionNumber : (hit?.question_number || ''))),
-    year: isInterviewQuestion ? null : (isEnglishLitQuestion ? hit?.PaperYear : (isMathsQuestion ? hit?.paper_info?.year : (isBiologyQuestion ? hit?.Year : hit?.year))),
-    questionType: isInterviewQuestion ? hit?.SubjectId1 : (isEnglishLitQuestion ? hit?.PaperName : (isMathsQuestion ? hit?.spec_topic : (isBiologyQuestion ? hit?.Subject : hit?.question_type))),
-    subType: isInterviewQuestion ? hit?.SubjectId2 : (isEnglishLitQuestion ? hit?.PaperSection : (isMathsQuestion ? hit?.question_topic : (isBiologyQuestion ? hit?.QuestionTopics?.[0] : (Array.isArray(hit?.sub_types) ? hit.sub_types[0] : hit?.sub_types)))),
-    filters: isInterviewQuestion ? (hit?.all_subjects || []) : (isEnglishLitQuestion ? englishLitFilters : (isBiologyQuestion ? (hit?.QuestionTopics || []) : (hit?.filters || []))),
-    questionContent: hit?.question_content || hit?.question_text,
+    questionNumber: isInterviewQuestion ? hit?.QuestionID : (isInterviewResourcesQuestion ? hit?.id : (isEnglishLitQuestion ? hit?.QuestionNo : (isBiologyQuestion ? hit?.QuestionNumber : (hit?.question_number || '')))),
+    year: isInterviewQuestion ? null : (isInterviewResourcesQuestion ? null : (isEnglishLitQuestion ? hit?.PaperYear : (isMathsQuestion ? hit?.paper_info?.year : (isBiologyQuestion ? hit?.Year : hit?.year)))),
+    questionType: isInterviewQuestion ? hit?.SubjectId1 : (isInterviewResourcesQuestion ? hit?.subject : (isEnglishLitQuestion ? hit?.PaperName : (isMathsQuestion ? hit?.spec_topic : (isBiologyQuestion ? hit?.Subject : hit?.question_type)))),
+    subType: isInterviewQuestion ? hit?.SubjectId2 : (isInterviewResourcesQuestion ? hit?.subjectArea : (isEnglishLitQuestion ? hit?.PaperSection : (isMathsQuestion ? hit?.question_topic : (isBiologyQuestion ? hit?.QuestionTopics?.[0] : (Array.isArray(hit?.sub_types) ? hit.sub_types[0] : hit?.sub_types))))),
+    filters: isInterviewQuestion ? (hit?.all_subjects || []) : (isInterviewResourcesQuestion ? [hit?.sectionCategory] : (isEnglishLitQuestion ? englishLitFilters : (isBiologyQuestion ? (hit?.QuestionTopics || []) : (hit?.filters || [])))),
+    questionContent: isInterviewResourcesQuestion ? hit?.overview : (hit?.question_content || hit?.question_text),
     imageUrl: hit?.imageFile || hit?.imageUrl,
-    questionText: isInterviewQuestion ? hit?.QuestionPromptText : (isEnglishLitQuestion ? hit?.QuestionPrompt : (isBiologyQuestion ? hit?.Parts?.[0]?.QuestionText : (hit?.question || hit?.question_text))),
+    questionText: isInterviewQuestion ? hit?.QuestionPromptText : (isInterviewResourcesQuestion ? hit?.title : (isEnglishLitQuestion ? hit?.QuestionPrompt : (isBiologyQuestion ? hit?.Parts?.[0]?.QuestionText : (hit?.question || hit?.question_text)))),
     videoUrl: hit?.videoSolutionLink || hit?.video_solution_url_1,
-    marks: isInterviewQuestion ? null : (isEnglishLitQuestion ? hit?.QuestionTotalMarks : (isBiologyQuestion ? hit?.TotalMarks : hit?.marks)),
+    marks: isInterviewQuestion ? null : (isInterviewResourcesQuestion ? null : (isEnglishLitQuestion ? hit?.QuestionTotalMarks : (isBiologyQuestion ? hit?.TotalMarks : hit?.marks))),
     time: isInterviewQuestion ? hit?.Time : null,
     paperInfo: englishLitPaperInfo || hit?.paper_info,
     textInfo: isEnglishLitQuestion ? hit?.Text1 : null,
     subjects: isInterviewQuestion ? hit?.all_subjects : null,
     pdfUrl: isEnglishLitQuestion ? hit?.MS : (isBiologyQuestion ? hit?.MarkScheme : (hit?.markscheme_pdf || hit?.pdf_url || hit?.markscheme_url || hit?.answer_pdf || hit?.answers_pdf)),
-    biologyParts: isBiologyQuestion ? hit?.Parts : null
-  }), [hit, isInterviewQuestion, isEnglishLitQuestion, isMathsQuestion, isBiologyQuestion, englishLitFilters, englishLitPaperInfo]);
+    biologyParts: isBiologyQuestion ? hit?.Parts : null,
+    practiceQuestions: isInterviewResourcesQuestion ? hit?.practiceQuestions : null
+  }), [hit, isInterviewQuestion, isInterviewResourcesQuestion, isEnglishLitQuestion, isMathsQuestion, isBiologyQuestion, englishLitFilters, englishLitPaperInfo]);
 
   return (
     <article className={styles.questionCard}>
@@ -658,10 +664,15 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
                   {paragraph.replace(/\\n/g, ' ')}
                 </p>
               ))
+            ) : isInterviewResourcesQuestion ? (
+              // Format Interview Resources title (just display as-is, overview is in questionContent)
+              <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600' }}>
+                {normalizedData.questionText}
+              </h2>
             ) : isBiologyQuestion ? (
               // Render biology questions with HTML tags properly parsed and sanitized
-              <div 
-                dangerouslySetInnerHTML={{ 
+              <div
+                dangerouslySetInnerHTML={{
                   __html: sanitizeHtml(
                     normalizedData.questionText
                       .replace(/<br\s*\/?>/gi, '<br />') // Normalize br tags
@@ -672,6 +683,32 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
             ) : (
               normalizedData.questionText
             )}
+          </div>
+        )}
+
+        {/* Show overview for Interview Resources with markdown formatting */}
+        {isInterviewResourcesQuestion && normalizedData.questionContent && (
+          <div className={styles.questionText} style={{ marginBottom: '20px' }}>
+            <ReactMarkdown>{normalizedData.questionContent}</ReactMarkdown>
+          </div>
+        )}
+
+        {/* Show practice questions for Interview Resources */}
+        {isInterviewResourcesQuestion && normalizedData.practiceQuestions && normalizedData.practiceQuestions.length > 0 && (
+          <div style={{ marginTop: '20px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '12px' }}>Practice Questions:</h3>
+            {normalizedData.practiceQuestions.map((q: any, index: number) => (
+              <div key={index} style={{ marginBottom: '16px', paddingLeft: '16px', borderLeft: '3px solid #E5E7EB' }}>
+                <div style={{ fontWeight: '500', marginBottom: '8px' }}>
+                  {q.number}. <ReactMarkdown>{q.question}</ReactMarkdown>
+                </div>
+                {q.type && (
+                  <span style={{ fontSize: '12px', color: '#6B7280', fontStyle: 'italic' }}>
+                    [{q.type}]
+                  </span>
+                )}
+              </div>
+            ))}
           </div>
         )}
 
@@ -731,11 +768,11 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         )}
 
         <div className={styles.actionButtons}>
-          {/* Show Answer button - hidden for interview questions */}
-          {!isInterviewQuestion && (
-            <Button 
-              variant="secondary" 
-              size="md" 
+          {/* Show Answer button - hidden for interview questions and interview resources */}
+          {!isInterviewQuestion && !isInterviewResourcesQuestion && (
+            <Button
+              variant="secondary"
+              size="md"
               className={styles.showAnswerBtn}
               onClick={handleShowAnswer}
             >
