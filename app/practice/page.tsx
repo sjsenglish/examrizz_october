@@ -282,26 +282,26 @@ export default function PracticePage() {
         <div style={{
           position: 'absolute',
           left: '5%',
-          top: '10%',
+          top: '3%',
           zIndex: 10,
           opacity: 0.7
         }}>
-          <Image 
+          <Image
             src="/svg/island-cloud-medium.svg"
             alt="Cloud"
             width={120}
             height={80}
           />
         </div>
-        
+
         <div style={{
           position: 'absolute',
           right: '5%',
-          top: '15%',
+          top: '5%',
           zIndex: 10,
           opacity: 0.7
         }}>
-          <Image 
+          <Image
             src="/svg/island-cloud-medium.svg"
             alt="Cloud"
             width={120}
