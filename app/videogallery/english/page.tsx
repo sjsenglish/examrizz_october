@@ -91,28 +91,30 @@ export default function EnglishVideoGalleryPage() {
               }}>
                 English Lit<br />Fundamentals
               </h2>
-              <button style={{
-                padding: '8px 21px',
-                backgroundColor: '#00CED1',
-                color: '#000000',
-                border: '1px solid #000000',
-                borderRadius: '6px',
-                fontFamily: "'Madimi One', sans-serif",
-                fontSize: '13px',
-                fontWeight: '400',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '7px',
-                margin: '0 auto',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.2)'
-              }}>
-                Start video series
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="https://exsearchvideos.s3.eu-central-1.amazonaws.com/quentin/How+to+Read+Episode+1.mov">
-                  <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
+              <Link href="/videogallery/english/english-episode-1" style={{ textDecoration: 'none' }}>
+                <button style={{
+                  padding: '8px 21px',
+                  backgroundColor: '#00CED1',
+                  color: '#000000',
+                  border: '1px solid #000000',
+                  borderRadius: '6px',
+                  fontFamily: "'Madimi One', sans-serif",
+                  fontSize: '13px',
+                  fontWeight: '400',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '7px',
+                  margin: '0 auto',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.2)'
+                }}>
+                  Start video series
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="https://exsearchvideos.s3.eu-central-1.amazonaws.com/quentin/How+to+Read+Episode+1.mov">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </Link>
             </div>
           </div>
           
@@ -183,25 +185,27 @@ export default function EnglishVideoGalleryPage() {
               }}>
                 How to read, write, and analyse: The basics
               </h2>
-              <button style={{
-                padding: '8px 16px',
-                backgroundColor: 'transparent',
-                border: '1px solid #000000',
-                borderRadius: '4px',
-                fontFamily: "'Madimi One', sans-serif",
-                fontSize: '12px',
-                color: '#000000',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.2)'
-              }}>
-                start topic
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="https://exsearchvideos.s3.eu-central-1.amazonaws.com/quentin/How+to+Read+Episode+2.mov">
-                  <polygon points="9,6 9,18 17,12" fill="#000000"/>
-                </svg>
-              </button>
+              <Link href="/videogallery/english/english-episode-1" style={{ textDecoration: 'none' }}>
+                <button style={{
+                  padding: '8px 16px',
+                  backgroundColor: 'transparent',
+                  border: '1px solid #000000',
+                  borderRadius: '4px',
+                  fontFamily: "'Madimi One', sans-serif",
+                  fontSize: '12px',
+                  color: '#000000',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.2)'
+                }}>
+                  start topic
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="https://exsearchvideos.s3.eu-central-1.amazonaws.com/quentin/How+to+Read+Episode+2.mov">
+                    <polygon points="9,6 9,18 17,12" fill="#000000"/>
+                  </svg>
+                </button>
+              </Link>
             </div>
 
             {/* Divider Line */}

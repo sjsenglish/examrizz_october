@@ -592,9 +592,9 @@ export default function EnglishEpisode2Page() {
             </div>
 
             {/* Action Buttons */}
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
+            <div style={{
+              display: 'none',
+              alignItems: 'center',
               gap: '15px',
               marginBottom: '40px',
               flexWrap: 'wrap',
@@ -714,7 +714,7 @@ export default function EnglishEpisode2Page() {
             </div>
 
             {/* Up Next Section */}
-            <div style={{ marginBottom: '10px', marginTop: '10%', marginLeft: '10%' }}>
+            <div style={{ display: 'none', marginBottom: '10px', marginTop: '10%', marginLeft: '10%' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '10px' }}>
                 <h3 style={{ 
                   fontFamily: "'Madimi One', sans-serif",
@@ -979,7 +979,7 @@ export default function EnglishEpisode2Page() {
         }}></div>
         
         {/* Video Navigation Section */}
-        <div style={{ padding: '0 40px' }}>
+        <div style={{ display: 'none', padding: '0 40px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '20px' }}>
             <button style={{
               padding: '15px',

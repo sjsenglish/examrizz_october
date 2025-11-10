@@ -28,3 +28,26 @@
   - "Watch later" button
   - "Saved" button
 - These elements can be re-enabled by removing the `display: 'none'` or `disabled` properties
+
+## Video Gallery Routing & UI Changes (Nov 2024)
+### `/videogallery/english` Page
+- "Start video series" button now routes to `/videogallery/english/english-episode-1`
+- "Start topic" button now routes to `/videogallery/english/english-episode-1`
+
+### English Episode Pages (`/videogallery/english/english-episode-*`)
+- The following elements are **hidden** (display: none) but remain in code for potential future use:
+  - Action buttons section (mark as complete, watch later, practice)
+  - Previous/Next video navigation buttons
+  - "Up Next" section with "open video gallery" button
+  - Bottom video navigation carousel (episode cards)
+- These elements can be re-enabled by removing the `display: 'none'` property
+
+### `/videogallery/howto` Page Layout Update
+- First two topic rows now display **5 videos per row** (changed from 3)
+  - Topic 1: "How to read, write, and take notes" (5 videos)
+  - Topic 2: "How to make your studying efficient" (5 videos)
+- Added **3 new topic sections** with **4 videos per row each**:
+  - Topic 3: "How to make your studying efficient" (4 videos)
+  - Topic 4: "How to make your studying efficient" (4 videos)
+  - Topic 5: "How to make your studying efficient" (4 videos)
+- Grid layouts use CSS Grid with `repeat(5, 1fr)` for 5-column rows and `repeat(4, 1fr)` for 4-column rows
