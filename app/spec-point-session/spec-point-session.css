@@ -129,9 +129,183 @@
   background: white;
   border: 2px solid #000;
   border-radius: 8px;
-  padding: 30px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   min-height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Joe Chat Container */
+.spec-point-session-page .joe-chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+}
+
+.spec-point-session-page .joe-chat-header {
+  border-bottom: 1px solid #E0E0E0;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.spec-point-session-page .joe-chat-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #000;
+  margin: 0 0 5px 0;
+}
+
+.spec-point-session-page .joe-chat-subtitle {
+  font-family: 'Figtree', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #666;
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+
+.spec-point-session-page .joe-messages-area {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 5px;
+  margin-bottom: 15px;
+  min-height: 300px;
+}
+
+.spec-point-session-page .joe-welcome-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.spec-point-session-page .joe-welcome-message h4 {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  margin: 0 0 10px 0;
+}
+
+.spec-point-session-page .joe-welcome-message p {
+  font-family: 'Figtree', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #666;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.spec-point-session-page .joe-message {
+  margin-bottom: 15px;
+  padding: 12px;
+  border-radius: 8px;
+  max-width: 85%;
+}
+
+.spec-point-session-page .joe-message.user {
+  background-color: #E8F4F8;
+  border: 1px solid #B3E5F0;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.spec-point-session-page .joe-message.assistant {
+  background-color: #F8F9FA;
+  border: 1px solid #E9ECEF;
+}
+
+.spec-point-session-page .joe-message-content {
+  font-family: 'Figtree', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #000;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+.spec-point-session-page .joe-message-content p {
+  margin: 0 0 8px 0;
+}
+
+.spec-point-session-page .joe-message-content p:last-child {
+  margin-bottom: 0;
+}
+
+.spec-point-session-page .joe-message-time {
+  font-family: 'Figtree', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  color: #999;
+  margin-top: 5px;
+  text-align: right;
+}
+
+.spec-point-session-page .joe-message.assistant .joe-message-time {
+  text-align: left;
+}
+
+.spec-point-session-page .joe-chat-input {
+  border-top: 1px solid #E0E0E0;
+  padding-top: 15px;
+}
+
+.spec-point-session-page .joe-input-container {
+  display: flex;
+  gap: 10px;
+  align-items: end;
+}
+
+.spec-point-session-page .joe-textarea {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #DDD;
+  border-radius: 6px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  resize: none;
+  background: #FAFAFA;
+  min-height: 36px;
+  max-height: 72px;
+}
+
+.spec-point-session-page .joe-textarea:focus {
+  outline: none;
+  border-color: #00CED1;
+  background: #FFFFFF;
+}
+
+.spec-point-session-page .joe-textarea:disabled {
+  background-color: #F5F5F5;
+  color: #999;
+}
+
+.spec-point-session-page .joe-send-btn {
+  padding: 8px 16px;
+  background: #B3F0F2;
+  border: 1px solid #00CED1;
+  border-radius: 6px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  height: 36px;
+}
+
+.spec-point-session-page .joe-send-btn:hover:not(:disabled) {
+  background: #9ee9ec;
+  transform: translateY(-1px);
+}
+
+.spec-point-session-page .joe-send-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .spec-point-session-page .right-container {

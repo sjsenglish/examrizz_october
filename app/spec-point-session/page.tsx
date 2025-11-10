@@ -1,7 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import ReactMarkdown from 'react-markdown';
+import { supabase } from '@/lib/supabase-client';
+import { useRouter } from 'next/navigation';
 import './spec-point-session.css';
 
 type ContentType = 'video' | 'questions' | 'pdf';
@@ -33,9 +36,174 @@ const sampleQuestions = [
 ];
 
 export default function SpecPointSessionPage() {
+  const router = useRouter();
+  
+  // Content state
   const [currentContent, setCurrentContent] = useState<ContentType>('video');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
+  
+  // Chat state
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [messages, setMessages] = useState<Array<{id: string, role: 'user' | 'assistant', content: string, timestamp: Date}>>([]);
+  const [currentMessage, setCurrentMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  // Authentication check
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+        setUserId(user?.id || null);
+      } catch (error) {
+        console.error('Error checking auth:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null);
+      setUserId(session?.user?.id || null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // Chat functions
+  const sendMessage = async () => {
+    if (!currentMessage.trim() || isLoading) {
+      return;
+    }
+
+    // If no user is logged in, show a helpful message
+    if (!userId) {
+      const loginPromptMessage = {
+        id: Date.now().toString(),
+        role: 'assistant' as const,
+        content: 'Hi! To have full conversations and save your progress, please log in or sign up. You can still browse the interface and see how it works!',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        role: 'user',
+        content: currentMessage.trim(),
+        timestamp: new Date()
+      }, loginPromptMessage]);
+      setCurrentMessage('');
+      return;
+    }
+
+    const userMessage = {
+      id: Date.now().toString(),
+      role: 'user' as const,
+      content: currentMessage.trim(),
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setCurrentMessage('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/chat/learn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userMessage.content,
+          conversationId,
+          userId,
+          currentContent,
+          specPoint: '6.4'
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send message');
+      }
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let assistantMessage = '';
+
+      const assistantId = (Date.now() + 1).toString();
+      setMessages(prev => [...prev, {
+        id: assistantId,
+        role: 'assistant',
+        content: '',
+        timestamp: new Date()
+      }]);
+
+      while (reader) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n');
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              
+              if (data.type === 'token') {
+                assistantMessage += data.content;
+                setMessages(prev => prev.map(msg => 
+                  msg.id === assistantId 
+                    ? { ...msg, content: assistantMessage }
+                    : msg
+                ));
+                
+                if (data.conversationId && !conversationId) {
+                  setConversationId(data.conversationId);
+                }
+              } else if (data.type === 'complete') {
+                if (data.conversationId && !conversationId) {
+                  setConversationId(data.conversationId);
+                }
+                // Check if Joe wants to switch content
+                if (data.switchContent) {
+                  setCurrentContent(data.switchContent);
+                }
+              } else if (data.type === 'error') {
+                setMessages(prev => prev.map(msg => 
+                  msg.id === assistantId 
+                    ? { ...msg, content: data.content }
+                    : msg
+                ));
+              }
+            } catch (e) {
+              console.error('Error parsing SSE data:', e);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again.',
+        timestamp: new Date()
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
 
   const handleAnswerSelect = (questionId: string, answer: string) => {
     setSelectedAnswers(prev => ({
@@ -160,9 +328,59 @@ export default function SpecPointSessionPage() {
 
         {/* Main Content */}
         <div className="main-content-container">
-          {/* Left Container - Empty for now */}
+          {/* Left Container - Joe Chat */}
           <div className="left-container">
-            {/* Empty as requested */}
+            <div className="joe-chat-container">
+              <div className="joe-chat-header">
+                <h3 className="joe-chat-title">Joe - Your Maths Buddy</h3>
+                <p className="joe-chat-subtitle">Ask me anything about this spec point</p>
+              </div>
+              
+              <div className="joe-messages-area">
+                {messages.length === 0 ? (
+                  <div className="joe-welcome-message">
+                    <h4>Hi, I'm Joe</h4>
+                    <p>I'm here to guide you through Spec Point 6.4. I can help with the notes, video, or practice questions. Ready to start?</p>
+                  </div>
+                ) : (
+                  messages.map(message => (
+                    <div key={message.id} className={`joe-message ${message.role}`}>
+                      <div className="joe-message-content">
+                        {message.role === 'assistant' ? (
+                          <ReactMarkdown>{message.content}</ReactMarkdown>
+                        ) : (
+                          message.content
+                        )}
+                      </div>
+                      <div className="joe-message-time">
+                        {message.timestamp.toLocaleTimeString()}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <div className="joe-chat-input">
+                <div className="joe-input-container">
+                  <textarea
+                    value={currentMessage}
+                    onChange={(e) => setCurrentMessage(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder="Ask Joe..."
+                    disabled={isLoading}
+                    rows={2}
+                    className="joe-textarea"
+                  />
+                  <button 
+                    onClick={sendMessage}
+                    disabled={isLoading || !currentMessage.trim()}
+                    className="joe-send-btn"
+                  >
+                    {isLoading ? 'Sending...' : 'Send'}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Right Container - Content Types */}
