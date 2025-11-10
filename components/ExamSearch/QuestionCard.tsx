@@ -73,6 +73,21 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   const isInterviewResourcesQuestion = useMemo(() => hit?.subject && hit?.subjectArea && hit?.sectionCategory && hit?.overview, [hit]);
   const isBiologyQuestion = useMemo(() => hit?.Subject === 'Biology' && hit?.Parts && Array.isArray(hit.Parts), [hit]);
 
+  // Check if content should be blurred (premium Interview Resources for non-Plus/Max users)
+  const shouldBlurContent = useMemo(() => {
+    if (!isInterviewResourcesQuestion) return false;
+    if (!hit?.isPremium) return false;
+
+    // If user is not logged in, blur premium content immediately
+    if (!user) return true;
+
+    // If user is logged in but we don't have feature usage yet, blur by default (safer)
+    if (!featureUsage) return true;
+
+    // If user has plus or max tier, don't blur
+    return featureUsage.tier === 'free';
+  }, [isInterviewResourcesQuestion, hit?.isPremium, user, featureUsage]);
+
   // Memoize array calculations to prevent re-renders
   const englishLitFilters = useMemo(() => 
     isEnglishLitQuestion ? [hit?.Text1?.Author, hit?.Text1?.Age].filter(Boolean) : [],
@@ -598,6 +613,21 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
           {normalizedData.year && <span className={styles.yearBadge}>{normalizedData.year}</span>}
           {normalizedData.marks && <span className={styles.marksBadge}>{normalizedData.marks} marks</span>}
           {normalizedData.time && <span className={styles.marksBadge}>{normalizedData.time} minutes</span>}
+          {/* Premium badge for Interview Resources */}
+          {isInterviewResourcesQuestion && hit?.isPremium && (
+            <span style={{
+              backgroundColor: '#FFD700',
+              color: '#000',
+              padding: '4px 8px',
+              borderRadius: '4px',
+              fontSize: '11px',
+              fontWeight: '600',
+              fontFamily: "'Madimi One', cursive",
+              border: '1px solid #FFA500'
+            }}>
+              ⭐ PREMIUM
+            </span>
+          )}
         </div>
         <div className={styles.filterButtons}>
           {normalizedData.questionType && (
@@ -688,7 +718,15 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
 
         {/* Show overview for Interview Resources with markdown formatting */}
         {isInterviewResourcesQuestion && normalizedData.questionContent && (
-          <div className={styles.questionText} style={{ marginBottom: '20px' }}>
+          <div
+            className={styles.questionText}
+            style={{
+              marginBottom: '20px',
+              filter: shouldBlurContent ? 'blur(8px)' : 'none',
+              userSelect: shouldBlurContent ? 'none' : 'auto',
+              pointerEvents: shouldBlurContent ? 'none' : 'auto'
+            }}
+          >
             <ReactMarkdown>
               {normalizedData.questionContent.replace(/\\n\\n/g, '\n\n').replace(/\\n/g, '\n')}
             </ReactMarkdown>
@@ -699,20 +737,28 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         {isInterviewResourcesQuestion && normalizedData.practiceQuestions && normalizedData.practiceQuestions.length > 0 && (
           <div style={{ marginTop: '20px' }}>
             <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '12px' }}>Practice Questions:</h3>
-            {normalizedData.practiceQuestions.map((q: any, index: number) => (
-              <div key={index} style={{ marginBottom: '16px', paddingLeft: '16px', borderLeft: '3px solid #E5E7EB' }}>
-                <div style={{ fontWeight: '500', marginBottom: '8px' }}>
-                  {q.number}. <ReactMarkdown>
-                    {q.question.replace(/\\n\\n/g, '\n\n').replace(/\\n/g, '\n')}
-                  </ReactMarkdown>
+            <div
+              style={{
+                filter: shouldBlurContent ? 'blur(8px)' : 'none',
+                userSelect: shouldBlurContent ? 'none' : 'auto',
+                pointerEvents: shouldBlurContent ? 'none' : 'auto'
+              }}
+            >
+              {normalizedData.practiceQuestions.map((q: any, index: number) => (
+                <div key={index} style={{ marginBottom: '16px', paddingLeft: '16px', borderLeft: '3px solid #E5E7EB' }}>
+                  <div style={{ fontWeight: '500', marginBottom: '8px' }}>
+                    {q.number}. <ReactMarkdown>
+                      {q.question.replace(/\\n\\n/g, '\n\n').replace(/\\n/g, '\n')}
+                    </ReactMarkdown>
+                  </div>
+                  {q.type && (
+                    <span style={{ fontSize: '12px', color: '#6B7280', fontStyle: 'italic' }}>
+                      [{q.type}]
+                    </span>
+                  )}
                 </div>
-                {q.type && (
-                  <span style={{ fontSize: '12px', color: '#6B7280', fontStyle: 'italic' }}>
-                    [{q.type}]
-                  </span>
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
 

@@ -154,6 +154,7 @@
   - `practiceQuestions`: Array of practice questions with `number`, `question`, and `type` fields
   - `tags`: Array of searchable tags
   - Visible filter tags: `subject` and `subjectArea`
+  - **`isPremium`**: Boolean field to mark premium content (requires Plus or Max tier)
 
 - **Question Card Display**:
   - Title displayed as H2 heading
@@ -174,6 +175,28 @@
   - Submit answer creates Discord ticket with type: `interview-resources-question`
   - Question content properly sanitized and formatted
   - **Escape sequence handling**: Literal `\n\n` and `\n` strings in data are converted to actual newlines before rendering with ReactMarkdown
+
+## Interview Resources Premium Content (Nov 2024)
+- **Premium Access Control**: Interview Resources with `isPremium: true` are restricted to Plus and Max tier users
+- **Logged Out and Free User Experience**:
+  - Question number, title, and filter tags remain **visible** (not blurred)
+  - Overview content is **blurred** with 8px blur filter
+  - Practice questions are **blurred** with 8px blur filter
+  - Content is non-selectable and non-interactive when blurred (userSelect: none, pointerEvents: none)
+  - **Premium badge** displays "⭐ PREMIUM" in gold next to question number for all premium resources
+  - **No overlay or upgrade prompts** - just clean blur effect
+  - Blur applies immediately on page load (no delay)
+- **Plus and Max User Experience**:
+  - All content fully accessible with no blur
+  - Premium badge still visible to indicate premium quality content
+- **Implementation** (`components/ExamSearch/QuestionCard.tsx`):
+  - `shouldBlurContent` logic:
+    - Returns `true` for logged out users (no delay)
+    - Returns `true` while loading user tier (safer default during load)
+    - Returns `true` for free tier users
+    - Returns `false` for plus/max tier users
+  - Blur styling applied via inline styles (filter: blur(8px))
+  - Premium badge always shown for isPremium resources
 
 ## Usage Tracking and Limits (Updated Nov 2024)
 - **Monthly Cost Limits** (defined in `lib/usage-tracking.ts`):
