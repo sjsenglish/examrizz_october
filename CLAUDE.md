@@ -56,3 +56,14 @@
   - Moved toast-6 from left: 45% to left: 35% to avoid obscuring treasure chest
   - Shrank grass pattern from 100px to 60px, then further reduced to 54px (10% reduction)
   - Added 2px solid black border line across top of grass to show where grass ends
+
+## Practice Pages UI Changes (Nov 2024)
+- **Practice page** (`/practice`):
+  - Admissions dropdown now excludes English Lit, Maths, Chemistry, Biology (only shows TSA, BMAT, Interview)
+  - A Level button is now disabled and greyed out (opacity: 0.5, cursor: not-allowed)
+  - A Level dropdown no longer appears on hover - button is completely disabled
+
+- **Create Practice Pack page** (`/create-practice-pack`):
+  - Subject dropdown displays all subjects but only TSA and BMAT are enabled
+  - Other subjects (English Lit, Maths, Chemistry, Biology, Interview) are greyed out (opacity: 0.4, color: #999999)
+  - Disabled subjects have cursor: not-allowed and cannot be selected

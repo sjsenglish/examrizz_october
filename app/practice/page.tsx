@@ -40,7 +40,9 @@ export default function PracticePage() {
   const [savingPack, setSavingPack] = useState<string | null>(null);
 
   // Available subjects for admissions dropdown
-  const availableSubjects = getAvailableSubjects(); // This will include TSA
+  const availableSubjects = getAvailableSubjects().filter(
+    subject => !['English Lit', 'Maths', 'Chemistry', 'Biology'].includes(subject)
+  ); // Filter out A Level subjects from admissions
   const allSubjects = getAllSubjects(); // For A Level dropdown
 
   // Load saved packs for current user
@@ -354,16 +356,14 @@ export default function PracticePage() {
             gap: '10px',
             width: '100%'
           }}>
-            {/* A Level Tab with Dropdown */}
-            <div 
+            {/* A Level Tab with Dropdown - DISABLED */}
+            <div
               style={{
                 position: 'relative',
                 flex: '1'
               }}
-              onMouseEnter={() => setShowALevelDropdown(true)}
-              onMouseLeave={() => setShowALevelDropdown(false)}
             >
-              <button 
+              <button
                 style={{
                   width: '100%',
                   height: '40px',
@@ -371,78 +371,23 @@ export default function PracticePage() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  backgroundColor: activeTab === 'A Level' ? '#B3F0F2' : '#FFFFFF',
-                  border: '1px solid #000000',
+                  backgroundColor: '#CCCCCC',
+                  border: '1px solid #999999',
                   borderRadius: '4px',
-                  cursor: 'pointer',
+                  cursor: 'not-allowed',
                   fontFamily: "'Madimi One', sans-serif",
                   fontSize: '14px',
                   fontWeight: '400',
-                  color: '#000000',
+                  color: '#666666',
                   letterSpacing: '0.04em',
-                  boxShadow: '0 6px 12px rgba(0, 0, 0, 0.4)',
-                  transition: 'transform 0.2s, box-shadow 0.2s'
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+                  opacity: 0.5
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                  e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.5)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0px)';
-                  e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.4)';
-                }}
-                onClick={() => setActiveTab('A Level')}
-                aria-label="A Level tab"
+                disabled
+                aria-label="A Level tab (disabled)"
               >
                 <span>A Level</span>
               </button>
-              
-              {/* A Level Dropdown */}
-              {showALevelDropdown && (
-                <div style={{
-                  position: 'absolute',
-                  top: 'calc(100% - 5px)',
-                  left: '0',
-                  right: '0',
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid #000000',
-                  borderRadius: '0px',
-                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                  zIndex: 9999
-                }}>
-                  {['Maths', 'Physics', 'English Lit', 'Biology', 'Chemistry'].map((subject) => (
-                    <button
-                      key={subject}
-                      style={{
-                        display: 'block',
-                        width: '100%',
-                        padding: '8px 12px',
-                        backgroundColor: 'transparent',
-                        border: 'none',
-                        textAlign: 'left',
-                        cursor: 'pointer',
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '14px',
-                        color: '#000000',
-                        letterSpacing: '0.04em'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#B3F0F2';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                      }}
-                      onClick={() => {
-                        setSelectedSubject(subject);
-                        setActiveTab('A Level');
-                        setShowALevelDropdown(false);
-                      }}
-                    >
-                      {subject}
-                    </button>
-                  ))}
-                </div>
-              )}
             </div>
             
             {/* Admissions Tab with Dropdown */}
