@@ -43,11 +43,14 @@
 - These elements can be re-enabled by removing the `display: 'none'` property
 
 ### `/videogallery/howto` Page Layout Update
-- First two topic rows now display **5 videos per row** (changed from 3)
-  - Topic 1: "How to read, write, and take notes" (5 videos)
-  - Topic 2: "How to make your studying efficient" (5 videos)
-- Added **3 new topic sections** with **4 videos per row each**:
-  - Topic 3: "How to make your studying efficient" (4 videos)
-  - Topic 4: "How to make your studying efficient" (4 videos)
-  - Topic 5: "How to make your studying efficient" (4 videos)
-- Grid layouts use CSS Grid with `repeat(5, 1fr)` for 5-column rows and `repeat(4, 1fr)` for 4-column rows
+- All topics now display **4 videos visible at a time** in a horizontal carousel
+  - Topic 1: "How to read, write, and take notes" (8 videos total)
+  - Topic 2: "How to make your studying efficient" (8 videos total)
+  - Topic 3: "How to make your studying efficient" (8 videos total)
+  - Topic 4: "How to make your studying efficient" (8 videos total)
+  - Topic 5: "How to make your studying efficient" (8 videos total)
+- **Carousel navigation**: Left/Right arrow buttons styled to match site design
+  - White background with black borders
+  - Smooth scrolling behavior
+  - Shows 4 videos at a time, scroll to see more
+- Implementation uses React refs and scroll functionality for smooth navigation

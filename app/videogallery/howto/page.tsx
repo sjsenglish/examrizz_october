@@ -1,39 +1,54 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import '../videogallery.css';
 
 export default function HowToVideoGalleryPage() {
-  // Topic 1 videos (5 videos)
-  const topic1Videos = Array(5).fill(null).map((_, index) => ({
-    id: index + 4, // Videos 4, 5, 6, 7, 8 from /video page
+  // Refs for scrolling containers
+  const topic1Ref = useRef<HTMLDivElement>(null);
+  const topic2Ref = useRef<HTMLDivElement>(null);
+  const topic3Ref = useRef<HTMLDivElement>(null);
+  const topic4Ref = useRef<HTMLDivElement>(null);
+  const topic5Ref = useRef<HTMLDivElement>(null);
+
+  // Scroll function
+  const scroll = (ref: React.RefObject<HTMLDivElement>, direction: 'left' | 'right') => {
+    if (ref.current) {
+      const scrollAmount = direction === 'left' ? -400 : 400;
+      ref.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  // Topic 1 videos (8 videos)
+  const topic1Videos = Array(8).fill(null).map((_, index) => ({
+    id: index + 4,
     title: `Video Description Topic or something`
   }));
 
-  // Topic 2 videos (5 videos)
-  const topic2Videos = Array(5).fill(null).map((_, index) => ({
-    id: index + 9, // Videos 9, 10, 11, 12, 13
+  // Topic 2 videos (8 videos)
+  const topic2Videos = Array(8).fill(null).map((_, index) => ({
+    id: index + 12,
     title: `Video Description Topic or something`
   }));
 
-  // Topic 3 videos (4 videos)
-  const topic3Videos = Array(4).fill(null).map((_, index) => ({
-    id: index + 14, // Videos 14, 15, 16, 17
+  // Topic 3 videos (8 videos)
+  const topic3Videos = Array(8).fill(null).map((_, index) => ({
+    id: index + 20,
     title: `Video Description Topic or something`
   }));
 
-  // Topic 4 videos (4 videos)
-  const topic4Videos = Array(4).fill(null).map((_, index) => ({
-    id: index + 18, // Videos 18, 19, 20, 21
+  // Topic 4 videos (8 videos)
+  const topic4Videos = Array(8).fill(null).map((_, index) => ({
+    id: index + 28,
     title: `Video Description Topic or something`
   }));
 
-  // Topic 5 videos (4 videos)
-  const topic5Videos = Array(4).fill(null).map((_, index) => ({
-    id: index + 22, // Videos 22, 23, 24, 25
+  // Topic 5 videos (8 videos)
+  const topic5Videos = Array(8).fill(null).map((_, index) => ({
+    id: index + 36,
     title: `Video Description Topic or something`
   }));
 
@@ -208,64 +223,109 @@ export default function HowToVideoGalleryPage() {
               marginBottom: '30px'
             }}></div>
 
-            {/* Video Grid - 5 videos */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(5, 1fr)',
-              gap: '40px',
-              marginBottom: '40px'
-            }}>
-              {topic1Videos.map((video, index) => (
-                <Link key={video.id} href={`/video/${video.id}`} style={{ textDecoration: 'none' }}>
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    cursor: 'pointer'
-                  }}>
+            {/* Video Carousel - 4 videos visible at a time */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px' }}>
+              {/* Left Arrow */}
+              <button
+                onClick={() => scroll(topic1Ref, 'left')}
+                style={{
+                  padding: '15px',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #000000',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  flexShrink: 0
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+
+              {/* Scrollable Container */}
+              <div
+                ref={topic1Ref}
+                style={{
+                  display: 'flex',
+                  gap: '40px',
+                  overflow: 'hidden',
+                  scrollBehavior: 'smooth',
+                  flex: 1
+                }}
+              >
+                {topic1Videos.map((video, index) => (
+                  <Link key={video.id} href={`/video/${video.id}`} style={{ textDecoration: 'none', minWidth: 'calc(25% - 30px)', flexShrink: 0 }}>
                     <div style={{
-                      backgroundColor: '#d0d0d0',
-                      border: '1px solid #000000',
-                      borderRadius: '4px',
-                      padding: '20px',
-                      height: '200px',
                       display: 'flex',
                       flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      position: 'relative',
-                      marginBottom: '10px',
-                      transition: 'transform 0.3s ease, box-shadow 0.3s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-4px)';
-                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = 'none';
+                      cursor: 'pointer'
                     }}>
                       <div style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '24px',
-                        color: '#666666',
-                        textAlign: 'center'
+                        backgroundColor: '#d0d0d0',
+                        border: '1px solid #000000',
+                        borderRadius: '4px',
+                        padding: '20px',
+                        height: '200px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        position: 'relative',
+                        marginBottom: '10px',
+                        transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-4px)';
+                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = 'none';
                       }}>
-                        Video Player
+                        <div style={{
+                          fontFamily: "'Figtree', sans-serif",
+                          fontSize: '24px',
+                          color: '#666666',
+                          textAlign: 'center'
+                        }}>
+                          Video Player
+                        </div>
+                      </div>
+
+                      <div style={{
+                        fontFamily: "'Figtree', sans-serif",
+                        fontSize: '12px',
+                        color: '#000000',
+                        letterSpacing: '0.04em',
+                        textAlign: 'left'
+                      }}>
+                        {video.title}
                       </div>
                     </div>
-                    
-                    <div style={{
-                      fontFamily: "'Figtree', sans-serif",
-                      fontSize: '12px',
-                      color: '#000000',
-                      letterSpacing: '0.04em',
-                      textAlign: 'left'
-                    }}>
-                      {video.title}
-                    </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                ))}
+              </div>
+
+              {/* Right Arrow */}
+              <button
+                onClick={() => scroll(topic1Ref, 'right')}
+                style={{
+                  padding: '15px',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #000000',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  flexShrink: 0
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
             </div>
             
             {/* Divider line below videos */}
@@ -327,64 +387,109 @@ export default function HowToVideoGalleryPage() {
               marginBottom: '30px'
             }}></div>
 
-            {/* Video Grid - 5 videos for Topic 2 */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(5, 1fr)',
-              gap: '40px',
-              marginBottom: '40px'
-            }}>
-              {topic2Videos.map((video, index) => (
-                <Link key={video.id} href={`/video/${video.id}`} style={{ textDecoration: 'none' }}>
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    cursor: 'pointer'
-                  }}>
+            {/* Video Carousel - 4 videos visible at a time */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px' }}>
+              {/* Left Arrow */}
+              <button
+                onClick={() => scroll(topic2Ref, 'left')}
+                style={{
+                  padding: '15px',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #000000',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  flexShrink: 0
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+
+              {/* Scrollable Container */}
+              <div
+                ref={topic2Ref}
+                style={{
+                  display: 'flex',
+                  gap: '40px',
+                  overflow: 'hidden',
+                  scrollBehavior: 'smooth',
+                  flex: 1
+                }}
+              >
+                {topic2Videos.map((video, index) => (
+                  <Link key={video.id} href={`/video/${video.id}`} style={{ textDecoration: 'none', minWidth: 'calc(25% - 30px)', flexShrink: 0 }}>
                     <div style={{
-                      backgroundColor: '#d0d0d0',
-                      border: '1px solid #000000',
-                      borderRadius: '4px',
-                      padding: '20px',
-                      height: '200px',
                       display: 'flex',
                       flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      position: 'relative',
-                      marginBottom: '10px',
-                      transition: 'transform 0.3s ease, box-shadow 0.3s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-4px)';
-                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = 'none';
+                      cursor: 'pointer'
                     }}>
                       <div style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '24px',
-                        color: '#666666',
-                        textAlign: 'center'
+                        backgroundColor: '#d0d0d0',
+                        border: '1px solid #000000',
+                        borderRadius: '4px',
+                        padding: '20px',
+                        height: '200px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        position: 'relative',
+                        marginBottom: '10px',
+                        transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-4px)';
+                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = 'none';
                       }}>
-                        Video Player
+                        <div style={{
+                          fontFamily: "'Figtree', sans-serif",
+                          fontSize: '24px',
+                          color: '#666666',
+                          textAlign: 'center'
+                        }}>
+                          Video Player
+                        </div>
+                      </div>
+
+                      <div style={{
+                        fontFamily: "'Figtree', sans-serif",
+                        fontSize: '12px',
+                        color: '#000000',
+                        letterSpacing: '0.04em',
+                        textAlign: 'left'
+                      }}>
+                        {video.title}
                       </div>
                     </div>
-                    
-                    <div style={{
-                      fontFamily: "'Figtree', sans-serif",
-                      fontSize: '12px',
-                      color: '#000000',
-                      letterSpacing: '0.04em',
-                      textAlign: 'left'
-                    }}>
-                      {video.title}
-                    </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                ))}
+              </div>
+
+              {/* Right Arrow */}
+              <button
+                onClick={() => scroll(topic2Ref, 'right')}
+                style={{
+                  padding: '15px',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #000000',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  flexShrink: 0
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
             </div>
             
             {/* Divider line below videos */}
@@ -445,64 +550,109 @@ export default function HowToVideoGalleryPage() {
               marginBottom: '30px'
             }}></div>
 
-            {/* Video Grid - 4 videos for Topic 3 */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: '40px',
-              marginBottom: '40px'
-            }}>
-              {topic3Videos.map((video, index) => (
-                <Link key={video.id} href={`/video/${video.id}`} style={{ textDecoration: 'none' }}>
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    cursor: 'pointer'
-                  }}>
+            {/* Video Carousel - 4 videos visible at a time */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px' }}>
+              {/* Left Arrow */}
+              <button
+                onClick={() => scroll(topic3Ref, 'left')}
+                style={{
+                  padding: '15px',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #000000',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  flexShrink: 0
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+
+              {/* Scrollable Container */}
+              <div
+                ref={topic3Ref}
+                style={{
+                  display: 'flex',
+                  gap: '40px',
+                  overflow: 'hidden',
+                  scrollBehavior: 'smooth',
+                  flex: 1
+                }}
+              >
+                {topic3Videos.map((video, index) => (
+                  <Link key={video.id} href={`/video/${video.id}`} style={{ textDecoration: 'none', minWidth: 'calc(25% - 30px)', flexShrink: 0 }}>
                     <div style={{
-                      backgroundColor: '#d0d0d0',
-                      border: '1px solid #000000',
-                      borderRadius: '4px',
-                      padding: '20px',
-                      height: '200px',
                       display: 'flex',
                       flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      position: 'relative',
-                      marginBottom: '10px',
-                      transition: 'transform 0.3s ease, box-shadow 0.3s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-4px)';
-                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = 'none';
+                      cursor: 'pointer'
                     }}>
                       <div style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '24px',
-                        color: '#666666',
-                        textAlign: 'center'
+                        backgroundColor: '#d0d0d0',
+                        border: '1px solid #000000',
+                        borderRadius: '4px',
+                        padding: '20px',
+                        height: '200px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        position: 'relative',
+                        marginBottom: '10px',
+                        transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-4px)';
+                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = 'none';
                       }}>
-                        Video Player
+                        <div style={{
+                          fontFamily: "'Figtree', sans-serif",
+                          fontSize: '24px',
+                          color: '#666666',
+                          textAlign: 'center'
+                        }}>
+                          Video Player
+                        </div>
+                      </div>
+
+                      <div style={{
+                        fontFamily: "'Figtree', sans-serif",
+                        fontSize: '12px',
+                        color: '#000000',
+                        letterSpacing: '0.04em',
+                        textAlign: 'left'
+                      }}>
+                        {video.title}
                       </div>
                     </div>
+                  </Link>
+                ))}
+              </div>
 
-                    <div style={{
-                      fontFamily: "'Figtree', sans-serif",
-                      fontSize: '12px',
-                      color: '#000000',
-                      letterSpacing: '0.04em',
-                      textAlign: 'left'
-                    }}>
-                      {video.title}
-                    </div>
-                  </div>
-                </Link>
-              ))}
+              {/* Right Arrow */}
+              <button
+                onClick={() => scroll(topic3Ref, 'right')}
+                style={{
+                  padding: '15px',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #000000',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  flexShrink: 0
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
             </div>
 
             {/* Divider line below videos */}
@@ -563,64 +713,109 @@ export default function HowToVideoGalleryPage() {
               marginBottom: '30px'
             }}></div>
 
-            {/* Video Grid - 4 videos for Topic 4 */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: '40px',
-              marginBottom: '40px'
-            }}>
-              {topic4Videos.map((video, index) => (
-                <Link key={video.id} href={`/video/${video.id}`} style={{ textDecoration: 'none' }}>
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    cursor: 'pointer'
-                  }}>
+            {/* Video Carousel - 4 videos visible at a time */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px' }}>
+              {/* Left Arrow */}
+              <button
+                onClick={() => scroll(topic4Ref, 'left')}
+                style={{
+                  padding: '15px',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #000000',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  flexShrink: 0
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+
+              {/* Scrollable Container */}
+              <div
+                ref={topic4Ref}
+                style={{
+                  display: 'flex',
+                  gap: '40px',
+                  overflow: 'hidden',
+                  scrollBehavior: 'smooth',
+                  flex: 1
+                }}
+              >
+                {topic4Videos.map((video, index) => (
+                  <Link key={video.id} href={`/video/${video.id}`} style={{ textDecoration: 'none', minWidth: 'calc(25% - 30px)', flexShrink: 0 }}>
                     <div style={{
-                      backgroundColor: '#d0d0d0',
-                      border: '1px solid #000000',
-                      borderRadius: '4px',
-                      padding: '20px',
-                      height: '200px',
                       display: 'flex',
                       flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      position: 'relative',
-                      marginBottom: '10px',
-                      transition: 'transform 0.3s ease, box-shadow 0.3s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-4px)';
-                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = 'none';
+                      cursor: 'pointer'
                     }}>
                       <div style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '24px',
-                        color: '#666666',
-                        textAlign: 'center'
+                        backgroundColor: '#d0d0d0',
+                        border: '1px solid #000000',
+                        borderRadius: '4px',
+                        padding: '20px',
+                        height: '200px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        position: 'relative',
+                        marginBottom: '10px',
+                        transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-4px)';
+                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = 'none';
                       }}>
-                        Video Player
+                        <div style={{
+                          fontFamily: "'Figtree', sans-serif",
+                          fontSize: '24px',
+                          color: '#666666',
+                          textAlign: 'center'
+                        }}>
+                          Video Player
+                        </div>
+                      </div>
+
+                      <div style={{
+                        fontFamily: "'Figtree', sans-serif",
+                        fontSize: '12px',
+                        color: '#000000',
+                        letterSpacing: '0.04em',
+                        textAlign: 'left'
+                      }}>
+                        {video.title}
                       </div>
                     </div>
+                  </Link>
+                ))}
+              </div>
 
-                    <div style={{
-                      fontFamily: "'Figtree', sans-serif",
-                      fontSize: '12px',
-                      color: '#000000',
-                      letterSpacing: '0.04em',
-                      textAlign: 'left'
-                    }}>
-                      {video.title}
-                    </div>
-                  </div>
-                </Link>
-              ))}
+              {/* Right Arrow */}
+              <button
+                onClick={() => scroll(topic4Ref, 'right')}
+                style={{
+                  padding: '15px',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #000000',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  flexShrink: 0
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
             </div>
 
             {/* Divider line below videos */}
@@ -681,64 +876,109 @@ export default function HowToVideoGalleryPage() {
               marginBottom: '30px'
             }}></div>
 
-            {/* Video Grid - 4 videos for Topic 5 */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: '40px',
-              marginBottom: '40px'
-            }}>
-              {topic5Videos.map((video, index) => (
-                <Link key={video.id} href={`/video/${video.id}`} style={{ textDecoration: 'none' }}>
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    cursor: 'pointer'
-                  }}>
+            {/* Video Carousel - 4 videos visible at a time */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px' }}>
+              {/* Left Arrow */}
+              <button
+                onClick={() => scroll(topic5Ref, 'left')}
+                style={{
+                  padding: '15px',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #000000',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  flexShrink: 0
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+
+              {/* Scrollable Container */}
+              <div
+                ref={topic5Ref}
+                style={{
+                  display: 'flex',
+                  gap: '40px',
+                  overflow: 'hidden',
+                  scrollBehavior: 'smooth',
+                  flex: 1
+                }}
+              >
+                {topic5Videos.map((video, index) => (
+                  <Link key={video.id} href={`/video/${video.id}`} style={{ textDecoration: 'none', minWidth: 'calc(25% - 30px)', flexShrink: 0 }}>
                     <div style={{
-                      backgroundColor: '#d0d0d0',
-                      border: '1px solid #000000',
-                      borderRadius: '4px',
-                      padding: '20px',
-                      height: '200px',
                       display: 'flex',
                       flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      position: 'relative',
-                      marginBottom: '10px',
-                      transition: 'transform 0.3s ease, box-shadow 0.3s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-4px)';
-                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = 'none';
+                      cursor: 'pointer'
                     }}>
                       <div style={{
-                        fontFamily: "'Figtree', sans-serif",
-                        fontSize: '24px',
-                        color: '#666666',
-                        textAlign: 'center'
+                        backgroundColor: '#d0d0d0',
+                        border: '1px solid #000000',
+                        borderRadius: '4px',
+                        padding: '20px',
+                        height: '200px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        position: 'relative',
+                        marginBottom: '10px',
+                        transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-4px)';
+                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = 'none';
                       }}>
-                        Video Player
+                        <div style={{
+                          fontFamily: "'Figtree', sans-serif",
+                          fontSize: '24px',
+                          color: '#666666',
+                          textAlign: 'center'
+                        }}>
+                          Video Player
+                        </div>
+                      </div>
+
+                      <div style={{
+                        fontFamily: "'Figtree', sans-serif",
+                        fontSize: '12px',
+                        color: '#000000',
+                        letterSpacing: '0.04em',
+                        textAlign: 'left'
+                      }}>
+                        {video.title}
                       </div>
                     </div>
+                  </Link>
+                ))}
+              </div>
 
-                    <div style={{
-                      fontFamily: "'Figtree', sans-serif",
-                      fontSize: '12px',
-                      color: '#000000',
-                      letterSpacing: '0.04em',
-                      textAlign: 'left'
-                    }}>
-                      {video.title}
-                    </div>
-                  </div>
-                </Link>
-              ))}
+              {/* Right Arrow */}
+              <button
+                onClick={() => scroll(topic5Ref, 'right')}
+                style={{
+                  padding: '15px',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #000000',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  flexShrink: 0
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
             </div>
 
             {/* Divider line below videos */}
