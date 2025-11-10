@@ -1363,19 +1363,21 @@ export default function StudyBookPage() {
     }
   };
 
-  // Show loading spinner while checking auth
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p>Loading...</p>
-      </div>
-    );
-  }
-
   return (
     <div className="study-book-new">
       <Navbar />
+
+      {/* Show loading spinner while checking auth */}
+      {loading && (
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading...</p>
+        </div>
+      )}
+
+      {/* Hide main content during loading */}
+      {!loading && (
+        <>
 
       {/* Back Button */}
       <Link 
@@ -3389,6 +3391,8 @@ export default function StudyBookPage() {
             </div>
           </div>
         </div>
+      )}
+        </>
       )}
 
       {/* Usage Limit Notification */}
