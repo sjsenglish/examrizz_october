@@ -7,7 +7,7 @@ import Navbar from '@/components/Navbar';
 import './maths-demo.css';
 
 export default function MathsDemoPage() {
-  const [showProgressModal, setShowProgressModal] = useState(false);
+  const [showProgressModal, setShowProgressModal] = useState(true);
 
   return (
     <div className="maths-demo-page">
@@ -181,41 +181,43 @@ export default function MathsDemoPage() {
           </div>
 
           {/* Progress floating box */}
-          <div className="progress-floating-box">
-            <button 
-              className="close-btn"
-              onClick={() => setShowProgressModal(false)}
-            >
-              ×
-            </button>
-            
-            <div className="progress-content">
-              <div className="progress-item">
-                <span className="label">Subject:</span>
-                <span className="value">A Level</span>
-              </div>
-              <div className="progress-item">
-                <span className="label">Current grade:</span>
-                <span className="value">A</span>
-              </div>
-              <div className="progress-item">
-                <span className="label">Weak spec points:</span>
-                <span className="value">2.1, 3.6, 7.2</span>
-              </div>
-              <div className="progress-item">
-                <span className="label">Last worked on:</span>
-                <span className="value">6.4</span>
-              </div>
-              <div className="progress-item">
-                <span className="label">Upcoming:</span>
-                <span className="value">6.5</span>
-              </div>
-              <div className="progress-item">
-                <span className="label">Target grade:</span>
-                <span className="value">A*</span>
+          {showProgressModal && (
+            <div className="progress-floating-box">
+              <button
+                className="close-btn"
+                onClick={() => setShowProgressModal(false)}
+              >
+                ×
+              </button>
+
+              <div className="progress-content">
+                <div className="progress-item">
+                  <span className="label">Subject:</span>
+                  <span className="value">A Level</span>
+                </div>
+                <div className="progress-item">
+                  <span className="label">Current grade:</span>
+                  <span className="value">A</span>
+                </div>
+                <div className="progress-item">
+                  <span className="label">Weak spec points:</span>
+                  <span className="value">2.1, 3.6, 7.2</span>
+                </div>
+                <div className="progress-item">
+                  <span className="label">Last worked on:</span>
+                  <span className="value">6.4</span>
+                </div>
+                <div className="progress-item">
+                  <span className="label">Upcoming:</span>
+                  <span className="value">6.5</span>
+                </div>
+                <div className="progress-item">
+                  <span className="label">Target grade:</span>
+                  <span className="value">A*</span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

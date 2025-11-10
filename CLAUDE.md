@@ -47,11 +47,16 @@
   - Moved treasure chest icon from 60x60 to 150x150 (2.5x bigger)
   - Relocated ghost character to bottom right corner (changed from `left: 60px` to `right: 60px`)
   - Repositioned speech bubble above ghost (changed from side positioning to `bottom: 180px` above ghost)
-  - Speech bubble now has centered arrow pointer below it pointing down to ghost
+  - **Speech bubbles are now clean oval shapes** (border-radius: 30px for green ghost, 25px for love letter ghost)
+  - **Both speech bubbles no longer have arrow pointers** - removed ::before pseudo-elements for cleaner look
+  - Green ghost speech bubble moved to the left (right: -50px instead of -100px)
+  - Love letter ghost speech bubble repositioned up and left (top: 10%, left: 14% instead of 12%, 20%)
   - Moved achievements sidebar (progress floating box) from top right to **bottom left corner**
-  - Made achievements sidebar more compact: width reduced to 200px, padding to 10px
-  - Reduced font sizes in sidebar for compactness (label: 9px, value: 10px)
-  - Reduced spacing between progress items (margin-bottom: 6px, padding-bottom: 4px)
+  - **Enlarged sidebar**: width increased to 280px (from 200px), padding to 16px (from 10px)
+  - **Increased sidebar font sizes**: label: 11px (from 9px), value: 13px (from 10px)
+  - **Increased sidebar spacing**: margin-bottom: 10px, padding-bottom: 8px (from 6px/4px)
+  - **Close button is now functional**: clicking × hides the sidebar via conditional rendering
+  - **Top-left toast icon (toast-1) has pulse animation**: subtle scale from 1 to 1.05 over 2s loop
   - Adjusted toast icon positions to be higher up on screen (moved bottom toasts from 85-90% to 70-75%)
   - Moved toast-6 from left: 45% to left: 35% to avoid obscuring treasure chest
   - Shrank grass pattern from 100px to 60px, then further reduced to 54px (10% reduction)
@@ -88,8 +93,8 @@
 - **Love Letter Ghost Guide** (`/maths-demo`):
   - Added love-letter.svg icon next to toast-1 at position (top: 15%, left: 16%)
   - Ghost has floating animation (10px vertical movement over 3s)
-  - Speech bubble positioned at (top: 12%, left: 20%) with text "skip straight to spec topic"
-  - Speech bubble has left-pointing arrow connecting to the ghost icon
+  - Speech bubble repositioned to (top: 10%, left: 14%) with text "skip straight to spec topic"
+  - Speech bubble is now a clean oval shape without arrow pointer (border-radius: 25px)
   - Styles defined in `app/maths-demo/maths-demo.css` with `.love-letter-ghost` and `.love-letter-speech` classes
 
 ## Spec Topic Page (Nov 2024)
