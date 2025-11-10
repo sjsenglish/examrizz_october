@@ -108,6 +108,28 @@ export const SUBJECT_CONFIGS: SubjectConfig[] = [
     ]
   },
   {
+    id: 'interview-resources',
+    name: 'Interview Resources',
+    indexName: 'v2_interview_resources',
+    available: true,
+    filters: [
+      {
+        id: 'subject',
+        label: 'Subject',
+        field: 'subject',
+        type: 'checkbox',
+        fetchFromIndex: true
+      },
+      {
+        id: 'sectionCategory',
+        label: 'Section Category',
+        field: 'sectionCategory',
+        type: 'checkbox',
+        fetchFromIndex: true
+      }
+    ]
+  },
+  {
     id: 'english-lit',
     name: 'English Lit',
     indexName: 'v2_edexcel_alevel_english_literature',

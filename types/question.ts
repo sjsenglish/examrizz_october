@@ -88,6 +88,28 @@ export interface Question {
     SpecType?: string;
     [key: string]: any;
   }>;
+
+  // Interview Resources specific properties
+  id?: string;
+  slug?: string;
+  subject?: string; // lowercase subject name
+  subjectArea?: string;
+  sectionCategory?: string;
+  sectionType?: string;
+  yearRange?: string;
+  title?: string;
+  overview?: string; // Markdown content
+  practiceQuestions?: Array<{
+    number: number;
+    question: string;
+    type?: string;
+    [key: string]: any;
+  }>;
+  tags?: string[];
+  tier?: string;
+  isPremium?: boolean;
+  path?: string;
+  pathSegments?: string[];
 }
 
 export interface QuestionCardProps {

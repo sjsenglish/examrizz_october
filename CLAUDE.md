@@ -140,6 +140,41 @@
   - Page: `app/spec-topic/page.tsx`
   - Styles: `app/spec-topic/spec-topic.css`
 
+## Search Page - Interview Resources Index (Nov 2024)
+- **New Index Added**: `v2_interview_resources` added to `/search` page
+- **Dropdown Label**: "Interview Resources" appears in Admissions dropdown
+- **Index Configuration** (`lib/subjectConfig.ts`):
+  - Index name: `v2_interview_resources`
+  - Available filters: `subject` and `sectionCategory`
+  - Filter labels: "Subject" and "Section Category"
+
+- **Data Structure** (example record):
+  - Fields: `id`, `slug`, `subject`, `subjectArea`, `sectionCategory`, `sectionType`, `yearRange`, `title`, `overview`
+  - `overview`: Contains main content in markdown format
+  - `practiceQuestions`: Array of practice questions with `number`, `question`, and `type` fields
+  - `tags`: Array of searchable tags
+  - Visible filter tags: `subject` and `subjectArea`
+
+- **Question Card Display**:
+  - Title displayed as H2 heading
+  - Overview rendered with **ReactMarkdown** for proper markdown formatting
+  - Practice questions displayed in bordered sections with markdown support
+  - Question type badges shown (e.g., "explain", "evaluate")
+  - **Submit Answer button** available with Discord routing (same flow as Interview questions)
+  - No "Show Answer" button (like Interview questions - these are discussion-based)
+
+- **FilterBox Configuration**:
+  - Two-column layout: Subject and Section Category
+  - Both filters use standard refinement lists with counts
+  - Filter title: "Interview Resources"
+
+- **Implementation Details**:
+  - Uses `InterviewQuestionsList` component (same as Interview questions for infinite scroll)
+  - Markdown rendering via `react-markdown` package
+  - Submit answer creates Discord ticket with type: `interview-resources-question`
+  - Question content properly sanitized and formatted
+  - **Escape sequence handling**: Literal `\n\n` and `\n` strings in data are converted to actual newlines before rendering with ReactMarkdown
+
 ## Usage Tracking and Limits (Updated Nov 2024)
 - **Monthly Cost Limits** (defined in `lib/usage-tracking.ts`):
   - Free tier: **$1.00** per month (reduced from $2.00)

@@ -11,6 +11,8 @@ const getFilterTitle = (subject: string) => {
       return 'BMAT BioMedical Admissions Test';
     case 'interview':
       return 'Interview Questions';
+    case 'interview resources':
+      return 'Interview Resources';
     case 'english lit':
       return 'A Level English Literature';
     case 'biology':
@@ -122,7 +124,7 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubj
   // Dynamic attribute selection based on subject
   const getAttributes = (subject: string) => {
     const subjectLower = subject.toLowerCase();
-    
+
     if (subjectLower === 'interview') {
       // Interview questions use specific structure - Subject filter only
       return {
@@ -131,6 +133,16 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubj
         filters: null,
         questionTypeLabel: 'Subject',
         subTypeLabel: null,
+        filtersLabel: null
+      };
+    } else if (subjectLower === 'interview resources') {
+      // Interview resources use subject and sectionCategory
+      return {
+        questionType: 'subject',
+        subType: 'sectionCategory',
+        filters: null,
+        questionTypeLabel: 'Subject',
+        subTypeLabel: 'Section Category',
         filtersLabel: null
       };
     } else if (subjectLower === 'english lit') {
@@ -168,7 +180,8 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubj
   
   const attributes = getAttributes(currentSubject);
   const isInterview = currentSubject.toLowerCase() === 'interview';
-  
+  const isInterviewResources = currentSubject.toLowerCase() === 'interview resources';
+
   // Use custom hook for interview subjects
   const interviewSubjectFilter = useInterviewSubjectFilter();
   
@@ -203,11 +216,11 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubj
               <div className="filter-category-title">
                 <span>Subject</span>
               </div>
-              
+
               {interviewSubjectFilter.items.map((item) => (
                 <label key={item.value} className="filter-option">
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     className="filter-checkbox secondary"
                     checked={item.isRefined}
                     onChange={() => interviewSubjectFilter.refine(item.value)}
@@ -216,6 +229,49 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubj
                 </label>
               ))}
             </div>
+          </div>
+        ) : isInterviewResources ? (
+          // Interview Resources-specific two-column layout for subject and sectionCategory
+          <div className="filter-grid">
+            {/* Column 1 - Subject */}
+            <div className="filter-column">
+              <div className="filter-category-title">
+                <span>{attributes.questionTypeLabel}</span>
+              </div>
+
+              {questionTypeRefinement.items.map((item) => (
+                <label key={item.value} className="filter-option">
+                  <input
+                    type="checkbox"
+                    className="filter-checkbox secondary"
+                    checked={item.isRefined}
+                    onChange={() => questionTypeRefinement.refine(item.value)}
+                  />
+                  <span>{item.label} ({item.count})</span>
+                </label>
+              ))}
+            </div>
+
+            {/* Column 2 - Section Category */}
+            {attributes.subType && (
+              <div className="filter-column">
+                <div className="filter-category-title">
+                  <span>{attributes.subTypeLabel}</span>
+                </div>
+
+                {subTypesRefinement.items.map((item) => (
+                  <label key={item.value} className="filter-option">
+                    <input
+                      type="checkbox"
+                      className="filter-checkbox secondary"
+                      checked={item.isRefined}
+                      onChange={() => subTypesRefinement.refine(item.value)}
+                    />
+                    <span>{item.label} ({item.count})</span>
+                  </label>
+                ))}
+              </div>
+            )}
           </div>
         ) : (
           // Standard three-column layout for other subjects
@@ -285,7 +341,7 @@ export const FilterBox: React.FC<FilterBoxProps> = ({ onHideFilters, currentSubj
 
         {/* Control Buttons */}
         <div className="filter-controls">
-          <Button variant="ghost" size="sm" onClick={() => isInterview ? interviewSubjectFilter.clear() : clearAllFilters()}>clear filters</Button>
+          <Button variant="ghost" size="sm" onClick={() => (isInterview || isInterviewResources) ? (isInterview ? interviewSubjectFilter.clear() : clearAllFilters()) : clearAllFilters()}>clear filters</Button>
           <Button variant="ghost" size="sm" onClick={onHideFilters}>hide filters</Button>
         </div>
       </div>
