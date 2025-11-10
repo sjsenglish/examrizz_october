@@ -88,6 +88,17 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     return featureUsage.tier === 'free';
   }, [isInterviewResourcesQuestion, hit?.isPremium, user, featureUsage]);
 
+  // Check if interview questions should be blurred (all interview questions for logged out users)
+  const shouldBlurInterviewContent = useMemo(() => {
+    if (!isInterviewQuestion) return false;
+
+    // If user is not logged in, blur all interview questions
+    if (!user) return true;
+
+    // If user is logged in, don't blur (regardless of tier)
+    return false;
+  }, [isInterviewQuestion, user]);
+
   // Memoize array calculations to prevent re-renders
   const englishLitFilters = useMemo(() => 
     isEnglishLitQuestion ? [hit?.Text1?.Author, hit?.Text1?.Age].filter(Boolean) : [],
@@ -686,7 +697,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
 
         {/* Show question text for all question types except maths */}
         {!isMathsQuestion && normalizedData.questionText && (
-          <div className={styles.questionText}>
+          <div
+            className={styles.questionText}
+            style={{
+              filter: shouldBlurInterviewContent ? 'blur(8px)' : 'none',
+              userSelect: shouldBlurInterviewContent ? 'none' : 'auto',
+              pointerEvents: shouldBlurInterviewContent ? 'none' : 'auto'
+            }}
+          >
             {isInterviewQuestion ? (
               // Format interview questions with proper line breaks
               normalizedData.questionText.split('\\n\\n').map((paragraph, index) => (
