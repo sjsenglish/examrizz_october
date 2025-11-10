@@ -173,6 +173,7 @@
   - Markdown rendering via `react-markdown` package
   - Submit answer creates Discord ticket with type: `interview-resources-question`
   - Question content properly sanitized and formatted
+  - **Escape sequence handling**: Literal `\n\n` and `\n` strings in data are converted to actual newlines before rendering with ReactMarkdown
 
 ## Usage Tracking and Limits (Updated Nov 2024)
 - **Monthly Cost Limits** (defined in `lib/usage-tracking.ts`):

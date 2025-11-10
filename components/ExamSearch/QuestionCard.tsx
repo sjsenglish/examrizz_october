@@ -689,7 +689,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         {/* Show overview for Interview Resources with markdown formatting */}
         {isInterviewResourcesQuestion && normalizedData.questionContent && (
           <div className={styles.questionText} style={{ marginBottom: '20px' }}>
-            <ReactMarkdown>{normalizedData.questionContent}</ReactMarkdown>
+            <ReactMarkdown>
+              {normalizedData.questionContent.replace(/\\n\\n/g, '\n\n').replace(/\\n/g, '\n')}
+            </ReactMarkdown>
           </div>
         )}
 
@@ -700,7 +702,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
             {normalizedData.practiceQuestions.map((q: any, index: number) => (
               <div key={index} style={{ marginBottom: '16px', paddingLeft: '16px', borderLeft: '3px solid #E5E7EB' }}>
                 <div style={{ fontWeight: '500', marginBottom: '8px' }}>
-                  {q.number}. <ReactMarkdown>{q.question}</ReactMarkdown>
+                  {q.number}. <ReactMarkdown>
+                    {q.question.replace(/\\n\\n/g, '\n\n').replace(/\\n/g, '\n')}
+                  </ReactMarkdown>
                 </div>
                 {q.type && (
                   <span style={{ fontSize: '12px', color: '#6B7280', fontStyle: 'italic' }}>
