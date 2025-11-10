@@ -90,9 +90,22 @@
   - A Level dropdown no longer appears on hover - button is completely disabled
 
 - **Create Practice Pack page** (`/create-practice-pack`):
-  - Subject dropdown displays all subjects but only TSA and BMAT are enabled
-  - Other subjects (English Lit, Maths, Chemistry, Biology, Interview) are greyed out (opacity: 0.4, color: #999999)
+  - Subject dropdown displays all subjects but **only TSA is enabled** (BMAT is now greyed out as of Nov 2024)
+  - Other subjects (English Lit, Maths, Chemistry, Biology, Interview, BMAT) are greyed out (opacity: 0.4, color: #999999)
   - Disabled subjects have cursor: not-allowed and cannot be selected
+
+- **Select Practice Questions page** (`/select-practice-questions`):
+  - Reduced padding between elements and navbar (main-content padding-top reduced from 88px to 63px for more compact layout)
+  - Additional padding reductions for tighter spacing:
+    - `.modal-container` padding: reduced from 12px 21px to 10px 18px
+    - `.inner-container` padding: reduced from 17px to 12px
+  - Fixed viewport scrolling: page container has fixed height and no scroll, only the questions container scrolls
+  - Layout uses flexbox hierarchy to ensure questions container is scrollable while page remains fixed:
+    - `.page-background`: height: 100vh, overflow: hidden
+    - `.main-content`: height: calc(100vh - 63px), overflow: hidden
+    - `.modal-container`: flex container with flex-direction: column, padding: 10px 18px
+    - `.inner-container`: padding: 12px
+    - `.questions-container`: flex: 1, min-height: 0, overflow-y: auto for scrollable content
 
 ## Maths Demo Page Interactive Elements (Nov 2024)
 - **Toast Icons** (`/maths-demo`):
