@@ -677,7 +677,7 @@ export async function POST(request: NextRequest) {
           try {
             const actualInputTokens = Math.ceil(message.length / 4);
             const actualOutputTokens = Math.ceil(fullResponse.length / 4);
-            await recordUsage(userId, 'other', actualInputTokens, actualOutputTokens);
+            await recordUsage(userId, 'interview', actualInputTokens, actualOutputTokens);
           } catch (usageError) {
             console.error('Error recording usage:', usageError);
             // Don't fail the request if usage tracking fails

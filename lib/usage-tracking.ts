@@ -8,8 +8,8 @@ const supabase = createClient(
 // Usage limits per tier (in USD)
 export const USAGE_LIMITS = {
   free: 2.00,
-  plus: 6.00,
-  max: 12.00
+  plus: 5.00,
+  max: 10.00
 } as const
 
 // Feature usage limits per tier
@@ -35,7 +35,7 @@ export const COST_PER_1K_TOKENS = {
 export interface UsageRecord {
   id: string
   user_id: string
-  service: 'askbo' | 'other'
+  service: 'askbo' | 'interview' | 'other'
   tokens_used: number
   cost_usd: number
   created_at: string
@@ -166,9 +166,9 @@ function invalidateFeatureUsageCache(userId: string, feature: 'submit_answer' | 
 
 // Record usage for a user
 export async function recordUsage(
-  userId: string, 
-  service: 'askbo' | 'other',
-  inputTokens: number, 
+  userId: string,
+  service: 'askbo' | 'interview' | 'other',
+  inputTokens: number,
   outputTokens: number
 ): Promise<void> {
   const inputCost = (inputTokens / 1000) * COST_PER_1K_TOKENS.input

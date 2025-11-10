@@ -129,3 +129,23 @@
 - **Files**:
   - Page: `app/spec-topic/page.tsx`
   - Styles: `app/spec-topic/spec-topic.css`
+
+## Usage Limits and Rate Limiting (Updated Nov 2024)
+- **AskBo buddy chat** and **Interview buddy chat** both have usage limits based on subscription tier
+- **Monthly cost limits** (in USD per user per month):
+  - **Free tier**: $2.00/month
+  - **Plus tier**: $5.00/month
+  - **Max tier**: $10.00/month
+- **Implementation**:
+  - Usage tracking library: `lib/usage-tracking.ts`
+  - Cost calculated based on token usage (input + output tokens)
+  - Both chat features check limits before processing requests
+  - Returns 402 (Payment Required) error when limit exceeded
+  - Service tracking types: 'askbo' for AskBo chat, 'interview' for Interview buddy chat
+- **API routes**:
+  - AskBo: `/app/api/chat/bo/route.ts` - uses `canMakeRequest()` and `recordUsage()`
+  - Interview: `/app/api/chat/interview/route.ts` - uses `canMakeRequest()` and `recordUsage()`
+- **User experience**:
+  - Shows usage limit modal when limit is reached
+  - Prompts user to upgrade subscription for higher limits
+  - Usage info displayed on AskBo page showing current usage vs limit
