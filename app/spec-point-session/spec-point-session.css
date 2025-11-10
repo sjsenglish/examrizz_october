@@ -1,0 +1,410 @@
+/* Spec Point Session Page Styles - Scoped to this page only */
+@import url('https://fonts.googleapis.com/css2?family=Madimi+One&family=Figtree:wght@400;500;600&display=swap');
+
+/* Scope all styles to spec point session page specifically */
+.spec-point-session-page * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.spec-point-session-page .page-background {
+  background: #F9F9FF;
+  min-height: 100vh;
+  font-family: 'Madimi One', sans-serif;
+}
+
+/* Navbar */
+.spec-point-session-page .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #F8F8F5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.spec-point-session-page .logo {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #000000;
+  text-decoration: none;
+  margin: 0;
+  cursor: pointer;
+}
+
+.spec-point-session-page .menu-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.spec-point-session-page .menu-line {
+  width: 20px;
+  height: 2px;
+  background-color: #000000;
+  border-radius: 1px;
+}
+
+/* Back Button */
+.spec-point-session-page .back-button {
+  position: fixed;
+  top: 80px;
+  left: 40px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333333;
+  font-family: 'Madimi One', sans-serif;
+  font-size: 13px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  z-index: 50;
+}
+
+.spec-point-session-page .back-button:hover {
+  background-color: #F5F5F5;
+  transform: translateY(-1px);
+}
+
+/* Header */
+.spec-point-session-page .header-container {
+  padding: 140px 40px 30px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.spec-point-session-page .header-content {
+  background: white;
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.spec-point-session-page .page-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #000;
+  margin: 0 0 8px 0;
+}
+
+.spec-point-session-page .page-subtitle {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  color: #666;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+/* Main Content - Equal sized containers */
+.spec-point-session-page .main-content-container {
+  padding: 0 40px 40px;
+  display: flex;
+  gap: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.spec-point-session-page .left-container {
+  flex: 1;
+  min-width: 0;
+  background: white;
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-height: 600px;
+}
+
+.spec-point-session-page .right-container {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Content Selector */
+.spec-point-session-page .content-selector {
+  display: flex;
+  background: white;
+  border: 2px solid #000;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.spec-point-session-page .selector-button {
+  flex: 1;
+  padding: 15px 20px;
+  background: white;
+  border: none;
+  font-family: 'Madimi One', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-right: 2px solid #000;
+}
+
+.spec-point-session-page .selector-button:last-child {
+  border-right: none;
+}
+
+.spec-point-session-page .selector-button:hover {
+  background: #f0f0f0;
+}
+
+.spec-point-session-page .selector-button.active {
+  background: #B3F0F2;
+  color: #000;
+}
+
+/* Content Container */
+.spec-point-session-page .content-container {
+  background: white;
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  min-height: 500px;
+}
+
+.spec-point-session-page .content-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #000;
+  margin: 0 0 20px 0;
+}
+
+/* Video Content */
+.spec-point-session-page .video-player {
+  background: #f5f5f5;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spec-point-session-page .video-placeholder {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-family: 'Madimi One', sans-serif;
+  font-size: 16px;
+}
+
+.spec-point-session-page .video-placeholder p {
+  margin: 10px 0;
+}
+
+/* Questions Content */
+.spec-point-session-page .question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.spec-point-session-page .question-navigation {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.spec-point-session-page .nav-button {
+  padding: 8px 16px;
+  background: #B3F0F2;
+  border: 2px solid #000;
+  border-radius: 6px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.spec-point-session-page .nav-button:hover:not(:disabled) {
+  background: #9ee9ec;
+}
+
+.spec-point-session-page .nav-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.spec-point-session-page .question-counter {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+}
+
+.spec-point-session-page .question-content {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.spec-point-session-page .question-text {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  line-height: 1.5;
+}
+
+.spec-point-session-page .options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.spec-point-session-page .option-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 20px;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.spec-point-session-page .option-item:hover {
+  border-color: #B3F0F2;
+  background: #f8fffe;
+}
+
+.spec-point-session-page .option-item.selected {
+  background: #DBF7F9;
+  border-color: #00CED1;
+}
+
+.spec-point-session-page .option-letter {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  min-width: 20px;
+  flex-shrink: 0;
+}
+
+.spec-point-session-page .option-text {
+  flex: 1;
+  font-family: 'Madimi One', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* PDF Content */
+.spec-point-session-page .pdf-viewer {
+  background: #f5f5f5;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spec-point-session-page .pdf-placeholder {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-family: 'Madimi One', sans-serif;
+}
+
+.spec-point-session-page .pdf-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.spec-point-session-page .pdf-placeholder p {
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+.spec-point-session-page .download-button {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background: #B3F0F2;
+  border: 2px solid #000;
+  border-radius: 8px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.spec-point-session-page .download-button:hover {
+  background: #9ee9ec;
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .spec-point-session-page .main-content-container {
+    flex-direction: column;
+    padding: 0 20px 40px;
+  }
+  
+  .spec-point-session-page .header-container {
+    padding: 80px 20px 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .spec-point-session-page .content-selector {
+    flex-direction: column;
+  }
+  
+  .spec-point-session-page .selector-button {
+    border-right: none;
+    border-bottom: 2px solid #000;
+  }
+  
+  .spec-point-session-page .selector-button:last-child {
+    border-bottom: none;
+  }
+  
+  .spec-point-session-page .question-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .spec-point-session-page .question-navigation {
+    gap: 10px;
+  }
+}

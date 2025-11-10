@@ -24,13 +24,15 @@ export default function MathsDemoPage() {
 
             {/* Ghost character */}
             <div className="ghost-character">
-              <Image 
-                src="/icons/pixel-ghost-w-sword-yellow.svg" 
-                alt="Ghost Character" 
-                width={160} 
-                height={160}
-                className="ghost-icon"
-              />
+              <Link href="/spec-point-session" className="ghost-link">
+                <Image 
+                  src="/icons/pixel-ghost-w-sword-yellow.svg" 
+                  alt="Ghost Character" 
+                  width={160} 
+                  height={160}
+                  className="ghost-icon"
+                />
+              </Link>
               <div className="speech-bubble">
                 Jump to your topic or click me to carry on where you left off
               </div>

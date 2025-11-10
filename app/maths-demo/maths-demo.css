@@ -56,6 +56,16 @@
   z-index: 15;
 }
 
+.maths-demo-page .ghost-link {
+  display: block;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.maths-demo-page .ghost-link:hover {
+  transform: scale(1.05);
+}
+
 .maths-demo-page .speech-bubble {
   position: absolute;
   top: -80px;
