@@ -56,6 +56,16 @@
   - Moved toast-6 from left: 45% to left: 35% to avoid obscuring treasure chest
   - Shrank grass pattern from 100px to 60px, then further reduced to 54px (10% reduction)
   - Added 2px solid black border line across top of grass to show where grass ends
+  - **Latest updates (Nov 2024)**:
+    - Increased sidebar size: width from 200px to 280px, padding from 10px to 16px
+    - Made close button functional - clicking it now hides the sidebar
+    - Increased sidebar font sizes: label from 9px to 11px, value from 10px to 13px
+    - Increased sidebar spacing: margin-bottom from 6px to 10px, padding-bottom from 4px to 8px
+    - Modified yellow ghost speech bubble: removed arrow pointer, changed to clean oval shape (border-radius: 30px)
+    - Repositioned yellow ghost speech bubble to the left side (right: 180px, bottom: 50px)
+    - Added loveletter icon (love-letter.svg) at bottom left with clean oval speech bubble above it
+    - Added pulsing arrow above toast-11 (first blue toast) to indicate which icon to click
+    - Arrow uses red color (#FF6B6B) and pulses with opacity and vertical movement animation
 
 ## AskBo Page Layout Fix (Nov 2024)
 - **Issue**: Page experienced layout shift on initial load - loading screen had different structure than actual content

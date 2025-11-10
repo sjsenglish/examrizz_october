@@ -7,7 +7,7 @@ import Navbar from '@/components/Navbar';
 import './maths-demo.css';
 
 export default function MathsDemoPage() {
-  const [showProgressModal, setShowProgressModal] = useState(false);
+  const [showProgressBox, setShowProgressBox] = useState(true);
 
   return (
     <div className="maths-demo-page">
@@ -53,10 +53,10 @@ export default function MathsDemoPage() {
             {/* Ghost character */}
             <div className="ghost-character">
               <Link href="/spec-point-session" className="ghost-link">
-                <Image 
-                  src="/icons/pixel-ghost-w-sword-yellow.svg" 
-                  alt="Ghost Character" 
-                  width={160} 
+                <Image
+                  src="/icons/pixel-ghost-w-sword-yellow.svg"
+                  alt="Ghost Character"
+                  width={160}
                   height={160}
                   className="ghost-icon"
                 />
@@ -64,6 +64,20 @@ export default function MathsDemoPage() {
               <div className="speech-bubble">
                 Jump to your topic or click me to carry on where you left off
               </div>
+            </div>
+
+            {/* Loveletter ghost */}
+            <div className="loveletter-ghost">
+              <div className="loveletter-speech-bubble">
+                Click on a toast to start learning!
+              </div>
+              <Image
+                src="/icons/love-letter.svg"
+                alt="Love Letter"
+                width={80}
+                height={80}
+                className="loveletter-icon"
+              />
             </div>
 
             {/* Treasure box at center top */}
@@ -111,6 +125,12 @@ export default function MathsDemoPage() {
             {/* Blue toasts (available levels) */}
             <div className="toast blue toast-11">
               <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
+              {/* Pulsing arrow pointing at this toast */}
+              <div className="pulse-arrow">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 10L12 15L17 10" stroke="#FF6B6B" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
             </div>
             <div className="toast blue toast-12">
               <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
@@ -166,13 +186,14 @@ export default function MathsDemoPage() {
           </div>
 
           {/* Progress floating box */}
-          <div className="progress-floating-box">
-            <button 
-              className="close-btn"
-              onClick={() => setShowProgressModal(false)}
-            >
-              ×
-            </button>
+          {showProgressBox && (
+            <div className="progress-floating-box">
+              <button
+                className="close-btn"
+                onClick={() => setShowProgressBox(false)}
+              >
+                ×
+              </button>
             
             <div className="progress-content">
               <div className="progress-item">
@@ -200,7 +221,8 @@ export default function MathsDemoPage() {
                 <span className="value">A*</span>
               </div>
             </div>
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
