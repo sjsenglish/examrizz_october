@@ -15,3 +15,9 @@
 - User profiles are created automatically via database trigger on auth.users INSERT
 - The login page should simply redirect authenticated users to home
 - Profile creation is handled by the database trigger in `/database/URGENT_FIX_USER_CREATION.sql`
+
+## Landing Page Design (Updated Nov 2024)
+- Cloud icons positioned closer to the island platform for better visual cohesion
+- Cloud positioning in `components/landing/LandingHub.tsx`:
+  - Big clouds: left-[20%] top-[30%], right-[20%] top-[45%]
+  - Medium clouds: left-[38%] top-[25%], right-[38%] top-[27%]
