@@ -591,42 +591,48 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   return (
     <article className={styles.questionCard}>
       <header className={styles.questionHeader}>
-        <div className={styles.questionInfo}>
-          <span className={styles.questionNumber}>
-            {isInterviewQuestion ? normalizedData.questionNumber : `Question ${normalizedData.questionNumber}`}
-          </span>
-          {normalizedData.year && <span className={styles.yearBadge}>{normalizedData.year}</span>}
-          {normalizedData.marks && <span className={styles.marksBadge}>{normalizedData.marks} marks</span>}
-          {normalizedData.time && <span className={styles.marksBadge}>{normalizedData.time} minutes</span>}
-        </div>
-        <div className={styles.filterButtons}>
-          {normalizedData.questionType && (
-            <Button variant="filter" size="sm">{normalizedData.questionType}</Button>
-          )}
-          {normalizedData.subType && (
-            <Button variant="filter" size="sm" 
-              style={{ backgroundColor: 'var(--color-secondary-light)' }}>
-              {normalizedData.subType}
-            </Button>
-          )}
-          {normalizedData.filters && normalizedData.filters.length > 0 && (
-            <Button variant="filter" size="sm" 
-              style={{ backgroundColor: 'var(--color-primary-lighter)' }}>
-              {normalizedData.filters[0]}
-            </Button>
-          )}
-          {normalizedData.paperInfo && (
-            <Button variant="filter" size="sm" 
-              style={{ backgroundColor: 'transparent' }}>
-              {(normalizedData.paperInfo as any)?.paper_reference || 'SPEC PT. 4.1'}
-            </Button>
-          )}
-        </div>
+        {/* Hide question info for Interview Resources questions */}
+        {!isInterviewResourcesQuestion && (
+          <div className={styles.questionInfo}>
+            <span className={styles.questionNumber}>
+              {isInterviewQuestion ? normalizedData.questionNumber : `Question ${normalizedData.questionNumber}`}
+            </span>
+            {normalizedData.year && <span className={styles.yearBadge}>{normalizedData.year}</span>}
+            {normalizedData.marks && <span className={styles.marksBadge}>{normalizedData.marks} marks</span>}
+            {normalizedData.time && <span className={styles.marksBadge}>{normalizedData.time} minutes</span>}
+          </div>
+        )}
+        {/* Hide filter badges for Interview Resources questions */}
+        {!isInterviewResourcesQuestion && (
+          <div className={styles.filterButtons}>
+            {normalizedData.questionType && (
+              <Button variant="filter" size="sm">{normalizedData.questionType}</Button>
+            )}
+            {normalizedData.subType && (
+              <Button variant="filter" size="sm"
+                style={{ backgroundColor: 'var(--color-secondary-light)' }}>
+                {normalizedData.subType}
+              </Button>
+            )}
+            {normalizedData.filters && normalizedData.filters.length > 0 && (
+              <Button variant="filter" size="sm"
+                style={{ backgroundColor: 'var(--color-primary-lighter)' }}>
+                {normalizedData.filters[0]}
+              </Button>
+            )}
+            {normalizedData.paperInfo && (
+              <Button variant="filter" size="sm"
+                style={{ backgroundColor: 'transparent' }}>
+                {(normalizedData.paperInfo as any)?.paper_reference || 'SPEC PT. 4.1'}
+              </Button>
+            )}
+          </div>
+        )}
       </header>
 
       <div className={styles.questionContent}>
-        {/* Show question content for non-maths questions */}
-        {!isMathsQuestion && normalizedData.questionContent && (
+        {/* Show question content for non-maths questions (excluding Interview Resources) */}
+        {!isMathsQuestion && !isInterviewResourcesQuestion && normalizedData.questionContent && (
           <p className={styles.questionPassage}>
             {normalizedData.questionContent}
           </p>
