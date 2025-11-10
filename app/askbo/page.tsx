@@ -181,18 +181,22 @@ export default function StudyBookPage() {
     { id: 'academic-papers', label: 'Academic Papers', icon: '/icons/academic-paper.svg', count: getCategoryCount('academic-papers') }
   ];
 
-  // Auth check - optional login (no redirect)
+  // Auth check - required login (redirect to /login if not authenticated)
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           setUser(user);
+          setLoading(false);
+        } else {
+          // No user found, redirect to login
+          router.push('/login');
         }
       } catch (error) {
-        console.log('No user logged in, continuing without auth');
+        console.log('Auth error, redirecting to login');
+        router.push('/login');
       }
-      setLoading(false);
     };
     checkAuth();
   }, [router]);
