@@ -99,14 +99,14 @@
     - **Removed**: Title badge "Maths A Level - 90 hours" and left/right arrow buttons
     - **Progress Bar Features**:
       - Total duration: 92.83 hours displayed in center
-      - Green gradient fill showing cumulative progress based on current spec point
-      - Loveletter ghost icon serves as draggable progress tracker
+      - Light cyan fill (#DBFCFF) showing cumulative progress based on current spec point
+      - Love letter icon serves as draggable progress tracker
       - Treasure chest icon positioned at end of progress bar (100% completion)
       - Click anywhere on progress bar to jump to corresponding spec point
-      - Drag loveletter ghost to manually navigate between spec points
+      - Drag love letter icon to manually navigate between spec points
       - Progress automatically updates based on scroll position
-    - **Ghost Navigation**:
-      - Loveletter ghost moves along progress bar based on cumulative hours completed
+    - **Icon Navigation**:
+      - Love letter icon moves along progress bar based on cumulative hours completed
       - Interactive: click and drag to navigate to any spec point
       - Visual feedback: cursor changes to grab/grabbing during interaction
       - Smooth scrolling animation when navigating between spec points

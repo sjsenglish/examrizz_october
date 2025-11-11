@@ -20,7 +20,7 @@
 /* Progress Bar */
 .maths-demo-page .progress-bar-container {
   position: fixed;
-  top: 80px;
+  top: 96px;
   left: 50%;
   transform: translateX(-50%);
   width: 70%;
@@ -44,7 +44,7 @@
   left: 0;
   top: 0;
   height: 100%;
-  background: linear-gradient(90deg, #4CAF50 0%, #8BC34A 100%);
+  background: #DBFCFF;
   border-radius: 8px;
   transition: width 0.3s ease;
   z-index: 1;
@@ -278,7 +278,7 @@
 @media (max-width: 768px) {
   .maths-demo-page .progress-bar-container {
     width: 80%;
-    top: 75px;
+    top: 90px;
   }
 
   .maths-demo-page .progress-bar-track {
@@ -320,7 +320,7 @@
 @media (max-width: 480px) {
   .maths-demo-page .progress-bar-container {
     width: 85%;
-    top: 70px;
+    top: 84px;
   }
 
   .maths-demo-page .progress-bar-track {

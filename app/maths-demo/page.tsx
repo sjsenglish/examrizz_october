@@ -224,7 +224,7 @@ export default function MathsDemoPage() {
               onMouseDown={handleMouseDown}
             >
               <Image
-                src="/icons/love-letter-ghost.svg"
+                src="/icons/love-letter.svg"
                 alt="Progress tracker"
                 width={40}
                 height={40}
