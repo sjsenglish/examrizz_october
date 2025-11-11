@@ -107,7 +107,7 @@ export default function CompetitionPage() {
           </div>
 
           <div style={{ textAlign: 'center' }}>
-            <Link href="/maths-demo" className="demo-button">
+            <Link href="/subject-selection" className="demo-button">
               Maths Edexcel A Level Demo
             </Link>
           </div>

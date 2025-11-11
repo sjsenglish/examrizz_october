@@ -39,13 +39,27 @@
   - "Saved" button
 - These elements can be re-enabled by removing the `display: 'none'` or `disabled` properties
 
-## Competition and Maths Demo Page UI Changes (Nov 2024)
+## Competition and Subject Selection Flow (Nov 2024)
 - **Competition page** (`/competition`):
   - Added back button (same style as practice page) in top left corner, linking to home page
   - Centered the "Maths Edexcel A Level Demo" button using a wrapper div with `text-align: center`
+  - **Routing**: Button now links to `/subject-selection` (updated Nov 2024)
+
+- **Subject Selection page** (`/subject-selection`) - **NEW Nov 2024**:
+  - Intermediate page between `/competition` and `/maths-demo`
+  - Displays three subject options: Pure Maths, Statistics, Mechanics
+  - Each subject has a colored book icon:
+    - Pure Maths: Blue book (clickable, links to `/maths-demo`)
+    - Statistics: Pink book (disabled/greyed out)
+    - Mechanics: Purple book (disabled/greyed out)
+  - Icons sourced from Firebase Storage (external URLs)
+  - Back button links to `/competition`
+  - Layout follows competition page styling with 3-column grid
+  - Disabled subjects have opacity: 0.4, grayscale filter, and no hover effects
+  - Files: `app/subject-selection/page.tsx` and `app/subject-selection/subject-selection.css`
 
 - **Maths Demo page** (`/maths-demo`):
-  - Added back button linking to `/competition` in top left corner
+  - Added back button linking to `/subject-selection` in top left corner (updated Nov 2024)
   - Moved treasure chest icon from 60x60 to 150x150 (2.5x bigger)
   - Relocated ghost character to bottom right corner (changed from `left: 60px` to `right: 60px`)
   - Repositioned speech bubble above ghost (changed from side positioning to `bottom: 180px` above ghost)
@@ -63,6 +77,8 @@
   - Moved toast-6 from left: 45% to left: 35% to avoid obscuring treasure chest
   - Shrank grass pattern from 100px to 60px, then further reduced to 54px (10% reduction)
   - Added 2px solid black border line across top of grass to show where grass ends
+
+**Navigation Flow**: Home → Competition → Subject Selection → Maths Demo → Spec Topic
 
 ## AskBo Page Layout Fix (Nov 2024)
 - **Issue**: Page experienced layout shift on initial load - loading screen had different structure than actual content

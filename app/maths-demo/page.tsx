@@ -16,7 +16,7 @@ export default function MathsDemoPage() {
 
         {/* Back Button */}
         <Link
-          href="/competition"
+          href="/subject-selection"
           style={{
             position: 'absolute',
             top: '90px',
