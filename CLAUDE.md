@@ -196,14 +196,20 @@
   - **Content container (left)**: Contains video player, practice questions, and PDF notes (flex: 3)
     - Occupies 60% of horizontal space
     - Includes content type selector tabs (Video, Questions, PDF Notes)
+    - No section titles - content displays directly without headers
   - **Buddy chat container (right)**: Joe chat assistant (flex: 2)
     - Occupies 40% of horizontal space
     - Features chat interface with message history and input
+    - No header section - chat area starts directly with messages
   - Total flex ratio: 3:2 (main content : buddy chat)
-- **Header**: Simple title display only
-  - Removed bordered container styling
-  - Removed subtitle "Learn, practice, and master this topic"
-  - Clean, minimal presentation with just "Spec Point 6.4 - Differentiation"
+- **Header**: Centered title display
+  - Page title centered: "Spec Point 6.4 - Differentiation"
+  - No subtitle or bordered container
+  - Clean, minimal presentation
+- **Removed Elements** (Nov 2024):
+  - Chat header: "Joe - Your Maths Buddy" and "Ask me anything about this spec point"
+  - Content titles: "Video Walkthrough", "Practice Questions", "Study Notes (PDF)"
+  - Question navigation centered (no longer left-aligned with title)
 - **Purpose**: Gives primary focus to the learning content with chat assistant on the side
 - **Files**:
   - Page: `app/spec-point-session/page.tsx`

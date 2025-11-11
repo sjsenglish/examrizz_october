@@ -214,7 +214,6 @@ export default function SpecPointSessionPage() {
 
   const renderVideoContent = () => (
     <div className="content-container">
-      <h3 className="content-title">Video Walkthrough</h3>
       <div className="video-player">
         <div className="video-placeholder">
           <p>Sample video content would appear here</p>
@@ -226,13 +225,12 @@ export default function SpecPointSessionPage() {
 
   const renderQuestionsContent = () => {
     const currentQuestion = sampleQuestions[currentQuestionIndex];
-    
+
     return (
       <div className="content-container">
         <div className="question-header">
-          <h3 className="content-title">Practice Questions</h3>
           <div className="question-navigation">
-            <button 
+            <button
               onClick={() => setCurrentQuestionIndex(Math.max(0, currentQuestionIndex - 1))}
               disabled={currentQuestionIndex === 0}
               className="nav-button"
@@ -242,7 +240,7 @@ export default function SpecPointSessionPage() {
             <span className="question-counter">
               {currentQuestionIndex + 1} of {sampleQuestions.length}
             </span>
-            <button 
+            <button
               onClick={() => setCurrentQuestionIndex(Math.min(sampleQuestions.length - 1, currentQuestionIndex + 1))}
               disabled={currentQuestionIndex === sampleQuestions.length - 1}
               className="nav-button"
@@ -280,7 +278,6 @@ export default function SpecPointSessionPage() {
 
   const renderPdfContent = () => (
     <div className="content-container">
-      <h3 className="content-title">Study Notes (PDF)</h3>
       <div className="pdf-viewer">
         <div className="pdf-placeholder">
           <div className="pdf-icon">📄</div>
@@ -358,11 +355,6 @@ export default function SpecPointSessionPage() {
           {/* Right Container - Joe Chat */}
           <div className="right-container">
             <div className="joe-chat-container">
-              <div className="joe-chat-header">
-                <h3 className="joe-chat-title">Joe - Your Maths Buddy</h3>
-                <p className="joe-chat-subtitle">Ask me anything about this spec point</p>
-              </div>
-
               <div className="joe-messages-area">
                 {messages.length === 0 ? (
                   <div className="joe-welcome-message">
