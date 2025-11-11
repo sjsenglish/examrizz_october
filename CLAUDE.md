@@ -89,8 +89,10 @@
   - **Spec Points Data**: 30 total spec points with lesson counts ranging from 1-6 lessons each
   - **Ghost Character**:
     - Positioned on the first stepping stone (spec point 1.1 Proofs)
+    - Position: top: -60px (moved up 15% from -40px)
+    - Responsive: top: -45px on tablet (768px breakpoint)
     - Floating animation with subtle up/down movement
-    - Clickable link to `/spec-point-session`
+    - **Clickable link** to `/spec-point-session` with spec point and lesson parameters
     - Size: 100x100px
   - **Horizontal Scrolling**:
     - Left/right arrow buttons for navigation (fixed position on left/right edges)
@@ -99,6 +101,9 @@
     - Left arrow disabled when at start position
   - **Treasure Box**: Positioned at the end of all stepping stones with "Complete!" label
   - **Toast Icons**: Each toast represents one lesson within the spec point
+    - **All toasts are clickable** (Nov 2024) - Link to `/spec-point-session` with parameters
+    - URL format: `?spec={id}&lesson={number}&name={encoded name}`
+    - Each toast links to its specific lesson session page
     - Hover effect: scale(1.1) on all toast icons
     - Toast arrangement: Flex layout with wrapping, max-width 200px per group
   - **Styling Details**:
@@ -189,6 +194,38 @@
 - **Files**:
   - Page: `app/spec-topic/page.tsx`
   - Styles: `app/spec-topic/spec-topic.css`
+
+## Spec Point Session Page Layout (Nov 2024)
+- **Page**: `/spec-point-session` - Individual spec point learning session
+- **Layout Structure**:
+  - **Content container (left)**: Contains video player, practice questions, and PDF notes (flex: 3)
+    - Occupies 60% of horizontal space
+    - Includes content type selector tabs (Video, Questions, PDF Notes)
+    - No section titles - content displays directly without headers
+    - **Video and PDF containers**: Enlarged to min-height: 550px (from 400px) to nearly fill container
+  - **Buddy chat container (right)**: Joe chat assistant (flex: 2)
+    - Occupies 40% of horizontal space
+    - Features chat interface with message history and input
+    - No header section - chat area starts directly with messages
+  - Total flex ratio: 3:2 (main content : buddy chat)
+- **Dynamic Title System** (Nov 2024):
+  - Title format: "{specPoint} {specName}: Lesson {lessonNumber}"
+  - Uses URL parameters: `?spec=X.X&lesson=N&name=TopicName`
+  - Example: "1.1 Proofs: Lesson 1"
+  - Chat welcome message also uses dynamic spec point info
+  - **Implementation**: Uses `useSearchParams()` wrapped in Suspense boundary (Next.js 15 requirement)
+- **Header**: Centered title display
+  - Page title dynamically generated from URL parameters
+  - No subtitle or bordered container
+  - Clean, minimal presentation
+- **Removed Elements** (Nov 2024):
+  - Chat header: "Joe - Your Maths Buddy" and "Ask me anything about this spec point"
+  - Content titles: "Video Walkthrough", "Practice Questions", "Study Notes (PDF)"
+  - Question navigation centered (no longer left-aligned with title)
+- **Purpose**: Gives primary focus to the learning content with chat assistant on the side
+- **Files**:
+  - Page: `app/spec-point-session/page.tsx`
+  - Styles: `app/spec-point-session/spec-point-session.css`
 
 ## Search Page - Interview Resources Index (Nov 2024)
 - **New Index Added**: `v2_interview_resources` added to `/search` page

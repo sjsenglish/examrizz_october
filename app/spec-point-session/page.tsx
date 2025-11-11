@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { supabase } from '@/lib/supabase-client';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import './spec-point-session.css';
 
 type ContentType = 'video' | 'questions' | 'pdf';
@@ -35,9 +35,15 @@ const sampleQuestions = [
   }
 ];
 
-export default function SpecPointSessionPage() {
+function SpecPointSessionContent() {
   const router = useRouter();
-  
+  const searchParams = useSearchParams();
+
+  // Get URL parameters
+  const specPoint = searchParams.get('spec') || '6.4';
+  const lessonNumber = searchParams.get('lesson') || '1';
+  const specName = searchParams.get('name') || 'Differentiation';
+
   // Content state
   const [currentContent, setCurrentContent] = useState<ContentType>('video');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -121,7 +127,7 @@ export default function SpecPointSessionPage() {
           conversationId,
           userId,
           currentContent,
-          specPoint: '6.4'
+          specPoint: `${specPoint} ${specName} - Lesson ${lessonNumber}`
         })
       });
 
@@ -214,7 +220,6 @@ export default function SpecPointSessionPage() {
 
   const renderVideoContent = () => (
     <div className="content-container">
-      <h3 className="content-title">Video Walkthrough</h3>
       <div className="video-player">
         <div className="video-placeholder">
           <p>Sample video content would appear here</p>
@@ -226,13 +231,12 @@ export default function SpecPointSessionPage() {
 
   const renderQuestionsContent = () => {
     const currentQuestion = sampleQuestions[currentQuestionIndex];
-    
+
     return (
       <div className="content-container">
         <div className="question-header">
-          <h3 className="content-title">Practice Questions</h3>
           <div className="question-navigation">
-            <button 
+            <button
               onClick={() => setCurrentQuestionIndex(Math.max(0, currentQuestionIndex - 1))}
               disabled={currentQuestionIndex === 0}
               className="nav-button"
@@ -242,7 +246,7 @@ export default function SpecPointSessionPage() {
             <span className="question-counter">
               {currentQuestionIndex + 1} of {sampleQuestions.length}
             </span>
-            <button 
+            <button
               onClick={() => setCurrentQuestionIndex(Math.min(sampleQuestions.length - 1, currentQuestionIndex + 1))}
               disabled={currentQuestionIndex === sampleQuestions.length - 1}
               className="nav-button"
@@ -280,7 +284,6 @@ export default function SpecPointSessionPage() {
 
   const renderPdfContent = () => (
     <div className="content-container">
-      <h3 className="content-title">Study Notes (PDF)</h3>
       <div className="pdf-viewer">
         <div className="pdf-placeholder">
           <div className="pdf-icon">📄</div>
@@ -320,27 +323,49 @@ export default function SpecPointSessionPage() {
 
         {/* Header */}
         <div className="header-container">
-          <div className="header-content">
-            <h1 className="page-title">Spec Point 6.4 - Differentiation</h1>
-            <p className="page-subtitle">Learn, practice, and master this topic</p>
-          </div>
+          <h1 className="page-title">{specPoint} {specName}: Lesson {lessonNumber}</h1>
         </div>
 
         {/* Main Content */}
         <div className="main-content-container">
-          {/* Left Container - Joe Chat */}
+          {/* Left Container - Content Types */}
           <div className="left-container">
+            {/* Content Type Selector */}
+            <div className="content-selector">
+              <button
+                className={`selector-button ${currentContent === 'video' ? 'active' : ''}`}
+                onClick={() => setCurrentContent('video')}
+              >
+                Video
+              </button>
+              <button
+                className={`selector-button ${currentContent === 'questions' ? 'active' : ''}`}
+                onClick={() => setCurrentContent('questions')}
+              >
+                Questions
+              </button>
+              <button
+                className={`selector-button ${currentContent === 'pdf' ? 'active' : ''}`}
+                onClick={() => setCurrentContent('pdf')}
+              >
+                PDF Notes
+              </button>
+            </div>
+
+            {/* Content Display */}
+            {currentContent === 'video' && renderVideoContent()}
+            {currentContent === 'questions' && renderQuestionsContent()}
+            {currentContent === 'pdf' && renderPdfContent()}
+          </div>
+
+          {/* Right Container - Joe Chat */}
+          <div className="right-container">
             <div className="joe-chat-container">
-              <div className="joe-chat-header">
-                <h3 className="joe-chat-title">Joe - Your Maths Buddy</h3>
-                <p className="joe-chat-subtitle">Ask me anything about this spec point</p>
-              </div>
-              
               <div className="joe-messages-area">
                 {messages.length === 0 ? (
                   <div className="joe-welcome-message">
                     <h4>Hi, I'm Joe</h4>
-                    <p>I'm here to guide you through Spec Point 6.4. I can help with the notes, video, or practice questions. Ready to start?</p>
+                    <p>I'm here to guide you through {specPoint} {specName} - Lesson {lessonNumber}. I can help with the notes, video, or practice questions. Ready to start?</p>
                   </div>
                 ) : (
                   messages.map(message => (
@@ -371,7 +396,7 @@ export default function SpecPointSessionPage() {
                     rows={2}
                     className="joe-textarea"
                   />
-                  <button 
+                  <button
                     onClick={sendMessage}
                     disabled={isLoading || !currentMessage.trim()}
                     className="joe-send-btn"
@@ -382,38 +407,26 @@ export default function SpecPointSessionPage() {
               </div>
             </div>
           </div>
-
-          {/* Right Container - Content Types */}
-          <div className="right-container">
-            {/* Content Type Selector */}
-            <div className="content-selector">
-              <button
-                className={`selector-button ${currentContent === 'video' ? 'active' : ''}`}
-                onClick={() => setCurrentContent('video')}
-              >
-                Video
-              </button>
-              <button
-                className={`selector-button ${currentContent === 'questions' ? 'active' : ''}`}
-                onClick={() => setCurrentContent('questions')}
-              >
-                Questions
-              </button>
-              <button
-                className={`selector-button ${currentContent === 'pdf' ? 'active' : ''}`}
-                onClick={() => setCurrentContent('pdf')}
-              >
-                PDF Notes
-              </button>
-            </div>
-
-            {/* Content Display */}
-            {currentContent === 'video' && renderVideoContent()}
-            {currentContent === 'questions' && renderQuestionsContent()}
-            {currentContent === 'pdf' && renderPdfContent()}
-          </div>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SpecPointSessionPage() {
+  return (
+    <Suspense fallback={
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontFamily: "'Madimi One', sans-serif"
+      }}>
+        Loading...
+      </div>
+    }>
+      <SpecPointSessionContent />
+    </Suspense>
   );
 }

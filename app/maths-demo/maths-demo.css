@@ -125,6 +125,8 @@
 .maths-demo-page .toast-item {
   cursor: pointer;
   transition: transform 0.2s ease;
+  display: block;
+  text-decoration: none;
 }
 
 .maths-demo-page .toast-item:hover {
@@ -147,7 +149,7 @@
 /* Ghost on first stone */
 .maths-demo-page .ghost-on-stone {
   position: absolute;
-  top: -40px;
+  top: -60px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 15;
@@ -279,7 +281,7 @@
   }
 
   .maths-demo-page .ghost-on-stone {
-    top: -30px;
+    top: -45px;
   }
 
   .maths-demo-page .ghost-link img {
