@@ -330,7 +330,7 @@
   background: #f5f5f5;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
-  min-height: 400px;
+  min-height: 550px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -457,7 +457,7 @@
   background: #f5f5f5;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
-  min-height: 400px;
+  min-height: 550px;
   display: flex;
   align-items: center;
   justify-content: center;

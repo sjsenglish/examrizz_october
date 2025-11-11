@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { supabase } from '@/lib/supabase-client';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import './spec-point-session.css';
 
 type ContentType = 'video' | 'questions' | 'pdf';
@@ -37,7 +37,13 @@ const sampleQuestions = [
 
 export default function SpecPointSessionPage() {
   const router = useRouter();
-  
+  const searchParams = useSearchParams();
+
+  // Get URL parameters
+  const specPoint = searchParams.get('spec') || '6.4';
+  const lessonNumber = searchParams.get('lesson') || '1';
+  const specName = searchParams.get('name') || 'Differentiation';
+
   // Content state
   const [currentContent, setCurrentContent] = useState<ContentType>('video');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -121,7 +127,7 @@ export default function SpecPointSessionPage() {
           conversationId,
           userId,
           currentContent,
-          specPoint: '6.4'
+          specPoint: `${specPoint} ${specName} - Lesson ${lessonNumber}`
         })
       });
 
@@ -317,7 +323,7 @@ export default function SpecPointSessionPage() {
 
         {/* Header */}
         <div className="header-container">
-          <h1 className="page-title">Spec Point 6.4 - Differentiation</h1>
+          <h1 className="page-title">{specPoint} {specName}: Lesson {lessonNumber}</h1>
         </div>
 
         {/* Main Content */}
@@ -359,7 +365,7 @@ export default function SpecPointSessionPage() {
                 {messages.length === 0 ? (
                   <div className="joe-welcome-message">
                     <h4>Hi, I'm Joe</h4>
-                    <p>I'm here to guide you through Spec Point 6.4. I can help with the notes, video, or practice questions. Ready to start?</p>
+                    <p>I'm here to guide you through {specPoint} {specName} - Lesson {lessonNumber}. I can help with the notes, video, or practice questions. Ready to start?</p>
                   </div>
                 ) : (
                   messages.map(message => (
