@@ -192,14 +192,19 @@
 
 ## Spec Point Session Page Layout (Nov 2024)
 - **Page**: `/spec-point-session` - Individual spec point learning session
-- **Layout Adjustments**:
-  - **Buddy chat container (left)**: Reduced width by 20% (flex: 2 instead of flex: 1)
-    - Now occupies 40% of horizontal space
-  - **Content container (right)**: Increased width to compensate (flex: 3 instead of flex: 1)
-    - Now occupies 60% of horizontal space
-    - Contains video player, practice questions, and PDF notes
-  - Total flex ratio: 2:3 (buddy chat : main content)
-- **Purpose**: Gives more prominence to the learning content while keeping chat accessible
+- **Layout Structure**:
+  - **Content container (left)**: Contains video player, practice questions, and PDF notes (flex: 3)
+    - Occupies 60% of horizontal space
+    - Includes content type selector tabs (Video, Questions, PDF Notes)
+  - **Buddy chat container (right)**: Joe chat assistant (flex: 2)
+    - Occupies 40% of horizontal space
+    - Features chat interface with message history and input
+  - Total flex ratio: 3:2 (main content : buddy chat)
+- **Header**: Simple title display only
+  - Removed bordered container styling
+  - Removed subtitle "Learn, practice, and master this topic"
+  - Clean, minimal presentation with just "Spec Point 6.4 - Differentiation"
+- **Purpose**: Gives primary focus to the learning content with chat assistant on the side
 - **Files**:
   - Page: `app/spec-point-session/page.tsx`
   - Styles: `app/spec-point-session/spec-point-session.css`

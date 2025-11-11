@@ -320,22 +320,49 @@ export default function SpecPointSessionPage() {
 
         {/* Header */}
         <div className="header-container">
-          <div className="header-content">
-            <h1 className="page-title">Spec Point 6.4 - Differentiation</h1>
-            <p className="page-subtitle">Learn, practice, and master this topic</p>
-          </div>
+          <h1 className="page-title">Spec Point 6.4 - Differentiation</h1>
         </div>
 
         {/* Main Content */}
         <div className="main-content-container">
-          {/* Left Container - Joe Chat */}
+          {/* Left Container - Content Types */}
           <div className="left-container">
+            {/* Content Type Selector */}
+            <div className="content-selector">
+              <button
+                className={`selector-button ${currentContent === 'video' ? 'active' : ''}`}
+                onClick={() => setCurrentContent('video')}
+              >
+                Video
+              </button>
+              <button
+                className={`selector-button ${currentContent === 'questions' ? 'active' : ''}`}
+                onClick={() => setCurrentContent('questions')}
+              >
+                Questions
+              </button>
+              <button
+                className={`selector-button ${currentContent === 'pdf' ? 'active' : ''}`}
+                onClick={() => setCurrentContent('pdf')}
+              >
+                PDF Notes
+              </button>
+            </div>
+
+            {/* Content Display */}
+            {currentContent === 'video' && renderVideoContent()}
+            {currentContent === 'questions' && renderQuestionsContent()}
+            {currentContent === 'pdf' && renderPdfContent()}
+          </div>
+
+          {/* Right Container - Joe Chat */}
+          <div className="right-container">
             <div className="joe-chat-container">
               <div className="joe-chat-header">
                 <h3 className="joe-chat-title">Joe - Your Maths Buddy</h3>
                 <p className="joe-chat-subtitle">Ask me anything about this spec point</p>
               </div>
-              
+
               <div className="joe-messages-area">
                 {messages.length === 0 ? (
                   <div className="joe-welcome-message">
@@ -371,7 +398,7 @@ export default function SpecPointSessionPage() {
                     rows={2}
                     className="joe-textarea"
                   />
-                  <button 
+                  <button
                     onClick={sendMessage}
                     disabled={isLoading || !currentMessage.trim()}
                     className="joe-send-btn"
@@ -381,36 +408,6 @@ export default function SpecPointSessionPage() {
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Right Container - Content Types */}
-          <div className="right-container">
-            {/* Content Type Selector */}
-            <div className="content-selector">
-              <button
-                className={`selector-button ${currentContent === 'video' ? 'active' : ''}`}
-                onClick={() => setCurrentContent('video')}
-              >
-                Video
-              </button>
-              <button
-                className={`selector-button ${currentContent === 'questions' ? 'active' : ''}`}
-                onClick={() => setCurrentContent('questions')}
-              >
-                Questions
-              </button>
-              <button
-                className={`selector-button ${currentContent === 'pdf' ? 'active' : ''}`}
-                onClick={() => setCurrentContent('pdf')}
-              >
-                PDF Notes
-              </button>
-            </div>
-
-            {/* Content Display */}
-            {currentContent === 'video' && renderVideoContent()}
-            {currentContent === 'questions' && renderQuestionsContent()}
-            {currentContent === 'pdf' && renderPdfContent()}
           </div>
         </div>
       </div>
