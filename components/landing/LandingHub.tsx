@@ -57,13 +57,15 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <Image
-            src="/icons/arena.svg"
-            alt="ARENA"
-            width={186} /* 75% of 248 -> 186 */
-            height={186} /* 75% of 248 -> 186 */
-            className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
-          />
+          <Link href="/arena" className="block">
+            <Image
+              src="/icons/arena.svg"
+              alt="ARENA"
+              width={186} /* 75% of 248 -> 186 */
+              height={186} /* 75% of 248 -> 186 */
+              className="drop-shadow-lg"
+            />
+          </Link>
         </div>
 
         {/* VIDEO - top-right (75% from left, 25% from top) */}
