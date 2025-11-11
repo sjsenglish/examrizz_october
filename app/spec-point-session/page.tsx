@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { supabase } from '@/lib/supabase-client';
@@ -35,7 +35,7 @@ const sampleQuestions = [
   }
 ];
 
-export default function SpecPointSessionPage() {
+function SpecPointSessionContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -410,5 +410,23 @@ export default function SpecPointSessionPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SpecPointSessionPage() {
+  return (
+    <Suspense fallback={
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontFamily: "'Madimi One', sans-serif"
+      }}>
+        Loading...
+      </div>
+    }>
+      <SpecPointSessionContent />
+    </Suspense>
   );
 }

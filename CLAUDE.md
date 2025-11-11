@@ -213,6 +213,7 @@
   - Uses URL parameters: `?spec=X.X&lesson=N&name=TopicName`
   - Example: "1.1 Proofs: Lesson 1"
   - Chat welcome message also uses dynamic spec point info
+  - **Implementation**: Uses `useSearchParams()` wrapped in Suspense boundary (Next.js 15 requirement)
 - **Header**: Centered title display
   - Page title dynamically generated from URL parameters
   - No subtitle or bordered container
