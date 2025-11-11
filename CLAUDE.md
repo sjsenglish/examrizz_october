@@ -190,6 +190,20 @@
   - Page: `app/spec-topic/page.tsx`
   - Styles: `app/spec-topic/spec-topic.css`
 
+## Spec Point Session Page Layout (Nov 2024)
+- **Page**: `/spec-point-session` - Individual spec point learning session
+- **Layout Adjustments**:
+  - **Buddy chat container (left)**: Reduced width by 20% (flex: 2 instead of flex: 1)
+    - Now occupies 40% of horizontal space
+  - **Content container (right)**: Increased width to compensate (flex: 3 instead of flex: 1)
+    - Now occupies 60% of horizontal space
+    - Contains video player, practice questions, and PDF notes
+  - Total flex ratio: 2:3 (buddy chat : main content)
+- **Purpose**: Gives more prominence to the learning content while keeping chat accessible
+- **Files**:
+  - Page: `app/spec-point-session/page.tsx`
+  - Styles: `app/spec-point-session/spec-point-session.css`
+
 ## Search Page - Interview Resources Index (Nov 2024)
 - **New Index Added**: `v2_interview_resources` added to `/search` page
 - **Dropdown Label**: "Interview Resources" appears in Admissions dropdown
