@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const { content, ticketId, userEmail, type } = await request.json();
+    const { content, ticketId, userEmail, type, discordId, discordUsername } = await request.json();
 
     if (!content || !ticketId) {
       return NextResponse.json(
@@ -91,6 +91,11 @@ export async function POST(request: NextRequest) {
               value: submissionCategory,
               inline: true
             },
+            ...(discordId || discordUsername ? [{
+              name: "Discord Account",
+              value: discordUsername ? `${discordUsername}${discordId ? ` (ID: ${discordId})` : ''}` : `ID: ${discordId}`,
+              inline: false
+            }] : []),
             ...contentParts,
             ...(videoUrl ? [{
               name: isUploadedVideo ? "🎥 Video File (Uploaded)" : "🔗 Video Link",

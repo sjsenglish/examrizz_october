@@ -992,7 +992,9 @@ export default function StudyBookPage() {
         body: JSON.stringify({
           content: conversationContext,
           ticketId: ticketId,
-          userEmail: user.email
+          userEmail: user.email,
+          discordId: userProfile?.discord_id,
+          discordUsername: userProfile?.discord_username
         })
       });
 

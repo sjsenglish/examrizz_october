@@ -339,3 +339,16 @@
   - `recordUsage()`: Records actual token usage after completion
   - `verifyUsageWithinLimit()`: Post-recording verification to catch race conditions
   - `getMonthlyUsage()`: Gets current month's total usage for a user
+
+## Discord Ticket Enhancement (Nov 2024)
+- **Discord ID and Username in Tickets**: All Discord tickets now include user's Discord ID and username
+- **Implementation**:
+  - Updated `/api/discord-webhook` to accept `discordId` and `discordUsername` parameters
+  - Parameters are optional - won't break if not provided (backward compatible)
+  - Added new "Discord Account" field in Discord embeds showing both username and ID
+  - Format: `username (ID: discord_id)` or just `ID: discord_id` if username unavailable
+- **Affected Components**:
+  - `components/ExamSearch/QuestionCard.tsx`: Passes Discord info when submitting answers from search page
+  - `app/askbo/page.tsx`: Passes Discord info when creating teacher help tickets from AskBo
+  - `app/api/discord-webhook/route.ts`: Receives and includes Discord info in all ticket embeds
+- **Purpose**: Helps teachers identify and respond to students in Discord support channels more efficiently
