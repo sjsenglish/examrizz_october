@@ -1,13 +1,64 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import './maths-demo.css';
 
+// Spec point data structure
+const specPoints = [
+  { id: '1.1', name: 'Proofs', lessons: 3, hours: 4.42 },
+  { id: '2.1', name: 'Indices', lessons: 2, hours: 2.33 },
+  { id: '2.2', name: 'Surds', lessons: 2, hours: 2.33 },
+  { id: '2.3', name: 'Quadratic Function', lessons: 6, hours: 7.33 },
+  { id: '2.4', name: 'Simultaneous Equations', lessons: 2, hours: 2.5 },
+  { id: '2.5', name: 'Inequalities', lessons: 2, hours: 2.5 },
+  { id: '2.6', name: 'Manipulating Polynomials', lessons: 4, hours: 5 },
+  { id: '2.7', name: 'Graphs', lessons: 5, hours: 6.25 },
+  { id: '2.9', name: 'Transformations', lessons: 1, hours: 1.25 },
+  { id: '3.1', name: 'Straight Line Equation', lessons: 3, hours: 3.67 },
+  { id: '3.2', name: 'Circles', lessons: 2, hours: 2.5 },
+  { id: '4.1', name: 'Binomial Expansions', lessons: 2, hours: 2.5 },
+  { id: '5.1', name: 'Trigonometry', lessons: 3, hours: 3.67 },
+  { id: '5.3', name: 'Trigonometric Graphs', lessons: 2, hours: 2.5 },
+  { id: '5.5', name: 'Trigonometric Identities', lessons: 1, hours: 1.33 },
+  { id: '5.7', name: 'Solving Trig Equations', lessons: 2, hours: 2.67 },
+  { id: '6.1', name: 'Exponential Functions', lessons: 2, hours: 2.5 },
+  { id: '6.2', name: 'Exponential Models', lessons: 1, hours: 1.25 },
+  { id: '6.3', name: 'Logarithms', lessons: 2, hours: 2.5 },
+  { id: '6.4', name: 'Logarithm Laws', lessons: 1, hours: 1.25 },
+  { id: '6.5', name: 'Solving Equations', lessons: 1, hours: 1.25 },
+  { id: '6.6', name: 'Non-linear Graphs', lessons: 1, hours: 1.25 },
+  { id: '6.7', name: 'Modelling', lessons: 1, hours: 1.25 },
+  { id: '7.1', name: 'Intro to Differentiation', lessons: 3, hours: 4.42 },
+  { id: '7.2', name: 'Differentiating Functions', lessons: 1, hours: 1.17 },
+  { id: '7.3', name: 'Differentiation Application', lessons: 6, hours: 8 },
+  { id: '8.1', name: 'Integration', lessons: 1, hours: 1.25 },
+  { id: '8.2', name: 'Integrate Functions', lessons: 2, hours: 2.5 },
+  { id: '8.3', name: 'Definite Integrals', lessons: 4, hours: 5.33 },
+  { id: '10.1-10.5', name: 'Vectors', lessons: 6, hours: 7.33 },
+];
+
 export default function MathsDemoPage() {
-  const [showProgressModal, setShowProgressModal] = useState(true);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  const handleScroll = (direction: 'left' | 'right') => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const scrollAmount = 400;
+    const newPosition = direction === 'right'
+      ? scrollPosition + scrollAmount
+      : scrollPosition - scrollAmount;
+
+    container.scrollTo({
+      left: newPosition,
+      behavior: 'smooth'
+    });
+    setScrollPosition(newPosition);
+  };
 
   return (
     <div className="maths-demo-page">
@@ -42,182 +93,111 @@ export default function MathsDemoPage() {
           Back
         </Link>
 
-        <div className="demo-container">
-          {/* Main level map area */}
-          <div className="level-map">
-            {/* Title badge */}
-            <div className="title-badge">
-              Maths A Level - 90 hours
-            </div>
+        {/* Title badge */}
+        <div className="title-badge">
+          Maths A Level - 90 hours
+        </div>
 
-            {/* Ghost character */}
-            <div className="ghost-character">
-              <Link href="/spec-point-session" className="ghost-link">
-                <Image 
-                  src="/icons/pixel-ghost-w-sword-yellow.svg" 
-                  alt="Ghost Character" 
-                  width={160} 
-                  height={160}
-                  className="ghost-icon"
-                />
-              </Link>
-              <div className="speech-bubble">
-                Jump to your topic or click me to carry on where you left off
-              </div>
-            </div>
+        {/* Scroll navigation arrows */}
+        <button
+          className="scroll-arrow left-arrow"
+          onClick={() => handleScroll('left')}
+          disabled={scrollPosition <= 0}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
 
-            {/* Treasure box at center top */}
-            <div className="treasure-box center-top">
-              <Image
-                src="/icons/treasure-box-blue.svg"
-                alt="Treasure Box"
-                width={150}
-                height={150}
-              />
-            </div>
+        <button
+          className="scroll-arrow right-arrow"
+          onClick={() => handleScroll('right')}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
 
-            {/* Purple toasts (completed levels) */}
-            <Link href="/spec-topic" className="toast purple toast-1">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
-            </Link>
-
-            {/* Love letter ghost next to toast-1 */}
-            <div className="love-letter-ghost">
-              <Image
-                src="/icons/love-letter.svg"
-                alt="Love Letter Ghost"
-                width={50}
-                height={50}
-              />
-            </div>
-
-            {/* Speech bubble for love letter ghost */}
-            <div className="love-letter-speech">
-              skip straight to spec topic
-            </div>
-            <div className="toast purple toast-2">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
-            </div>
-            <div className="toast purple toast-3">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
-            </div>
-            <div className="toast purple toast-4">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
-            </div>
-            <div className="toast purple toast-5">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
-            </div>
-            <div className="toast purple toast-6">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
-            </div>
-            <div className="toast purple toast-7">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
-            </div>
-            <div className="toast purple toast-8">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
-            </div>
-            <div className="toast purple toast-9">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
-            </div>
-            <div className="toast purple toast-10">
-              <Image src="/icons/toast-purple.svg" alt="Completed Level" width={60} height={60} />
-            </div>
-
-            {/* Blue toasts (available levels) */}
-            <div className="toast blue toast-11">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
-            </div>
-            <div className="toast blue toast-12">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
-            </div>
-            <div className="toast blue toast-13">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
-            </div>
-            <div className="toast blue toast-14">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
-            </div>
-            <div className="toast blue toast-15">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
-            </div>
-            <div className="toast blue toast-16">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
-            </div>
-            <div className="toast blue toast-17">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
-            </div>
-            <div className="toast blue toast-18">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
-            </div>
-            <div className="toast blue toast-19">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
-            </div>
-            <div className="toast blue toast-20">
-              <Image src="/icons/toast-blue.svg" alt="Available Level" width={60} height={60} />
-            </div>
-
-            {/* Decorative clouds */}
-            <div className="cloud cloud-1">
-              <Image src="/icons/cloud.svg" alt="Cloud" width={100} height={60} />
-            </div>
-            <div className="cloud cloud-2">
-              <Image src="/icons/cloud.svg" alt="Cloud" width={80} height={48} />
-            </div>
-            <div className="cloud cloud-3">
-              <Image src="/icons/cloud.svg" alt="Cloud" width={90} height={54} />
-            </div>
-            <div className="cloud cloud-4">
-              <Image src="/icons/cloud.svg" alt="Cloud" width={70} height={42} />
-            </div>
-
+        {/* Stepping stones container */}
+        <div
+          className="stepping-stones-container"
+          ref={scrollContainerRef}
+          onScroll={(e) => setScrollPosition(e.currentTarget.scrollLeft)}
+        >
+          <div className="stones-track">
             {/* Grass pattern at bottom */}
             <div className="grass-pattern">
-              <Image 
-                src="/icons/grass-pattern.svg" 
-                alt="Grass" 
+              <Image
+                src="/icons/grass-pattern.svg"
+                alt="Grass"
                 fill
                 className="grass-image"
               />
             </div>
-          </div>
 
-          {/* Progress floating box */}
-          {showProgressModal && (
-            <div className="progress-floating-box">
-              <button
-                className="close-btn"
-                onClick={() => setShowProgressModal(false)}
-              >
-                ×
-              </button>
+            {/* Render stepping stones */}
+            {specPoints.map((spec, index) => (
+              <div key={spec.id} className="stepping-stone">
+                {/* Toast icons (one per lesson) */}
+                <div className="toasts-group">
+                  {Array.from({ length: spec.lessons }).map((_, lessonIndex) => (
+                    <div key={lessonIndex} className="toast-item">
+                      <Image
+                        src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202376.svg?alt=media&token=96940cfc-fd51-4c0c-a40b-eca32f113b46"
+                        alt={`Lesson ${lessonIndex + 1}`}
+                        width={50}
+                        height={50}
+                      />
+                    </div>
+                  ))}
+                </div>
 
-              <div className="progress-content">
-                <div className="progress-item">
-                  <span className="label">Subject:</span>
-                  <span className="value">A Level</span>
+                {/* Bar/platform */}
+                <div className="stone-bar">
+                  <Image
+                    src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FVector%20448.svg?alt=media&token=a9e45250-f832-4b9d-b896-7282df82e5d7"
+                    alt="Platform"
+                    width={180}
+                    height={40}
+                    className="bar-image"
+                  />
                 </div>
-                <div className="progress-item">
-                  <span className="label">Current grade:</span>
-                  <span className="value">A</span>
-                </div>
-                <div className="progress-item">
-                  <span className="label">Weak spec points:</span>
-                  <span className="value">2.1, 3.6, 7.2</span>
-                </div>
-                <div className="progress-item">
-                  <span className="label">Last worked on:</span>
-                  <span className="value">6.4</span>
-                </div>
-                <div className="progress-item">
-                  <span className="label">Upcoming:</span>
-                  <span className="value">6.5</span>
-                </div>
-                <div className="progress-item">
-                  <span className="label">Target grade:</span>
-                  <span className="value">A*</span>
+
+                {/* Ghost on first stone */}
+                {index === 0 && (
+                  <div className="ghost-on-stone">
+                    <Link href="/spec-point-session" className="ghost-link">
+                      <Image
+                        src="/icons/pixel-ghost-w-sword-yellow.svg"
+                        alt="Ghost Character"
+                        width={100}
+                        height={100}
+                        className="ghost-icon"
+                      />
+                    </Link>
+                  </div>
+                )}
+
+                {/* Spec point info */}
+                <div className="spec-info">
+                  <div className="spec-id">{spec.id}</div>
+                  <div className="spec-name">{spec.name}</div>
+                  <div className="spec-time">{spec.hours} hrs</div>
                 </div>
               </div>
+            ))}
+
+            {/* Treasure box at the end */}
+            <div className="treasure-box-end">
+              <Image
+                src="/icons/treasure-box-blue.svg"
+                alt="Treasure Box"
+                width={120}
+                height={120}
+              />
+              <div className="treasure-label">Complete!</div>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

@@ -44,25 +44,38 @@
   - Added back button (same style as practice page) in top left corner, linking to home page
   - Centered the "Maths Edexcel A Level Demo" button using a wrapper div with `text-align: center`
 
-- **Maths Demo page** (`/maths-demo`):
-  - Added back button linking to `/competition` in top left corner
-  - Moved treasure chest icon from 60x60 to 150x150 (2.5x bigger)
-  - Relocated ghost character to bottom right corner (changed from `left: 60px` to `right: 60px`)
-  - Repositioned speech bubble above ghost (changed from side positioning to `bottom: 180px` above ghost)
-  - **Speech bubbles are now clean oval shapes** (border-radius: 30px for green ghost, 25px for love letter ghost)
-  - **Both speech bubbles no longer have arrow pointers** - removed ::before pseudo-elements for cleaner look
-  - Green ghost speech bubble moved to the left (right: -50px instead of -100px)
-  - Love letter ghost speech bubble repositioned up and left (top: 10%, left: 14% instead of 12%, 20%)
-  - Moved achievements sidebar (progress floating box) from top right to **bottom left corner**
-  - **Enlarged sidebar**: width increased to 280px (from 200px), padding to 16px (from 10px)
-  - **Increased sidebar font sizes**: label: 11px (from 9px), value: 13px (from 10px)
-  - **Increased sidebar spacing**: margin-bottom: 10px, padding-bottom: 8px (from 6px/4px)
-  - **Close button is now functional**: clicking × hides the sidebar via conditional rendering
-  - **Top-left toast icon (toast-1) has pulse animation**: subtle scale from 1 to 1.05 over 2s loop
-  - Adjusted toast icon positions to be higher up on screen (moved bottom toasts from 85-90% to 70-75%)
-  - Moved toast-6 from left: 45% to left: 35% to avoid obscuring treasure chest
-  - Shrank grass pattern from 100px to 60px, then further reduced to 54px (10% reduction)
-  - Added 2px solid black border line across top of grass to show where grass ends
+- **Maths Demo page** (`/maths-demo`) - **REDESIGNED Nov 2024**:
+  - **Complete layout overhaul**: Changed from scattered toasts to horizontal stepping stones layout
+  - **Removed**: Progress sidebar (achievements floating box) completely removed from page
+  - **New Layout Structure**:
+    - Horizontal stepping stones going left-to-right across the screen
+    - Each stepping stone represents one spec point from the curriculum
+    - Bar images (Vector 448.svg) serve as platforms for each spec point
+    - Multiple toast icons (Group 2376.svg) positioned above each bar - one toast per lesson
+    - Spec point info displayed below each bar: ID, name, and completion time in hours
+  - **Spec Points Data**: 30 total spec points with lesson counts ranging from 1-6 lessons each
+  - **Ghost Character**:
+    - Positioned on the first stepping stone (spec point 1.1 Proofs)
+    - Floating animation with subtle up/down movement
+    - Clickable link to `/spec-point-session`
+    - Size: 100x100px
+  - **Horizontal Scrolling**:
+    - Left/right arrow buttons for navigation (fixed position on left/right edges)
+    - Smooth scrolling behavior between stepping stones
+    - Arrows are circular with white background and black border
+    - Left arrow disabled when at start position
+  - **Treasure Box**: Positioned at the end of all stepping stones with "Complete!" label
+  - **Toast Icons**: Each toast represents one lesson within the spec point
+    - Hover effect: scale(1.1) on all toast icons
+    - Toast arrangement: Flex layout with wrapping, max-width 200px per group
+  - **Styling Details**:
+    - Gap between stones: 150px (100px on tablet, 80px on mobile)
+    - Grass pattern at bottom: 54px height with 2px black border on top (fixed position)
+    - Title badge: "Maths A Level - 90 hours" centered at top
+    - Back button in top-left corner linking to `/competition`
+  - **Files**:
+    - Page: `app/maths-demo/page.tsx`
+    - Styles: `app/maths-demo/maths-demo.css`
 
 ## AskBo Page Layout Fix (Nov 2024)
 - **Issue**: Page experienced layout shift on initial load - loading screen had different structure than actual content
@@ -108,19 +121,6 @@
     - `.modal-container`: flex container with flex-direction: column, padding: 10px 18px
     - `.inner-container`: padding: 12px
     - `.questions-container`: flex: 1, min-height: 0, overflow-y: auto for scrollable content
-
-## Maths Demo Page Interactive Elements (Nov 2024)
-- **Toast Icons** (`/maths-demo`):
-  - Disabled popout effect (hover scale) on all toast icons except toast-1 (top-left corner)
-  - Only toast-1 maintains the `transform: scale(1.1)` on hover
-  - Toast-1 is clickable and links to `/spec-topic` page
-
-- **Love Letter Ghost Guide** (`/maths-demo`):
-  - Added love-letter.svg icon next to toast-1 at position (top: 15%, left: 16%)
-  - Ghost has floating animation (10px vertical movement over 3s)
-  - Speech bubble repositioned to (top: 10%, left: 14%) with text "skip straight to spec topic"
-  - Speech bubble is now a clean oval shape without arrow pointer (border-radius: 25px)
-  - Styles defined in `app/maths-demo/maths-demo.css` with `.love-letter-ghost` and `.love-letter-speech` classes
 
 ## Spec Topic Page (Nov 2024)
 - **New Page**: `/spec-topic` - "7.2 Differentiating Functions"
