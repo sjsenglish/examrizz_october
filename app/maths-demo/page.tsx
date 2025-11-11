@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
@@ -40,25 +40,143 @@ const specPoints = [
   { id: '10.1-10.5', name: 'Vectors', lessons: 6, hours: 7.33 },
 ];
 
+const TOTAL_HOURS = 92.83;
+
 export default function MathsDemoPage() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
+  const progressBarRef = useRef<HTMLDivElement>(null);
+  const [currentSpecIndex, setCurrentSpecIndex] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
 
-  const handleScroll = (direction: 'left' | 'right') => {
+  // Calculate cumulative hours for each spec point
+  const getCumulativeHours = (index: number) => {
+    return specPoints.slice(0, index + 1).reduce((sum, spec) => sum + spec.hours, 0);
+  };
+
+  // Calculate current progress percentage based on spec index
+  const currentProgress = (getCumulativeHours(currentSpecIndex) / TOTAL_HOURS) * 100;
+
+  // Scroll to specific spec point
+  const scrollToSpec = (index: number) => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
-    const scrollAmount = 400;
-    const newPosition = direction === 'right'
-      ? scrollPosition + scrollAmount
-      : scrollPosition - scrollAmount;
+    const stones = container.querySelectorAll('.stepping-stone');
+    if (stones[index]) {
+      const stone = stones[index] as HTMLElement;
+      const containerWidth = container.offsetWidth;
+      const stoneLeft = stone.offsetLeft;
+      const stoneWidth = stone.offsetWidth;
 
-    container.scrollTo({
-      left: newPosition,
-      behavior: 'smooth'
-    });
-    setScrollPosition(newPosition);
+      // Center the stone in the viewport
+      const scrollPosition = stoneLeft - (containerWidth / 2) + (stoneWidth / 2);
+
+      container.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
+
+      setCurrentSpecIndex(index);
+    }
   };
+
+  // Handle ghost drag on progress bar
+  const handleProgressBarClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!progressBarRef.current) return;
+
+    const rect = progressBarRef.current.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const barWidth = rect.width - 60; // Account for treasure chest space
+    const clickPercentage = (clickX / barWidth) * 100;
+
+    // Find which spec point this percentage corresponds to
+    let targetIndex = 0;
+    for (let i = 0; i < specPoints.length; i++) {
+      const specProgress = (getCumulativeHours(i) / TOTAL_HOURS) * 100;
+      if (clickPercentage >= specProgress) {
+        targetIndex = i;
+      } else {
+        break;
+      }
+    }
+
+    scrollToSpec(targetIndex);
+  };
+
+  // Handle ghost drag
+  const handleMouseDown = () => {
+    setIsDragging(true);
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging || !progressBarRef.current) return;
+
+    const rect = progressBarRef.current.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const barWidth = rect.width - 60;
+    const percentage = Math.max(0, Math.min(100, (mouseX / barWidth) * 100));
+
+    // Find closest spec point
+    let closestIndex = 0;
+    let closestDiff = Infinity;
+
+    for (let i = 0; i < specPoints.length; i++) {
+      const specProgress = (getCumulativeHours(i) / TOTAL_HOURS) * 100;
+      const diff = Math.abs(percentage - specProgress);
+      if (diff < closestDiff) {
+        closestDiff = diff;
+        closestIndex = i;
+      }
+    }
+
+    scrollToSpec(closestIndex);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [isDragging]);
+
+  // Update current spec index based on scroll position
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const stones = container.querySelectorAll('.stepping-stone');
+      const containerCenter = container.scrollLeft + (container.offsetWidth / 2);
+
+      let closestIndex = 0;
+      let closestDistance = Infinity;
+
+      stones.forEach((stone, index) => {
+        const stoneElement = stone as HTMLElement;
+        const stoneCenter = stoneElement.offsetLeft + (stoneElement.offsetWidth / 2);
+        const distance = Math.abs(containerCenter - stoneCenter);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+
+      setCurrentSpecIndex(closestIndex);
+    };
+
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <div className="maths-demo-page">
@@ -93,36 +211,48 @@ export default function MathsDemoPage() {
           Back
         </Link>
 
-        {/* Title badge */}
-        <div className="title-badge">
-          Maths A Level - 90 hours
+        {/* Progress Bar */}
+        <div className="progress-bar-container" ref={progressBarRef} onClick={handleProgressBarClick}>
+          <div className="progress-bar-track">
+            {/* Progress fill */}
+            <div className="progress-bar-fill" style={{ width: `${currentProgress}%` }} />
+
+            {/* Loveletter ghost tracker */}
+            <div
+              className="progress-ghost"
+              style={{ left: `${currentProgress}%` }}
+              onMouseDown={handleMouseDown}
+            >
+              <Image
+                src="/icons/love-letter.svg"
+                alt="Progress tracker"
+                width={40}
+                height={40}
+                className="ghost-tracker-icon"
+              />
+            </div>
+
+            {/* Progress text */}
+            <div className="progress-text">
+              {getCumulativeHours(currentSpecIndex).toFixed(2)} / {TOTAL_HOURS} hours
+            </div>
+
+            {/* Treasure chest at the end */}
+            <div className="progress-treasure">
+              <Image
+                src="/icons/treasure-box-blue.svg"
+                alt="Complete"
+                width={35}
+                height={35}
+              />
+            </div>
+          </div>
         </div>
-
-        {/* Scroll navigation arrows */}
-        <button
-          className="scroll-arrow left-arrow"
-          onClick={() => handleScroll('left')}
-          disabled={scrollPosition <= 0}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-
-        <button
-          className="scroll-arrow right-arrow"
-          onClick={() => handleScroll('right')}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
 
         {/* Stepping stones container */}
         <div
           className="stepping-stones-container"
           ref={scrollContainerRef}
-          onScroll={(e) => setScrollPosition(e.currentTarget.scrollLeft)}
         >
           <div className="stones-track">
             {/* Grass pattern at bottom */}
@@ -193,17 +323,6 @@ export default function MathsDemoPage() {
                 </div>
               </div>
             ))}
-
-            {/* Treasure box at the end */}
-            <div className="treasure-box-end">
-              <Image
-                src="/icons/treasure-box-blue.svg"
-                alt="Treasure Box"
-                width={120}
-                height={120}
-              />
-              <div className="treasure-label">Complete!</div>
-            </div>
           </div>
         </div>
       </div>

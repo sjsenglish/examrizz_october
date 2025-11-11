@@ -17,59 +17,82 @@
   overflow: hidden;
 }
 
-/* Title badge */
-.maths-demo-page .title-badge {
-  position: absolute;
-  top: 90px;
+/* Progress Bar */
+.maths-demo-page .progress-bar-container {
+  position: fixed;
+  top: 96px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #FFFFFF;
-  border: 2px solid #000000;
-  border-radius: 20px;
-  padding: 8px 20px;
-  font-family: 'Inter', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  color: #000000;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 20;
+  width: 70%;
+  max-width: 900px;
+  z-index: 30;
+  cursor: pointer;
 }
 
-/* Scroll arrows */
-.maths-demo-page .scroll-arrow {
-  position: fixed;
+.maths-demo-page .progress-bar-track {
+  position: relative;
+  height: 20px;
+  background-color: #E0E0E0;
+  border-radius: 10px;
+  border: 2px solid #000000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: visible;
+}
+
+.maths-demo-page .progress-bar-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: #DBFCFF;
+  border-radius: 8px;
+  transition: width 0.3s ease;
+  z-index: 1;
+}
+
+.maths-demo-page .progress-ghost {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  cursor: grab;
+  transition: left 0.3s ease;
+}
+
+.maths-demo-page .progress-ghost:active {
+  cursor: grabbing;
+}
+
+.maths-demo-page .ghost-tracker-icon {
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+  transition: transform 0.2s ease;
+}
+
+.maths-demo-page .progress-ghost:hover .ghost-tracker-icon {
+  transform: scale(1.15);
+}
+
+.maths-demo-page .progress-text {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #000000;
+  z-index: 2;
+  pointer-events: none;
+  text-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
+}
+
+.maths-demo-page .progress-treasure {
+  position: absolute;
+  right: -40px;
   top: 50%;
   transform: translateY(-50%);
-  width: 50px;
-  height: 50px;
-  background-color: #FFFFFF;
-  border: 2px solid #000000;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 30;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
-}
-
-.maths-demo-page .scroll-arrow:hover:not(:disabled) {
-  background-color: #F0F0F0;
-  transform: translateY(-50%) scale(1.1);
-}
-
-.maths-demo-page .scroll-arrow:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.maths-demo-page .left-arrow {
-  left: 20px;
-}
-
-.maths-demo-page .right-arrow {
-  right: 20px;
+  z-index: 2;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.2));
 }
 
 /* Stepping stones container */
@@ -212,28 +235,6 @@
   margin-top: 4px;
 }
 
-/* Treasure box at the end */
-.maths-demo-page .treasure-box-end {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-  margin-left: 50px;
-}
-
-.maths-demo-page .treasure-label {
-  font-family: 'Inter', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: #000000;
-  background-color: #FFD700;
-  padding: 8px 20px;
-  border-radius: 20px;
-  border: 2px solid #000000;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
 /* Grass pattern at bottom */
 .maths-demo-page .grass-pattern {
   position: fixed;
@@ -253,31 +254,35 @@
 
 /* Responsive design */
 @media (max-width: 768px) {
-  .maths-demo-page .title-badge {
-    font-size: 14px;
-    padding: 6px 16px;
-    top: 80px;
+  .maths-demo-page .progress-bar-container {
+    width: 80%;
+    top: 90px;
+  }
+
+  .maths-demo-page .progress-bar-track {
+    height: 18px;
+  }
+
+  .maths-demo-page .progress-text {
+    font-size: 10px;
+  }
+
+  .maths-demo-page .progress-ghost img {
+    width: 35px;
+    height: 35px;
+  }
+
+  .maths-demo-page .progress-treasure img {
+    width: 30px;
+    height: 30px;
   }
 
   .maths-demo-page .stepping-stones-container {
-    padding: 160px 60px 80px 60px;
+    padding: 140px 60px 80px 60px;
   }
 
   .maths-demo-page .stones-track {
     gap: 100px;
-  }
-
-  .maths-demo-page .scroll-arrow {
-    width: 40px;
-    height: 40px;
-  }
-
-  .maths-demo-page .left-arrow {
-    left: 10px;
-  }
-
-  .maths-demo-page .right-arrow {
-    right: 10px;
   }
 
   .maths-demo-page .ghost-on-stone {
@@ -291,13 +296,35 @@
 }
 
 @media (max-width: 480px) {
-  .maths-demo-page .title-badge {
-    font-size: 12px;
-    padding: 5px 12px;
+  .maths-demo-page .progress-bar-container {
+    width: 85%;
+    top: 84px;
+  }
+
+  .maths-demo-page .progress-bar-track {
+    height: 16px;
+  }
+
+  .maths-demo-page .progress-text {
+    font-size: 9px;
+  }
+
+  .maths-demo-page .progress-ghost img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .maths-demo-page .progress-treasure {
+    right: -35px;
+  }
+
+  .maths-demo-page .progress-treasure img {
+    width: 25px;
+    height: 25px;
   }
 
   .maths-demo-page .stepping-stones-container {
-    padding: 140px 40px 60px 40px;
+    padding: 120px 40px 60px 40px;
   }
 
   .maths-demo-page .stones-track {

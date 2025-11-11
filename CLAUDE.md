@@ -94,12 +94,26 @@
     - Floating animation with subtle up/down movement
     - **Clickable link** to `/spec-point-session` with spec point and lesson parameters
     - Size: 100x100px
-  - **Horizontal Scrolling**:
-    - Left/right arrow buttons for navigation (fixed position on left/right edges)
-    - Smooth scrolling behavior between stepping stones
-    - Arrows are circular with white background and black border
-    - Left arrow disabled when at start position
-  - **Treasure Box**: Positioned at the end of all stepping stones with "Complete!" label
+  - **Navigation System** (Updated Nov 2024):
+    - **Progress bar** at top of page (fixed position, visible during scrolling)
+    - **Removed**: Title badge "Maths A Level - 90 hours" and left/right arrow buttons
+    - **Progress Bar Features**:
+      - Total duration: 92.83 hours displayed in center
+      - Light cyan fill (#DBFCFF) showing cumulative progress based on current spec point
+      - Love letter icon serves as draggable progress tracker
+      - Treasure chest icon positioned at end of progress bar (100% completion)
+      - Click anywhere on progress bar to jump to corresponding spec point
+      - Drag love letter icon to manually navigate between spec points
+      - Progress automatically updates based on scroll position
+    - **Icon Navigation**:
+      - Love letter icon moves along progress bar based on cumulative hours completed
+      - Interactive: click and drag to navigate to any spec point
+      - Visual feedback: cursor changes to grab/grabbing during interaction
+      - Smooth scrolling animation when navigating between spec points
+    - **Progress Calculation**:
+      - Dynamically calculates cumulative hours from spec point data
+      - Position on bar represents percentage of total course completion
+      - Updates in real-time as user scrolls through stepping stones
   - **Toast Icons**: Each toast represents one lesson within the spec point
     - **All toasts are clickable** (Nov 2024) - Link to `/spec-point-session` with parameters
     - URL format: `?spec={id}&lesson={number}&name={encoded name}`
@@ -109,8 +123,8 @@
   - **Styling Details**:
     - Gap between stones: 150px (100px on tablet, 80px on mobile)
     - Grass pattern at bottom: 54px height with 2px black border on top (fixed position)
-    - Title badge: "Maths A Level - 90 hours" centered at top
-    - Back button in top-left corner linking to `/competition`
+    - Progress bar: 70% width, centered, with responsive sizing for mobile
+    - Back button in top-left corner linking to `/subject-selection`
   - **Files**:
     - Page: `app/maths-demo/page.tsx`
     - Styles: `app/maths-demo/maths-demo.css`
