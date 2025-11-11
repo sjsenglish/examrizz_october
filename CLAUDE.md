@@ -22,7 +22,7 @@
   - Big clouds: left-[20%] top-[30%], right-[20%] top-[45%]
   - Medium clouds: left-[38%] top-[25%], right-[38%] top-[27%]
 - **Teacher icon**: Removed "Coming Soon" hover tooltip (now just shows greyed-out icon)
-- **Learn icon**: Greyed out with opacity-40 and grayscale, made non-clickable
+- **Learn icon**: Now active and clickable - links to `/learn` page (unlocked Nov 2024)
 - **Video icon**: Greyed out with opacity-40 and grayscale, made non-clickable (Nov 2024)
 - **Arena icon**: Now active and clickable - links to `/arena` page (unlocked Nov 2024)
 
