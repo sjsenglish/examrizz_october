@@ -39,11 +39,44 @@
   - "Saved" button
 - These elements can be re-enabled by removing the `display: 'none'` or `disabled` properties
 
-## Competition and Maths Demo Page UI Changes (Nov 2024)
+## Competition and Subject Selection Flow (Nov 2024)
 - **Competition page** (`/competition`):
   - Added back button (same style as practice page) in top left corner, linking to home page
   - Centered the "Maths Edexcel A Level Demo" button using a wrapper div with `text-align: center`
+  - **Routing**: Button now links to `/subject-selection` (updated Nov 2024)
 
+- **Subject Selection page** (`/subject-selection`) - **NEW Nov 2024**:
+  - Intermediate page between `/competition` and `/maths-demo`
+  - Displays three subject options: Pure Maths, Statistics, Mechanics
+  - Each subject has a colored book icon:
+    - Pure Maths: Blue book (clickable, links to `/maths-demo`)
+    - Statistics: Pink book (disabled/greyed out)
+    - Mechanics: Purple book (disabled/greyed out)
+  - Icons sourced from Firebase Storage (external URLs)
+  - Back button links to `/competition`
+  - Layout follows competition page styling with 3-column grid
+  - Disabled subjects have opacity: 0.4, grayscale filter, and no hover effects
+  - Files: `app/subject-selection/page.tsx` and `app/subject-selection/subject-selection.css`
+
+- **Maths Demo page** (`/maths-demo`):
+  - Added back button linking to `/subject-selection` in top left corner (updated Nov 2024)
+  - Moved treasure chest icon from 60x60 to 150x150 (2.5x bigger)
+  - Relocated ghost character to bottom right corner (changed from `left: 60px` to `right: 60px`)
+  - Repositioned speech bubble above ghost (changed from side positioning to `bottom: 180px` above ghost)
+  - **Speech bubbles are now clean oval shapes** (border-radius: 30px for green ghost, 25px for love letter ghost)
+  - **Both speech bubbles no longer have arrow pointers** - removed ::before pseudo-elements for cleaner look
+  - Green ghost speech bubble moved to the left (right: -50px instead of -100px)
+  - Love letter ghost speech bubble repositioned up and left (top: 10%, left: 14% instead of 12%, 20%)
+  - Moved achievements sidebar (progress floating box) from top right to **bottom left corner**
+  - **Enlarged sidebar**: width increased to 280px (from 200px), padding to 16px (from 10px)
+  - **Increased sidebar font sizes**: label: 11px (from 9px), value: 13px (from 10px)
+  - **Increased sidebar spacing**: margin-bottom: 10px, padding-bottom: 8px (from 6px/4px)
+  - **Close button is now functional**: clicking × hides the sidebar via conditional rendering
+  - **Top-left toast icon (toast-1) has pulse animation**: subtle scale from 1 to 1.05 over 2s loop
+  - Adjusted toast icon positions to be higher up on screen (moved bottom toasts from 85-90% to 70-75%)
+  - Moved toast-6 from left: 45% to left: 35% to avoid obscuring treasure chest
+  - Shrank grass pattern from 100px to 60px, then further reduced to 54px (10% reduction)
+  - Added 2px solid black border line across top of grass to show where grass ends
 - **Maths Demo page** (`/maths-demo`) - **REDESIGNED Nov 2024**:
   - **Complete layout overhaul**: Changed from scattered toasts to horizontal stepping stones layout
   - **Removed**: Progress sidebar (achievements floating box) completely removed from page
@@ -76,6 +109,8 @@
   - **Files**:
     - Page: `app/maths-demo/page.tsx`
     - Styles: `app/maths-demo/maths-demo.css`
+
+**Navigation Flow**: Home → Competition → Subject Selection → Maths Demo → Spec Topic
 
 ## AskBo Page Layout Fix (Nov 2024)
 - **Issue**: Page experienced layout shift on initial load - loading screen had different structure than actual content
