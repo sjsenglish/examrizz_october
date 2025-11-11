@@ -114,7 +114,6 @@
       - Dynamically calculates cumulative hours from spec point data
       - Position on bar represents percentage of total course completion
       - Updates in real-time as user scrolls through stepping stones
-  - **Treasure Box**: Positioned at the end of all stepping stones with "Complete!" label
   - **Toast Icons**: Each toast represents one lesson within the spec point
     - **All toasts are clickable** (Nov 2024) - Link to `/spec-point-session` with parameters
     - URL format: `?spec={id}&lesson={number}&name={encoded name}`

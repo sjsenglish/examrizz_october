@@ -323,17 +323,6 @@ export default function MathsDemoPage() {
                 </div>
               </div>
             ))}
-
-            {/* Treasure box at the end */}
-            <div className="treasure-box-end">
-              <Image
-                src="/icons/treasure-box-blue.svg"
-                alt="Treasure Box"
-                width={120}
-                height={120}
-              />
-              <div className="treasure-label">Complete!</div>
-            </div>
           </div>
         </div>
       </div>

@@ -235,28 +235,6 @@
   margin-top: 4px;
 }
 
-/* Treasure box at the end */
-.maths-demo-page .treasure-box-end {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-  margin-left: 50px;
-}
-
-.maths-demo-page .treasure-label {
-  font-family: 'Inter', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: #000000;
-  background-color: #FFD700;
-  padding: 8px 20px;
-  border-radius: 20px;
-  border: 2px solid #000000;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
 /* Grass pattern at bottom */
 .maths-demo-page .grass-pattern {
   position: fixed;
