@@ -153,7 +153,7 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <Link href="/learn" className="block">
+          <Link href="/competition" className="block">
             <Image
               src="/icons/learn.svg"
               alt="LEARN"
