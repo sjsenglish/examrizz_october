@@ -340,15 +340,44 @@
   - `verifyUsageWithinLimit()`: Post-recording verification to catch race conditions
   - `getMonthlyUsage()`: Gets current month's total usage for a user
 
-## Discord Ticket Enhancement (Nov 2024)
-- **Discord ID and Username in Tickets**: All Discord tickets now include user's Discord ID and username
-- **Implementation**:
+## Discord Ticket Enhancement (Updated Nov 2024)
+- **Discord ID and Username in Tickets**: All Discord tickets now **require** user's Discord username
+- **Implementation** (Updated Nov 2024):
   - Updated `/api/discord-webhook` to accept `discordId` and `discordUsername` parameters
   - Parameters are optional - won't break if not provided (backward compatible)
   - Added new "Discord Account" field in Discord embeds showing both username and ID
   - Format: `username (ID: discord_id)` or just `ID: discord_id` if username unavailable
+- **Discord Username Requirement** (Updated Nov 2024):
+  - **REQUIRED**: Discord username must be provided before ticket submission
+  - If user profile doesn't have `discord_username`, a modal prompts user to enter it manually
+  - Modal collects:
+    - Discord Username (required) - e.g., "username" or "username#1234"
+    - Discord ID (optional) - 18-digit number from Discord Developer Mode
+  - Manual entry is stored in component state and used for ticket submission
+  - Implementation in:
+    - `components/ExamSearch/QuestionCard.tsx`: Shows Discord info modal before allowing answer submission
+    - `app/askbo/page.tsx`: Shows Discord info modal before creating teacher help tickets
+- **Database Backup** (Updated Nov 2024):
+  - All tickets are now stored in the `support_tickets` database table as a backup
+  - Stored information:
+    - `user_id`: User's UUID from auth.users
+    - `session_id`: Unique session UUID for tracking
+    - `discord_username`: Discord username from profile or manual entry
+    - `status`: Ticket status (default: 'open')
+    - `notes`: JSON string containing ticket metadata (ticketId, type, userEmail, discordId, contentPreview)
+  - Database insert is non-blocking - if it fails, the Discord ticket is still created
+  - Both client components pass `userId` to the webhook API
+  - Implementation in `app/api/discord-webhook/route.ts`
 - **Affected Components**:
-  - `components/ExamSearch/QuestionCard.tsx`: Passes Discord info when submitting answers from search page
-  - `app/askbo/page.tsx`: Passes Discord info when creating teacher help tickets from AskBo
-  - `app/api/discord-webhook/route.ts`: Receives and includes Discord info in all ticket embeds
-- **Purpose**: Helps teachers identify and respond to students in Discord support channels more efficiently
+  - `components/ExamSearch/QuestionCard.tsx`:
+    - Checks for Discord username before opening submission modal
+    - Shows Discord info collection modal if username missing
+    - Passes Discord info and userId when submitting answers
+  - `app/askbo/page.tsx`:
+    - Checks for Discord username before creating teacher tickets
+    - Shows Discord info collection modal if username missing
+    - Passes Discord info and userId when creating tickets
+  - `app/api/discord-webhook/route.ts`:
+    - Receives and includes Discord info in all ticket embeds
+    - Stores ticket in support_tickets table as backup
+- **Purpose**: Ensures teachers can always identify and contact students in Discord support channels, with database backup for tracking and analytics

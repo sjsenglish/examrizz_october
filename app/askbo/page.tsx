@@ -127,6 +127,11 @@ export default function StudyBookPage() {
   const [isCreatingTicket, setIsCreatingTicket] = useState(false);
   const [ticketResult, setTicketResult] = useState<{success: boolean, message: string, ticketId?: string} | null>(null);
 
+  // Discord info modal state
+  const [isDiscordInfoModalOpen, setIsDiscordInfoModalOpen] = useState(false);
+  const [manualDiscordUsername, setManualDiscordUsername] = useState('');
+  const [manualDiscordId, setManualDiscordId] = useState('');
+
   // Usage tracking state
   const [usageInfo, setUsageInfo] = useState<UsageInfo | null>(null);
   const [showUsageLimitModal, setShowUsageLimitModal] = useState(false);
@@ -934,34 +939,7 @@ export default function StudyBookPage() {
           success: false,
           message: 'Please log in to create a teacher help request.'
         });
-        return;
-      }
-
-      // Check if user has Discord authentication
-      const hasDiscordAuth = await checkDiscordAuth();
-      if (!hasDiscordAuth) {
-        // Redirect to Discord OAuth
-        const { data, error } = await supabase.auth.signInWithOAuth({
-          provider: 'discord',
-          options: {
-            redirectTo: `${window.location.origin}/askbo`,
-            queryParams: {
-              prompt: 'consent'
-            }
-          }
-        });
-
-        if (error) {
-          setTicketResult({
-            success: false,
-            message: 'Failed to connect Discord. Please try again.'
-          });
-        } else {
-          setTicketResult({
-            success: false,
-            message: 'Please complete Discord authentication to create a teacher help request.'
-          });
-        }
+        setIsCreatingTicket(false);
         return;
       }
 
@@ -971,12 +949,27 @@ export default function StudyBookPage() {
           success: false,
           message: 'Please have a conversation with Bo first before requesting teacher help.'
         });
+        setIsCreatingTicket(false);
         return;
       }
 
+      // Check if Discord username is available (from profile or manual entry)
+      const hasDiscordUsername = userProfile?.discord_username || manualDiscordUsername;
+
+      if (!hasDiscordUsername) {
+        // No Discord username - show modal to collect it
+        setIsDiscordInfoModalOpen(true);
+        setIsCreatingTicket(false);
+        return;
+      }
+
+      // Use Discord info from profile or manual entry
+      const discordUsername = userProfile?.discord_username || manualDiscordUsername;
+      const discordId = userProfile?.discord_id || manualDiscordId || undefined;
+
       // Extract last 5 messages for context
       const recentMessages = messages.slice(-5);
-      const conversationContext = recentMessages.map(msg => 
+      const conversationContext = recentMessages.map(msg =>
         `**${msg.role.toUpperCase()}**: ${msg.content}`
       ).join('\n\n');
 
@@ -993,8 +986,9 @@ export default function StudyBookPage() {
           content: conversationContext,
           ticketId: ticketId,
           userEmail: user.email,
-          discordId: userProfile?.discord_id,
-          discordUsername: userProfile?.discord_username
+          userId: user.id,
+          discordId: discordId,
+          discordUsername: discordUsername
         })
       });
 
@@ -1022,6 +1016,23 @@ export default function StudyBookPage() {
     } finally {
       setIsCreatingTicket(false);
     }
+  };
+
+  const handleDiscordInfoSubmit = async () => {
+    if (!manualDiscordUsername.trim()) {
+      alert('Please enter your Discord username.');
+      return;
+    }
+
+    // Close Discord info modal and retry ticket creation
+    setIsDiscordInfoModalOpen(false);
+    handleAskTeacher();
+  };
+
+  const handleCloseDiscordInfoModal = () => {
+    setIsDiscordInfoModalOpen(false);
+    setManualDiscordUsername('');
+    setManualDiscordId('');
   };
 
   // Initialize editing form when profile data is available
@@ -3500,6 +3511,155 @@ export default function StudyBookPage() {
             >
               ×
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Discord Info Modal */}
+      {isDiscordInfoModalOpen && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 10000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '24px',
+            borderRadius: '12px',
+            width: '90%',
+            maxWidth: '500px',
+            border: '2px solid black',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)'
+          }}>
+            <h3 style={{
+              fontFamily: "'Madimi One', cursive",
+              fontSize: '20px',
+              marginBottom: '16px',
+              color: 'black'
+            }}>
+              Discord Information Required
+            </h3>
+
+            <p style={{
+              marginBottom: '20px',
+              fontSize: '14px',
+              lineHeight: '1.5',
+              color: '#333'
+            }}>
+              To create a teacher help request, we need your Discord username so our teachers can contact you. Please enter your Discord information below.
+            </p>
+
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{
+                display: 'block',
+                fontWeight: 'bold',
+                marginBottom: '8px',
+                color: 'black'
+              }}>
+                Discord Username: *
+              </label>
+              <input
+                type="text"
+                value={manualDiscordUsername}
+                onChange={(e) => setManualDiscordUsername(e.target.value)}
+                placeholder="e.g., username#1234 or username"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid #ccc',
+                  fontSize: '14px',
+                  fontFamily: 'inherit',
+                  boxSizing: 'border-box'
+                }}
+              />
+              <div style={{
+                fontSize: '11px',
+                color: '#666',
+                marginTop: '4px'
+              }}>
+                Your Discord username (e.g., "johndoe" or "johndoe#1234")
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{
+                display: 'block',
+                fontWeight: 'bold',
+                marginBottom: '8px',
+                color: 'black'
+              }}>
+                Discord ID (Optional):
+              </label>
+              <input
+                type="text"
+                value={manualDiscordId}
+                onChange={(e) => setManualDiscordId(e.target.value)}
+                placeholder="e.g., 123456789012345678"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid #ccc',
+                  fontSize: '14px',
+                  fontFamily: 'inherit',
+                  boxSizing: 'border-box'
+                }}
+              />
+              <div style={{
+                fontSize: '11px',
+                color: '#666',
+                marginTop: '4px'
+              }}>
+                Your Discord user ID (18-digit number). Right-click your name in Discord and select "Copy User ID" with Developer Mode enabled.
+              </div>
+            </div>
+
+            <div style={{
+              display: 'flex',
+              gap: '12px',
+              justifyContent: 'flex-end'
+            }}>
+              <button
+                onClick={handleCloseDiscordInfoModal}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: 'transparent',
+                  color: '#333',
+                  border: '1px solid #ccc',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  cursor: 'pointer',
+                  fontFamily: "'Madimi One', cursive"
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDiscordInfoSubmit}
+                disabled={!manualDiscordUsername.trim()}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: !manualDiscordUsername.trim() ? '#9CA3AF' : '#5865F2',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  cursor: !manualDiscordUsername.trim() ? 'not-allowed' : 'pointer',
+                  opacity: !manualDiscordUsername.trim() ? 0.6 : 1,
+                  fontFamily: "'Madimi One', cursive"
+                }}
+              >
+                Continue
+              </button>
+            </div>
           </div>
         </div>
       )}

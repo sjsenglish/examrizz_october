@@ -66,6 +66,11 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Discord info modal state
+  const [isDiscordInfoModalOpen, setIsDiscordInfoModalOpen] = useState(false);
+  const [manualDiscordUsername, setManualDiscordUsername] = useState('');
+  const [manualDiscordId, setManualDiscordId] = useState('');
+
   // Detect question type based on data structure - memoized to prevent re-renders
   const isMathsQuestion = useMemo(() => hit?.paper_info && hit?.spec_topic, [hit]);
   const isEnglishLitQuestion = useMemo(() => hit?.QualificationLevel === 'A Level' && hit?.Subject === 'English Literature', [hit]);
@@ -291,45 +296,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         return; // Tooltip will show the message
       }
 
-      // Check if user is authenticated with Discord/Google (sufficient for submission)
-      const provider = user.app_metadata?.provider;
-      const hasDiscordAuth = user.identities?.find((identity: any) => identity.provider === 'discord');
-      const hasGoogleAuth = user.identities?.find((identity: any) => identity.provider === 'google');
-      
-      if (!hasDiscordAuth && !hasGoogleAuth && (!userProfile?.discord_id)) {
-        // No OAuth provider and no Discord linked - need to link Discord
-        try {
-          // Use linkIdentity to add Discord to existing account without signing out
-          const { error } = await supabase.auth.linkIdentity({
-            provider: 'discord',
-            options: {
-              redirectTo: `${window.location.origin}${window.location.pathname}?submit=true`
-            }
-          });
-
-          if (error) {
-            console.error('Discord linking error:', error);
-            alert('Failed to link Discord account. Please try again.');
-          }
-          // User will be redirected to Discord OAuth for linking
-          return;
-        } catch (error) {
-          console.error('Discord linking setup error:', error);
-          alert('Failed to setup Discord linking. Please try again.');
-          return;
-        }
-      }
-      
-      // Refresh profile data to get latest Discord info (handled by ensureUserProfile)
-      if (hasDiscordAuth && !userProfile?.discord_id) {
-        // Refresh profile through context to get latest Discord info
-        try {
-          await refreshProfile();
-        } catch (error) {
-          console.error('Error refreshing profile after Discord auth:', error);
-        }
-      }
-
       if (!featureUsage) {
         return; // Tooltip will show the message
       }
@@ -338,7 +304,16 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         return; // Tooltip will show the message
       }
 
-      // Open the submission modal for users with Discord linked
+      // Check if Discord username is available (from profile or manual entry)
+      const hasDiscordUsername = userProfile?.discord_username || manualDiscordUsername;
+
+      if (!hasDiscordUsername) {
+        // No Discord username - show modal to collect it
+        setIsDiscordInfoModalOpen(true);
+        return;
+      }
+
+      // Open the submission modal
       setUserAnswer('');
       setAdditionalLinks('');
       setVideoLink('');
@@ -348,6 +323,27 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       console.error('Submit answer error:', error);
       alert('Failed to open submission form. Please try again.');
     }
+  };
+
+  const handleDiscordInfoSubmit = async () => {
+    if (!manualDiscordUsername.trim()) {
+      alert('Please enter your Discord username.');
+      return;
+    }
+
+    // Close Discord info modal and open submission modal
+    setIsDiscordInfoModalOpen(false);
+    setUserAnswer('');
+    setAdditionalLinks('');
+    setVideoLink('');
+    setVideoFile(null);
+    setIsSubmitModalOpen(true);
+  };
+
+  const handleCloseDiscordInfoModal = () => {
+    setIsDiscordInfoModalOpen(false);
+    setManualDiscordUsername('');
+    setManualDiscordId('');
   };
 
   const handleFinalSubmitAnswer = async () => {
@@ -431,6 +427,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
       // Generate unique ticket ID
       const ticketId = `QUEST-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
+      // Use Discord info from profile or manual entry
+      const discordUsername = userProfile?.discord_username || manualDiscordUsername;
+      const discordId = userProfile?.discord_id || manualDiscordId || undefined;
+
       // Create ticket in Discord help center via webhook with user's complete submission
       const response = await fetch('/api/discord-webhook', {
         method: 'POST',
@@ -441,9 +441,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
           content: questionContext,
           ticketId: ticketId,
           userEmail: user.email,
+          userId: user.id,
           type: submissionType,
-          discordId: userProfile?.discord_id,
-          discordUsername: userProfile?.discord_username
+          discordId: discordId,
+          discordUsername: discordUsername
         }),
       });
       
@@ -990,6 +991,143 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
         pdfUrl={normalizedData.pdfUrl}
         questionNumber={String(normalizedData.questionNumber)}
       />
+
+      {/* Discord Info Modal */}
+      {isDiscordInfoModalOpen && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '24px',
+            borderRadius: '12px',
+            width: '90%',
+            maxWidth: '500px',
+            border: '2px solid black',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)'
+          }}>
+            <h3 style={{
+              fontFamily: "'Madimi One', cursive",
+              fontSize: '20px',
+              marginBottom: '16px',
+              color: 'black'
+            }}>
+              Discord Information Required
+            </h3>
+
+            <p style={{
+              marginBottom: '20px',
+              fontSize: '14px',
+              lineHeight: '1.5',
+              color: '#333'
+            }}>
+              To submit your answer for teacher review, we need your Discord username so our teachers can contact you. Please enter your Discord information below.
+            </p>
+
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{
+                display: 'block',
+                fontWeight: 'bold',
+                marginBottom: '8px',
+                color: 'black'
+              }}>
+                Discord Username: *
+              </label>
+              <input
+                type="text"
+                value={manualDiscordUsername}
+                onChange={(e) => setManualDiscordUsername(e.target.value)}
+                placeholder="e.g., username#1234 or username"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid #ccc',
+                  fontSize: '14px',
+                  fontFamily: 'inherit',
+                  boxSizing: 'border-box'
+                }}
+              />
+              <div style={{
+                fontSize: '11px',
+                color: '#666',
+                marginTop: '4px'
+              }}>
+                Your Discord username (e.g., "johndoe" or "johndoe#1234")
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{
+                display: 'block',
+                fontWeight: 'bold',
+                marginBottom: '8px',
+                color: 'black'
+              }}>
+                Discord ID (Optional):
+              </label>
+              <input
+                type="text"
+                value={manualDiscordId}
+                onChange={(e) => setManualDiscordId(e.target.value)}
+                placeholder="e.g., 123456789012345678"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid #ccc',
+                  fontSize: '14px',
+                  fontFamily: 'inherit',
+                  boxSizing: 'border-box'
+                }}
+              />
+              <div style={{
+                fontSize: '11px',
+                color: '#666',
+                marginTop: '4px'
+              }}>
+                Your Discord user ID (18-digit number). Right-click your name in Discord and select "Copy User ID" with Developer Mode enabled.
+              </div>
+            </div>
+
+            <div style={{
+              display: 'flex',
+              gap: '12px',
+              justifyContent: 'flex-end'
+            }}>
+              <Button
+                variant="ghost"
+                size="md"
+                onClick={handleCloseDiscordInfoModal}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="secondary"
+                size="md"
+                onClick={handleDiscordInfoSubmit}
+                disabled={!manualDiscordUsername.trim()}
+                style={{
+                  backgroundColor: !manualDiscordUsername.trim() ? '#9CA3AF' : '#5865F2',
+                  color: 'white',
+                  opacity: !manualDiscordUsername.trim() ? 0.6 : 1
+                }}
+              >
+                Continue
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Submit Answer Modal */}
       {isSubmitModalOpen && (
