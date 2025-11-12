@@ -340,15 +340,31 @@
   - `verifyUsageWithinLimit()`: Post-recording verification to catch race conditions
   - `getMonthlyUsage()`: Gets current month's total usage for a user
 
-## Discord Ticket Enhancement (Nov 2024)
-- **Discord ID and Username in Tickets**: All Discord tickets now include user's Discord ID and username
-- **Implementation**:
+## Discord Ticket Enhancement (Updated Nov 2024)
+- **Discord ID and Username in Tickets**: All Discord tickets now **require** user's Discord username
+- **Implementation** (Updated Nov 2024):
   - Updated `/api/discord-webhook` to accept `discordId` and `discordUsername` parameters
   - Parameters are optional - won't break if not provided (backward compatible)
   - Added new "Discord Account" field in Discord embeds showing both username and ID
   - Format: `username (ID: discord_id)` or just `ID: discord_id` if username unavailable
+- **Discord Username Requirement** (Updated Nov 2024):
+  - **REQUIRED**: Discord username must be provided before ticket submission
+  - If user profile doesn't have `discord_username`, a modal prompts user to enter it manually
+  - Modal collects:
+    - Discord Username (required) - e.g., "username" or "username#1234"
+    - Discord ID (optional) - 18-digit number from Discord Developer Mode
+  - Manual entry is stored in component state and used for ticket submission
+  - Implementation in:
+    - `components/ExamSearch/QuestionCard.tsx`: Shows Discord info modal before allowing answer submission
+    - `app/askbo/page.tsx`: Shows Discord info modal before creating teacher help tickets
 - **Affected Components**:
-  - `components/ExamSearch/QuestionCard.tsx`: Passes Discord info when submitting answers from search page
-  - `app/askbo/page.tsx`: Passes Discord info when creating teacher help tickets from AskBo
+  - `components/ExamSearch/QuestionCard.tsx`:
+    - Checks for Discord username before opening submission modal
+    - Shows Discord info collection modal if username missing
+    - Passes Discord info (from profile or manual entry) when submitting answers
+  - `app/askbo/page.tsx`:
+    - Checks for Discord username before creating teacher tickets
+    - Shows Discord info collection modal if username missing
+    - Passes Discord info (from profile or manual entry) when creating tickets
   - `app/api/discord-webhook/route.ts`: Receives and includes Discord info in all ticket embeds
-- **Purpose**: Helps teachers identify and respond to students in Discord support channels more efficiently
+- **Purpose**: Ensures teachers can always identify and contact students in Discord support channels
