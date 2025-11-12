@@ -441,6 +441,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
           content: questionContext,
           ticketId: ticketId,
           userEmail: user.email,
+          userId: user.id,
           type: submissionType,
           discordId: discordId,
           discordUsername: discordUsername

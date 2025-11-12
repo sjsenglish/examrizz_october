@@ -357,14 +357,27 @@
   - Implementation in:
     - `components/ExamSearch/QuestionCard.tsx`: Shows Discord info modal before allowing answer submission
     - `app/askbo/page.tsx`: Shows Discord info modal before creating teacher help tickets
+- **Database Backup** (Updated Nov 2024):
+  - All tickets are now stored in the `support_tickets` database table as a backup
+  - Stored information:
+    - `user_id`: User's UUID from auth.users
+    - `session_id`: Unique session UUID for tracking
+    - `discord_username`: Discord username from profile or manual entry
+    - `status`: Ticket status (default: 'open')
+    - `notes`: JSON string containing ticket metadata (ticketId, type, userEmail, discordId, contentPreview)
+  - Database insert is non-blocking - if it fails, the Discord ticket is still created
+  - Both client components pass `userId` to the webhook API
+  - Implementation in `app/api/discord-webhook/route.ts`
 - **Affected Components**:
   - `components/ExamSearch/QuestionCard.tsx`:
     - Checks for Discord username before opening submission modal
     - Shows Discord info collection modal if username missing
-    - Passes Discord info (from profile or manual entry) when submitting answers
+    - Passes Discord info and userId when submitting answers
   - `app/askbo/page.tsx`:
     - Checks for Discord username before creating teacher tickets
     - Shows Discord info collection modal if username missing
-    - Passes Discord info (from profile or manual entry) when creating tickets
-  - `app/api/discord-webhook/route.ts`: Receives and includes Discord info in all ticket embeds
-- **Purpose**: Ensures teachers can always identify and contact students in Discord support channels
+    - Passes Discord info and userId when creating tickets
+  - `app/api/discord-webhook/route.ts`:
+    - Receives and includes Discord info in all ticket embeds
+    - Stores ticket in support_tickets table as backup
+- **Purpose**: Ensures teachers can always identify and contact students in Discord support channels, with database backup for tracking and analytics

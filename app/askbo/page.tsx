@@ -986,6 +986,7 @@ export default function StudyBookPage() {
           content: conversationContext,
           ticketId: ticketId,
           userEmail: user.email,
+          userId: user.id,
           discordId: discordId,
           discordUsername: discordUsername
         })

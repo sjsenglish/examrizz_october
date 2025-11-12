@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+
+// Server-side Supabase client for database operations
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function POST(request: NextRequest) {
   try {
-    const { content, ticketId, userEmail, type, discordId, discordUsername } = await request.json();
+    const { content, ticketId, userEmail, userId, type, discordId, discordUsername } = await request.json();
 
     if (!content || !ticketId) {
       return NextResponse.json(
@@ -128,8 +134,41 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ 
-      success: true, 
+    // Store ticket in database as backup (non-blocking - don't fail if this fails)
+    try {
+      if (userId) {
+        // Generate a unique session ID
+        const sessionId = crypto.randomUUID();
+
+        // Insert into support_tickets table
+        const { error: dbError } = await supabase
+          .from('support_tickets')
+          .insert({
+            user_id: userId,
+            session_id: sessionId,
+            discord_username: discordUsername || null,
+            status: 'open',
+            notes: JSON.stringify({
+              ticketId,
+              type: safeType,
+              userEmail,
+              discordId: discordId || null,
+              contentPreview: content.substring(0, 500)
+            })
+          });
+
+        if (dbError) {
+          console.error('Failed to store ticket in database (non-critical):', dbError);
+          // Don't fail the request - Discord webhook already succeeded
+        }
+      }
+    } catch (dbError) {
+      console.error('Database error while storing ticket (non-critical):', dbError);
+      // Don't fail the request - Discord webhook already succeeded
+    }
+
+    return NextResponse.json({
+      success: true,
       ticketId,
       message: 'Ticket created successfully'
     });
