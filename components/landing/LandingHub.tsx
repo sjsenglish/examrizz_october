@@ -57,15 +57,13 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <Link href="/arena" className="block">
-            <Image
-              src="/icons/arena.svg"
-              alt="ARENA"
-              width={186} /* 75% of 248 -> 186 */
-              height={186} /* 75% of 248 -> 186 */
-              className="drop-shadow-lg"
-            />
-          </Link>
+          <Image
+            src="/icons/arena.svg"
+            alt="ARENA"
+            width={186} /* 75% of 248 -> 186 */
+            height={186} /* 75% of 248 -> 186 */
+            className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
+          />
         </div>
 
         {/* VIDEO - top-right (75% from left, 25% from top) */}
@@ -153,15 +151,13 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <Link href="/competition" className="block">
-            <Image
-              src="/icons/learn.svg"
-              alt="LEARN"
-              width={140} /* 75% of 186 -> 140 */
-              height={140} /* 75% of 186 -> 140 */
-              className="drop-shadow-lg"
-            />
-          </Link>
+          <Image
+            src="/icons/learn.svg"
+            alt="LEARN"
+            width={140} /* 75% of 186 -> 140 */
+            height={140} /* 75% of 186 -> 140 */
+            className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
+          />
         </div>
 
         {/* SEARCH - between video and learn icons on the right edge */}
