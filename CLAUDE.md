@@ -22,7 +22,7 @@
   - Big clouds: left-[20%] top-[30%], right-[20%] top-[45%]
   - Medium clouds: left-[38%] top-[25%], right-[38%] top-[27%]
 - **Teacher icon**: Greyed out with opacity-40 and grayscale, made non-clickable (Nov 2024)
-- **Learn icon**: Greyed out with opacity-40 and grayscale, made non-clickable (locked Nov 2024)
+- **Learn icon**: Unlocked and clickable, links to `/maths-demo` (unlocked Nov 2024)
 - **Video icon**: Greyed out with opacity-40 and grayscale, made non-clickable (Nov 2024)
 - **Arena icon**: Greyed out with opacity-40 and grayscale, made non-clickable (locked Nov 2024)
 

@@ -151,13 +151,15 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <Image
-            src="/icons/learn.svg"
-            alt="LEARN"
-            width={140} /* 75% of 186 -> 140 */
-            height={140} /* 75% of 186 -> 140 */
-            className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
-          />
+          <Link href="/maths-demo" className="block">
+            <Image
+              src="/icons/learn.svg"
+              alt="LEARN"
+              width={140} /* 75% of 186 -> 140 */
+              height={140} /* 75% of 186 -> 140 */
+              className="drop-shadow-lg"
+            />
+          </Link>
         </div>
 
         {/* SEARCH - between video and learn icons on the right edge */}
