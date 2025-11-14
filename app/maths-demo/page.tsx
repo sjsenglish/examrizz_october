@@ -6,41 +6,67 @@ import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import './maths-demo.css';
 
-// Spec point data structure
+// Spec point data structure - includes blended block as special type
 const specPoints = [
-  { id: '1.1', name: 'Proofs', lessons: 3, hours: 4.42 },
-  { id: '2.1', name: 'Indices', lessons: 2, hours: 2.33 },
-  { id: '2.2', name: 'Surds', lessons: 2, hours: 2.33 },
-  { id: '2.3', name: 'Quadratic Function', lessons: 6, hours: 7.33 },
-  { id: '2.4', name: 'Simultaneous Equations', lessons: 2, hours: 2.5 },
-  { id: '2.5', name: 'Inequalities', lessons: 2, hours: 2.5 },
-  { id: '2.6', name: 'Manipulating Polynomials', lessons: 4, hours: 5 },
-  { id: '2.7', name: 'Graphs', lessons: 5, hours: 6.25 },
-  { id: '2.9', name: 'Transformations', lessons: 1, hours: 1.25 },
-  { id: '3.1', name: 'Straight Line Equation', lessons: 3, hours: 3.67 },
-  { id: '3.2', name: 'Circles', lessons: 2, hours: 2.5 },
-  { id: '4.1', name: 'Binomial Expansions', lessons: 2, hours: 2.5 },
-  { id: '5.1', name: 'Trigonometry', lessons: 3, hours: 3.67 },
-  { id: '5.3', name: 'Trigonometric Graphs', lessons: 2, hours: 2.5 },
-  { id: '5.5', name: 'Trigonometric Identities', lessons: 1, hours: 1.33 },
-  { id: '5.7', name: 'Solving Trig Equations', lessons: 2, hours: 2.67 },
-  { id: '6.1', name: 'Exponential Functions', lessons: 2, hours: 2.5 },
-  { id: '6.2', name: 'Exponential Models', lessons: 1, hours: 1.25 },
-  { id: '6.3', name: 'Logarithms', lessons: 2, hours: 2.5 },
-  { id: '6.4', name: 'Logarithm Laws', lessons: 1, hours: 1.25 },
-  { id: '6.5', name: 'Solving Equations', lessons: 1, hours: 1.25 },
-  { id: '6.6', name: 'Non-linear Graphs', lessons: 1, hours: 1.25 },
-  { id: '6.7', name: 'Modelling', lessons: 1, hours: 1.25 },
-  { id: '7.1', name: 'Intro to Differentiation', lessons: 3, hours: 4.42 },
-  { id: '7.2', name: 'Differentiating Functions', lessons: 1, hours: 1.17 },
-  { id: '7.3', name: 'Differentiation Application', lessons: 6, hours: 8 },
-  { id: '8.1', name: 'Integration', lessons: 1, hours: 1.25 },
-  { id: '8.2', name: 'Integrate Functions', lessons: 2, hours: 2.5 },
-  { id: '8.3', name: 'Definite Integrals', lessons: 4, hours: 5.33 },
-  { id: '10.1-10.5', name: 'Vectors', lessons: 6, hours: 7.33 },
+  { id: '1.1', name: 'Proofs', lessons: 3, hours: 4.42, type: 'normal', chapter: 1 },
+  { id: 'blended', name: 'Blended Practice', lessons: 0, hours: 0, type: 'blended', chapter: 1 },
+  { id: '2.1', name: 'Indices', lessons: 2, hours: 2.33, type: 'normal', chapter: 2 },
+  { id: '2.2', name: 'Surds', lessons: 2, hours: 2.33, type: 'normal', chapter: 2 },
+  { id: '2.3', name: 'Quadratic Function', lessons: 6, hours: 7.33, type: 'normal', chapter: 2 },
+  { id: '2.4', name: 'Simultaneous Equations', lessons: 2, hours: 2.5, type: 'normal', chapter: 2 },
+  { id: '2.5', name: 'Inequalities', lessons: 2, hours: 2.5, type: 'normal', chapter: 2 },
+  { id: '2.6', name: 'Manipulating Polynomials', lessons: 4, hours: 5, type: 'normal', chapter: 2 },
+  { id: '2.7', name: 'Graphs', lessons: 5, hours: 6.25, type: 'normal', chapter: 2 },
+  { id: '2.9', name: 'Transformations', lessons: 1, hours: 1.25, type: 'normal', chapter: 2 },
+  { id: '3.1', name: 'Straight Line Equation', lessons: 3, hours: 3.67, type: 'normal', chapter: 3 },
+  { id: '3.2', name: 'Circles', lessons: 2, hours: 2.5, type: 'normal', chapter: 3 },
+  { id: '4.1', name: 'Binomial Expansions', lessons: 2, hours: 2.5, type: 'normal', chapter: 4 },
+  { id: '5.1', name: 'Trigonometry', lessons: 3, hours: 3.67, type: 'normal', chapter: 5 },
+  { id: '5.3', name: 'Trigonometric Graphs', lessons: 2, hours: 2.5, type: 'normal', chapter: 5 },
+  { id: '5.5', name: 'Trigonometric Identities', lessons: 1, hours: 1.33, type: 'normal', chapter: 5 },
+  { id: '5.7', name: 'Solving Trig Equations', lessons: 2, hours: 2.67, type: 'normal', chapter: 5 },
+  { id: '6.1', name: 'Exponential Functions', lessons: 2, hours: 2.5, type: 'normal', chapter: 6 },
+  { id: '6.2', name: 'Exponential Models', lessons: 1, hours: 1.25, type: 'normal', chapter: 6 },
+  { id: '6.3', name: 'Logarithms', lessons: 2, hours: 2.5, type: 'normal', chapter: 6 },
+  { id: '6.4', name: 'Logarithm Laws', lessons: 1, hours: 1.25, type: 'normal', chapter: 6 },
+  { id: '6.5', name: 'Solving Equations', lessons: 1, hours: 1.25, type: 'normal', chapter: 6 },
+  { id: '6.6', name: 'Non-linear Graphs', lessons: 1, hours: 1.25, type: 'normal', chapter: 6 },
+  { id: '6.7', name: 'Modelling', lessons: 1, hours: 1.25, type: 'normal', chapter: 6 },
+  { id: '7.1', name: 'Intro to Differentiation', lessons: 3, hours: 4.42, type: 'normal', chapter: 7 },
+  { id: '7.2', name: 'Differentiating Functions', lessons: 1, hours: 1.17, type: 'normal', chapter: 7 },
+  { id: '7.3', name: 'Differentiation Application', lessons: 6, hours: 8, type: 'normal', chapter: 7 },
+  { id: '8.1', name: 'Integration', lessons: 1, hours: 1.25, type: 'normal', chapter: 8 },
+  { id: '8.2', name: 'Integrate Functions', lessons: 2, hours: 2.5, type: 'normal', chapter: 8 },
+  { id: '8.3', name: 'Definite Integrals', lessons: 4, hours: 5.33, type: 'normal', chapter: 8 },
+  { id: '10.1-10.5', name: 'Vectors', lessons: 6, hours: 7.33, type: 'normal', chapter: 10 },
 ];
 
 const TOTAL_HOURS = 92.83;
+
+// Get height offset for each stepping stone for visual variation
+const getStoneHeightOffset = (index: number): number => {
+  const pattern = [0, 0, -60, 30, -30, 20, -40, 10, -20, 40, -50, 0, -30, 20, -40, 30, -20, 0, -35, 25, -45, 15, -25, 35, -55, 0, -40, 20, -30, 40, -50];
+  return pattern[index] || 0;
+};
+
+// Get signpost info for chapter markers
+const getChapterSignpost = (chapter: number, isFirstInChapter: boolean) => {
+  if (!isFirstInChapter) return null;
+
+  const signs = [
+    { chapter: 1, url: 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fpurplesign.svg?alt=media&token=3fad5483-edcd-469e-bb6c-c19f22a7345b' },
+    { chapter: 2, url: 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fbluesign.svg?alt=media&token=b415f33b-dc02-427a-a507-c17e0a45a00d' },
+    { chapter: 3, url: 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fpurplesign.svg?alt=media&token=3fad5483-edcd-469e-bb6c-c19f22a7345b' },
+    { chapter: 4, url: 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fbluesign.svg?alt=media&token=b415f33b-dc02-427a-a507-c17e0a45a00d' },
+    { chapter: 5, url: 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fpurplesign.svg?alt=media&token=3fad5483-edcd-469e-bb6c-c19f22a7345b' },
+    { chapter: 6, url: 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fbluesign.svg?alt=media&token=b415f33b-dc02-427a-a507-c17e0a45a00d' },
+    { chapter: 7, url: 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fpurplesign.svg?alt=media&token=3fad5483-edcd-469e-bb6c-c19f22a7345b' },
+    { chapter: 8, url: 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fbluesign.svg?alt=media&token=b415f33b-dc02-427a-a507-c17e0a45a00d' },
+    { chapter: 10, url: 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fpurplesign.svg?alt=media&token=3fad5483-edcd-469e-bb6c-c19f22a7345b' },
+  ];
+
+  return signs.find(s => s.chapter === chapter);
+};
 
 export default function MathsDemoPage() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -48,9 +74,11 @@ export default function MathsDemoPage() {
   const [currentSpecIndex, setCurrentSpecIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
 
-  // Calculate cumulative hours for each spec point
+  // Calculate cumulative hours for each spec point (exclude blended blocks)
   const getCumulativeHours = (index: number) => {
-    return specPoints.slice(0, index + 1).reduce((sum, spec) => sum + spec.hours, 0);
+    return specPoints.slice(0, index + 1).reduce((sum, spec) => {
+      return spec.type === 'normal' ? sum + spec.hours : sum;
+    }, 0);
   };
 
   // Calculate current progress percentage based on spec index
@@ -84,9 +112,12 @@ export default function MathsDemoPage() {
   const handleProgressBarClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!progressBarRef.current) return;
 
-    const rect = progressBarRef.current.getBoundingClientRect();
+    const trackElement = progressBarRef.current.querySelector('.progress-bar-track');
+    if (!trackElement) return;
+
+    const rect = trackElement.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
-    const barWidth = rect.width - 60; // Account for treasure chest space
+    const barWidth = rect.width;
     const clickPercentage = (clickX / barWidth) * 100;
 
     // Find which spec point this percentage corresponds to
@@ -111,9 +142,12 @@ export default function MathsDemoPage() {
   const handleMouseMove = (e: MouseEvent) => {
     if (!isDragging || !progressBarRef.current) return;
 
-    const rect = progressBarRef.current.getBoundingClientRect();
+    const trackElement = progressBarRef.current.querySelector('.progress-bar-track');
+    if (!trackElement) return;
+
+    const rect = trackElement.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
-    const barWidth = rect.width - 60;
+    const barWidth = rect.width;
     const percentage = Math.max(0, Math.min(100, (mouseX / barWidth) * 100));
 
     // Find closest spec point
@@ -231,21 +265,11 @@ export default function MathsDemoPage() {
                 className="ghost-tracker-icon"
               />
             </div>
+          </div>
 
-            {/* Progress text */}
-            <div className="progress-text">
-              {getCumulativeHours(currentSpecIndex).toFixed(2)} / {TOTAL_HOURS} hours
-            </div>
-
-            {/* Treasure chest at the end */}
-            <div className="progress-treasure">
-              <Image
-                src="/icons/treasure-box-blue.svg"
-                alt="Complete"
-                width={35}
-                height={35}
-              />
-            </div>
+          {/* Progress text at end of bar */}
+          <div className="progress-hours-text">
+            {getCumulativeHours(currentSpecIndex).toFixed(2)} / {TOTAL_HOURS} hours
           </div>
         </div>
 
@@ -266,63 +290,102 @@ export default function MathsDemoPage() {
             </div>
 
             {/* Render stepping stones */}
-            {specPoints.map((spec, index) => (
-              <div key={spec.id} className="stepping-stone">
-                {/* Toast icons (one per lesson) */}
-                <div className="toasts-group">
-                  {Array.from({ length: spec.lessons }).map((_, lessonIndex) => (
-                    <Link
-                      key={lessonIndex}
-                      href={`/spec-point-session?spec=${spec.id}&lesson=${lessonIndex + 1}&name=${encodeURIComponent(spec.name)}`}
-                      className="toast-item"
-                    >
-                      <Image
-                        src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202376.svg?alt=media&token=96940cfc-fd51-4c0c-a40b-eca32f113b46"
-                        alt={`Lesson ${lessonIndex + 1}`}
-                        width={38}
-                        height={38}
-                      />
-                    </Link>
-                  ))}
-                </div>
+            {specPoints.map((spec, index) => {
+              // Check if this is the first spec of a new chapter
+              const isFirstInChapter = index === 0 || spec.chapter !== specPoints[index - 1].chapter;
+              const signpost = getChapterSignpost(spec.chapter, isFirstInChapter);
+              const heightOffset = getStoneHeightOffset(index);
 
-                {/* Bar/platform */}
-                <div className="stone-bar">
-                  <Image
-                    src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FVector%20448.svg?alt=media&token=a9e45250-f832-4b9d-b896-7282df82e5d7"
-                    alt="Platform"
-                    width={132}
-                    height={33}
-                    className="bar-image"
-                  />
-                </div>
+              return (
+                <div key={spec.id} className="stepping-stone-wrapper">
+                  {/* Stepping stone */}
+                  <div className="stepping-stone" style={{ transform: `translateY(${heightOffset}px)` }}>
+                    {/* Spec point info at TOP */}
+                    {spec.type === 'normal' && (
+                      <div className="spec-info-top">
+                        <div className="spec-title">{spec.id} {spec.name}</div>
+                      </div>
+                    )}
 
-                {/* Ghost on first stone */}
-                {index === 0 && (
-                  <div className="ghost-on-stone">
-                    <Link
-                      href={`/spec-point-session?spec=${spec.id}&lesson=1&name=${encodeURIComponent(spec.name)}`}
-                      className="ghost-link"
-                    >
+                    {/* For blended block, show treasure chest above */}
+                    {spec.type === 'blended' && (
+                      <div className="blended-treasure">
+                        <Image
+                          src="/icons/treasure-box-blue.svg"
+                          alt="Blended Practice"
+                          width={60}
+                          height={60}
+                        />
+                      </div>
+                    )}
+
+                    {/* Toast icons (one per lesson) - only for normal spec points */}
+                    {spec.type === 'normal' && (
+                      <div className="toasts-group">
+                        {Array.from({ length: spec.lessons }).map((_, lessonIndex) => (
+                          <Link
+                            key={lessonIndex}
+                            href={`/spec-point-session?spec=${spec.id}&lesson=${lessonIndex + 1}&name=${encodeURIComponent(spec.name)}`}
+                            className="toast-item"
+                          >
+                            <Image
+                              src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202376.svg?alt=media&token=96940cfc-fd51-4c0c-a40b-eca32f113b46"
+                              alt={`Lesson ${lessonIndex + 1}`}
+                              width={38}
+                              height={38}
+                            />
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Bar/platform - different for blended block */}
+                    <div className="stone-bar">
                       <Image
-                        src="/icons/pixel-ghost-w-sword-yellow.svg"
-                        alt="Ghost Character"
-                        width={77}
-                        height={77}
-                        className="ghost-icon"
+                        src={spec.type === 'blended'
+                          ? "https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fblendedblock.svg?alt=media&token=71bb36cd-e129-4278-ad60-53c543311295"
+                          : "https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FVector%20448.svg?alt=media&token=a9e45250-f832-4b9d-b896-7282df82e5d7"
+                        }
+                        alt={spec.type === 'blended' ? "Blended Block" : "Platform"}
+                        width={spec.type === 'blended' ? 150 : 132}
+                        height={spec.type === 'blended' ? 150 : 33}
+                        className="bar-image"
                       />
-                    </Link>
+                    </div>
+
+                    {/* Ghost on first stone */}
+                    {index === 0 && (
+                      <div className="ghost-on-stone">
+                        <Link
+                          href={`/spec-point-session?spec=${spec.id}&lesson=1&name=${encodeURIComponent(spec.name)}`}
+                          className="ghost-link"
+                        >
+                          <Image
+                            src="/icons/pixel-ghost-w-sword-yellow.svg"
+                            alt="Ghost Character"
+                            width={77}
+                            height={77}
+                            className="ghost-icon"
+                          />
+                        </Link>
+                      </div>
+                    )}
                   </div>
-                )}
 
-                {/* Spec point info */}
-                <div className="spec-info">
-                  <div className="spec-id">{spec.id}</div>
-                  <div className="spec-name">{spec.name}</div>
-                  <div className="spec-time">{spec.hours} hrs</div>
+                  {/* Chapter signpost under grass */}
+                  {signpost && (
+                    <div className="chapter-signpost">
+                      <Image
+                        src={signpost.url}
+                        alt={`Chapter ${spec.chapter}`}
+                        width={80}
+                        height={100}
+                      />
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
