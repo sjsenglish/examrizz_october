@@ -22,7 +22,7 @@
   - Big clouds: left-[20%] top-[30%], right-[20%] top-[45%]
   - Medium clouds: left-[38%] top-[25%], right-[38%] top-[27%]
 - **Teacher icon**: Greyed out with opacity-40 and grayscale, made non-clickable (Nov 2024)
-- **Learn icon**: Unlocked and clickable, links to `/maths-demo` (unlocked Nov 2024)
+- **Learn icon**: Unlocked and clickable, links directly to `/competition` (updated Nov 2024)
 - **Video icon**: Greyed out with opacity-40 and grayscale, made non-clickable (Nov 2024)
 - **Arena icon**: Greyed out with opacity-40 and grayscale, made non-clickable (locked Nov 2024)
 
@@ -129,7 +129,7 @@
     - Page: `app/maths-demo/page.tsx`
     - Styles: `app/maths-demo/maths-demo.css`
 
-**Navigation Flow**: Home → Competition → Subject Selection → Maths Demo → Spec Topic
+**Navigation Flow**: Home (Learn icon) → Competition → Subject Selection → Maths Demo → Spec Topic
 
 ## AskBo Page Layout Fix (Nov 2024)
 - **Issue**: Page experienced layout shift on initial load - loading screen had different structure than actual content
