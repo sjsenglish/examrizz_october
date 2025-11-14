@@ -122,7 +122,7 @@
     - Toast arrangement: Flex layout with wrapping, max-width 200px per group
   - **Styling Details**:
     - Gap between stones: 150px (100px on tablet, 80px on mobile)
-    - Grass pattern at bottom: 54px height with 2px black border on top (fixed position)
+    - Grass pattern at bottom: 54px height with 2px black border on top, positioned 57px from bottom (fixed position, moved up 105% of height - Nov 2024)
     - Progress bar: 70% width, centered, with responsive sizing for mobile
     - Back button in top-left corner linking to `/subject-selection`
   - **Files**:

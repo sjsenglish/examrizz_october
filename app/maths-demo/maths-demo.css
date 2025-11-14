@@ -238,7 +238,7 @@
 /* Grass pattern at bottom */
 .maths-demo-page .grass-pattern {
   position: fixed;
-  bottom: 0;
+  bottom: 57px;
   left: 0;
   right: 0;
   height: 54px;
