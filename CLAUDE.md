@@ -119,12 +119,22 @@
     - URL format: `?spec={id}&lesson={number}&name={encoded name}`
     - Each toast links to its specific lesson session page
     - Hover effect: scale(1.1) on all toast icons
-    - Toast arrangement: Flex layout with wrapping, max-width 200px per group
+    - Toast arrangement: Flex layout with wrapping, max-width 140px per group (reduced from 200px - Nov 2024)
   - **Styling Details**:
-    - Gap between stones: 150px (100px on tablet, 80px on mobile)
-    - Grass pattern at bottom: 54px height with 2px black border on top, positioned 57px from bottom (fixed position, moved up 105% of height - Nov 2024)
+    - Gap between stones: 80px (reduced from 150px to fit 5 topics in one view - Nov 2024)
+    - Grass pattern at bottom: 54px height with 2px black border on top, positioned 60px from bottom (fixed position, moved up 110% of height - Nov 2024)
     - Progress bar: 70% width, centered, with responsive sizing for mobile
     - Back button in top-left corner linking to `/subject-selection`
+    - **Icon sizes** (reduced for compact layout to fit 5 topics in view - Nov 2024):
+      - Toast icons: 35x35px (down from 50x50px)
+      - Bar/platform: 120x30px (down from 180x40px)
+      - Ghost character: 70x70px (down from 100x100px)
+      - Ghost position: top: -45px (adjusted for smaller size)
+    - **Spec info typography** (reduced - Nov 2024):
+      - ID: 13px (down from 16px)
+      - Name: 11px (down from 13px)
+      - Time badge: 10px (down from 12px)
+      - Min-width: 120px (down from 180px)
   - **Files**:
     - Page: `app/maths-demo/page.tsx`
     - Styles: `app/maths-demo/maths-demo.css`
