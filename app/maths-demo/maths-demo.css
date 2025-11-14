@@ -121,7 +121,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 80px;
+  gap: 88px;
   min-height: 100%;
   padding-bottom: 80px;
 }
@@ -142,7 +142,7 @@
   margin-bottom: 10px;
   justify-content: center;
   flex-wrap: wrap;
-  max-width: 140px;
+  max-width: 154px;
 }
 
 .maths-demo-page .toast-item {
@@ -172,7 +172,7 @@
 /* Ghost on first stone */
 .maths-demo-page .ghost-on-stone {
   position: absolute;
-  top: -45px;
+  top: -50px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 15;
@@ -206,27 +206,27 @@
   gap: 3px;
   margin-top: 8px;
   text-align: center;
-  min-width: 120px;
+  min-width: 132px;
 }
 
 .maths-demo-page .spec-id {
   font-family: 'Inter', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: #000000;
 }
 
 .maths-demo-page .spec-name {
   font-family: 'Inter', sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   color: #333333;
-  max-width: 110px;
+  max-width: 120px;
 }
 
 .maths-demo-page .spec-time {
   font-family: 'Inter', sans-serif;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   color: #666666;
   background-color: #F0F0F0;
@@ -238,7 +238,7 @@
 /* Grass pattern at bottom */
 .maths-demo-page .grass-pattern {
   position: fixed;
-  bottom: 60px;
+  bottom: 64px;
   left: 0;
   right: 0;
   height: 54px;

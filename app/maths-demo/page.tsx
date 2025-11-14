@@ -279,8 +279,8 @@ export default function MathsDemoPage() {
                       <Image
                         src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202376.svg?alt=media&token=96940cfc-fd51-4c0c-a40b-eca32f113b46"
                         alt={`Lesson ${lessonIndex + 1}`}
-                        width={35}
-                        height={35}
+                        width={38}
+                        height={38}
                       />
                     </Link>
                   ))}
@@ -291,8 +291,8 @@ export default function MathsDemoPage() {
                   <Image
                     src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FVector%20448.svg?alt=media&token=a9e45250-f832-4b9d-b896-7282df82e5d7"
                     alt="Platform"
-                    width={120}
-                    height={30}
+                    width={132}
+                    height={33}
                     className="bar-image"
                   />
                 </div>
@@ -307,8 +307,8 @@ export default function MathsDemoPage() {
                       <Image
                         src="/icons/pixel-ghost-w-sword-yellow.svg"
                         alt="Ghost Character"
-                        width={70}
-                        height={70}
+                        width={77}
+                        height={77}
                         className="ghost-icon"
                       />
                     </Link>
