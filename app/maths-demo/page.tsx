@@ -82,7 +82,8 @@ export default function MathsDemoPage() {
   };
 
   // Calculate current progress percentage based on spec index
-  const currentProgress = (getCumulativeHours(currentSpecIndex) / TOTAL_HOURS) * 100;
+  // Disabled for now - will implement chapter-based fill later
+  const currentProgress = 0;
 
   // Scroll to specific spec point
   const scrollToSpec = (index: number) => {

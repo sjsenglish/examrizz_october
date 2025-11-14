@@ -124,6 +124,7 @@
   flex-direction: column;
   align-items: center;
   flex-shrink: 0;
+  min-height: calc(100vh - 60px);
 }
 
 /* Individual stepping stone */
@@ -222,7 +223,7 @@
 /* Chapter signposts under grass */
 .maths-demo-page .chapter-signpost {
   position: absolute;
-  top: calc(100vh - 200px);
+  bottom: 85px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -290,7 +291,7 @@
   }
 
   .maths-demo-page .chapter-signpost {
-    top: calc(100vh - 180px);
+    bottom: 75px;
   }
 
   .maths-demo-page .chapter-signpost img {
@@ -337,7 +338,7 @@
   }
 
   .maths-demo-page .chapter-signpost {
-    top: calc(100vh - 160px);
+    bottom: 65px;
   }
 
   .maths-demo-page .chapter-signpost img {
