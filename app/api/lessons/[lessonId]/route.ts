@@ -6,18 +6,12 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-interface RouteContext {
-  params: {
-    lessonId: string;
-  };
-}
-
 export async function GET(
   request: NextRequest,
-  { params }: RouteContext
+  context: { params: Promise<{ lessonId: string }> }
 ) {
   try {
-    const { lessonId } = params;
+    const { lessonId } = await context.params;
 
     if (!lessonId) {
       return NextResponse.json(
