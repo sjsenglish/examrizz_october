@@ -224,12 +224,17 @@
 /* Chapter signposts under grass */
 .maths-demo-page .chapter-signpost {
   position: absolute;
-  bottom: -60px;
+  bottom: -120px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
   pointer-events: none;
+}
+
+.maths-demo-page .chapter-signpost img {
+  width: 160px;
+  height: 200px;
 }
 
 /* Grass pattern at bottom */
@@ -292,7 +297,7 @@
   }
 
   .maths-demo-page .chapter-signpost {
-    bottom: -50px;
+    bottom: -100px;
   }
 
   .maths-demo-page .chapter-signpost img {
@@ -339,7 +344,7 @@
   }
 
   .maths-demo-page .chapter-signpost {
-    bottom: -40px;
+    bottom: -80px;
   }
 
   .maths-demo-page .chapter-signpost img {
