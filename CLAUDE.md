@@ -276,6 +276,214 @@
 - **Files**:
   - Page: `app/spec-point-session/page.tsx`
   - Styles: `app/spec-point-session/spec-point-session.css`
+- **Questions Integration** (Nov 2024):
+  - Questions loaded from database via `/api/lessons/[lessonId]/questions` endpoint
+  - Each question displays code (e.g., B1, A1), difficulty level, and instructions
+  - Question parts (a, b, c, d) displayed with human-readable text
+  - **MathInput component** used for LaTeX answer input instead of multiple choice
+  - User answers stored in state with key format: `{questionCode}-{partLetter}`
+  - Question navigation: Previous/Next buttons with counter showing current position
+  - Loading states for questions fetching
+  - Empty state when no questions available
+
+## Lessons Questions API Route (Nov 2024)
+- **Endpoint**: `/api/lessons/[lessonId]/questions` - GET endpoint for fetching lesson questions
+- **File**: `app/api/lessons/[lessonId]/questions/route.ts`
+- **Authentication**: No authentication required (content is public)
+- **Parameters**:
+  - `lessonId` (string, required): UUID of the lesson from learn_lessons table
+- **Response Data**:
+  - `questions`: Array of question objects with parts
+  - Each question has: `code`, `difficulty`, `instructions`, `parts[]`
+  - Each part has: `letter`, `questionLatex`, `questionDisplay`
+- **Database Queries**:
+  - Queries `learn_questions` table ordered by `display_order`
+  - Queries `learn_question_parts` table for all questions
+  - Groups parts by question ID
+- **Error Handling**:
+  - 400: Missing lesson ID
+  - 500: Database error
+  - Returns empty array if no questions found
+- **Usage**: Used by spec point session pages to load practice questions
+
+## Answer Submission API Route (Nov 2024)
+- **Endpoint**: `/api/answers/submit` - POST endpoint for submitting and validating student answers
+- **File**: `app/api/answers/submit/route.ts`
+- **Dependencies**: Uses `mathjs` library for symbolic math comparison
+- **Request Body**:
+  - `user_id` (string, required): UUID of the user from auth.users
+  - `question_part_id` (string, required): UUID of the question part from learn_question_parts
+  - `submitted_answer_latex` (string, required): Student's LaTeX answer
+  - `time_spent_seconds` (number, optional): Time spent on the question
+- **Validation Logic**:
+  - Fetches acceptable answers from `learn_question_parts.acceptable_answers` (JSON array)
+  - **Normalization** applied to both submitted and acceptable answers:
+    - Removes all whitespace
+    - Converts `\times` and `\cdot` to `*`
+    - Removes curly braces around single characters (e.g., `x^{6}` → `x^6`)
+    - Converts `\div` to `/`
+    - Lowercase conversion for case-insensitive comparison
+  - **Two-stage comparison**:
+    1. String matching on normalized LaTeX
+    2. Symbolic math comparison using mathjs for algebraic equivalence
+  - **Mathjs conversion**: Converts LaTeX to mathjs format (`\frac{a}{b}` → `(a)/(b)`, `\sqrt{x}` → `sqrt(x)`, etc.)
+- **Database Operations**:
+  - Saves to `learn_user_answers` table with fields:
+    - `submitted_answer_latex`: Raw LaTeX answer
+    - `is_correct`: Boolean validation result
+    - `marks_awarded`: Full marks if correct, 0 if incorrect
+    - `attempt_number`: Increments with each retry
+    - `time_spent_seconds`: Time tracking
+  - Database trigger automatically updates `learn_user_progress`
+- **Response Data**:
+  - `correct` (boolean): Whether answer is correct
+  - `correctAnswer` (string): First acceptable answer (for feedback)
+  - `feedback` (string): User-friendly message
+  - `marksAwarded` (number): Marks received
+  - `attemptNumber` (number): Current attempt count
+- **Error Handling**:
+  - 400: Missing required fields
+  - 404: Question part not found
+  - 500: Database error or missing acceptable answers
+  - Mathjs errors fall back to string comparison only
+- **Usage**: Called from spec point session pages when students submit answers to practice questions
+
+## PDF Viewer Component (Nov 2024)
+- **Component**: `/components/PdfViewer.tsx` - Reusable PDF viewing component using react-pdf
+- **Dependencies**: react-pdf library installed for PDF rendering
+- **Props**:
+  - `pdfUrl` (string, required): URL of the PDF to display
+  - `onPageChange` (function, optional): Callback fired when page changes - receives page number
+- **Features**:
+  - **PDF Rendering**: Uses react-pdf's Document and Page components
+  - **Navigation Controls**: Previous/Next buttons with proper disabled states
+  - **Page Counter**: Displays "Page X of Y" format in center of controls
+  - **Loading State**: Animated spinner with "Loading PDF..." message
+  - **Error Handling**: Shows warning icon and error message if PDF fails to load
+  - **Responsive Design**: Automatically adjusts to container width (max 800px)
+  - **Text & Annotations**: Full PDF functionality with text selection enabled
+- **Styling**:
+  - White background (#ffffff)
+  - Black border (2px solid)
+  - Rounded corners (12px radius)
+  - Light gray PDF viewing area (#f5f5f5)
+  - Navigation bar at bottom with border separator
+  - Button hover effects for better UX
+- **Worker Configuration**: Uses CDN-hosted PDF.js worker from unpkg
+- **Usage**: Designed for use in spec point session pages for displaying study materials
+- **Integration in Spec Point Session Page** (Nov 2024):
+  - PDF URL fetched from `learn_lessons` table based on spec point and lesson number
+  - Falls back to default S3 URL if no database entry found
+  - "Download PDF" button opens PDF in new tab
+  - PDF viewing tracked in `learn_user_progress` table (sets `pdf_viewed = true`)
+  - Progress tracking creates new record if none exists, updates existing record if already exists
+  - Tracking occurs when user switches to PDF tab (tracked once per viewing session)
+
+## Lessons API Route (Nov 2024)
+- **Endpoint**: `/api/lessons/[lessonId]` - GET endpoint for fetching lesson data
+- **File**: `app/api/lessons/[lessonId]/route.ts`
+- **Authentication**: No authentication required (content is public)
+- **Parameters**:
+  - `lessonId` (string, required): UUID of the lesson from learn_lessons table
+- **Response Data**:
+  - `id`: Lesson UUID
+  - `specPoint`: Spec point identifier (e.g., "7.2")
+  - `lessonNumber`: Lesson number within the spec point
+  - `lessonName`: Name of the lesson
+  - `description`: Lesson description
+  - `videoUrl`: S3 URL for the lesson video
+  - `pdfNotesUrl`: S3 URL for the lesson PDF notes
+  - `totalQuestions`: Count of all question parts across all questions for this lesson
+  - `createdAt`: Timestamp of lesson creation
+  - `updatedAt`: Timestamp of last update
+- **Error Handling**:
+  - 400: Missing lesson ID
+  - 404: Lesson not found (PGRST116 error code)
+  - 500: Database error or internal server error
+- **Question Counting Logic**:
+  - Queries `learn_questions` table to get all questions for the lesson
+  - Counts total rows in `learn_question_parts` table for those questions
+  - Continues gracefully if question count fails (returns 0)
+- **Usage**: Used by spec point session pages to fetch complete lesson data including question counts
+
+## Video Player Component (Nov 2024)
+- **Component**: `/components/VideoPlayer.tsx` - Custom video player using react-player
+- **Dependencies**: react-player library installed for video playback
+- **Props**:
+  - `videoUrl` (string, required): URL of the video to play (supports .mov, .mp4, and other formats)
+  - `onProgress` (function, optional): Callback fired during playback - receives progress as decimal (0-1)
+  - `onEnded` (function, optional): Callback fired when video ends
+- **Features**:
+  - **Video Playback**: Uses ReactPlayer component for reliable cross-format support
+  - **Custom Controls**: Fully custom control bar with site-consistent styling
+  - **Play/Pause**: Large, accessible play/pause toggle button
+  - **Progress Bar**: Seekable progress bar with visual feedback (#B3F0F2 accent color)
+  - **Volume Control**: Volume slider with mute/unmute button
+  - **Time Display**: Current time / Total duration in MM:SS format
+  - **Fullscreen**: Enter/exit fullscreen mode
+  - **Auto-hide Controls**: Controls fade out after 3 seconds of inactivity during playback
+  - **Loading State**: Animated spinner with "Loading video..." message
+  - **Responsive Design**: Maintains 16:9 aspect ratio at all screen sizes
+- **Styling**:
+  - Black background (#000) for video container
+  - Gradient control bar overlay (transparent to rgba(0,0,0,0.8))
+  - Madimi One font for time display
+  - #B3F0F2 accent color for progress bar, volume slider, and hover states
+  - Rounded corners (12px radius) on container
+  - Custom styled range input thumbs with white borders
+- **Video Format Support**: Supports .mov, .mp4, .webm, and other formats via react-player
+- **Controls Behavior**:
+  - Show on mouse movement or hover
+  - Hide after 3 seconds of inactivity when playing
+  - Always visible when paused
+- **Usage**: Designed for use in spec point session pages for lesson video playback
+- **Integration in Spec Point Session Page** (Nov 2024):
+  - Video URL fetched from `learn_lessons` table based on spec point and lesson number
+  - Falls back to default S3 URL if no database entry found
+  - Dynamically imported with `ssr: false` to prevent SSR issues with react-player
+  - **Progress Tracking**: Video progress saved to `learn_user_progress.video_progress_seconds` every 10 seconds
+  - **Completion Tracking**: When video ends, sets `learn_user_progress.video_watched = true`
+  - Progress tracking creates new record if none exists, updates existing record if already exists
+  - Tracking only occurs for logged-in users
+
+## MathInput Component (Nov 2024)
+- **Component**: `/components/MathInput.tsx` - LaTeX math input component using MathQuill
+- **Dependencies**: @edtr-io/mathquill installed for LaTeX editing
+- **Props**:
+  - `value` (string, required): Current LaTeX string value
+  - `onChange` (function, required): Callback fired when LaTeX changes - receives latex string
+  - `placeholder` (string, optional): Placeholder text for empty input (default: "Enter math expression...")
+- **Features**:
+  - **LaTeX Input**: Uses MathQuill WYSIWYG editor for math expressions
+  - **Live Preview**: Displays rendered LaTeX above the input field
+  - **Math Keyboard**: Grid of common math symbols and operators
+  - **Symbol Insertion**: Click buttons to insert symbols at cursor position
+  - **Client-Side Only**: Dynamically imports MathQuill to avoid SSR issues
+- **Styling**:
+  - Figtree font for UI elements
+  - White background for input field
+  - 2px solid border: #DDD normally, #000 when focused
+  - Border radius: 8px
+  - Padding: 12px
+  - Preview section with light gray background (#f5f5f5)
+- **Math Keyboard Buttons** (grid layout, 3-4 per row):
+  - **Powers/Indices**: x², x³, xⁿ
+  - **Roots**: √, ∛, ⁿ√
+  - **Operations**: ±, ÷, ×, a/b
+  - **Comparisons**: ≤, ≥, ≠
+  - **Special**: ∞, π, α, β, θ
+  - **Calculus**: Σ, ∫, lim
+  - **Brackets**: ( ), [ ], { }
+- **Responsive Design**:
+  - Desktop: auto-fill grid (min 70px per button)
+  - Tablet (≤768px): 4 buttons per row
+  - Mobile (≤480px): 3 buttons per row
+- **Usage**: Designed for math question input in spec point session pages
+- **Implementation Notes**:
+  - Uses `@ts-nocheck` to avoid TypeScript conflicts with MathQuill
+  - MathQuill CSS loaded from CDN (jsdelivr)
+  - StaticMath used for preview rendering
+  - Focus management after button clicks
 
 ## Search Page - Interview Resources Index (Nov 2024)
 - **New Index Added**: `v2_interview_resources` added to `/search` page

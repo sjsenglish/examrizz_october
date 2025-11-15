@@ -348,6 +348,11 @@
   margin: 10px 0;
 }
 
+.spec-point-session-page .video-loading-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
 /* Questions Content */
 .spec-point-session-page .question-header {
   display: flex;
@@ -453,6 +458,44 @@
 }
 
 /* PDF Content */
+.spec-point-session-page .pdf-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+.spec-point-session-page .download-pdf-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: #B3F0F2;
+  border: 2px solid #000;
+  border-radius: 8px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.spec-point-session-page .download-pdf-button:hover {
+  background: #9ee9ec;
+  transform: translateY(-1px);
+}
+
+.spec-point-session-page .download-pdf-button svg {
+  flex-shrink: 0;
+}
+
+.spec-point-session-page .pdf-viewer-container {
+  height: 550px;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
 .spec-point-session-page .pdf-viewer {
   background: #f5f5f5;
   border: 2px solid #e0e0e0;
@@ -478,25 +521,6 @@
 .spec-point-session-page .pdf-placeholder p {
   font-size: 16px;
   margin: 10px 0;
-}
-
-.spec-point-session-page .download-button {
-  margin-top: 20px;
-  padding: 12px 24px;
-  background: #B3F0F2;
-  border: 2px solid #000;
-  border-radius: 8px;
-  font-family: 'Figtree', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: #000;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.spec-point-session-page .download-button:hover {
-  background: #9ee9ec;
-  transform: translateY(-1px);
 }
 
 /* Responsive Design */
@@ -534,4 +558,118 @@
   .spec-point-session-page .question-navigation {
     gap: 10px;
   }
+}
+/* Questions loading and empty states */
+.spec-point-session-page .questions-loading,
+.spec-point-session-page .no-questions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.spec-point-session-page .loading-icon,
+.spec-point-session-page .no-questions-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.spec-point-session-page .questions-loading p,
+.spec-point-session-page .no-questions p {
+  font-family: 'Figtree', sans-serif;
+  font-size: 16px;
+  color: #666;
+}
+
+/* Question header info */
+.spec-point-session-page .question-header-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.spec-point-session-page .question-code {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #000;
+}
+
+.spec-point-session-page .question-difficulty {
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  color: #666;
+}
+
+.spec-point-session-page .difficulty-easy {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.spec-point-session-page .difficulty-medium {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.spec-point-session-page .difficulty-hard {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+/* Question instructions */
+.spec-point-session-page .question-instructions {
+  font-family: 'Figtree', sans-serif;
+  font-size: 15px;
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  border-left: 4px solid #B3F0F2;
+}
+
+/* Question parts */
+.spec-point-session-page .question-parts {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.spec-point-session-page .question-part {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.spec-point-session-page .part-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.spec-point-session-page .part-letter {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  min-width: 25px;
+  flex-shrink: 0;
+}
+
+.spec-point-session-page .part-question {
+  flex: 1;
+  font-family: 'Figtree', sans-serif;
+  font-size: 15px;
+  color: #333;
+  line-height: 1.6;
+}
+
+.spec-point-session-page .part-answer {
+  margin-left: 35px;
 }
