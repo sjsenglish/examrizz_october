@@ -224,7 +224,7 @@
 /* Chapter signposts under grass */
 .maths-demo-page .chapter-signpost {
   position: absolute;
-  bottom: -20px;
+  bottom: -60px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -292,12 +292,12 @@
   }
 
   .maths-demo-page .chapter-signpost {
-    bottom: -15px;
+    bottom: -50px;
   }
 
   .maths-demo-page .chapter-signpost img {
-    width: 70px;
-    height: 90px;
+    width: 140px;
+    height: 180px;
   }
 }
 
@@ -339,11 +339,11 @@
   }
 
   .maths-demo-page .chapter-signpost {
-    bottom: -10px;
+    bottom: -40px;
   }
 
   .maths-demo-page .chapter-signpost img {
-    width: 60px;
-    height: 80px;
+    width: 120px;
+    height: 160px;
   }
 }
