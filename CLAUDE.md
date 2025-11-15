@@ -375,6 +375,45 @@
   - Progress tracking creates new record if none exists, updates existing record if already exists
   - Tracking only occurs for logged-in users
 
+## MathInput Component (Nov 2024)
+- **Component**: `/components/MathInput.tsx` - LaTeX math input component using MathQuill
+- **Dependencies**: @edtr-io/mathquill installed for LaTeX editing
+- **Props**:
+  - `value` (string, required): Current LaTeX string value
+  - `onChange` (function, required): Callback fired when LaTeX changes - receives latex string
+  - `placeholder` (string, optional): Placeholder text for empty input (default: "Enter math expression...")
+- **Features**:
+  - **LaTeX Input**: Uses MathQuill WYSIWYG editor for math expressions
+  - **Live Preview**: Displays rendered LaTeX above the input field
+  - **Math Keyboard**: Grid of common math symbols and operators
+  - **Symbol Insertion**: Click buttons to insert symbols at cursor position
+  - **Client-Side Only**: Dynamically imports MathQuill to avoid SSR issues
+- **Styling**:
+  - Figtree font for UI elements
+  - White background for input field
+  - 2px solid border: #DDD normally, #000 when focused
+  - Border radius: 8px
+  - Padding: 12px
+  - Preview section with light gray background (#f5f5f5)
+- **Math Keyboard Buttons** (grid layout, 3-4 per row):
+  - **Powers/Indices**: x², x³, xⁿ
+  - **Roots**: √, ∛, ⁿ√
+  - **Operations**: ±, ÷, ×, a/b
+  - **Comparisons**: ≤, ≥, ≠
+  - **Special**: ∞, π, α, β, θ
+  - **Calculus**: Σ, ∫, lim
+  - **Brackets**: ( ), [ ], { }
+- **Responsive Design**:
+  - Desktop: auto-fill grid (min 70px per button)
+  - Tablet (≤768px): 4 buttons per row
+  - Mobile (≤480px): 3 buttons per row
+- **Usage**: Designed for math question input in spec point session pages
+- **Implementation Notes**:
+  - Uses `@ts-nocheck` to avoid TypeScript conflicts with MathQuill
+  - MathQuill CSS loaded from CDN (jsdelivr)
+  - StaticMath used for preview rendering
+  - Focus management after button clicks
+
 ## Search Page - Interview Resources Index (Nov 2024)
 - **New Index Added**: `v2_interview_resources` added to `/search` page
 - **Dropdown Label**: "Interview Resources" appears in Admissions dropdown
