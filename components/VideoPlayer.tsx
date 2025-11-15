@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import ReactPlayer from 'react-player';
+import './VideoPlayer.css';
 
 interface VideoPlayerProps {
   videoUrl: string;
@@ -177,12 +178,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
           >
             Loading video...
           </p>
-          <style jsx>{`
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          `}</style>
         </div>
       )}
 
@@ -379,27 +374,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
           </div>
         </div>
       </div>
-
-      {/* Custom Styles for Range Inputs */}
-      <style jsx>{`
-        input[type='range']::-webkit-slider-thumb {
-          appearance: none;
-          width: 14px;
-          height: 14px;
-          border-radius: 50%;
-          background: #B3F0F2;
-          cursor: pointer;
-          border: 2px solid #fff;
-        }
-        input[type='range']::-moz-range-thumb {
-          width: 14px;
-          height: 14px;
-          border-radius: 50%;
-          background: #B3F0F2;
-          cursor: pointer;
-          border: 2px solid #fff;
-        }
-      `}</style>
     </div>
   );
 };
