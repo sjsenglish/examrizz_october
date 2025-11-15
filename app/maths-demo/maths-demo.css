@@ -312,7 +312,7 @@
 /* Chapter signposts under grass */
 .maths-demo-page .chapter-signpost {
   position: absolute;
-  bottom: -80px;
+  bottom: 118px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -412,7 +412,7 @@
   }
 
   .maths-demo-page .chapter-signpost {
-    bottom: -60px;
+    bottom: 133px;
     width: 105px;
     height: 135px;
   }
@@ -485,7 +485,7 @@
   }
 
   .maths-demo-page .chapter-signpost {
-    bottom: -50px;
+    bottom: 148px;
     width: 90px;
     height: 120px;
   }
