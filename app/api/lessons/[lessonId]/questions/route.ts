@@ -20,62 +20,57 @@ export async function GET(
       );
     }
 
-    // Fetch all questions for this lesson
-    const { data: questions, error: questionsError } = await supabase
+    // Fetch all questions with their parts using nested query
+    const { data: questions, error } = await supabase
       .from('learn_questions')
-      .select('id, code, difficulty, instructions, display_order')
+      .select(`
+        id,
+        question_code,
+        difficulty_level,
+        instructions,
+        display_order,
+        learn_question_parts (
+          id,
+          part_letter,
+          question_latex,
+          question_display,
+          solution_steps,
+          marks,
+          display_order
+        )
+      `)
       .eq('lesson_id', lessonId)
-      .order('display_order', { ascending: true });
+      .order('display_order');
 
-    if (questionsError) {
-      console.error('Error fetching questions:', questionsError);
+    if (error) {
+      console.error('Error fetching questions:', error);
       return NextResponse.json(
         { error: 'Database error while fetching questions' },
         { status: 500 }
       );
     }
 
-    if (!questions || questions.length === 0) {
-      return NextResponse.json({ questions: [] });
-    }
+    // Transform data to match frontend expectations (camelCase format)
+    const transformedQuestions = questions?.map(question => ({
+      code: question.question_code,
+      difficulty: question.difficulty_level,
+      instructions: question.instructions,
+      parts: question.learn_question_parts?.map((part: any) => ({
+        id: part.id,
+        letter: part.part_letter,
+        questionLatex: part.question_latex,
+        questionDisplay: part.question_display,
+        solutionSteps: part.solution_steps,
+        marks: part.marks
+      })) || []
+    })) || [];
 
-    // Fetch question parts for all questions
-    const questionIds = questions.map(q => q.id);
-    const { data: parts, error: partsError } = await supabase
-      .from('learn_question_parts')
-      .select('id, question_id, letter, question_latex, question_display, solution_steps, marks, display_order')
-      .in('question_id', questionIds)
-      .order('display_order', { ascending: true });
-
-    if (partsError) {
-      console.error('Error fetching question parts:', partsError);
-      return NextResponse.json(
-        { error: 'Database error while fetching question parts' },
-        { status: 500 }
-      );
-    }
-
-    // Group parts by question
-    const questionsWithParts = questions.map(question => {
-      const questionParts = parts?.filter(p => p.question_id === question.id) || [];
-      return {
-        code: question.code,
-        difficulty: question.difficulty,
-        instructions: question.instructions,
-        parts: questionParts.map(part => ({
-          id: part.id,
-          letter: part.letter,
-          questionLatex: part.question_latex,
-          questionDisplay: part.question_display,
-          solutionSteps: part.solution_steps,
-          marks: part.marks
-        }))
-      };
+    return NextResponse.json({
+      success: true,
+      questions: transformedQuestions
     });
 
-    return NextResponse.json({ questions: questionsWithParts });
-
-  } catch (error) {
+  } catch (error: any) {
     console.error('Questions API Error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
