@@ -277,6 +277,30 @@
   - Page: `app/spec-point-session/page.tsx`
   - Styles: `app/spec-point-session/spec-point-session.css`
 
+## PDF Viewer Component (Nov 2024)
+- **Component**: `/components/PdfViewer.tsx` - Reusable PDF viewing component using react-pdf
+- **Dependencies**: react-pdf library installed for PDF rendering
+- **Props**:
+  - `pdfUrl` (string, required): URL of the PDF to display
+  - `onPageChange` (function, optional): Callback fired when page changes - receives page number
+- **Features**:
+  - **PDF Rendering**: Uses react-pdf's Document and Page components
+  - **Navigation Controls**: Previous/Next buttons with proper disabled states
+  - **Page Counter**: Displays "Page X of Y" format in center of controls
+  - **Loading State**: Animated spinner with "Loading PDF..." message
+  - **Error Handling**: Shows warning icon and error message if PDF fails to load
+  - **Responsive Design**: Automatically adjusts to container width (max 800px)
+  - **Text & Annotations**: Full PDF functionality with text selection enabled
+- **Styling**:
+  - White background (#ffffff)
+  - Black border (2px solid)
+  - Rounded corners (12px radius)
+  - Light gray PDF viewing area (#f5f5f5)
+  - Navigation bar at bottom with border separator
+  - Button hover effects for better UX
+- **Worker Configuration**: Uses CDN-hosted PDF.js worker from unpkg
+- **Usage**: Designed for use in spec point session pages for displaying study materials
+
 ## Search Page - Interview Resources Index (Nov 2024)
 - **New Index Added**: `v2_interview_resources` added to `/search` page
 - **Dropdown Label**: "Interview Resources" appears in Admissions dropdown
