@@ -300,6 +300,13 @@
   - Button hover effects for better UX
 - **Worker Configuration**: Uses CDN-hosted PDF.js worker from unpkg
 - **Usage**: Designed for use in spec point session pages for displaying study materials
+- **Integration in Spec Point Session Page** (Nov 2024):
+  - PDF URL fetched from `learn_lessons` table based on spec point and lesson number
+  - Falls back to default S3 URL if no database entry found
+  - "Download PDF" button opens PDF in new tab
+  - PDF viewing tracked in `learn_user_progress` table (sets `pdf_viewed = true`)
+  - Progress tracking creates new record if none exists, updates existing record if already exists
+  - Tracking occurs when user switches to PDF tab (tracked once per viewing session)
 
 ## Search Page - Interview Resources Index (Nov 2024)
 - **New Index Added**: `v2_interview_resources` added to `/search` page
