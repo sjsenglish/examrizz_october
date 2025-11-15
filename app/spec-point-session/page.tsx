@@ -170,6 +170,8 @@ function SpecPointSessionContent() {
         // Hardcode lesson ID for now (Power Rule lesson)
         const hardcodedLessonId = 'd0000000-0000-0000-0000-000000000001';
 
+        console.log('🔍 Fetching lesson data for ID:', hardcodedLessonId);
+
         // Query learn_lessons table directly by lesson ID
         const { data, error } = await supabase
           .from('learn_lessons')
@@ -187,21 +189,39 @@ function SpecPointSessionContent() {
           .single();
 
         if (error) {
-          console.error('Error fetching lesson data:', error);
+          console.error('❌ Error fetching lesson data:', error);
+          console.log('⚠️ Using fallback URLs');
           // If no data in database, use default S3 URLs
-          setPdfUrl('https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/lessonpdf/Copy+of+Chapter+7+Differentiation+Lessons.pdf');
-          setVideoUrl('https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/7.1_L/7_1+Lesson+1+Differentiation.mov');
+          const fallbackPdfUrl = 'https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/lessonpdf/Copy+of+Chapter+7+Differentiation+Lessons.pdf';
+          const fallbackVideoUrl = 'https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/7.1_L/7_1+Lesson+1+Differentiation.mov';
+          setPdfUrl(fallbackPdfUrl);
+          setVideoUrl(fallbackVideoUrl);
+          console.log('📄 PDF URL (fallback):', fallbackPdfUrl);
+          console.log('🎬 Video URL (fallback):', fallbackVideoUrl);
         } else if (data) {
+          console.log('✅ Lesson data fetched successfully:', data);
           setLessonId(data.id);
-          setPdfUrl(data.pdf_notes_url || 'https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/lessonpdf/Copy+of+Chapter+7+Differentiation+Lessons.pdf');
-          setVideoUrl(data.video_url || 'https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/7.1_L/7_1+Lesson+1+Differentiation.mov');
+
+          const pdfUrlFromDb = data.pdf_notes_url || 'https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/lessonpdf/Copy+of+Chapter+7+Differentiation+Lessons.pdf';
+          const videoUrlFromDb = data.video_url || 'https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/7.1_L/7_1+Lesson+1+Differentiation.mov';
+
+          setPdfUrl(pdfUrlFromDb);
+          setVideoUrl(videoUrlFromDb);
+
+          console.log('📄 PDF URL:', pdfUrlFromDb);
+          console.log('🎬 Video URL:', videoUrlFromDb);
         }
       } catch (error) {
-        console.error('Error in fetchLessonData:', error);
+        console.error('❌ Error in fetchLessonData:', error);
         // Fallback to default URLs
-        setPdfUrl('https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/lessonpdf/Copy+of+Chapter+7+Differentiation+Lessons.pdf');
-        setVideoUrl('https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/7.1_L/7_1+Lesson+1+Differentiation.mov');
+        const fallbackPdfUrl = 'https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/lessonpdf/Copy+of+Chapter+7+Differentiation+Lessons.pdf';
+        const fallbackVideoUrl = 'https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/7.1_L/7_1+Lesson+1+Differentiation.mov';
+        setPdfUrl(fallbackPdfUrl);
+        setVideoUrl(fallbackVideoUrl);
+        console.log('📄 PDF URL (error fallback):', fallbackPdfUrl);
+        console.log('🎬 Video URL (error fallback):', fallbackVideoUrl);
       } finally {
+        console.log('🏁 Loading complete - pdfLoading: false, videoLoading: false');
         setPdfLoading(false);
         setVideoLoading(false);
       }
@@ -748,6 +768,8 @@ function SpecPointSessionContent() {
   };
 
   const renderVideoContent = () => {
+    console.log('🎬 renderVideoContent called - videoLoading:', videoLoading, 'videoUrl:', videoUrl);
+
     if (videoLoading) {
       return (
         <div className="content-container">
@@ -762,6 +784,7 @@ function SpecPointSessionContent() {
     }
 
     if (!videoUrl) {
+      console.log('⚠️ No video URL available');
       return (
         <div className="content-container">
           <div className="video-player">
@@ -774,6 +797,7 @@ function SpecPointSessionContent() {
       );
     }
 
+    console.log('✅ Rendering VideoPlayer with URL:', videoUrl);
     return (
       <div className="content-container">
         <VideoPlayer
@@ -952,6 +976,8 @@ function SpecPointSessionContent() {
   };
 
   const renderPdfContent = () => {
+    console.log('📄 renderPdfContent called - pdfLoading:', pdfLoading, 'pdfUrl:', pdfUrl);
+
     if (pdfLoading) {
       return (
         <div className="content-container">
@@ -966,6 +992,7 @@ function SpecPointSessionContent() {
     }
 
     if (!pdfUrl) {
+      console.log('⚠️ No PDF URL available');
       return (
         <div className="content-container">
           <div className="pdf-viewer">
@@ -978,6 +1005,7 @@ function SpecPointSessionContent() {
       );
     }
 
+    console.log('✅ Rendering PdfViewer with URL:', pdfUrl);
     return (
       <div className="content-container">
         <div className="pdf-controls">
