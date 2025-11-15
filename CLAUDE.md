@@ -308,6 +308,33 @@
   - Progress tracking creates new record if none exists, updates existing record if already exists
   - Tracking occurs when user switches to PDF tab (tracked once per viewing session)
 
+## Lessons API Route (Nov 2024)
+- **Endpoint**: `/api/lessons/[lessonId]` - GET endpoint for fetching lesson data
+- **File**: `app/api/lessons/[lessonId]/route.ts`
+- **Authentication**: No authentication required (content is public)
+- **Parameters**:
+  - `lessonId` (string, required): UUID of the lesson from learn_lessons table
+- **Response Data**:
+  - `id`: Lesson UUID
+  - `specPoint`: Spec point identifier (e.g., "7.2")
+  - `lessonNumber`: Lesson number within the spec point
+  - `lessonName`: Name of the lesson
+  - `description`: Lesson description
+  - `videoUrl`: S3 URL for the lesson video
+  - `pdfNotesUrl`: S3 URL for the lesson PDF notes
+  - `totalQuestions`: Count of all question parts across all questions for this lesson
+  - `createdAt`: Timestamp of lesson creation
+  - `updatedAt`: Timestamp of last update
+- **Error Handling**:
+  - 400: Missing lesson ID
+  - 404: Lesson not found (PGRST116 error code)
+  - 500: Database error or internal server error
+- **Question Counting Logic**:
+  - Queries `learn_questions` table to get all questions for the lesson
+  - Counts total rows in `learn_question_parts` table for those questions
+  - Continues gracefully if question count fails (returns 0)
+- **Usage**: Used by spec point session pages to fetch complete lesson data including question counts
+
 ## Search Page - Interview Resources Index (Nov 2024)
 - **New Index Added**: `v2_interview_resources` added to `/search` page
 - **Dropdown Label**: "Interview Resources" appears in Admissions dropdown
