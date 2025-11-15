@@ -348,6 +348,11 @@
   margin: 10px 0;
 }
 
+.spec-point-session-page .video-loading-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
 /* Questions Content */
 .spec-point-session-page .question-header {
   display: flex;

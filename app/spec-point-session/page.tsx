@@ -25,6 +25,23 @@ const PdfViewer = dynamic(() => import('@/components/PdfViewer'), {
   ),
 });
 
+// Dynamically import VideoPlayer with ssr: false to prevent SSR issues with react-player
+const VideoPlayer = dynamic(() => import('@/components/VideoPlayer'), {
+  ssr: false,
+  loading: () => (
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '550px',
+      fontSize: '14px',
+      color: '#666'
+    }}>
+      Loading video player...
+    </div>
+  ),
+});
+
 type ContentType = 'video' | 'questions' | 'pdf';
 
 // Sample question data
@@ -67,10 +84,13 @@ function SpecPointSessionContent() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
 
-  // PDF state
+  // Lesson data state
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [pdfLoading, setPdfLoading] = useState(false);
+  const [videoLoading, setVideoLoading] = useState(false);
   const [lessonId, setLessonId] = useState<string | null>(null);
+  const [lastProgressUpdate, setLastProgressUpdate] = useState<number>(0);
 
   // Chat state
   const [user, setUser] = useState<any>(null);
@@ -106,33 +126,38 @@ function SpecPointSessionContent() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Fetch lesson data and PDF URL
+  // Fetch lesson data including video and PDF URLs
   useEffect(() => {
     const fetchLessonData = async () => {
       setPdfLoading(true);
+      setVideoLoading(true);
       try {
-        // Query learn_lessons table to get lesson data including PDF URL
+        // Query learn_lessons table to get lesson data including video and PDF URLs
         const { data, error } = await supabase
           .from('learn_lessons')
-          .select('id, pdf_notes_url')
+          .select('id, video_url, pdf_notes_url')
           .eq('spec_point', specPoint)
           .eq('lesson_number', parseInt(lessonNumber))
           .single();
 
         if (error) {
           console.error('Error fetching lesson data:', error);
-          // If no data in database, use default S3 URL
+          // If no data in database, use default S3 URLs
           setPdfUrl('https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/lessonpdf/Copy+of+Chapter+7+Differentiation+Lessons.pdf');
+          setVideoUrl('https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/7.1_L/7_1+Lesson+1+Differentiation.mov');
         } else if (data) {
           setLessonId(data.id);
           setPdfUrl(data.pdf_notes_url || 'https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/lessonpdf/Copy+of+Chapter+7+Differentiation+Lessons.pdf');
+          setVideoUrl(data.video_url || 'https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/7.1_L/7_1+Lesson+1+Differentiation.mov');
         }
       } catch (error) {
         console.error('Error in fetchLessonData:', error);
-        // Fallback to default PDF
+        // Fallback to default URLs
         setPdfUrl('https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/lessonpdf/Copy+of+Chapter+7+Differentiation+Lessons.pdf');
+        setVideoUrl('https://examrizzjoemathsvideos.s3.eu-central-1.amazonaws.com/7.1_L/7_1+Lesson+1+Differentiation.mov');
       } finally {
         setPdfLoading(false);
+        setVideoLoading(false);
       }
     };
 
@@ -344,16 +369,161 @@ function SpecPointSessionContent() {
     }
   };
 
-  const renderVideoContent = () => (
-    <div className="content-container">
-      <div className="video-player">
-        <div className="video-placeholder">
-          <p>Sample video content would appear here</p>
-          <p>explaining the spec point concepts</p>
+  // Track video progress (called every 10 seconds during playback)
+  const handleVideoProgress = async (progress: number) => {
+    if (!userId || !lessonId || !videoUrl) {
+      return;
+    }
+
+    // Get current video duration from the player (estimate based on typical lesson length)
+    // For now, we'll track progress as a percentage
+    const currentSeconds = Math.floor(progress * 3600); // Assuming ~1 hour max video
+
+    // Only update if 10 seconds have passed since last update
+    if (currentSeconds - lastProgressUpdate < 10) {
+      return;
+    }
+
+    setLastProgressUpdate(currentSeconds);
+
+    try {
+      const { data: existingProgress, error: fetchError } = await supabase
+        .from('learn_user_progress')
+        .select('id, video_progress_seconds')
+        .eq('user_id', userId)
+        .eq('lesson_id', lessonId)
+        .single();
+
+      if (fetchError && fetchError.code !== 'PGRST116') {
+        console.error('Error fetching progress for video tracking:', fetchError);
+        return;
+      }
+
+      if (existingProgress) {
+        // Update existing progress
+        const { error: updateError } = await supabase
+          .from('learn_user_progress')
+          .update({
+            video_progress_seconds: currentSeconds,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', existingProgress.id);
+
+        if (updateError) {
+          console.error('Error updating video progress:', updateError);
+        }
+      } else {
+        // Create new progress record
+        const { error: insertError } = await supabase
+          .from('learn_user_progress')
+          .insert({
+            user_id: userId,
+            lesson_id: lessonId,
+            video_progress_seconds: currentSeconds,
+            video_watched: false,
+            pdf_viewed: false,
+            questions_completed: false
+          });
+
+        if (insertError) {
+          console.error('Error creating progress record for video:', insertError);
+        }
+      }
+    } catch (error) {
+      console.error('Error in handleVideoProgress:', error);
+    }
+  };
+
+  // Mark video as watched when it ends
+  const handleVideoEnded = async () => {
+    if (!userId || !lessonId) {
+      return;
+    }
+
+    try {
+      const { data: existingProgress, error: fetchError } = await supabase
+        .from('learn_user_progress')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('lesson_id', lessonId)
+        .single();
+
+      if (fetchError && fetchError.code !== 'PGRST116') {
+        console.error('Error fetching progress for video completion:', fetchError);
+        return;
+      }
+
+      if (existingProgress) {
+        // Update existing progress
+        const { error: updateError } = await supabase
+          .from('learn_user_progress')
+          .update({
+            video_watched: true,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', existingProgress.id);
+
+        if (updateError) {
+          console.error('Error marking video as watched:', updateError);
+        }
+      } else {
+        // Create new progress record
+        const { error: insertError } = await supabase
+          .from('learn_user_progress')
+          .insert({
+            user_id: userId,
+            lesson_id: lessonId,
+            video_watched: true,
+            pdf_viewed: false,
+            questions_completed: false
+          });
+
+        if (insertError) {
+          console.error('Error creating progress record for video completion:', insertError);
+        }
+      }
+    } catch (error) {
+      console.error('Error in handleVideoEnded:', error);
+    }
+  };
+
+  const renderVideoContent = () => {
+    if (videoLoading) {
+      return (
+        <div className="content-container">
+          <div className="video-player">
+            <div className="video-placeholder">
+              <div className="video-loading-icon">🎬</div>
+              <p>Loading video...</p>
+            </div>
+          </div>
         </div>
+      );
+    }
+
+    if (!videoUrl) {
+      return (
+        <div className="content-container">
+          <div className="video-player">
+            <div className="video-placeholder">
+              <div className="video-loading-icon">🎬</div>
+              <p>No video available for this lesson</p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="content-container">
+        <VideoPlayer
+          videoUrl={videoUrl}
+          onProgress={handleVideoProgress}
+          onEnded={handleVideoEnded}
+        />
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderQuestionsContent = () => {
     const currentQuestion = sampleQuestions[currentQuestionIndex];

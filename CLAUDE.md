@@ -366,6 +366,14 @@
   - Hide after 3 seconds of inactivity when playing
   - Always visible when paused
 - **Usage**: Designed for use in spec point session pages for lesson video playback
+- **Integration in Spec Point Session Page** (Nov 2024):
+  - Video URL fetched from `learn_lessons` table based on spec point and lesson number
+  - Falls back to default S3 URL if no database entry found
+  - Dynamically imported with `ssr: false` to prevent SSR issues with react-player
+  - **Progress Tracking**: Video progress saved to `learn_user_progress.video_progress_seconds` every 10 seconds
+  - **Completion Tracking**: When video ends, sets `learn_user_progress.video_watched = true`
+  - Progress tracking creates new record if none exists, updates existing record if already exists
+  - Tracking only occurs for logged-in users
 
 ## Search Page - Interview Resources Index (Nov 2024)
 - **New Index Added**: `v2_interview_resources` added to `/search` page
