@@ -306,6 +306,48 @@
   - Returns empty array if no questions found
 - **Usage**: Used by spec point session pages to load practice questions
 
+## Answer Submission API Route (Nov 2024)
+- **Endpoint**: `/api/answers/submit` - POST endpoint for submitting and validating student answers
+- **File**: `app/api/answers/submit/route.ts`
+- **Dependencies**: Uses `mathjs` library for symbolic math comparison
+- **Request Body**:
+  - `user_id` (string, required): UUID of the user from auth.users
+  - `question_part_id` (string, required): UUID of the question part from learn_question_parts
+  - `submitted_answer_latex` (string, required): Student's LaTeX answer
+  - `time_spent_seconds` (number, optional): Time spent on the question
+- **Validation Logic**:
+  - Fetches acceptable answers from `learn_question_parts.acceptable_answers` (JSON array)
+  - **Normalization** applied to both submitted and acceptable answers:
+    - Removes all whitespace
+    - Converts `\times` and `\cdot` to `*`
+    - Removes curly braces around single characters (e.g., `x^{6}` → `x^6`)
+    - Converts `\div` to `/`
+    - Lowercase conversion for case-insensitive comparison
+  - **Two-stage comparison**:
+    1. String matching on normalized LaTeX
+    2. Symbolic math comparison using mathjs for algebraic equivalence
+  - **Mathjs conversion**: Converts LaTeX to mathjs format (`\frac{a}{b}` → `(a)/(b)`, `\sqrt{x}` → `sqrt(x)`, etc.)
+- **Database Operations**:
+  - Saves to `learn_user_answers` table with fields:
+    - `submitted_answer_latex`: Raw LaTeX answer
+    - `is_correct`: Boolean validation result
+    - `marks_awarded`: Full marks if correct, 0 if incorrect
+    - `attempt_number`: Increments with each retry
+    - `time_spent_seconds`: Time tracking
+  - Database trigger automatically updates `learn_user_progress`
+- **Response Data**:
+  - `correct` (boolean): Whether answer is correct
+  - `correctAnswer` (string): First acceptable answer (for feedback)
+  - `feedback` (string): User-friendly message
+  - `marksAwarded` (number): Marks received
+  - `attemptNumber` (number): Current attempt count
+- **Error Handling**:
+  - 400: Missing required fields
+  - 404: Question part not found
+  - 500: Database error or missing acceptable answers
+  - Mathjs errors fall back to string comparison only
+- **Usage**: Called from spec point session pages when students submit answers to practice questions
+
 ## PDF Viewer Component (Nov 2024)
 - **Component**: `/components/PdfViewer.tsx` - Reusable PDF viewing component using react-pdf
 - **Dependencies**: react-pdf library installed for PDF rendering
