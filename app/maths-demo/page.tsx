@@ -73,6 +73,18 @@ export default function MathsDemoPage() {
   const progressBarRef = useRef<HTMLDivElement>(null);
   const [currentSpecIndex, setCurrentSpecIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  // Filter spec points based on search query (exclude blended blocks)
+  const filteredSpecs = specPoints.filter(spec => {
+    if (!searchQuery.trim() || spec.type === 'blended') return false;
+    const query = searchQuery.toLowerCase();
+    return (
+      spec.id.toLowerCase().includes(query) ||
+      spec.name.toLowerCase().includes(query)
+    );
+  });
 
   // Calculate cumulative hours for each spec point (exclude blended blocks)
   const getCumulativeHours = (index: number) => {
@@ -106,6 +118,23 @@ export default function MathsDemoPage() {
       });
 
       setCurrentSpecIndex(index);
+    }
+  };
+
+  // Handle search input
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    setShowDropdown(value.trim().length > 0);
+  };
+
+  // Handle selecting a topic from dropdown
+  const handleSelectTopic = (specId: string) => {
+    const index = specPoints.findIndex(spec => spec.id === specId);
+    if (index !== -1) {
+      scrollToSpec(index);
+      setSearchQuery('');
+      setShowDropdown(false);
     }
   };
 
@@ -245,6 +274,33 @@ export default function MathsDemoPage() {
           </svg>
           Back
         </Link>
+
+        {/* Search Bar */}
+        <div className="search-bar-wrapper">
+          <div className="search-bar-container-custom">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              placeholder="Search topics..."
+              className="search-input"
+            />
+            {showDropdown && filteredSpecs.length > 0 && (
+              <div className="search-dropdown">
+                {filteredSpecs.map((spec) => (
+                  <div
+                    key={spec.id}
+                    className="search-dropdown-item"
+                    onClick={() => handleSelectTopic(spec.id)}
+                  >
+                    <span className="search-item-id">{spec.id}</span>
+                    <span className="search-item-name">{spec.name}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
 
         {/* Progress Bar */}
         <div className="progress-bar-container" ref={progressBarRef} onClick={handleProgressBarClick}>
