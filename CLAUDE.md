@@ -141,10 +141,13 @@
       - Desktop gap: 100px (reduced from 180px)
       - Tablet gap: 90px (reduced from 160px)
       - Mobile gap: 80px (reduced from 140px)
-    - **Chapter signposts** (Updated Nov 2024): Positioned relative to grass at bottom of page, not affected by stepping stone vertical positioning changes
-      - Desktop: bottom: -80px (maintains original position despite increased padding-top)
-      - Tablet: bottom: -60px
-      - Mobile: bottom: -50px
+    - **Chapter signposts** (Updated Nov 2024): Positioned to appear in grass area near divider line
+      - **CRITICAL**: These values are calculated based on wrapper extending 80px below viewport and grass fixed at bottom: 64px
+      - Desktop: bottom: 118px (NOT negative - positions signpost to appear in grass with ~70px visible above grass divider line)
+      - Tablet: bottom: 133px (adjusted for 135px signpost height)
+      - Mobile: bottom: 148px (adjusted for 120px signpost height)
+      - **DO NOT use negative values** - they push signposts below viewport making them invisible
+      - Positioning calculation: Grass top is at 118px from viewport bottom; wrapper bottom extends 80px below viewport; positive bottom value keeps signposts visible in grass area
     - Grass pattern at bottom: 54px height with 2px black border on top, positioned 64px from bottom (fixed position, moved up 118% of height - Nov 2024)
     - Progress bar: 80% width, centered, with responsive sizing for mobile
     - Back button in top-left corner linking to `/subject-selection`
