@@ -12,6 +12,8 @@ interface VideoPlayerProps {
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded }) => {
+  console.log('🎥 VideoPlayer component mounted with URL:', videoUrl);
+
   const playerRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -25,6 +27,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [controlsTimeout, setControlsTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Handle fullscreen changes
   useEffect(() => {
@@ -104,12 +107,20 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
   };
 
   const handleReady = () => {
+    console.log('✅ VideoPlayer: Video is ready to play');
     setIsLoading(false);
   };
 
   const handleEnded = () => {
+    console.log('✅ VideoPlayer: Video playback ended');
     setIsPlaying(false);
     onEnded?.();
+  };
+
+  const handleError = (error: any) => {
+    console.error('❌ VideoPlayer: Error loading/playing video:', error);
+    setError('Failed to load video. The video format may not be supported by your browser.');
+    setIsLoading(false);
   };
 
   const handleDuration = (duration: number) => {
@@ -143,7 +154,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
       }}
     >
       {/* Loading Spinner */}
-      {isLoading && (
+      {isLoading && !error && (
         <div
           style={{
             position: 'absolute',
@@ -182,32 +193,85 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
         </div>
       )}
 
+      {/* Error Display */}
+      {error && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#000',
+            zIndex: 10,
+            padding: '20px',
+          }}
+        >
+          <div
+            style={{
+              fontSize: '48px',
+              marginBottom: '16px',
+            }}
+          >
+            ⚠️
+          </div>
+          <p
+            style={{
+              color: '#fff',
+              fontFamily: "'Madimi One', sans-serif",
+              fontSize: '16px',
+              textAlign: 'center',
+              marginBottom: '8px',
+            }}
+          >
+            Video Error
+          </p>
+          <p
+            style={{
+              color: '#B3F0F2',
+              fontFamily: "'Madimi One', sans-serif",
+              fontSize: '12px',
+              textAlign: 'center',
+            }}
+          >
+            {error}
+          </p>
+        </div>
+      )}
+
       {/* React Player */}
-      <ReactPlayer
-        ref={playerRef}
-        url={videoUrl}
-        playing={isPlaying}
-        volume={volume}
-        muted={isMuted}
-        onProgress={handleProgress}
-        onDuration={handleDuration}
-        onReady={handleReady}
-        onEnded={handleEnded}
-        width="100%"
-        height="100%"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-        }}
-        config={{
-          file: {
-            attributes: {
-              controlsList: 'nodownload',
+      {!error && (
+        <ReactPlayer
+          ref={playerRef}
+          url={videoUrl}
+          playing={isPlaying}
+          volume={volume}
+          muted={isMuted}
+          onProgress={handleProgress}
+          onDuration={handleDuration}
+          onReady={handleReady}
+          onEnded={handleEnded}
+          onError={handleError}
+          width="100%"
+          height="100%"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+          }}
+          config={{
+            file: {
+              attributes: {
+                controlsList: 'nodownload',
+              },
             },
-          },
-        }}
-      />
+          }}
+        />
+      )}
 
       {/* Custom Controls */}
       <div

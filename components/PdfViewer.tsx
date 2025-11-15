@@ -14,6 +14,8 @@ interface PdfViewerProps {
 }
 
 const PdfViewer: React.FC<PdfViewerProps> = ({ pdfUrl, onPageChange }) => {
+  console.log('📄 PdfViewer component mounted with URL:', pdfUrl);
+
   const [numPages, setNumPages] = useState<number | null>(null);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -21,15 +23,17 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ pdfUrl, onPageChange }) => {
   const [containerWidth, setContainerWidth] = useState<number>(0);
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+    console.log('✅ PdfViewer: PDF loaded successfully with', numPages, 'pages');
     setNumPages(numPages);
     setIsLoading(false);
     setError(null);
   };
 
   const onDocumentLoadError = (error: Error) => {
+    console.error('❌ PdfViewer: Error loading PDF:', error);
     setIsLoading(false);
-    setError('Failed to load PDF. Please try again later.');
-    console.error('PDF load error:', error);
+    setError('Failed to load PDF. This may be due to CORS restrictions or an invalid PDF file.');
+    console.error('PDF load error details:', error);
   };
 
   const goToPreviousPage = () => {
