@@ -1,16 +1,26 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 
-export const dynamic = 'force-dynamic';
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function GET(
-  request: Request,
-  { params }: { params: { lessonId: string } }
+  request: NextRequest,
+  context: { params: Promise<{ lessonId: string }> }
 ) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const { lessonId } = await context.params;
 
+    if (!lessonId) {
+      return NextResponse.json(
+        { error: 'Lesson ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Fetch all questions with their parts using nested query
     const { data: questions, error } = await supabase
       .from('learn_questions')
       .select(`
@@ -31,12 +41,15 @@ export async function GET(
           display_order
         )
       `)
-      .eq('lesson_id', params.lessonId)
+      .eq('lesson_id', lessonId)
       .order('display_order');
 
     if (error) {
-      console.error('Supabase error:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error('Error fetching questions:', error);
+      return NextResponse.json(
+        { error: 'Database error while fetching questions' },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({
@@ -45,10 +58,10 @@ export async function GET(
     });
 
   } catch (error: any) {
-    console.error('API error:', error);
-    return NextResponse.json({
-      error: 'Internal server error',
-      details: error.message
-    }, { status: 500 });
+    console.error('Questions API Error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }

@@ -348,13 +348,15 @@
 - **Parameters**:
   - `lessonId` (string, required): UUID of the lesson from learn_lessons table
 - **Response Data**:
-  - `questions`: Array of question objects with parts
-  - Each question has: `code`, `difficulty`, `instructions`, `parts[]`
-  - Each part has: `id`, `letter`, `questionLatex`, `questionDisplay`, `solutionSteps`, `marks`
-- **Database Queries**:
-  - Queries `learn_questions` table ordered by `display_order`
-  - Queries `learn_question_parts` table for all questions with fields: `id`, `question_id`, `letter`, `question_latex`, `question_display`, `solution_steps`, `marks`, `display_order`
-  - Groups parts by question ID
+  - `success`: Boolean indicating success
+  - `questions`: Array of question objects with nested parts
+  - Each question has: `id`, `question_code`, `difficulty_level`, `instructions`, `display_order`, `learn_question_parts[]`
+  - Each part has: `id`, `part_letter`, `question_latex`, `question_display`, `answer_latex`, `answer_display`, `acceptable_answers`, `marks`, `display_order`
+- **Database Query** (Updated Nov 2024):
+  - **Single nested query** using Supabase relationship syntax for better performance
+  - Fetches `learn_questions` with embedded `learn_question_parts` in one database call
+  - Ordered by `display_order` for consistent presentation
+  - Uses service role client (`@supabase/supabase-js`) matching project pattern
 - **Error Handling**:
   - 400: Missing lesson ID
   - 500: Database error
