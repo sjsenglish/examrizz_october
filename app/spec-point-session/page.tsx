@@ -62,9 +62,12 @@ type ContentType = 'video' | 'questions' | 'pdf';
 
 // Types for question data
 interface QuestionPart {
+  id: string;
   letter: string;
   questionLatex: string;
   questionDisplay: string;
+  solutionSteps: string | null;
+  marks: number;
 }
 
 interface Question {
@@ -72,6 +75,16 @@ interface Question {
   difficulty: string;
   instructions: string;
   parts: QuestionPart[];
+}
+
+interface PartSubmissionState {
+  submitted: boolean;
+  correct: boolean | null;
+  showSolution: boolean;
+  feedback: string;
+  marksAwarded: number;
+  attemptNumber: number;
+  isSubmitting: boolean;
 }
 
 function SpecPointSessionContent() {
@@ -87,6 +100,10 @@ function SpecPointSessionContent() {
   const [currentContent, setCurrentContent] = useState<ContentType>('video');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
+
+  // Answer submission state
+  const [submissionStates, setSubmissionStates] = useState<Record<string, PartSubmissionState>>({});
+  const [questionStartTimes, setQuestionStartTimes] = useState<Record<string, number>>({});
 
   // Lesson data state
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
@@ -336,6 +353,104 @@ function SpecPointSessionContent() {
     setUserAnswers(prev => ({
       ...prev,
       [key]: latex
+    }));
+
+    // Track start time when user starts typing (only once per part)
+    if (!questionStartTimes[key] && latex.trim()) {
+      setQuestionStartTimes(prev => ({
+        ...prev,
+        [key]: Date.now()
+      }));
+    }
+  };
+
+  // Submit answer for a question part
+  const handleSubmitAnswer = async (partId: string, partKey: string) => {
+    const answer = userAnswers[partKey];
+
+    if (!answer || !answer.trim()) {
+      return;
+    }
+
+    if (!userId) {
+      alert('Please log in to submit answers');
+      return;
+    }
+
+    // Calculate time spent
+    const startTime = questionStartTimes[partKey] || Date.now();
+    const timeSpentSeconds = Math.floor((Date.now() - startTime) / 1000);
+
+    // Set submitting state
+    setSubmissionStates(prev => ({
+      ...prev,
+      [partKey]: {
+        ...prev[partKey],
+        isSubmitting: true,
+        submitted: false,
+        correct: null,
+        showSolution: false,
+        feedback: '',
+        marksAwarded: 0,
+        attemptNumber: 0
+      }
+    }));
+
+    try {
+      const response = await fetch('/api/answers/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: userId,
+          question_part_id: partId,
+          submitted_answer_latex: answer,
+          time_spent_seconds: timeSpentSeconds
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit answer');
+      }
+
+      const data = await response.json();
+
+      // Update submission state with feedback
+      setSubmissionStates(prev => ({
+        ...prev,
+        [partKey]: {
+          submitted: true,
+          correct: data.correct,
+          showSolution: false,
+          feedback: data.feedback,
+          marksAwarded: data.marksAwarded,
+          attemptNumber: data.attemptNumber,
+          isSubmitting: false
+        }
+      }));
+    } catch (error) {
+      console.error('Error submitting answer:', error);
+
+      // Show error state
+      setSubmissionStates(prev => ({
+        ...prev,
+        [partKey]: {
+          ...prev[partKey],
+          isSubmitting: false,
+          submitted: false,
+          feedback: 'Error submitting answer. Please try again.'
+        }
+      }));
+    }
+  };
+
+  // Toggle solution display
+  const handleToggleSolution = (partKey: string) => {
+    setSubmissionStates(prev => ({
+      ...prev,
+      [partKey]: {
+        ...prev[partKey],
+        showSolution: !prev[partKey]?.showSolution
+      }
     }));
   };
 
@@ -624,12 +739,16 @@ function SpecPointSessionContent() {
           <div className="question-parts">
             {currentQuestion.parts.map((part, partIndex) => {
               const answerKey = `${currentQuestion.code}-${part.letter}`;
+              const submissionState = submissionStates[answerKey];
 
               return (
                 <div key={partIndex} className="question-part">
                   <div className="part-header">
                     <span className="part-letter">{part.letter})</span>
                     <span className="part-question">{part.questionDisplay}</span>
+                    {part.marks && (
+                      <span className="part-marks">({part.marks} {part.marks === 1 ? 'mark' : 'marks'})</span>
+                    )}
                   </div>
 
                   <div className="part-answer">
@@ -639,6 +758,78 @@ function SpecPointSessionContent() {
                       placeholder="Enter your answer using LaTeX..."
                     />
                   </div>
+
+                  {/* Check Answer Button */}
+                  <div className="answer-actions">
+                    <button
+                      onClick={() => handleSubmitAnswer(part.id, answerKey)}
+                      disabled={!userAnswers[answerKey] || submissionState?.isSubmitting}
+                      className="check-answer-btn"
+                    >
+                      {submissionState?.isSubmitting ? 'Checking...' : 'Check Answer'}
+                    </button>
+                  </div>
+
+                  {/* Feedback Display */}
+                  {submissionState?.submitted && (
+                    <div className={`feedback-container ${submissionState.correct ? 'correct' : 'incorrect'}`}>
+                      <div className="feedback-header">
+                        {submissionState.correct ? (
+                          <div className="feedback-icon correct-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="12" cy="12" r="10" fill="#4CAF50"/>
+                              <path d="M9 12l2 2 4-4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          </div>
+                        ) : (
+                          <div className="feedback-icon incorrect-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="12" cy="12" r="10" fill="#f44336"/>
+                              <path d="M15 9l-6 6M9 9l6 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          </div>
+                        )}
+                        <div className="feedback-content">
+                          <div className="feedback-message">
+                            {submissionState.correct ? (
+                              <>
+                                <strong>Correct! ✓</strong>
+                                <span> You earned {submissionState.marksAwarded} {submissionState.marksAwarded === 1 ? 'mark' : 'marks'}!</span>
+                              </>
+                            ) : (
+                              <>
+                                <strong>Incorrect.</strong>
+                                <span> Try again or view the solution.</span>
+                              </>
+                            )}
+                          </div>
+                          {submissionState.attemptNumber > 1 && (
+                            <div className="attempt-info">Attempt #{submissionState.attemptNumber}</div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Show Solution Button (only for incorrect answers) */}
+                      {!submissionState.correct && part.solutionSteps && (
+                        <div className="solution-actions">
+                          <button
+                            onClick={() => handleToggleSolution(answerKey)}
+                            className="toggle-solution-btn"
+                          >
+                            {submissionState.showSolution ? 'Hide Solution' : 'Show Solution'}
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Solution Display */}
+                      {submissionState.showSolution && part.solutionSteps && (
+                        <div className="solution-display">
+                          <h4>Solution:</h4>
+                          <ReactMarkdown>{part.solutionSteps}</ReactMarkdown>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               );
             })}

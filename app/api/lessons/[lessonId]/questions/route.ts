@@ -43,7 +43,7 @@ export async function GET(
     const questionIds = questions.map(q => q.id);
     const { data: parts, error: partsError } = await supabase
       .from('learn_question_parts')
-      .select('question_id, letter, question_latex, question_display, display_order')
+      .select('id, question_id, letter, question_latex, question_display, solution_steps, marks, display_order')
       .in('question_id', questionIds)
       .order('display_order', { ascending: true });
 
@@ -63,9 +63,12 @@ export async function GET(
         difficulty: question.difficulty,
         instructions: question.instructions,
         parts: questionParts.map(part => ({
+          id: part.id,
           letter: part.letter,
           questionLatex: part.question_latex,
-          questionDisplay: part.question_display
+          questionDisplay: part.question_display,
+          solutionSteps: part.solution_steps,
+          marks: part.marks
         }))
       };
     });
