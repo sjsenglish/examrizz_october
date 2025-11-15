@@ -349,12 +349,14 @@
   - `lessonId` (string, required): UUID of the lesson from learn_lessons table
 - **Response Data**:
   - `success`: Boolean indicating success
-  - `questions`: Array of question objects with nested parts
-  - Each question has: `id`, `question_code`, `difficulty_level`, `instructions`, `display_order`, `learn_question_parts[]`
-  - Each part has: `id`, `part_letter`, `question_latex`, `question_display`, `answer_latex`, `answer_display`, `acceptable_answers`, `marks`, `display_order`
+  - `questions`: Array of question objects with nested parts (transformed to camelCase)
+  - Each question has: `code`, `difficulty`, `instructions`, `parts[]`
+  - Each part has: `id`, `letter`, `questionLatex`, `questionDisplay`, `solutionSteps`, `marks`
 - **Database Query** (Updated Nov 2024):
   - **Single nested query** using Supabase relationship syntax for better performance
   - Fetches `learn_questions` with embedded `learn_question_parts` in one database call
+  - Database fields: `question_code`, `difficulty_level`, `part_letter`, `question_latex`, `question_display`, `solution_steps`
+  - **Data transformation**: Converts database snake_case fields to camelCase for frontend compatibility
   - Ordered by `display_order` for consistent presentation
   - Uses service role client (`@supabase/supabase-js`) matching project pattern
 - **Error Handling**:

@@ -34,9 +34,7 @@ export async function GET(
           part_letter,
           question_latex,
           question_display,
-          answer_latex,
-          answer_display,
-          acceptable_answers,
+          solution_steps,
           marks,
           display_order
         )
@@ -52,9 +50,24 @@ export async function GET(
       );
     }
 
+    // Transform data to match frontend expectations (camelCase format)
+    const transformedQuestions = questions?.map(question => ({
+      code: question.question_code,
+      difficulty: question.difficulty_level,
+      instructions: question.instructions,
+      parts: question.learn_question_parts?.map((part: any) => ({
+        id: part.id,
+        letter: part.part_letter,
+        questionLatex: part.question_latex,
+        questionDisplay: part.question_display,
+        solutionSteps: part.solution_steps,
+        marks: part.marks
+      })) || []
+    })) || [];
+
     return NextResponse.json({
       success: true,
-      questions: questions || []
+      questions: transformedQuestions
     });
 
   } catch (error: any) {
