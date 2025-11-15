@@ -379,8 +379,8 @@ export default function MathsDemoPage() {
                       <Image
                         src={signpost.url}
                         alt={`Chapter ${spec.chapter}`}
-                        width={240}
-                        height={300}
+                        width={120}
+                        height={150}
                       />
                     </div>
                   )}

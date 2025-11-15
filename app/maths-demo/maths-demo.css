@@ -230,13 +230,13 @@
   z-index: 10;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
   pointer-events: none;
-  width: 240px;
-  height: 300px;
+  width: 120px;
+  height: 150px;
 }
 
 .maths-demo-page .chapter-signpost img {
-  width: 240px !important;
-  height: 300px !important;
+  width: 120px !important;
+  height: 150px !important;
   max-width: none !important;
 }
 
@@ -301,13 +301,13 @@
 
   .maths-demo-page .chapter-signpost {
     bottom: 0;
-    width: 210px;
-    height: 270px;
+    width: 105px;
+    height: 135px;
   }
 
   .maths-demo-page .chapter-signpost img {
-    width: 210px !important;
-    height: 270px !important;
+    width: 105px !important;
+    height: 135px !important;
   }
 }
 
@@ -350,12 +350,12 @@
 
   .maths-demo-page .chapter-signpost {
     bottom: 0;
-    width: 180px;
-    height: 240px;
+    width: 90px;
+    height: 120px;
   }
 
   .maths-demo-page .chapter-signpost img {
-    width: 180px !important;
-    height: 240px !important;
+    width: 90px !important;
+    height: 120px !important;
   }
 }
