@@ -335,6 +335,38 @@
   - Continues gracefully if question count fails (returns 0)
 - **Usage**: Used by spec point session pages to fetch complete lesson data including question counts
 
+## Video Player Component (Nov 2024)
+- **Component**: `/components/VideoPlayer.tsx` - Custom video player using react-player
+- **Dependencies**: react-player library installed for video playback
+- **Props**:
+  - `videoUrl` (string, required): URL of the video to play (supports .mov, .mp4, and other formats)
+  - `onProgress` (function, optional): Callback fired during playback - receives progress as decimal (0-1)
+  - `onEnded` (function, optional): Callback fired when video ends
+- **Features**:
+  - **Video Playback**: Uses ReactPlayer component for reliable cross-format support
+  - **Custom Controls**: Fully custom control bar with site-consistent styling
+  - **Play/Pause**: Large, accessible play/pause toggle button
+  - **Progress Bar**: Seekable progress bar with visual feedback (#B3F0F2 accent color)
+  - **Volume Control**: Volume slider with mute/unmute button
+  - **Time Display**: Current time / Total duration in MM:SS format
+  - **Fullscreen**: Enter/exit fullscreen mode
+  - **Auto-hide Controls**: Controls fade out after 3 seconds of inactivity during playback
+  - **Loading State**: Animated spinner with "Loading video..." message
+  - **Responsive Design**: Maintains 16:9 aspect ratio at all screen sizes
+- **Styling**:
+  - Black background (#000) for video container
+  - Gradient control bar overlay (transparent to rgba(0,0,0,0.8))
+  - Madimi One font for time display
+  - #B3F0F2 accent color for progress bar, volume slider, and hover states
+  - Rounded corners (12px radius) on container
+  - Custom styled range input thumbs with white borders
+- **Video Format Support**: Supports .mov, .mp4, .webm, and other formats via react-player
+- **Controls Behavior**:
+  - Show on mouse movement or hover
+  - Hide after 3 seconds of inactivity when playing
+  - Always visible when paused
+- **Usage**: Designed for use in spec point session pages for lesson video playback
+
 ## Search Page - Interview Resources Index (Nov 2024)
 - **New Index Added**: `v2_interview_resources` added to `/search` page
 - **Dropdown Label**: "Interview Resources" appears in Admissions dropdown
