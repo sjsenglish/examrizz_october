@@ -95,7 +95,8 @@
     - **Clickable link** to `/spec-point-session` with spec point and lesson parameters
     - Size: 100x100px
   - **Search Bar** (Added Nov 2024):
-    - **Position**: Fixed at top of page, above progress bar
+    - **Position**: Fixed at top of page (top: 70px), above progress bar
+    - **Width**: 40% of viewport (max-width: 550px) - half the width of progress bar
     - **Styling**: Rectangular with rounded corners (12px radius), drop shadow on bottom edge
     - **Functionality**: Real-time filtering of spec points as user types
     - **Dropdown**: Appears when typing, exact same width as search bar, no gap
@@ -104,8 +105,9 @@
     - **Display**: Shows spec ID and name in each dropdown item
     - Clicking a topic from dropdown scrolls to that spec point
   - **Navigation System** (Updated Nov 2024):
-    - **Search bar** at top of page (fixed position, visible during scrolling)
-    - **Progress bar** below search bar (fixed position, visible during scrolling)
+    - **Search bar** at top of page (top: 70px, fixed position, visible during scrolling)
+    - **Progress bar** below search bar (top: 160px, fixed position, visible during scrolling)
+    - **Spacing**: 90px gap between search bar and progress bar for clear visual separation
     - **Removed**: Title badge "Maths A Level - 90 hours" and left/right arrow buttons
     - **Progress Bar Features**:
       - Total duration: 92.83 hours displayed in center
@@ -139,6 +141,10 @@
       - Desktop gap: 100px (reduced from 180px)
       - Tablet gap: 90px (reduced from 160px)
       - Mobile gap: 80px (reduced from 140px)
+    - **Chapter signposts** (Updated Nov 2024): Positioned relative to grass at bottom of page, not affected by stepping stone vertical positioning changes
+      - Desktop: bottom: -80px (maintains original position despite increased padding-top)
+      - Tablet: bottom: -60px
+      - Mobile: bottom: -50px
     - Grass pattern at bottom: 54px height with 2px black border on top, positioned 64px from bottom (fixed position, moved up 118% of height - Nov 2024)
     - Progress bar: 80% width, centered, with responsive sizing for mobile
     - Back button in top-left corner linking to `/subject-selection`
