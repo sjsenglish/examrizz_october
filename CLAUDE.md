@@ -303,6 +303,29 @@
     - Solution styled with gray background and left border accent
   - **Multiple Attempts**: Users can resubmit answers, attempt number increments automatically
   - **Login Requirement**: Non-logged-in users are prompted to log in before submitting answers
+- **Progress Indicator** (Nov 2024):
+  - **Display Location**: Between page header and main content
+  - **Only visible for logged-in users**
+  - **Progress Statistics**:
+    - Questions answered correctly count (e.g., "12 / 41 answered correctly")
+    - Video watched indicator: ✓ (green) when watched, ○ (gray) when not watched
+    - PDF viewed indicator: ✓ (green) when viewed, ○ (gray) when not viewed
+  - **Progress Bar**:
+    - Shows completion percentage based on questions answered correctly
+    - Background: #E0E0E0
+    - Fill: #B3F0F2
+    - Height: 8px
+    - Border: 1px solid #000
+    - Border radius: 4px
+    - Smooth animation on width change (0.5s transition)
+  - **Real-time Updates**:
+    - Question count updates when user submits correct answers
+    - Video indicator updates when video finishes playing
+    - PDF indicator updates when user views PDF (switches to PDF tab)
+  - **Data Sources**:
+    - Fetches from `learn_user_progress` table for video_watched and pdf_viewed
+    - Counts unique correct answers from `learn_user_answers` table
+    - Calculates total questions from loaded questions data
 
 ## Lessons Questions API Route (Nov 2024)
 - **Endpoint**: `/api/lessons/[lessonId]/questions` - GET endpoint for fetching lesson questions

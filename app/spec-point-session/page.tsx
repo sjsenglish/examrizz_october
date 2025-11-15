@@ -117,6 +117,16 @@ function SpecPointSessionContent() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [questionsLoading, setQuestionsLoading] = useState(false);
 
+  // Progress tracking state
+  const [progressData, setProgressData] = useState({
+    questionsAttempted: 0,
+    questionsCorrect: 0,
+    totalQuestions: 0,
+    videoWatched: false,
+    pdfViewed: false
+  });
+  const [progressLoading, setProgressLoading] = useState(false);
+
   // Chat state
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -213,6 +223,72 @@ function SpecPointSessionContent() {
 
     fetchQuestions();
   }, [lessonId]);
+
+  // Fetch progress data when lessonId and userId are available
+  useEffect(() => {
+    const fetchProgressData = async () => {
+      if (!lessonId || !userId) return;
+
+      setProgressLoading(true);
+      try {
+        // Fetch user progress (video_watched, pdf_viewed)
+        const { data: progress, error: progressError } = await supabase
+          .from('learn_user_progress')
+          .select('video_watched, pdf_viewed')
+          .eq('user_id', userId)
+          .eq('lesson_id', lessonId)
+          .single();
+
+        if (progressError && progressError.code !== 'PGRST116') {
+          console.error('Error fetching progress:', progressError);
+        }
+
+        // Get all question part IDs from current questions
+        const allPartIds = questions.flatMap(q => q.parts.map(p => p.id));
+        const totalQuestions = allPartIds.length;
+
+        // Fetch user answers for this lesson's questions
+        let questionsAttempted = 0;
+        let questionsCorrect = 0;
+
+        if (allPartIds.length > 0) {
+          const { data: answers, error: answersError } = await supabase
+            .from('learn_user_answers')
+            .select('question_part_id, is_correct')
+            .eq('user_id', userId)
+            .in('question_part_id', allPartIds);
+
+          if (answersError) {
+            console.error('Error fetching answers:', answersError);
+          } else if (answers) {
+            // Count unique attempted questions
+            const attemptedPartIds = new Set(answers.map(a => a.question_part_id));
+            questionsAttempted = attemptedPartIds.size;
+
+            // Count correct answers (only count each part once, even if multiple attempts)
+            const correctPartIds = new Set(
+              answers.filter(a => a.is_correct).map(a => a.question_part_id)
+            );
+            questionsCorrect = correctPartIds.size;
+          }
+        }
+
+        setProgressData({
+          questionsAttempted,
+          questionsCorrect,
+          totalQuestions,
+          videoWatched: progress?.video_watched || false,
+          pdfViewed: progress?.pdf_viewed || false
+        });
+      } catch (error) {
+        console.error('Error in fetchProgressData:', error);
+      } finally {
+        setProgressLoading(false);
+      }
+    };
+
+    fetchProgressData();
+  }, [lessonId, userId, questions]);
 
   // Track PDF viewed when user switches to PDF tab
   useEffect(() => {
@@ -427,6 +503,19 @@ function SpecPointSessionContent() {
           isSubmitting: false
         }
       }));
+
+      // Update progress data in real-time
+      setProgressData(prev => {
+        // Check if this is a new attempt (first time submitting this part)
+        const isNewAttempt = data.attemptNumber === 1;
+        const isCorrect = data.correct;
+
+        return {
+          ...prev,
+          questionsAttempted: isNewAttempt ? prev.questionsAttempted + 1 : prev.questionsAttempted,
+          questionsCorrect: isCorrect ? prev.questionsCorrect + 1 : prev.questionsCorrect
+        };
+      });
     } catch (error) {
       console.error('Error submitting answer:', error);
 
@@ -487,6 +576,9 @@ function SpecPointSessionContent() {
 
         if (updateError) {
           console.error('Error updating PDF viewed status:', updateError);
+        } else {
+          // Update progress state in real-time
+          setProgressData(prev => ({ ...prev, pdfViewed: true }));
         }
       } else if (!existingProgress) {
         // Create new progress record
@@ -502,6 +594,9 @@ function SpecPointSessionContent() {
 
         if (insertError) {
           console.error('Error creating progress record:', insertError);
+        } else {
+          // Update progress state in real-time
+          setProgressData(prev => ({ ...prev, pdfViewed: true }));
         }
       }
     } catch (error) {
@@ -613,6 +708,9 @@ function SpecPointSessionContent() {
 
         if (updateError) {
           console.error('Error marking video as watched:', updateError);
+        } else {
+          // Update progress state in real-time
+          setProgressData(prev => ({ ...prev, videoWatched: true }));
         }
       } else {
         // Create new progress record
@@ -628,6 +726,9 @@ function SpecPointSessionContent() {
 
         if (insertError) {
           console.error('Error creating progress record for video completion:', insertError);
+        } else {
+          // Update progress state in real-time
+          setProgressData(prev => ({ ...prev, videoWatched: true }));
         }
       }
     } catch (error) {
@@ -924,6 +1025,42 @@ function SpecPointSessionContent() {
         <div className="header-container">
           <h1 className="page-title">{specPoint} {specName}: Lesson {lessonNumber}</h1>
         </div>
+
+        {/* Progress Indicator */}
+        {userId && !progressLoading && (
+          <div className="progress-indicator">
+            <div className="progress-stats">
+              <div className="progress-stat-item">
+                <span className="progress-stat-label">Questions:</span>
+                <span className="progress-stat-value">
+                  {progressData.questionsCorrect} / {progressData.totalQuestions} answered correctly
+                </span>
+              </div>
+              <div className="progress-stat-item">
+                <span className="progress-stat-label">Video:</span>
+                <span className={`progress-indicator-icon ${progressData.videoWatched ? 'completed' : ''}`}>
+                  {progressData.videoWatched ? '✓' : '○'}
+                </span>
+              </div>
+              <div className="progress-stat-item">
+                <span className="progress-stat-label">PDF:</span>
+                <span className={`progress-indicator-icon ${progressData.pdfViewed ? 'completed' : ''}`}>
+                  {progressData.pdfViewed ? '✓' : '○'}
+                </span>
+              </div>
+            </div>
+            <div className="progress-bar-container">
+              <div
+                className="progress-bar-fill"
+                style={{
+                  width: progressData.totalQuestions > 0
+                    ? `${(progressData.questionsCorrect / progressData.totalQuestions) * 100}%`
+                    : '0%'
+                }}
+              />
+            </div>
+          </div>
+        )}
 
         {/* Main Content */}
         <div className="main-content-container">
