@@ -5,8 +5,25 @@ import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { supabase } from '@/lib/supabase-client';
 import { useRouter, useSearchParams } from 'next/navigation';
-import PdfViewer from '@/components/PdfViewer';
+import dynamic from 'next/dynamic';
 import './spec-point-session.css';
+
+// Dynamically import PdfViewer with ssr: false to prevent DOMMatrix error during build
+const PdfViewer = dynamic(() => import('@/components/PdfViewer'), {
+  ssr: false,
+  loading: () => (
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '550px',
+      fontSize: '14px',
+      color: '#666'
+    }}>
+      Loading PDF viewer...
+    </div>
+  ),
+});
 
 type ContentType = 'video' | 'questions' | 'pdf';
 
