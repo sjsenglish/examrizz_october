@@ -11,7 +11,7 @@ interface VideoPlayerProps {
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded }) => {
-  const playerRef = useRef<ReactPlayer>(null);
+  const playerRef = useRef<React.ElementRef<typeof ReactPlayer>>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
