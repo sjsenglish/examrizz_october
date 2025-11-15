@@ -108,8 +108,8 @@ function SpecPointSessionContent() {
   // Lesson data state
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
-  const [pdfLoading, setPdfLoading] = useState(false);
-  const [videoLoading, setVideoLoading] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(true);
+  const [videoLoading, setVideoLoading] = useState(true);
   const [lessonId, setLessonId] = useState<string | null>(null);
   const [lastProgressUpdate, setLastProgressUpdate] = useState<number>(0);
 

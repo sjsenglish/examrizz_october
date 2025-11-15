@@ -247,6 +247,11 @@
 
 ## Spec Point Session Page Layout (Nov 2024)
 - **Page**: `/spec-point-session` - Individual spec point learning session
+- **Loading States Fix** (Nov 2024):
+  - Video and PDF loading states initialized to `true` (not `false`)
+  - Ensures loading screens are visible on initial page render
+  - Prevents flash of "no content" before data fetches
+  - Loading states set to `false` after lesson data successfully loads
 - **Layout Structure**:
   - **Content container (left)**: Contains video player, practice questions, and PDF notes (flex: 3)
     - Occupies 60% of horizontal space
