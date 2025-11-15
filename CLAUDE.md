@@ -331,6 +331,15 @@
     - Fetches from `learn_user_progress` table for video_watched and pdf_viewed
     - Counts unique correct answers from `learn_user_answers` table
     - Calculates total questions from loaded questions data
+- **Database Query Fix** (Nov 2024):
+  - **Issue**: Original code queried `learn_lessons` using non-existent `spec_point` column
+  - **Solution**: Changed to direct lesson ID query instead
+  - **Implementation**:
+    - Hardcoded lesson ID: `d0000000-0000-0000-0000-000000000001` (Power Rule lesson)
+    - Query uses `.eq('id', lessonId)` instead of `.eq('spec_point', specPoint)`
+    - Added join with `learn_spec_points` table to get spec point code and name
+    - Questions already fetched correctly using `lesson_id`
+  - **Database Schema Note**: `learn_lessons.spec_point_id` is a UUID foreign key, not a string column
 
 ## Lessons Questions API Route (Nov 2024)
 - **Endpoint**: `/api/lessons/[lessonId]/questions` - GET endpoint for fetching lesson questions
