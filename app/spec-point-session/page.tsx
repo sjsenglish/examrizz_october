@@ -42,33 +42,37 @@ const VideoPlayer = dynamic(() => import('@/components/VideoPlayer'), {
   ),
 });
 
+// Dynamically import MathInput with ssr: false to prevent SSR issues with MathQuill
+const MathInput = dynamic(() => import('@/components/MathInput'), {
+  ssr: false,
+  loading: () => (
+    <div style={{
+      padding: '12px',
+      border: '2px solid #ddd',
+      borderRadius: '8px',
+      fontSize: '14px',
+      color: '#666'
+    }}>
+      Loading math input...
+    </div>
+  ),
+});
+
 type ContentType = 'video' | 'questions' | 'pdf';
 
-// Sample question data
-const sampleQuestions = [
-  {
-    id: '1',
-    question_text: 'What is the derivative of x²?',
-    options: {
-      A: '2x',
-      B: 'x',
-      C: '2',
-      D: 'x²'
-    },
-    answer_letter: 'A'
-  },
-  {
-    id: '2', 
-    question_text: 'What is the integral of 2x dx?',
-    options: {
-      A: '2',
-      B: 'x² + C',
-      C: '2x + C',
-      D: 'x + C'
-    },
-    answer_letter: 'B'
-  }
-];
+// Types for question data
+interface QuestionPart {
+  letter: string;
+  questionLatex: string;
+  questionDisplay: string;
+}
+
+interface Question {
+  code: string;
+  difficulty: string;
+  instructions: string;
+  parts: QuestionPart[];
+}
 
 function SpecPointSessionContent() {
   const router = useRouter();
@@ -82,7 +86,7 @@ function SpecPointSessionContent() {
   // Content state
   const [currentContent, setCurrentContent] = useState<ContentType>('video');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
+  const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
 
   // Lesson data state
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
@@ -91,6 +95,10 @@ function SpecPointSessionContent() {
   const [videoLoading, setVideoLoading] = useState(false);
   const [lessonId, setLessonId] = useState<string | null>(null);
   const [lastProgressUpdate, setLastProgressUpdate] = useState<number>(0);
+
+  // Questions state
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [questionsLoading, setQuestionsLoading] = useState(false);
 
   // Chat state
   const [user, setUser] = useState<any>(null);
@@ -163,6 +171,31 @@ function SpecPointSessionContent() {
 
     fetchLessonData();
   }, [specPoint, lessonNumber]);
+
+  // Fetch questions when lessonId is available
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      if (!lessonId) return;
+
+      setQuestionsLoading(true);
+      try {
+        const response = await fetch(`/api/lessons/${lessonId}/questions`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch questions');
+        }
+
+        const data = await response.json();
+        setQuestions(data.questions || []);
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+        setQuestions([]);
+      } finally {
+        setQuestionsLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, [lessonId]);
 
   // Track PDF viewed when user switches to PDF tab
   useEffect(() => {
@@ -299,10 +332,10 @@ function SpecPointSessionContent() {
     }
   };
 
-  const handleAnswerSelect = (questionId: string, answer: string) => {
-    setSelectedAnswers(prev => ({
+  const handleAnswerChange = (key: string, latex: string) => {
+    setUserAnswers(prev => ({
       ...prev,
-      [questionId]: answer
+      [key]: latex
     }));
   };
 
@@ -526,7 +559,29 @@ function SpecPointSessionContent() {
   };
 
   const renderQuestionsContent = () => {
-    const currentQuestion = sampleQuestions[currentQuestionIndex];
+    if (questionsLoading) {
+      return (
+        <div className="content-container">
+          <div className="questions-loading">
+            <div className="loading-icon">📝</div>
+            <p>Loading questions...</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (!questions || questions.length === 0) {
+      return (
+        <div className="content-container">
+          <div className="no-questions">
+            <div className="no-questions-icon">📝</div>
+            <p>No questions available for this lesson</p>
+          </div>
+        </div>
+      );
+    }
+
+    const currentQuestion = questions[currentQuestionIndex];
 
     return (
       <div className="content-container">
@@ -540,35 +595,50 @@ function SpecPointSessionContent() {
               Previous
             </button>
             <span className="question-counter">
-              {currentQuestionIndex + 1} of {sampleQuestions.length}
+              {currentQuestionIndex + 1} of {questions.length}
             </span>
             <button
-              onClick={() => setCurrentQuestionIndex(Math.min(sampleQuestions.length - 1, currentQuestionIndex + 1))}
-              disabled={currentQuestionIndex === sampleQuestions.length - 1}
+              onClick={() => setCurrentQuestionIndex(Math.min(questions.length - 1, currentQuestionIndex + 1))}
+              disabled={currentQuestionIndex === questions.length - 1}
               className="nav-button"
             >
               Next
             </button>
           </div>
         </div>
-        
+
         <div className="question-content">
-          <div className="question-text">
-            {currentQuestion.question_text}
+          <div className="question-header-info">
+            <div className="question-code">{currentQuestion.code}</div>
+            <div className="question-difficulty">
+              Difficulty: <span className={`difficulty-${currentQuestion.difficulty.toLowerCase()}`}>{currentQuestion.difficulty}</span>
+            </div>
           </div>
-          
-          <div className="options-list">
-            {Object.entries(currentQuestion.options).map(([letter, text]) => {
-              const isSelected = selectedAnswers[currentQuestion.id] === letter;
-              
+
+          {currentQuestion.instructions && (
+            <div className="question-instructions">
+              {currentQuestion.instructions}
+            </div>
+          )}
+
+          <div className="question-parts">
+            {currentQuestion.parts.map((part, partIndex) => {
+              const answerKey = `${currentQuestion.code}-${part.letter}`;
+
               return (
-                <div
-                  key={letter}
-                  className={`option-item ${isSelected ? 'selected' : ''}`}
-                  onClick={() => handleAnswerSelect(currentQuestion.id, letter)}
-                >
-                  <span className="option-letter">{letter}</span>
-                  <span className="option-text">{text}</span>
+                <div key={partIndex} className="question-part">
+                  <div className="part-header">
+                    <span className="part-letter">{part.letter})</span>
+                    <span className="part-question">{part.questionDisplay}</span>
+                  </div>
+
+                  <div className="part-answer">
+                    <MathInput
+                      value={userAnswers[answerKey] || ''}
+                      onChange={(latex) => handleAnswerChange(answerKey, latex)}
+                      placeholder="Enter your answer using LaTeX..."
+                    />
+                  </div>
                 </div>
               );
             })}

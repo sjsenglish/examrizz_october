@@ -276,6 +276,35 @@
 - **Files**:
   - Page: `app/spec-point-session/page.tsx`
   - Styles: `app/spec-point-session/spec-point-session.css`
+- **Questions Integration** (Nov 2024):
+  - Questions loaded from database via `/api/lessons/[lessonId]/questions` endpoint
+  - Each question displays code (e.g., B1, A1), difficulty level, and instructions
+  - Question parts (a, b, c, d) displayed with human-readable text
+  - **MathInput component** used for LaTeX answer input instead of multiple choice
+  - User answers stored in state with key format: `{questionCode}-{partLetter}`
+  - Question navigation: Previous/Next buttons with counter showing current position
+  - Loading states for questions fetching
+  - Empty state when no questions available
+
+## Lessons Questions API Route (Nov 2024)
+- **Endpoint**: `/api/lessons/[lessonId]/questions` - GET endpoint for fetching lesson questions
+- **File**: `app/api/lessons/[lessonId]/questions/route.ts`
+- **Authentication**: No authentication required (content is public)
+- **Parameters**:
+  - `lessonId` (string, required): UUID of the lesson from learn_lessons table
+- **Response Data**:
+  - `questions`: Array of question objects with parts
+  - Each question has: `code`, `difficulty`, `instructions`, `parts[]`
+  - Each part has: `letter`, `questionLatex`, `questionDisplay`
+- **Database Queries**:
+  - Queries `learn_questions` table ordered by `display_order`
+  - Queries `learn_question_parts` table for all questions
+  - Groups parts by question ID
+- **Error Handling**:
+  - 400: Missing lesson ID
+  - 500: Database error
+  - Returns empty array if no questions found
+- **Usage**: Used by spec point session pages to load practice questions
 
 ## PDF Viewer Component (Nov 2024)
 - **Component**: `/components/PdfViewer.tsx` - Reusable PDF viewing component using react-pdf
