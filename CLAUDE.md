@@ -83,10 +83,23 @@
   - **New Layout Structure**:
     - Horizontal stepping stones going left-to-right across the screen
     - Each stepping stone represents one spec point from the curriculum
-    - Bar images (Vector 448.svg) serve as platforms for each spec point
+    - **Block Images** (Updated Nov 2024):
+      - Purple blocks for odd-numbered chapters (1, 3, 5, 7): `purpleblock.svg`
+      - Blue blocks for even-numbered chapters (2, 4, 6, 8, 10): `blueblock.svg`
+      - Each block is 132x33px
     - Multiple toast icons (Group 2376.svg) positioned above each bar - one toast per lesson
     - Spec point info displayed below each bar: ID, name, and completion time in hours
-  - **Spec Points Data**: 30 total spec points with lesson counts ranging from 1-6 lessons each
+  - **Spec Points Data**: 39 total spec points including blended blocks at chapter ends (Updated Nov 2024)
+    - 30 normal spec points with lesson counts ranging from 1-6 lessons each
+    - 9 blended practice blocks positioned at the end of each chapter (chapters 1-8, 10)
+  - **Blended Blocks** (Updated Nov 2024):
+    - Added at the end of every chapter as special stepping stones
+    - Display treasure chest icon (150x150px) above the block
+    - **Two types of blended blocks**:
+      - Standard blended block: Used for odd chapters (1, 3, 5, 7) using `blendedblock.svg`
+      - Transition block: Used when transitioning from even to odd chapters (after chapters 2, 4, 6, 8) using `end-of-ch-blue-to-purple.svg`
+    - No lessons or hours associated with blended blocks
+    - Serve as visual chapter markers and practice checkpoints
   - **Ghost Character**:
     - Positioned on the first stepping stone (spec point 1.1 Proofs)
     - Position: top: -60px (moved up 15% from -40px)
