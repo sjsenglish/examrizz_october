@@ -94,8 +94,18 @@
     - Floating animation with subtle up/down movement
     - **Clickable link** to `/spec-point-session` with spec point and lesson parameters
     - Size: 100x100px
+  - **Search Bar** (Added Nov 2024):
+    - **Position**: Fixed at top of page, above progress bar
+    - **Styling**: Rectangular with rounded corners (12px radius), drop shadow on bottom edge
+    - **Functionality**: Real-time filtering of spec points as user types
+    - **Dropdown**: Appears when typing, exact same width as search bar, no gap
+    - **Selection Color**: #B3F0F2 (light cyan) on hover
+    - **Font**: Figtree family
+    - **Display**: Shows spec ID and name in each dropdown item
+    - Clicking a topic from dropdown scrolls to that spec point
   - **Navigation System** (Updated Nov 2024):
-    - **Progress bar** at top of page (fixed position, visible during scrolling)
+    - **Search bar** at top of page (fixed position, visible during scrolling)
+    - **Progress bar** below search bar (fixed position, visible during scrolling)
     - **Removed**: Title badge "Maths A Level - 90 hours" and left/right arrow buttons
     - **Progress Bar Features**:
       - Total duration: 92.83 hours displayed in center
@@ -121,9 +131,16 @@
     - Hover effect: scale(1.1) on all toast icons
     - Toast arrangement: Flex layout with wrapping, max-width 154px per group (Nov 2024)
   - **Styling Details**:
-    - Gap between stones: 88px (optimized for 5 topics in one view - Nov 2024)
+    - **Vertical positioning** (Updated Nov 2024): Stepping stones moved down 10% on page for better visual balance
+      - Desktop padding-top: 260px (increased from 180px)
+      - Tablet padding-top: 200px (increased from 140px)
+      - Mobile padding-top: 170px (increased from 120px)
+    - **Horizontal spacing** (Updated Nov 2024): Levels positioned closer together for tighter layout
+      - Desktop gap: 100px (reduced from 180px)
+      - Tablet gap: 90px (reduced from 160px)
+      - Mobile gap: 80px (reduced from 140px)
     - Grass pattern at bottom: 54px height with 2px black border on top, positioned 64px from bottom (fixed position, moved up 118% of height - Nov 2024)
-    - Progress bar: 70% width, centered, with responsive sizing for mobile
+    - Progress bar: 80% width, centered, with responsive sizing for mobile
     - Back button in top-left corner linking to `/subject-selection`
     - **Icon sizes** (optimized for 5 topics in view - Nov 2024):
       - Toast icons: 38x38px
