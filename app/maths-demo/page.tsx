@@ -6,10 +6,21 @@ import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import './maths-demo.css';
 
+// Spec point type definition
+type SpecPoint = {
+  id: string;
+  name: string;
+  lessons: number;
+  hours: number;
+  type: 'normal' | 'blended';
+  chapter: number;
+  transitionTo?: number; // For blended blocks transitioning from even to odd chapters
+};
+
 // Spec point data structure - includes blended block as special type
 const specPoints = [
   { id: '1.1', name: 'Proofs', lessons: 3, hours: 4.42, type: 'normal', chapter: 1 },
-  { id: 'blended', name: 'Blended Practice', lessons: 0, hours: 0, type: 'blended', chapter: 1 },
+  { id: 'blended-1', name: 'Blended Practice', lessons: 0, hours: 0, type: 'blended', chapter: 1 },
   { id: '2.1', name: 'Indices', lessons: 2, hours: 2.33, type: 'normal', chapter: 2 },
   { id: '2.2', name: 'Surds', lessons: 2, hours: 2.33, type: 'normal', chapter: 2 },
   { id: '2.3', name: 'Quadratic Function', lessons: 6, hours: 7.33, type: 'normal', chapter: 2 },
@@ -18,13 +29,17 @@ const specPoints = [
   { id: '2.6', name: 'Manipulating Polynomials', lessons: 4, hours: 5, type: 'normal', chapter: 2 },
   { id: '2.7', name: 'Graphs', lessons: 5, hours: 6.25, type: 'normal', chapter: 2 },
   { id: '2.9', name: 'Transformations', lessons: 1, hours: 1.25, type: 'normal', chapter: 2 },
+  { id: 'blended-2', name: 'Blended Practice', lessons: 0, hours: 0, type: 'blended', chapter: 2, transitionTo: 3 },
   { id: '3.1', name: 'Straight Line Equation', lessons: 3, hours: 3.67, type: 'normal', chapter: 3 },
   { id: '3.2', name: 'Circles', lessons: 2, hours: 2.5, type: 'normal', chapter: 3 },
+  { id: 'blended-3', name: 'Blended Practice', lessons: 0, hours: 0, type: 'blended', chapter: 3 },
   { id: '4.1', name: 'Binomial Expansions', lessons: 2, hours: 2.5, type: 'normal', chapter: 4 },
+  { id: 'blended-4', name: 'Blended Practice', lessons: 0, hours: 0, type: 'blended', chapter: 4, transitionTo: 5 },
   { id: '5.1', name: 'Trigonometry', lessons: 3, hours: 3.67, type: 'normal', chapter: 5 },
   { id: '5.3', name: 'Trigonometric Graphs', lessons: 2, hours: 2.5, type: 'normal', chapter: 5 },
   { id: '5.5', name: 'Trigonometric Identities', lessons: 1, hours: 1.33, type: 'normal', chapter: 5 },
   { id: '5.7', name: 'Solving Trig Equations', lessons: 2, hours: 2.67, type: 'normal', chapter: 5 },
+  { id: 'blended-5', name: 'Blended Practice', lessons: 0, hours: 0, type: 'blended', chapter: 5 },
   { id: '6.1', name: 'Exponential Functions', lessons: 2, hours: 2.5, type: 'normal', chapter: 6 },
   { id: '6.2', name: 'Exponential Models', lessons: 1, hours: 1.25, type: 'normal', chapter: 6 },
   { id: '6.3', name: 'Logarithms', lessons: 2, hours: 2.5, type: 'normal', chapter: 6 },
@@ -32,20 +47,24 @@ const specPoints = [
   { id: '6.5', name: 'Solving Equations', lessons: 1, hours: 1.25, type: 'normal', chapter: 6 },
   { id: '6.6', name: 'Non-linear Graphs', lessons: 1, hours: 1.25, type: 'normal', chapter: 6 },
   { id: '6.7', name: 'Modelling', lessons: 1, hours: 1.25, type: 'normal', chapter: 6 },
+  { id: 'blended-6', name: 'Blended Practice', lessons: 0, hours: 0, type: 'blended', chapter: 6, transitionTo: 7 },
   { id: '7.1', name: 'Intro to Differentiation', lessons: 3, hours: 4.42, type: 'normal', chapter: 7 },
   { id: '7.2', name: 'Differentiating Functions', lessons: 1, hours: 1.17, type: 'normal', chapter: 7 },
   { id: '7.3', name: 'Differentiation Application', lessons: 6, hours: 8, type: 'normal', chapter: 7 },
+  { id: 'blended-7', name: 'Blended Practice', lessons: 0, hours: 0, type: 'blended', chapter: 7 },
   { id: '8.1', name: 'Integration', lessons: 1, hours: 1.25, type: 'normal', chapter: 8 },
   { id: '8.2', name: 'Integrate Functions', lessons: 2, hours: 2.5, type: 'normal', chapter: 8 },
   { id: '8.3', name: 'Definite Integrals', lessons: 4, hours: 5.33, type: 'normal', chapter: 8 },
+  { id: 'blended-8', name: 'Blended Practice', lessons: 0, hours: 0, type: 'blended', chapter: 8, transitionTo: 10 },
   { id: '10.1-10.5', name: 'Vectors', lessons: 6, hours: 7.33, type: 'normal', chapter: 10 },
+  { id: 'blended-10', name: 'Blended Practice', lessons: 0, hours: 0, type: 'blended', chapter: 10 },
 ];
 
 const TOTAL_HOURS = 92.83;
 
 // Get height offset for each stepping stone for visual variation
 const getStoneHeightOffset = (index: number): number => {
-  const pattern = [0, 0, -60, 30, -30, 20, -40, 10, -20, 40, -50, 0, -30, 20, -40, 30, -20, 0, -35, 25, -45, 15, -25, 35, -55, 0, -40, 20, -30, 40, -50];
+  const pattern = [0, 0, -60, 30, -30, 20, -40, 10, -20, 40, -50, 0, -30, 20, -40, 0, 30, -20, 0, -35, 25, -45, 0, 15, -25, 35, -55, 0, -40, 20, -30, 40, -50, 0, 10, -30, 25, -35, 0];
   return pattern[index] || 0;
 };
 
@@ -396,12 +415,19 @@ export default function MathsDemoPage() {
                       </div>
                     )}
 
-                    {/* Bar/platform - different for blended block */}
+                    {/* Bar/platform - different for blended block and chapter colors */}
                     <div className="stone-bar">
                       <Image
-                        src={spec.type === 'blended'
-                          ? "https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fblendedblock.svg?alt=media&token=71bb36cd-e129-4278-ad60-53c543311295"
-                          : "https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FVector%20448.svg?alt=media&token=a9e45250-f832-4b9d-b896-7282df82e5d7"
+                        src={
+                          spec.type === 'blended'
+                            ? (spec.transitionTo
+                              ? "https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fend-of-ch-blue-to-purple.svg?alt=media&token=aab99d41-a396-478b-8f5d-7e9c1d1f6296"
+                              : "https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fblendedblock.svg?alt=media&token=71bb36cd-e129-4278-ad60-53c543311295"
+                            )
+                            : (spec.chapter % 2 === 1
+                              ? "https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fpurpleblock.svg?alt=media&token=8703ec4c-6009-472a-96d7-4244a32170db"
+                              : "https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fblueblock.svg?alt=media&token=dce6b734-b7bd-4803-bed6-4a426106fb0e"
+                            )
                         }
                         alt={spec.type === 'blended' ? "Blended Block" : "Platform"}
                         width={spec.type === 'blended' ? 150 : 132}
