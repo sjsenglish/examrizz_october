@@ -167,12 +167,23 @@ function SpecPointSessionContent() {
       setPdfLoading(true);
       setVideoLoading(true);
       try {
-        // Query learn_lessons table to get lesson data including video and PDF URLs
+        // Hardcode lesson ID for now (Power Rule lesson)
+        const hardcodedLessonId = 'd0000000-0000-0000-0000-000000000001';
+
+        // Query learn_lessons table directly by lesson ID
         const { data, error } = await supabase
           .from('learn_lessons')
-          .select('id, video_url, pdf_notes_url')
-          .eq('spec_point', specPoint)
-          .eq('lesson_number', parseInt(lessonNumber))
+          .select(`
+            id,
+            name,
+            video_url,
+            pdf_notes_url,
+            learn_spec_points (
+              code,
+              name
+            )
+          `)
+          .eq('id', hardcodedLessonId)
           .single();
 
         if (error) {
