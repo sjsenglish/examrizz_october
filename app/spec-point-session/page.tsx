@@ -62,9 +62,12 @@ type ContentType = 'video' | 'questions' | 'pdf';
 
 // Types for question data
 interface QuestionPart {
+  id: string;
   letter: string;
   questionLatex: string;
   questionDisplay: string;
+  solutionSteps: string | null;
+  marks: number;
 }
 
 interface Question {
@@ -72,6 +75,16 @@ interface Question {
   difficulty: string;
   instructions: string;
   parts: QuestionPart[];
+}
+
+interface PartSubmissionState {
+  submitted: boolean;
+  correct: boolean | null;
+  showSolution: boolean;
+  feedback: string;
+  marksAwarded: number;
+  attemptNumber: number;
+  isSubmitting: boolean;
 }
 
 function SpecPointSessionContent() {
@@ -88,6 +101,10 @@ function SpecPointSessionContent() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
 
+  // Answer submission state
+  const [submissionStates, setSubmissionStates] = useState<Record<string, PartSubmissionState>>({});
+  const [questionStartTimes, setQuestionStartTimes] = useState<Record<string, number>>({});
+
   // Lesson data state
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
@@ -99,6 +116,16 @@ function SpecPointSessionContent() {
   // Questions state
   const [questions, setQuestions] = useState<Question[]>([]);
   const [questionsLoading, setQuestionsLoading] = useState(false);
+
+  // Progress tracking state
+  const [progressData, setProgressData] = useState({
+    questionsAttempted: 0,
+    questionsCorrect: 0,
+    totalQuestions: 0,
+    videoWatched: false,
+    pdfViewed: false
+  });
+  const [progressLoading, setProgressLoading] = useState(false);
 
   // Chat state
   const [user, setUser] = useState<any>(null);
@@ -196,6 +223,72 @@ function SpecPointSessionContent() {
 
     fetchQuestions();
   }, [lessonId]);
+
+  // Fetch progress data when lessonId and userId are available
+  useEffect(() => {
+    const fetchProgressData = async () => {
+      if (!lessonId || !userId) return;
+
+      setProgressLoading(true);
+      try {
+        // Fetch user progress (video_watched, pdf_viewed)
+        const { data: progress, error: progressError } = await supabase
+          .from('learn_user_progress')
+          .select('video_watched, pdf_viewed')
+          .eq('user_id', userId)
+          .eq('lesson_id', lessonId)
+          .single();
+
+        if (progressError && progressError.code !== 'PGRST116') {
+          console.error('Error fetching progress:', progressError);
+        }
+
+        // Get all question part IDs from current questions
+        const allPartIds = questions.flatMap(q => q.parts.map(p => p.id));
+        const totalQuestions = allPartIds.length;
+
+        // Fetch user answers for this lesson's questions
+        let questionsAttempted = 0;
+        let questionsCorrect = 0;
+
+        if (allPartIds.length > 0) {
+          const { data: answers, error: answersError } = await supabase
+            .from('learn_user_answers')
+            .select('question_part_id, is_correct')
+            .eq('user_id', userId)
+            .in('question_part_id', allPartIds);
+
+          if (answersError) {
+            console.error('Error fetching answers:', answersError);
+          } else if (answers) {
+            // Count unique attempted questions
+            const attemptedPartIds = new Set(answers.map(a => a.question_part_id));
+            questionsAttempted = attemptedPartIds.size;
+
+            // Count correct answers (only count each part once, even if multiple attempts)
+            const correctPartIds = new Set(
+              answers.filter(a => a.is_correct).map(a => a.question_part_id)
+            );
+            questionsCorrect = correctPartIds.size;
+          }
+        }
+
+        setProgressData({
+          questionsAttempted,
+          questionsCorrect,
+          totalQuestions,
+          videoWatched: progress?.video_watched || false,
+          pdfViewed: progress?.pdf_viewed || false
+        });
+      } catch (error) {
+        console.error('Error in fetchProgressData:', error);
+      } finally {
+        setProgressLoading(false);
+      }
+    };
+
+    fetchProgressData();
+  }, [lessonId, userId, questions]);
 
   // Track PDF viewed when user switches to PDF tab
   useEffect(() => {
@@ -337,6 +430,117 @@ function SpecPointSessionContent() {
       ...prev,
       [key]: latex
     }));
+
+    // Track start time when user starts typing (only once per part)
+    if (!questionStartTimes[key] && latex.trim()) {
+      setQuestionStartTimes(prev => ({
+        ...prev,
+        [key]: Date.now()
+      }));
+    }
+  };
+
+  // Submit answer for a question part
+  const handleSubmitAnswer = async (partId: string, partKey: string) => {
+    const answer = userAnswers[partKey];
+
+    if (!answer || !answer.trim()) {
+      return;
+    }
+
+    if (!userId) {
+      alert('Please log in to submit answers');
+      return;
+    }
+
+    // Calculate time spent
+    const startTime = questionStartTimes[partKey] || Date.now();
+    const timeSpentSeconds = Math.floor((Date.now() - startTime) / 1000);
+
+    // Set submitting state
+    setSubmissionStates(prev => ({
+      ...prev,
+      [partKey]: {
+        ...prev[partKey],
+        isSubmitting: true,
+        submitted: false,
+        correct: null,
+        showSolution: false,
+        feedback: '',
+        marksAwarded: 0,
+        attemptNumber: 0
+      }
+    }));
+
+    try {
+      const response = await fetch('/api/answers/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: userId,
+          question_part_id: partId,
+          submitted_answer_latex: answer,
+          time_spent_seconds: timeSpentSeconds
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit answer');
+      }
+
+      const data = await response.json();
+
+      // Update submission state with feedback
+      setSubmissionStates(prev => ({
+        ...prev,
+        [partKey]: {
+          submitted: true,
+          correct: data.correct,
+          showSolution: false,
+          feedback: data.feedback,
+          marksAwarded: data.marksAwarded,
+          attemptNumber: data.attemptNumber,
+          isSubmitting: false
+        }
+      }));
+
+      // Update progress data in real-time
+      setProgressData(prev => {
+        // Check if this is a new attempt (first time submitting this part)
+        const isNewAttempt = data.attemptNumber === 1;
+        const isCorrect = data.correct;
+
+        return {
+          ...prev,
+          questionsAttempted: isNewAttempt ? prev.questionsAttempted + 1 : prev.questionsAttempted,
+          questionsCorrect: isCorrect ? prev.questionsCorrect + 1 : prev.questionsCorrect
+        };
+      });
+    } catch (error) {
+      console.error('Error submitting answer:', error);
+
+      // Show error state
+      setSubmissionStates(prev => ({
+        ...prev,
+        [partKey]: {
+          ...prev[partKey],
+          isSubmitting: false,
+          submitted: false,
+          feedback: 'Error submitting answer. Please try again.'
+        }
+      }));
+    }
+  };
+
+  // Toggle solution display
+  const handleToggleSolution = (partKey: string) => {
+    setSubmissionStates(prev => ({
+      ...prev,
+      [partKey]: {
+        ...prev[partKey],
+        showSolution: !prev[partKey]?.showSolution
+      }
+    }));
   };
 
   // Track PDF viewing
@@ -372,6 +576,9 @@ function SpecPointSessionContent() {
 
         if (updateError) {
           console.error('Error updating PDF viewed status:', updateError);
+        } else {
+          // Update progress state in real-time
+          setProgressData(prev => ({ ...prev, pdfViewed: true }));
         }
       } else if (!existingProgress) {
         // Create new progress record
@@ -387,6 +594,9 @@ function SpecPointSessionContent() {
 
         if (insertError) {
           console.error('Error creating progress record:', insertError);
+        } else {
+          // Update progress state in real-time
+          setProgressData(prev => ({ ...prev, pdfViewed: true }));
         }
       }
     } catch (error) {
@@ -498,6 +708,9 @@ function SpecPointSessionContent() {
 
         if (updateError) {
           console.error('Error marking video as watched:', updateError);
+        } else {
+          // Update progress state in real-time
+          setProgressData(prev => ({ ...prev, videoWatched: true }));
         }
       } else {
         // Create new progress record
@@ -513,6 +726,9 @@ function SpecPointSessionContent() {
 
         if (insertError) {
           console.error('Error creating progress record for video completion:', insertError);
+        } else {
+          // Update progress state in real-time
+          setProgressData(prev => ({ ...prev, videoWatched: true }));
         }
       }
     } catch (error) {
@@ -624,12 +840,16 @@ function SpecPointSessionContent() {
           <div className="question-parts">
             {currentQuestion.parts.map((part, partIndex) => {
               const answerKey = `${currentQuestion.code}-${part.letter}`;
+              const submissionState = submissionStates[answerKey];
 
               return (
                 <div key={partIndex} className="question-part">
                   <div className="part-header">
                     <span className="part-letter">{part.letter})</span>
                     <span className="part-question">{part.questionDisplay}</span>
+                    {part.marks && (
+                      <span className="part-marks">({part.marks} {part.marks === 1 ? 'mark' : 'marks'})</span>
+                    )}
                   </div>
 
                   <div className="part-answer">
@@ -639,6 +859,78 @@ function SpecPointSessionContent() {
                       placeholder="Enter your answer using LaTeX..."
                     />
                   </div>
+
+                  {/* Check Answer Button */}
+                  <div className="answer-actions">
+                    <button
+                      onClick={() => handleSubmitAnswer(part.id, answerKey)}
+                      disabled={!userAnswers[answerKey] || submissionState?.isSubmitting}
+                      className="check-answer-btn"
+                    >
+                      {submissionState?.isSubmitting ? 'Checking...' : 'Check Answer'}
+                    </button>
+                  </div>
+
+                  {/* Feedback Display */}
+                  {submissionState?.submitted && (
+                    <div className={`feedback-container ${submissionState.correct ? 'correct' : 'incorrect'}`}>
+                      <div className="feedback-header">
+                        {submissionState.correct ? (
+                          <div className="feedback-icon correct-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="12" cy="12" r="10" fill="#4CAF50"/>
+                              <path d="M9 12l2 2 4-4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          </div>
+                        ) : (
+                          <div className="feedback-icon incorrect-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="12" cy="12" r="10" fill="#f44336"/>
+                              <path d="M15 9l-6 6M9 9l6 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          </div>
+                        )}
+                        <div className="feedback-content">
+                          <div className="feedback-message">
+                            {submissionState.correct ? (
+                              <>
+                                <strong>Correct! ✓</strong>
+                                <span> You earned {submissionState.marksAwarded} {submissionState.marksAwarded === 1 ? 'mark' : 'marks'}!</span>
+                              </>
+                            ) : (
+                              <>
+                                <strong>Incorrect.</strong>
+                                <span> Try again or view the solution.</span>
+                              </>
+                            )}
+                          </div>
+                          {submissionState.attemptNumber > 1 && (
+                            <div className="attempt-info">Attempt #{submissionState.attemptNumber}</div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Show Solution Button (only for incorrect answers) */}
+                      {!submissionState.correct && part.solutionSteps && (
+                        <div className="solution-actions">
+                          <button
+                            onClick={() => handleToggleSolution(answerKey)}
+                            className="toggle-solution-btn"
+                          >
+                            {submissionState.showSolution ? 'Hide Solution' : 'Show Solution'}
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Solution Display */}
+                      {submissionState.showSolution && part.solutionSteps && (
+                        <div className="solution-display">
+                          <h4>Solution:</h4>
+                          <ReactMarkdown>{part.solutionSteps}</ReactMarkdown>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -733,6 +1025,42 @@ function SpecPointSessionContent() {
         <div className="header-container">
           <h1 className="page-title">{specPoint} {specName}: Lesson {lessonNumber}</h1>
         </div>
+
+        {/* Progress Indicator */}
+        {userId && !progressLoading && (
+          <div className="progress-indicator">
+            <div className="progress-stats">
+              <div className="progress-stat-item">
+                <span className="progress-stat-label">Questions:</span>
+                <span className="progress-stat-value">
+                  {progressData.questionsCorrect} / {progressData.totalQuestions} answered correctly
+                </span>
+              </div>
+              <div className="progress-stat-item">
+                <span className="progress-stat-label">Video:</span>
+                <span className={`progress-indicator-icon ${progressData.videoWatched ? 'completed' : ''}`}>
+                  {progressData.videoWatched ? '✓' : '○'}
+                </span>
+              </div>
+              <div className="progress-stat-item">
+                <span className="progress-stat-label">PDF:</span>
+                <span className={`progress-indicator-icon ${progressData.pdfViewed ? 'completed' : ''}`}>
+                  {progressData.pdfViewed ? '✓' : '○'}
+                </span>
+              </div>
+            </div>
+            <div className="progress-bar-container">
+              <div
+                className="progress-bar-fill"
+                style={{
+                  width: progressData.totalQuestions > 0
+                    ? `${(progressData.questionsCorrect / progressData.totalQuestions) * 100}%`
+                    : '0%'
+                }}
+              />
+            </div>
+          </div>
+        )}
 
         {/* Main Content */}
         <div className="main-content-container">

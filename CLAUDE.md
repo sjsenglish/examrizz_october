@@ -285,6 +285,47 @@
   - Question navigation: Previous/Next buttons with counter showing current position
   - Loading states for questions fetching
   - Empty state when no questions available
+- **Answer Submission & Feedback** (Nov 2024):
+  - **Check Answer button** below each MathInput component
+    - Disabled when no answer entered or while submitting
+    - Shows "Checking..." during submission
+  - **Time Tracking**: Automatically tracks time spent on each question part from first input
+  - **Submission State Management**: Tracks submitted status, correctness, attempt number, marks awarded
+  - **Feedback Display**:
+    - **Correct answers**: Green checkmark icon, "Correct! ✓" message, shows marks awarded
+    - **Incorrect answers**: Red X icon, "Incorrect. Try again or view solution." message
+    - Shows attempt number for multiple attempts
+    - Feedback container with color-coded borders (green for correct, red for incorrect)
+  - **Show Solution Feature**:
+    - "Show Solution" button appears for incorrect answers (if solution available)
+    - Toggle button to show/hide solution
+    - Solution displayed with markdown rendering via ReactMarkdown
+    - Solution styled with gray background and left border accent
+  - **Multiple Attempts**: Users can resubmit answers, attempt number increments automatically
+  - **Login Requirement**: Non-logged-in users are prompted to log in before submitting answers
+- **Progress Indicator** (Nov 2024):
+  - **Display Location**: Between page header and main content
+  - **Only visible for logged-in users**
+  - **Progress Statistics**:
+    - Questions answered correctly count (e.g., "12 / 41 answered correctly")
+    - Video watched indicator: ✓ (green) when watched, ○ (gray) when not watched
+    - PDF viewed indicator: ✓ (green) when viewed, ○ (gray) when not viewed
+  - **Progress Bar**:
+    - Shows completion percentage based on questions answered correctly
+    - Background: #E0E0E0
+    - Fill: #B3F0F2
+    - Height: 8px
+    - Border: 1px solid #000
+    - Border radius: 4px
+    - Smooth animation on width change (0.5s transition)
+  - **Real-time Updates**:
+    - Question count updates when user submits correct answers
+    - Video indicator updates when video finishes playing
+    - PDF indicator updates when user views PDF (switches to PDF tab)
+  - **Data Sources**:
+    - Fetches from `learn_user_progress` table for video_watched and pdf_viewed
+    - Counts unique correct answers from `learn_user_answers` table
+    - Calculates total questions from loaded questions data
 
 ## Lessons Questions API Route (Nov 2024)
 - **Endpoint**: `/api/lessons/[lessonId]/questions` - GET endpoint for fetching lesson questions
@@ -295,10 +336,10 @@
 - **Response Data**:
   - `questions`: Array of question objects with parts
   - Each question has: `code`, `difficulty`, `instructions`, `parts[]`
-  - Each part has: `letter`, `questionLatex`, `questionDisplay`
+  - Each part has: `id`, `letter`, `questionLatex`, `questionDisplay`, `solutionSteps`, `marks`
 - **Database Queries**:
   - Queries `learn_questions` table ordered by `display_order`
-  - Queries `learn_question_parts` table for all questions
+  - Queries `learn_question_parts` table for all questions with fields: `id`, `question_id`, `letter`, `question_latex`, `question_display`, `solution_steps`, `marks`, `display_order`
   - Groups parts by question ID
 - **Error Handling**:
   - 400: Missing lesson ID
