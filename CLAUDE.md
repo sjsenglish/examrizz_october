@@ -4,6 +4,40 @@
 - **IMPORTANT**: Always update this CLAUDE.md file before every git commit
 - Include any new project conventions, patterns, or important decisions made during development
 
+## Referrals System (Added Nov 2024)
+- **Page**: `/referrals` - Accessible via hamburger menu in navbar
+- **Design Approach**: Mix of SVG images and custom-built functional sections on white background
+- **Page Layout**: All elements positioned 10% lower (120px top padding) with unified 70% width
+- **SVG Images Used** (70% width, centered):
+  - Header: `Group 2795.svg` - Title and introduction section
+  - Details Section 1: `Group 2792.svg` - Information section
+  - Details Section 2: `Group 2791.svg` - Terms section
+- **Custom-Built Sections** (70% width, centered):
+  - **Your Referral Link** (background: #DEF9F9):
+    - Section title in Madimi One font
+    - Rectangle with bottom drop shadow
+    - Link input field with copy icon (Figtree font)
+    - Copy functionality with visual feedback
+  - **Friends Referred** (background: #D3F6F7):
+    - Section title in Madimi One font
+    - Dynamic list of referred users
+    - Each item in white rectangle with bottom drop shadow
+    - Shows email, date, and status (completed/pending)
+    - Figtree font throughout
+- **Database Tables**:
+  - `referral_codes`: Stores unique 8-character codes for each user (auto-generated on signup)
+  - `referrals`: Tracks all referrals with status (pending/completed)
+- **Integration**:
+  - Signup page extracts `?ref=CODE` from URL and passes to auth metadata
+  - Works with all signup methods (Email, Google, Discord)
+  - Database triggers automatically track referrals and update status
+- **API Endpoint**: `/api/referrals` - Returns user's referral code, stats, and referrals list
+- **Files**:
+  - Page: `app/referrals/page.tsx`
+  - Styles: `app/referrals/referrals.css`
+  - API: `app/api/referrals/route.ts`
+  - Schema: `database/referrals_schema.sql`
+
 ## Planning Mode
 - Always ask clarifying questions when in planning mode
 - Gather all necessary information before starting implementation

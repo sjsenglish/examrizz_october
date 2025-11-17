@@ -10,13 +10,16 @@ import { supabase } from '@/lib/supabase-client';
 export default function SignupPage() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
-  
+
   // Authentication state
   const [user, setUser] = useState<any>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [discordConnected, setDiscordConnected] = useState(false);
   const [existingProfile, setExistingProfile] = useState<any>(null);
-  
+
+  // Referral code from URL
+  const [referralCode, setReferralCode] = useState<string | null>(null);
+
   // Step 2 form data
   const [fullName, setFullName] = useState('');
   const [username, setUsername] = useState('');
@@ -35,12 +38,21 @@ export default function SignupPage() {
     setCurrentStep(2);
   };
 
+  // Extract referral code from URL
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref');
+    if (refCode) {
+      setReferralCode(refCode);
+    }
+  }, []);
+
   // Check authentication state and handle OAuth redirects
   useEffect(() => {
     const checkAuthState = async () => {
       try {
         setAuthLoading(true);
-        
+
         // Check current session
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         
@@ -157,7 +169,12 @@ export default function SignupPage() {
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'discord',
           options: {
-            redirectTo: `${window.location.origin}/signup`
+            redirectTo: `${window.location.origin}/signup${referralCode ? `?ref=${referralCode}` : ''}`,
+            ...(referralCode && {
+              data: {
+                referral_code: referralCode
+              }
+            })
           }
         });
         
@@ -192,7 +209,12 @@ export default function SignupPage() {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'discord',
         options: {
-          redirectTo: `${window.location.origin}/signup`
+          redirectTo: `${window.location.origin}/signup${referralCode ? `?ref=${referralCode}` : ''}`,
+          ...(referralCode && {
+            data: {
+              referral_code: referralCode
+            }
+          })
         }
       });
       
@@ -216,7 +238,12 @@ export default function SignupPage() {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/signup`
+          redirectTo: `${window.location.origin}/signup${referralCode ? `?ref=${referralCode}` : ''}`,
+          ...(referralCode && {
+            data: {
+              referral_code: referralCode
+            }
+          })
         }
       });
       
@@ -270,7 +297,8 @@ export default function SignupPage() {
           password,
           options: {
             data: {
-              email: email
+              email: email,
+              ...(referralCode && { referral_code: referralCode })
             }
           }
         });

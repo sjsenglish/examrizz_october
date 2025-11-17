@@ -1,0 +1,296 @@
+/* Referrals Page Styles - Page-specific, won't affect other pages */
+
+/* Page Wrapper - Ensures white background covers entire viewport */
+.referrals-page-wrapper {
+  min-height: 100vh;
+  background: #ffffff;
+  width: 100%;
+}
+
+.referrals-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 120px 40px 40px; /* Moved down by 10% (80px -> 120px) */
+  font-family: 'Figtree', sans-serif;
+}
+
+.referrals-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 60px); /* Account for navbar */
+  gap: 20px;
+  font-family: 'Figtree', sans-serif;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #B3F0F2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Unified Width for All Elements */
+.svg-image-unified {
+  width: 70%;
+  max-width: 850px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.unified-width {
+  width: 70%;
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+/* Header Section */
+.referrals-header-svg {
+  margin-bottom: 40px;
+}
+
+/* Section Title - Madimi One Font */
+.section-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+/* Your Referral Link Section */
+.referral-link-section {
+  background: #DEF9F9;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.link-input-wrapper {
+  display: flex;
+  gap: 12px;
+}
+
+.link-input {
+  flex: 1;
+  padding: 14px 18px;
+  font-size: 16px;
+  font-family: 'Figtree', sans-serif;
+  border: 2px solid #000;
+  border-radius: 8px;
+  background: #fff;
+  outline: none;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
+}
+
+.copy-button {
+  padding: 14px 20px;
+  background: #B3F0F2;
+  border: 2px solid #000;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
+}
+
+.copy-button:hover {
+  background: #9DE8EA;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.15);
+}
+
+.copy-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+}
+
+/* Friends Referred Section */
+.friends-referred-section {
+  background: #D3F6F7;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.friends-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  font-family: 'Figtree', sans-serif;
+  color: #666;
+  font-size: 16px;
+}
+
+.friend-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 8px;
+  font-family: 'Figtree', sans-serif;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+}
+
+.friend-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.15);
+}
+
+.friend-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.friend-email {
+  font-weight: 600;
+  font-size: 16px;
+  color: #000;
+}
+
+.friend-date {
+  font-size: 14px;
+  color: #666;
+}
+
+.friend-status {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.friend-status.completed {
+  background: #ECFDF5;
+  color: #059669;
+  border: 1px solid #059669;
+}
+
+.friend-status.pending {
+  background: #FEF3C7;
+  color: #D97706;
+  border: 1px solid #D97706;
+}
+
+/* Details Sections - Made Smaller */
+.details-section-1,
+.details-section-2 {
+  margin-bottom: 40px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .referrals-container {
+    padding: 110px 30px 30px; /* Adjusted for 10% down */
+  }
+
+  .svg-image-unified,
+  .unified-width {
+    width: 80%;
+  }
+
+  .section-title {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 768px) {
+  .referrals-container {
+    padding: 100px 20px 20px; /* Adjusted for 10% down */
+  }
+
+  .svg-image-unified,
+  .unified-width {
+    width: 90%;
+  }
+
+  .referral-link-section,
+  .friends-referred-section {
+    padding: 20px;
+  }
+
+  .section-title {
+    font-size: 20px;
+  }
+
+  .link-input-wrapper {
+    flex-direction: column;
+  }
+
+  .copy-button {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .friend-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .friend-status {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .referrals-container {
+    padding: 90px 15px 15px; /* Adjusted for 10% down */
+  }
+
+  .svg-image-unified,
+  .unified-width {
+    width: 95%;
+  }
+
+  .referral-link-section,
+  .friends-referred-section {
+    padding: 15px;
+  }
+
+  .section-title {
+    font-size: 18px;
+  }
+
+  .link-input {
+    font-size: 14px;
+    padding: 12px 14px;
+  }
+
+  .friend-email {
+    font-size: 14px;
+  }
+
+  .friend-date {
+    font-size: 12px;
+  }
+
+  .friend-status {
+    font-size: 12px;
+    padding: 4px 12px;
+  }
+}
