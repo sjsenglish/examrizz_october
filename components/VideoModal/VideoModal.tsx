@@ -8,16 +8,6 @@ interface VideoModalProps {
   videoUrl?: string;
 }
 
-const getYouTubeEmbedUrl = (url: string): string => {
-  if (!url) return '';
-  
-  // Handle different YouTube URL formats
-  const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/);
-  const videoId = videoIdMatch ? videoIdMatch[1] : '';
-  
-  return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
-};
-
 export const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose, videoUrl }) => {
   const [isMounted, setIsMounted] = useState(false);
 
@@ -56,24 +46,23 @@ export const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose, videoUr
 
   if (!isMounted || !isOpen) return null;
 
-  const embedUrl = videoUrl ? getYouTubeEmbedUrl(videoUrl) : '';
-
   const modalContent = (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <button className={styles.closeButton} onClick={onClose}>
         </button>
-        
-        {embedUrl ? (
+
+        {videoUrl ? (
           <div className={styles.videoContainer}>
-            <iframe
-              src={embedUrl}
-              title="Video Solution"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
+            <video
+              src={videoUrl}
+              controls
+              controlsList="nodownload"
               className={styles.videoFrame}
-            />
+              style={{ width: '100%', height: '100%', backgroundColor: '#000' }}
+            >
+              Your browser does not support the video tag.
+            </video>
           </div>
         ) : (
           <div className={styles.noVideoMessage}>

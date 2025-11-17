@@ -167,12 +167,23 @@ function SpecPointSessionContent() {
       setPdfLoading(true);
       setVideoLoading(true);
       try {
-        // Hardcode lesson ID for now (Power Rule lesson)
-        const hardcodedLessonId = 'd0000000-0000-0000-0000-000000000001';
+        console.log('🔍 Fetching lesson data for spec point:', specPoint, 'lesson:', lessonNumber);
 
-        console.log('🔍 Fetching lesson data for ID:', hardcodedLessonId);
+        // First, get the spec point ID from the code (e.g., "7.2")
+        const { data: specPointData, error: specPointError } = await supabase
+          .from('learn_spec_points')
+          .select('id')
+          .eq('code', specPoint)
+          .single();
 
-        // Query learn_lessons table directly by lesson ID
+        if (specPointError || !specPointData) {
+          console.error('❌ Error fetching spec point:', specPointError);
+          throw new Error('Spec point not found');
+        }
+
+        console.log('✅ Found spec point ID:', specPointData.id);
+
+        // Now query learn_lessons table using spec_point_id and lesson_number
         const { data, error } = await supabase
           .from('learn_lessons')
           .select(`
@@ -185,7 +196,8 @@ function SpecPointSessionContent() {
               name
             )
           `)
-          .eq('id', hardcodedLessonId)
+          .eq('spec_point_id', specPointData.id)
+          .eq('lesson_number', parseInt(lessonNumber))
           .single();
 
         if (error) {
