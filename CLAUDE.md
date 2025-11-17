@@ -190,7 +190,8 @@
         - **Styling**: Figtree font, black color (#000000), no text shadow
         - **Layout**: Chapter number and title displayed inline with flexbox, wraps to two lines for longer titles
         - Font sizes: 14px (desktop), 12px (tablet), 11px (mobile)
-        - Gap between elements: 4px (desktop/tablet), 3px (mobile)
+        - Gap between elements: 2px horizontal gap for all sizes
+        - Row gap (vertical spacing): 2px (desktop/tablet), 1px (mobile) for tighter wrapped lines
         - Text positioned at 12% from top of signpost, centered horizontally with flex-wrap enabled
     - **Background** (Updated Nov 2024): Full background SVG image
       - Image URL: Firebase storage `background-grey-updated.svg`

@@ -352,8 +352,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 2px;
   flex-wrap: wrap;
+  row-gap: 2px;
 }
 
 .maths-demo-page .signpost-chapter {
@@ -451,7 +452,8 @@
 
   .maths-demo-page .signpost-text {
     top: 12%;
-    gap: 4px;
+    gap: 2px;
+    row-gap: 2px;
   }
 
   .maths-demo-page .signpost-chapter {
@@ -537,7 +539,8 @@
 
   .maths-demo-page .signpost-text {
     top: 12%;
-    gap: 3px;
+    gap: 2px;
+    row-gap: 1px;
   }
 
   .maths-demo-page .signpost-chapter {
