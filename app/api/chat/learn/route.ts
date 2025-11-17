@@ -536,11 +536,11 @@ export async function POST(request: NextRequest) {
                 switchContent = 'pdf';
               }
               
-              // Send chunk to client (but filter out switch commands)
+              // Replace switch commands with clickable links
               const filteredText = text
-                .replace(/\\\[SWITCH_CONTENT:video\\\]/g, '')
-                .replace(/\\\[SWITCH_CONTENT:questions\\\]/g, '')
-                .replace(/\\\[SWITCH_CONTENT:pdf\\\]/g, '');
+                .replace(/\[SWITCH_CONTENT:video\]/g, '[SWITCH:video]')
+                .replace(/\[SWITCH_CONTENT:questions\]/g, '[SWITCH:questions]')
+                .replace(/\[SWITCH_CONTENT:pdf\]/g, '[SWITCH:pdf]');
               
               if (filteredText) {
                 controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ 
@@ -552,11 +552,11 @@ export async function POST(request: NextRequest) {
             }
           }
 
-          // Clean up the response to remove switch commands
+          // Replace switch commands with clickable links for database storage
           fullResponse = fullResponse
-            .replace(/\\\[SWITCH_CONTENT:video\\\]/g, '')
-            .replace(/\\\[SWITCH_CONTENT:questions\\\]/g, '')
-            .replace(/\\\[SWITCH_CONTENT:pdf\\\]/g, '');
+            .replace(/\[SWITCH_CONTENT:video\]/g, '[SWITCH:video]')
+            .replace(/\[SWITCH_CONTENT:questions\]/g, '[SWITCH:questions]')
+            .replace(/\[SWITCH_CONTENT:pdf\]/g, '[SWITCH:pdf]');
 
           // Save Joe's response to database
           await supabase

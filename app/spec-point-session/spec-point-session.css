@@ -251,6 +251,34 @@
   margin-bottom: 0;
 }
 
+/* Content Switch Button - Clickable link for changing tabs */
+.spec-point-session-page .content-switch-button {
+  display: inline-block;
+  background: #B3F0F2;
+  color: #000;
+  font-family: 'Figtree', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border: 2px solid #000;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 4px 6px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+}
+
+.spec-point-session-page .content-switch-button:hover {
+  background: #9EEBEE;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
+}
+
+.spec-point-session-page .content-switch-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
 .spec-point-session-page .joe-message-time {
   font-family: 'Figtree', sans-serif;
   font-size: 10px;
