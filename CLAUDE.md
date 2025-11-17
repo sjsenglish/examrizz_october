@@ -554,7 +554,7 @@
   - Progress tracking creates new record if none exists, updates existing record if already exists
   - Tracking only occurs for logged-in users
 
-## MathInput Component (Nov 2024)
+## MathInput Component (Updated Nov 2024)
 - **Component**: `/components/MathInput.tsx` - LaTeX math input component using MathQuill
 - **Dependencies**: @edtr-io/mathquill installed for LaTeX editing
 - **Props**:
@@ -563,17 +563,16 @@
   - `placeholder` (string, optional): Placeholder text for empty input (default: "Enter math expression...")
 - **Features**:
   - **LaTeX Input**: Uses MathQuill WYSIWYG editor for math expressions
-  - **Live Preview**: Displays rendered LaTeX above the input field
   - **Math Keyboard**: Grid of common math symbols and operators
   - **Symbol Insertion**: Click buttons to insert symbols at cursor position
   - **Client-Side Only**: Dynamically imports MathQuill to avoid SSR issues
+  - **Direct Input**: Users can type directly into the input field or click keyboard buttons
 - **Styling**:
   - Figtree font for UI elements
   - White background for input field
   - 2px solid border: #DDD normally, #000 when focused
   - Border radius: 8px
   - Padding: 12px
-  - Preview section with light gray background (#f5f5f5)
 - **Math Keyboard Buttons** (grid layout, 3-4 per row):
   - **Powers/Indices**: x², x³, xⁿ
   - **Roots**: √, ∛, ⁿ√
@@ -587,11 +586,22 @@
   - Tablet (≤768px): 4 buttons per row
   - Mobile (≤480px): 3 buttons per row
 - **Usage**: Designed for math question input in spec point session pages
-- **Implementation Notes**:
+- **Implementation Notes** (Updated Nov 2024):
   - Uses `@ts-nocheck` to avoid TypeScript conflicts with MathQuill
-  - MathQuill CSS loaded from CDN (jsdelivr)
-  - StaticMath used for preview rendering
+  - **jQuery dependency**: Loads jQuery 3.6.0 from CDN before MathQuill (MathQuill requires jQuery 1.5.2+)
+  - **MathQuill loaded from CDN** (jsdelivr v0.11.0) as script instead of npm module
+  - **Script loading order**: jQuery → MathQuill → MathField initialization
+  - **Synchronous loading**: Scripts load with `async: false` to ensure proper dependency order
+  - **Polling mechanism**: Uses setInterval to check when libraries are available before proceeding
+  - **Global objects**: Accesses jQuery and MathQuill from window object
+  - **Click handler** added to ensure field focuses when clicked anywhere in the input area
+  - **Simplified MathQuill config**: Basic handlers for edit events, auto-focus on initialization
+  - **CSS pointer-events** properly configured to ensure field is clickable and interactive
+  - **Textarea properly hidden** but accessible for keyboard input while maintaining field clickability
   - Focus management after button clicks
+  - **Preview section removed** for cleaner, more focused input experience
+  - **Deduplication**: Checks for existing script/CSS before loading to prevent duplicates
+  - **Console logging**: Added logging for debugging load sequence
 
 ## Search Page - Interview Resources Index (Nov 2024)
 - **New Index Added**: `v2_interview_resources` added to `/search` page
