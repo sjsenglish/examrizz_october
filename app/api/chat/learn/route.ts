@@ -328,7 +328,7 @@ YOUR MISSION: Get students to correct answers through clear, efficient explanati
 
 export async function POST(request: NextRequest) {
   try {
-    const { message, conversationId, userId, currentContent, specPoint } = await request.json();
+    const { message, conversationId, userId, currentContent, specPoint, lessonContent } = await request.json();
 
     if (!message || !userId) {
       return NextResponse.json({ error: 'Message and userId are required' }, { status: 400 });
@@ -415,13 +415,87 @@ export async function POST(request: NextRequest) {
 
     // Build context for Joe
     let contextString = '';
-    
+
     if (specPoint) {
       contextString += `\n\nCURRENT SESSION CONTEXT:\n`;
       contextString += `Spec Point: ${specPoint}\n`;
       contextString += `Current Content Tab: ${currentContent}\n`;
       contextString += `Available tabs: video, questions, pdf\n`;
       contextString += `You can switch content using the artifact delivery system when appropriate.\n`;
+    }
+
+    // Add lesson content details if available
+    if (lessonContent) {
+      contextString += `\n═══════════════════════════════════════════════════════════\n`;
+      contextString += `LESSON CONTENT AVAILABLE:\n`;
+      contextString += `═══════════════════════════════════════════════════════════\n`;
+
+      // Video information
+      if (lessonContent.videoUrl) {
+        contextString += `\nVIDEO: Available\n`;
+        contextString += `URL: ${lessonContent.videoUrl}\n`;
+      } else {
+        contextString += `\nVIDEO: Not available\n`;
+      }
+
+      // PDF information
+      if (lessonContent.pdfUrl) {
+        contextString += `\nPDF NOTES: Available\n`;
+        contextString += `URL: ${lessonContent.pdfUrl}\n`;
+      } else {
+        contextString += `\nPDF NOTES: Not available\n`;
+      }
+
+      // Questions information
+      if (lessonContent.questions && lessonContent.questions.length > 0) {
+        contextString += `\nQUESTIONS: ${lessonContent.totalQuestions} question(s) available\n`;
+
+        // Add details for each question
+        lessonContent.questions.forEach((question: any, index: number) => {
+          contextString += `\n--- Question ${index + 1} ---\n`;
+          contextString += `Code: ${question.code}\n`;
+          contextString += `Difficulty: ${question.difficulty}\n`;
+          if (question.instructions) {
+            contextString += `Instructions: ${question.instructions}\n`;
+          }
+          contextString += `Parts:\n`;
+          question.parts.forEach((part: any) => {
+            contextString += `  ${part.letter}) ${part.questionDisplay} (${part.marks} mark${part.marks !== 1 ? 's' : ''})\n`;
+            if (part.questionLatex) {
+              contextString += `     LaTeX: ${part.questionLatex}\n`;
+            }
+          });
+        });
+
+        // Highlight current question if student is on questions tab
+        if (currentContent === 'questions' && lessonContent.currentQuestionIndex !== null) {
+          const currentQ = lessonContent.questions[lessonContent.currentQuestionIndex];
+          contextString += `\n🎯 STUDENT IS CURRENTLY VIEWING QUESTION ${lessonContent.currentQuestionIndex + 1}:\n`;
+          contextString += `Code: ${currentQ.code} | Difficulty: ${currentQ.difficulty}\n`;
+          if (currentQ.instructions) {
+            contextString += `Instructions: ${currentQ.instructions}\n`;
+          }
+          contextString += `Parts:\n`;
+          currentQ.parts.forEach((part: any) => {
+            contextString += `  ${part.letter}) ${part.questionDisplay} (${part.marks} mark${part.marks !== 1 ? 's' : ''})\n`;
+          });
+        }
+      } else {
+        contextString += `\nQUESTIONS: No questions available\n`;
+      }
+
+      // Progress information
+      if (lessonContent.progressData) {
+        contextString += `\n--- Student Progress ---\n`;
+        contextString += `Questions Correct: ${lessonContent.progressData.questionsCorrect} / ${lessonContent.progressData.totalQuestions}\n`;
+        contextString += `Video Watched: ${lessonContent.progressData.videoWatched ? 'Yes' : 'No'}\n`;
+        contextString += `PDF Viewed: ${lessonContent.progressData.pdfViewed ? 'Yes' : 'No'}\n`;
+      }
+
+      contextString += `\n═══════════════════════════════════════════════════════════\n`;
+      contextString += `You can see all lesson content above. Reference specific questions, guide students\n`;
+      contextString += `through the exact problems they're working on, and track their progress.\n`;
+      contextString += `═══════════════════════════════════════════════════════════\n`;
     }
 
     // Enhanced system prompt with context
