@@ -189,7 +189,13 @@
   background-size: auto 400px;
   background-attachment: local;
   image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  image-rendering: high-quality;
+  image-rendering: optimizeQuality;
+  -ms-interpolation-mode: bicubic;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
 }
 
 /* Hide scrollbar but keep functionality */
