@@ -1057,21 +1057,338 @@ body {
    RESPONSIVE DESIGN
    ============================================================================= */
 
-@media (max-width: 768px) {
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 180px;
+    top: calc(80px + 12vh);
+    left: 15px;
+    padding: 14px;
+  }
+
+  .nav-item {
+    padding: 10px;
+    font-size: 12px;
+  }
+
   .materials-layout {
-    grid-template-columns: 1fr;
+    margin-left: 200px;
     gap: var(--space-24);
   }
-  
+
   .chat-container {
-    max-width: 85%;
+    width: calc(88% - 200px);
+    margin-left: 200px;
+    padding: 0 30px;
   }
-  
+
   .chat-input-fixed {
-    width: 85%;
+    left: 200px;
+    width: calc(88% - 200px);
+    padding: var(--space-20) 30px;
   }
-  
+
+  .categories-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-12);
+  }
+}
+
+/* Mobile (max 768px) */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 20px;
+  }
+
+  /* Sidebar becomes full-width overlay when open */
   .sidebar {
-    width: 100vw;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    max-width: 300px;
+    height: calc(100vh - 60px);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 200;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-toggle {
+    display: block;
+    top: 70px;
+    left: 15px;
+  }
+
+  /* Materials page */
+  .materials-layout {
+    grid-template-columns: 1fr;
+    margin-left: 0;
+    padding: 0 var(--space-16);
+    gap: var(--space-20);
+  }
+
+  .categories-panel,
+  .materials-grid {
+    padding: var(--space-24);
+  }
+
+  .categories-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-12);
+  }
+
+  .category-item {
+    min-height: 100px;
+    padding: var(--space-16);
+  }
+
+  .materials-cards {
+    grid-template-columns: 1fr;
+    gap: var(--space-16);
+  }
+
+  /* Chat page */
+  .chat-container {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    padding: 0 20px;
+  }
+
+  .chat-input-fixed {
+    left: 0;
+    width: 100%;
+    padding: var(--space-16) 20px;
+  }
+
+  .input-container textarea {
+    font-size: 15px;
+  }
+
+  .send-btn,
+  .ask-teacher-btn {
+    min-width: 100px;
+    padding: var(--space-12) var(--space-20);
+    font-size: 13px;
+  }
+
+  /* Drafts page */
+  .drafts-container {
+    margin-left: 0;
+    padding: var(--space-24) var(--space-16);
+  }
+
+  .drafts-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-16);
+  }
+
+  /* Floating draft button */
+  .floating-draft-button {
+    width: 50px;
+    height: 50px;
+    bottom: 15px;
+    right: 15px;
+  }
+
+  .floating-draft-button img {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Small Mobile (max 480px) */
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0 15px;
+  }
+
+  .sidebar {
+    max-width: 280px;
+  }
+
+  .nav-item {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  /* Materials */
+  .materials-layout {
+    padding: 0 var(--space-12);
+  }
+
+  .categories-panel h2,
+  .materials-grid h2 {
+    font-size: 20px;
+    margin-bottom: var(--space-16);
+  }
+
+  .categories-list {
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+  }
+
+  .category-item {
+    min-height: 90px;
+    padding: var(--space-12);
+  }
+
+  .category-item span {
+    font-size: 13px;
+  }
+
+  .add-material-btn {
+    padding: var(--space-12);
+    font-size: 15px;
+  }
+
+  .material-card {
+    padding: var(--space-16);
+  }
+
+  .material-card h3 {
+    font-size: 16px;
+  }
+
+  .material-card p {
+    font-size: 13px;
+  }
+
+  /* Chat */
+  .chat-container {
+    padding: 0 15px;
+  }
+
+  .welcome-message h2 {
+    font-size: 26px;
+  }
+
+  .message-content {
+    font-size: 15px;
+  }
+
+  .chat-input-fixed {
+    padding: var(--space-12) 15px;
+  }
+
+  .input-container {
+    gap: var(--space-12);
+  }
+
+  .input-container textarea {
+    font-size: 14px;
+    padding: var(--space-12);
+    min-height: 42px;
+  }
+
+  .send-btn,
+  .ask-teacher-btn {
+    min-width: 90px;
+    padding: var(--space-12) var(--space-16);
+    font-size: 12px;
+  }
+
+  /* Drafts */
+  .drafts-container {
+    padding: var(--space-20) var(--space-12);
+  }
+
+  .drafts-container h2 {
+    font-size: 22px;
+  }
+
+  .draft-card {
+    padding: var(--space-16);
+  }
+
+  .draft-header h3 {
+    font-size: 16px;
+  }
+
+  .draft-preview p {
+    font-size: 13px;
+  }
+
+  /* Modals */
+  .modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .modal-header {
+    padding: var(--space-16);
+  }
+
+  .modal-header h3 {
+    font-size: 18px;
+  }
+
+  .modal-content {
+    padding: var(--space-16);
+  }
+
+  .form-group label {
+    font-size: 13px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: var(--space-12);
+    font-size: 15px;
+  }
+
+  .floating-draft-button {
+    width: 45px;
+    height: 45px;
+  }
+
+  .floating-draft-button img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* Very Small Mobile (max 375px) */
+@media (max-width: 375px) {
+  .sidebar {
+    max-width: 260px;
+  }
+
+  .categories-panel,
+  .materials-grid {
+    padding: var(--space-16);
+  }
+
+  .categories-panel h2,
+  .materials-grid h2 {
+    font-size: 18px;
+  }
+
+  .category-item {
+    min-height: 85px;
+    padding: var(--space-10);
+  }
+
+  .category-item span {
+    font-size: 12px;
+  }
+
+  .welcome-message h2 {
+    font-size: 22px;
+  }
+
+  .message-content {
+    font-size: 14px;
+  }
+
+  .send-btn,
+  .ask-teacher-btn {
+    min-width: 80px;
+    font-size: 11px;
   }
 }
