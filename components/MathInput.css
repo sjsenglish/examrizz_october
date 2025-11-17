@@ -13,17 +13,19 @@
   min-height: 60px;
   padding: 12px;
   background-color: white;
-  border: 2px solid #ddd;
+  border: 2px solid #999;
   border-radius: 8px;
   font-size: 16px;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   cursor: text;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .math-input-field:focus,
 .math-input-field.mq-focused {
   outline: none;
   border-color: #000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 /* MathQuill placeholder styling */

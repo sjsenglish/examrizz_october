@@ -665,12 +665,14 @@ The entire site is now responsive across desktop, tablet, and mobile devices wit
   - **Symbol Insertion**: Click buttons to insert symbols at cursor position
   - **Client-Side Only**: Dynamically imports MathQuill to avoid SSR issues
   - **Direct Input**: Users can type directly into the input field or click keyboard buttons
-- **Styling**:
+- **Styling** (Updated Nov 2024):
   - Figtree font for UI elements
   - White background for input field
-  - 2px solid border: #DDD normally, #000 when focused
+  - 2px solid border: #999 (medium gray) normally for better visibility, #000 when focused
+  - Subtle box-shadow: 0 2px 4px rgba(0,0,0,0.08) default, 0 2px 6px rgba(0,0,0,0.15) when focused
   - Border radius: 8px
   - Padding: 12px
+  - Enhanced visual prominence to make input area clearer for users
 - **Math Keyboard Buttons** (grid layout, 3-4 per row):
   - **Powers/Indices**: x², x³, xⁿ
   - **Roots**: √, ∛, ⁿ√
