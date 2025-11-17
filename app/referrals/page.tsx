@@ -61,7 +61,7 @@ export default function ReferralsPage() {
 
       const data = await response.json();
       setReferralCode(data.referralCode);
-      setReferralLink(`${window.location.origin}/signup?ref=${data.referralCode}`);
+      setReferralLink(`https://www.examrizzsearch.com/signup?ref=${data.referralCode}`);
       setStats(data.stats);
       setReferrals(data.referrals);
     } catch (error) {
