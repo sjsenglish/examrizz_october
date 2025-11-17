@@ -30,97 +30,49 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Header */
-.referrals-header {
-  text-align: center;
-  margin-bottom: 50px;
+/* SVG Images */
+.svg-image {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
-.referrals-title {
-  font-size: 42px;
-  font-weight: 700;
-  margin-bottom: 12px;
-  color: #000;
+/* Header Section */
+.referrals-header-svg {
+  margin-bottom: 30px;
 }
 
-.referrals-subtitle {
-  font-size: 18px;
-  color: #666;
-  margin: 0;
+/* Referral Link Section with Overlay */
+.referral-link-section-wrapper {
+  position: relative;
+  margin-bottom: 30px;
 }
 
-/* Progress Tracker */
-.progress-tracker {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 50px 0;
-  padding: 40px 20px;
-  background: #DEF9F9;
-  border-radius: 12px;
-  border: 2px solid #000;
-}
-
-.progress-step {
+.functional-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  pointer-events: none;
 }
 
-.progress-circle {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 3px solid #B3F0F2;
-  background: #fff;
-  transition: all 0.3s ease;
-}
-
-.progress-step.completed .progress-circle {
-  background: #00CED1;
-  border-color: #00CED1;
-}
-
-.progress-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  text-align: center;
-  max-width: 100px;
-}
-
-.progress-line {
-  width: 80px;
-  height: 3px;
-  background: #B3F0F2;
-  margin: 0 10px;
-}
-
-/* Section Title */
-.section-title {
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 20px;
-  color: #000;
-}
-
-/* Referral Link Section */
-.referral-link-section {
-  background: #DEF9F9;
-  border: 2px solid #000;
-  border-radius: 12px;
-  padding: 30px;
-  margin-bottom: 40px;
-}
-
-.link-container {
+.link-input-container {
+  width: 80%;
+  max-width: 600px;
   display: flex;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 10px;
+  pointer-events: auto;
+  margin-top: 180px;
 }
 
-.link-input {
+.link-input-overlay {
   flex: 1;
   padding: 14px 18px;
   font-size: 16px;
@@ -128,35 +80,36 @@
   border-radius: 8px;
   font-family: 'Figtree', sans-serif;
   background: #fff;
+  outline: none;
 }
 
-.copy-button {
+.copy-button-overlay {
   padding: 14px 24px;
   background: #B3F0F2;
   border: 2px solid #000;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  font-size: 20px;
   transition: all 0.2s ease;
 }
 
-.copy-button:hover {
+.copy-button-overlay:hover {
   background: #9DE8EA;
   transform: translateY(-2px);
 }
 
-/* Share Buttons */
-.share-buttons {
+.share-buttons-overlay {
+  width: 80%;
+  max-width: 600px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
+  pointer-events: auto;
+  margin-top: 20px;
 }
 
-.share-button {
+.share-btn-overlay {
   padding: 12px 20px;
   border: 2px solid #000;
   border-radius: 8px;
@@ -165,251 +118,111 @@
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: 'Figtree', sans-serif;
-}
-
-.share-button:hover {
-  transform: translateY(-2px);
-}
-
-.share-button.email {
   background: #B3F0F2;
 }
 
-.share-button.email:hover {
+.share-btn-overlay:hover {
   background: #9DE8EA;
+  transform: translateY(-2px);
 }
 
-.share-button.whatsapp {
+.share-btn-overlay:nth-child(2) {
   background: #25D366;
   color: #fff;
 }
 
-.share-button.whatsapp:hover {
+.share-btn-overlay:nth-child(2):hover {
   background: #1EBE57;
 }
 
-.share-button.twitter {
+.share-btn-overlay:nth-child(3) {
   background: #1DA1F2;
   color: #fff;
 }
 
-.share-button.twitter:hover {
+.share-btn-overlay:nth-child(3):hover {
   background: #0D8BD9;
 }
 
-.share-button.facebook {
+.share-btn-overlay:nth-child(4) {
   background: #4267B2;
   color: #fff;
 }
 
-.share-button.facebook:hover {
+.share-btn-overlay:nth-child(4):hover {
   background: #365899;
 }
 
-/* Referrals List */
-.referrals-list-section {
-  margin-bottom: 40px;
+/* Friends List Section with Overlay */
+.friends-list-section-wrapper {
+  position: relative;
+  margin-bottom: 30px;
 }
 
-.referrals-list {
-  background: #D3F6F7;
-  border: 2px solid #000;
-  border-radius: 12px;
+.friends-list-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   padding: 20px;
-  max-height: 400px;
-  overflow-y: auto;
 }
 
-.referral-item {
+.empty-state-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-size: 16px;
+}
+
+.friend-item-overlay {
+  position: absolute;
+  left: 20px;
+  right: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 20px;
-  background: #fff;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.9);
   border: 2px solid #000;
   border-radius: 8px;
-  margin-bottom: 12px;
 }
 
-.referral-item:last-child {
-  margin-bottom: 0;
-}
-
-.referral-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.referral-email {
+.friend-email {
   font-weight: 600;
   font-size: 16px;
   color: #000;
+  flex: 1;
 }
 
-.referral-date {
+.friend-date {
   font-size: 14px;
   color: #666;
+  margin: 0 20px;
 }
 
-.referral-status {
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-weight: 600;
-  font-size: 14px;
+.friend-status {
+  font-size: 20px;
+  min-width: 30px;
+  text-align: center;
 }
 
-.referral-status.completed {
-  background: #ECFDF5;
+.friend-status.completed {
   color: #059669;
-  border: 1px solid #059669;
 }
 
-.referral-status.pending {
-  background: #FEF3C7;
+.friend-status.pending {
   color: #D97706;
-  border: 1px solid #D97706;
 }
 
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: #666;
-  font-size: 16px;
-}
-
-/* Stats Section */
-.stats-section {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  margin-bottom: 40px;
-}
-
-.stat-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 24px;
-  background: #fff;
-  border: 2px solid #000;
-  border-radius: 12px;
-}
-
-.stat-icon {
-  font-size: 36px;
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #DEF9F9;
-  border-radius: 10px;
-}
-
-.stat-content {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.stat-number {
-  font-size: 32px;
-  font-weight: 700;
-  color: #000;
-}
-
-.stat-label {
-  font-size: 14px;
-  color: #666;
-  font-weight: 500;
-}
-
-/* How It Works Section */
-.how-it-works {
-  margin-bottom: 40px;
-}
-
-.steps-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.step-card {
-  padding: 30px;
-  background: #E5FAFA;
-  border: 2px solid #000;
-  border-radius: 12px;
-  text-align: center;
-}
-
-.step-number {
-  width: 50px;
-  height: 50px;
-  background: #B3F0F2;
-  border: 2px solid #000;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0 auto 20px;
-}
-
-.step-card h3 {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 12px;
-  color: #000;
-}
-
-.step-card p {
-  font-size: 15px;
-  color: #333;
-  line-height: 1.6;
-  margin: 0;
-}
-
-/* Terms Section */
-.terms-section {
-  padding: 30px;
-  background: #fff;
-  border: 2px solid #000;
-  border-radius: 12px;
-  margin-bottom: 40px;
-}
-
-.terms-section h3 {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 16px;
-  color: #000;
-}
-
-.terms-section ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.terms-section li {
-  position: relative;
-  padding-left: 30px;
-  margin-bottom: 12px;
-  font-size: 15px;
-  color: #333;
-  line-height: 1.6;
-}
-
-.terms-section li:before {
-  content: "•";
-  position: absolute;
-  left: 10px;
-  color: #00CED1;
-  font-weight: 700;
-  font-size: 20px;
+/* Details Sections */
+.details-section-1,
+.details-section-2 {
+  margin-bottom: 30px;
 }
 
 /* Responsive Design */
@@ -418,16 +231,9 @@
     padding: 70px 30px 30px;
   }
 
-  .referrals-title {
-    font-size: 36px;
-  }
-
-  .stats-section {
-    grid-template-columns: 1fr;
-  }
-
-  .steps-grid {
-    grid-template-columns: 1fr;
+  .link-input-container,
+  .share-buttons-overlay {
+    width: 85%;
   }
 }
 
@@ -436,33 +242,26 @@
     padding: 60px 20px 20px;
   }
 
-  .referrals-title {
-    font-size: 28px;
-  }
-
-  .referrals-subtitle {
-    font-size: 16px;
-  }
-
-  .progress-tracker {
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-
-  .progress-line {
-    display: none;
-  }
-
-  .share-buttons {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .link-container {
+  .link-input-container {
     flex-direction: column;
+    width: 90%;
+    margin-top: 150px;
   }
 
-  .section-title {
-    font-size: 22px;
+  .share-buttons-overlay {
+    grid-template-columns: repeat(2, 1fr);
+    width: 90%;
+  }
+
+  .friend-item-overlay {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 15px;
+  }
+
+  .friend-date {
+    margin: 0;
   }
 }
 
@@ -471,22 +270,36 @@
     padding: 50px 15px 15px;
   }
 
-  .referrals-title {
-    font-size: 24px;
+  .link-input-container {
+    width: 95%;
+    margin-top: 120px;
   }
 
-  .share-buttons {
+  .share-buttons-overlay {
     grid-template-columns: 1fr;
+    width: 95%;
   }
 
-  .referral-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
+  .link-input-overlay {
+    font-size: 14px;
+    padding: 12px 14px;
   }
 
-  .stat-card {
-    flex-direction: column;
-    text-align: center;
+  .copy-button-overlay {
+    padding: 12px 20px;
+    font-size: 18px;
+  }
+
+  .share-btn-overlay {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .friend-email {
+    font-size: 14px;
+  }
+
+  .friend-date {
+    font-size: 12px;
   }
 }

@@ -123,91 +123,77 @@ export default function ReferralsPage() {
     <>
       <Navbar />
       <div className="referrals-container">
-        {/* Header Section */}
-        <div className="referrals-header">
-          <h1 className="referrals-title">Refer Friends & Earn Rewards</h1>
-          <p className="referrals-subtitle">Share ExamRizz with your friends and get rewarded when they sign up!</p>
+        {/* Header SVG */}
+        <div className="referrals-header-svg">
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202795.svg?alt=media&token=ed23d7cb-8609-4a46-bf91-57d85e1d4a1f"
+            alt="Referral Header"
+            className="svg-image"
+          />
         </div>
 
-        {/* Progress Tracker */}
-        <div className="progress-tracker">
-          <div className="progress-step completed">
-            <div className="progress-circle"></div>
-            <span className="progress-label">Share Link</span>
-          </div>
-          <div className="progress-line"></div>
-          <div className={`progress-step ${stats.total > 0 ? 'completed' : ''}`}>
-            <div className="progress-circle"></div>
-            <span className="progress-label">Friend Clicks</span>
-          </div>
-          <div className="progress-line"></div>
-          <div className={`progress-step ${stats.completed > 0 ? 'completed' : ''}`}>
-            <div className="progress-circle"></div>
-            <span className="progress-label">Friend Signs Up</span>
-          </div>
-          <div className="progress-line"></div>
-          <div className="progress-step">
-            <div className="progress-circle"></div>
-            <span className="progress-label">Get Rewarded</span>
-          </div>
-        </div>
+        {/* Referral Link Section with Functional Overlay */}
+        <div className="referral-link-section-wrapper">
+          {/* Background SVG */}
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202794.svg?alt=media&token=76968eac-056c-49e2-a144-34db7b28f5bf"
+            alt="Referral Link Section"
+            className="svg-image"
+          />
 
-        {/* Referral Link Section */}
-        <div className="referral-link-section">
-          <h2 className="section-title">Your Referral Link</h2>
-          <div className="link-container">
-            <input
-              type="text"
-              value={referralLink}
-              readOnly
-              className="link-input"
-            />
-            <button onClick={copyToClipboard} className="copy-button">
-              {copySuccess ? (
-                <span>✓ Copied!</span>
-              ) : (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" strokeWidth="2"/>
-                  <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5" stroke="currentColor" strokeWidth="2"/>
-                </svg>
-              )}
-            </button>
-          </div>
+          {/* Functional Overlay */}
+          <div className="functional-overlay">
+            <div className="link-input-container">
+              <input
+                type="text"
+                value={referralLink}
+                readOnly
+                className="link-input-overlay"
+              />
+              <button onClick={copyToClipboard} className="copy-button-overlay">
+                {copySuccess ? '✓' : '📋'}
+              </button>
+            </div>
 
-          {/* Share Buttons */}
-          <div className="share-buttons">
-            <button onClick={shareViaEmail} className="share-button email">
-              Email
-            </button>
-            <button onClick={shareViaWhatsApp} className="share-button whatsapp">
-              WhatsApp
-            </button>
-            <button onClick={shareViaTwitter} className="share-button twitter">
-              Twitter
-            </button>
-            <button onClick={shareViaFacebook} className="share-button facebook">
-              Facebook
-            </button>
+            <div className="share-buttons-overlay">
+              <button onClick={shareViaEmail} className="share-btn-overlay">
+                Email
+              </button>
+              <button onClick={shareViaWhatsApp} className="share-btn-overlay">
+                WhatsApp
+              </button>
+              <button onClick={shareViaTwitter} className="share-btn-overlay">
+                Twitter
+              </button>
+              <button onClick={shareViaFacebook} className="share-btn-overlay">
+                Facebook
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Referrals List */}
-        <div className="referrals-list-section">
-          <h2 className="section-title">Your Referrals ({stats.total})</h2>
-          <div className="referrals-list">
+        {/* Friends List Section with Functional Overlay */}
+        <div className="friends-list-section-wrapper">
+          {/* Background SVG */}
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202793.svg?alt=media&token=97207204-7f2f-419e-ac35-9a546ff76f3b"
+            alt="Friends List"
+            className="svg-image"
+          />
+
+          {/* Functional Friends List Overlay */}
+          <div className="friends-list-overlay">
             {referrals.length === 0 ? (
-              <div className="empty-state">
+              <div className="empty-state-overlay">
                 <p>No referrals yet. Share your link to get started!</p>
               </div>
             ) : (
-              referrals.map((referral) => (
-                <div key={referral.id} className="referral-item">
-                  <div className="referral-info">
-                    <span className="referral-email">{referral.referred_email}</span>
-                    <span className="referral-date">{formatDate(referral.created_at)}</span>
-                  </div>
-                  <span className={`referral-status ${referral.status}`}>
-                    {referral.status === 'completed' ? '✓ Completed' : 'Pending'}
+              referrals.map((referral, index) => (
+                <div key={referral.id} className="friend-item-overlay" style={{ top: `${60 + (index * 45)}px` }}>
+                  <span className="friend-email">{referral.referred_email}</span>
+                  <span className="friend-date">{formatDate(referral.created_at)}</span>
+                  <span className={`friend-status ${referral.status}`}>
+                    {referral.status === 'completed' ? '✓' : '⏳'}
                   </span>
                 </div>
               ))
@@ -215,62 +201,22 @@ export default function ReferralsPage() {
           </div>
         </div>
 
-        {/* Stats Section */}
-        <div className="stats-section">
-          <div className="stat-card">
-            <div className="stat-icon">👥</div>
-            <div className="stat-content">
-              <span className="stat-number">{stats.total}</span>
-              <span className="stat-label">Total Referrals</span>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon">✓</div>
-            <div className="stat-content">
-              <span className="stat-number">{stats.completed}</span>
-              <span className="stat-label">Completed</span>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon">⏳</div>
-            <div className="stat-content">
-              <span className="stat-number">{stats.pending}</span>
-              <span className="stat-label">Pending</span>
-            </div>
-          </div>
+        {/* Details Section 1 */}
+        <div className="details-section-1">
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202792.svg?alt=media&token=7735cfc3-bdb7-453e-af10-c832ccc2bdde"
+            alt="Details Section 1"
+            className="svg-image"
+          />
         </div>
 
-        {/* How It Works Section */}
-        <div className="how-it-works">
-          <h2 className="section-title">How It Works</h2>
-          <div className="steps-grid">
-            <div className="step-card">
-              <div className="step-number">1</div>
-              <h3>Share Your Link</h3>
-              <p>Copy your unique referral link and share it with friends via email, WhatsApp, or social media.</p>
-            </div>
-            <div className="step-card">
-              <div className="step-number">2</div>
-              <h3>Friend Signs Up</h3>
-              <p>When your friend clicks your link and creates an account, they'll be automatically tracked as your referral.</p>
-            </div>
-            <div className="step-card">
-              <div className="step-number">3</div>
-              <h3>Get Rewarded</h3>
-              <p>Once your friend completes their signup, you'll receive exclusive rewards and benefits!</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Terms Section */}
-        <div className="terms-section">
-          <h3>Referral Program Terms</h3>
-          <ul>
-            <li>Each unique email address can only be referred once</li>
-            <li>Referral rewards are credited after the referred user completes signup</li>
-            <li>Self-referrals and fake accounts are not permitted</li>
-            <li>ExamRizz reserves the right to modify or discontinue the referral program at any time</li>
-          </ul>
+        {/* Details Section 2 */}
+        <div className="details-section-2">
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202791.svg?alt=media&token=dceeb64f-e8c4-4390-b809-f95d18d284a3"
+            alt="Details Section 2"
+            className="svg-image"
+          />
         </div>
       </div>
     </>
