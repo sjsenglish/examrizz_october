@@ -40,7 +40,7 @@
   max-height: 90vh;
   overflow-y: auto;
   animation: slideInModal 0.3s ease;
-  padding: 48px;
+  padding: 60px;
 }
 
 @keyframes slideInModal {
@@ -95,7 +95,7 @@
   display: grid;
   grid-template-columns: 2fr 1fr;
   grid-template-rows: auto auto;
-  gap: 16px;
+  gap: 20px;
   width: 100%;
 }
 
@@ -105,16 +105,16 @@
   grid-row: 1 / 2;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: 20px;
 }
 
-/* Bottom left section - spans first column, second row, contains 2 boxes */
+/* Bottom left section - spans first column, second row, contains 2 boxes SIDE BY SIDE */
 .progress-bottom-left-v2 {
   grid-column: 1 / 2;
   grid-row: 2 / 3;
   display: grid;
-  grid-template-rows: auto auto;
-  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
 
 /* Right section - spans second column, both rows */
@@ -128,10 +128,10 @@
   background-color: #FFFFFF;
   border: 1px solid #000000;
   border-radius: 12px;
-  padding: 20px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -320,6 +320,7 @@
   .progress-bottom-left-v2 {
     grid-column: 1;
     grid-row: 2;
+    grid-template-columns: 1fr;
   }
 
   .progress-right-section-v2 {
@@ -332,10 +333,14 @@
   .progress-modal-v2 {
     width: 95%;
     max-height: 95vh;
-    padding: 24px;
+    padding: 30px;
   }
 
   .progress-top-section-v2 {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-bottom-left-v2 {
     grid-template-columns: 1fr;
   }
 
