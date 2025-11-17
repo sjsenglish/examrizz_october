@@ -183,6 +183,11 @@
   overflow-y: hidden;
   scroll-behavior: smooth;
   padding: 260px 100px 100px 100px;
+  background-image: url('https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fbackground-grey-updated.svg?alt=media&token=063dfd70-6c1a-4563-b521-28740384991b');
+  background-repeat: repeat-x;
+  background-position: bottom;
+  background-size: auto 100%;
+  background-attachment: local;
 }
 
 /* Hide scrollbar but keep functionality */
@@ -203,10 +208,6 @@
   gap: 100px;
   min-height: 100%;
   padding-bottom: 80px;
-  background-image: url('https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fbackground-grey-updated.svg?alt=media&token=063dfd70-6c1a-4563-b521-28740384991b');
-  background-repeat: repeat-x;
-  background-position: bottom;
-  background-size: auto 100%;
 }
 
 /* Wrapper for stone + signpost */
