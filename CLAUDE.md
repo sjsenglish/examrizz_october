@@ -69,8 +69,7 @@
   - **Personal Information Section**: Edit full name, username, school, rank in school
   - **Discord Information Section** (Highlighted):
     - **Critical for Referral Rewards**: Adding Discord username triggers referral reward processing
-    - Discord username input field (required for rewards)
-    - Discord ID input field (optional, 18-digit number)
+    - Discord username input field (only field required for rewards)
     - Clear instructions and hints for users
     - Special styling with #DEF9F9 background and "Required for Referral Rewards" badge
   - **Account Information Section** (Read-Only): Email address and member since date

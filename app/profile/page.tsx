@@ -23,7 +23,6 @@ export default function ProfilePage() {
     full_name: '',
     username: '',
     discord_username: '',
-    discord_id: '',
     school: '',
     rank_in_school: '',
   });
@@ -50,7 +49,6 @@ export default function ProfilePage() {
         full_name: profile.full_name || '',
         username: profile.username || '',
         discord_username: profile.discord_username || '',
-        discord_id: profile.discord_id || '',
         school: profile.school || '',
         rank_in_school: profile.rank_in_school || '',
       });
@@ -75,7 +73,6 @@ export default function ProfilePage() {
           full_name: formData.full_name,
           username: formData.username,
           discord_username: formData.discord_username,
-          discord_id: formData.discord_id,
           school: formData.school,
           rank_in_school: formData.rank_in_school,
         })
@@ -239,20 +236,6 @@ export default function ProfilePage() {
               />
               <div className="input-hint">
                 Your Discord username (found in Discord app under Settings → My Account)
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Discord ID (Optional)</label>
-              <input
-                type="text"
-                value={formData.discord_id}
-                onChange={(e) => handleInputChange('discord_id', e.target.value)}
-                className="form-input"
-                placeholder="18-digit number (optional)"
-              />
-              <div className="input-hint">
-                Your Discord ID (enable Developer Mode in Discord to copy)
               </div>
             </div>
           </div>
