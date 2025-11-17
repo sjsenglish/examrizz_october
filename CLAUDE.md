@@ -6,18 +6,20 @@
 
 ## Referrals System (Added Nov 2024)
 - **Page**: `/referrals` - Accessible via hamburger menu in navbar
-- **Design Approach**: Mix of smaller SVG images and custom-built functional sections
-- **SVG Images Used** (smaller, centered):
-  - Header: `Group 2795.svg` (80% width) - Title and introduction section
-  - Progress Circles: `Group 2796.svg` (70% width) - Steps visualization
-  - Details Section 1: `Group 2792.svg` (90% width) - Information section
-  - Details Section 2: `Group 2791.svg` (90% width) - Terms section
-- **Custom-Built Sections**:
+- **Design Approach**: Mix of SVG images and custom-built functional sections on white background
+- **Page Layout**: All elements positioned 10% lower (120px top padding) with unified 70% width
+- **SVG Images Used** (70% width, centered):
+  - Header: `Group 2795.svg` - Title and introduction section
+  - Details Section 1: `Group 2792.svg` - Information section
+  - Details Section 2: `Group 2791.svg` - Terms section
+- **Custom-Built Sections** (70% width, centered):
   - **Your Referral Link** (background: #DEF9F9):
+    - Section title in Madimi One font
     - Rectangle with bottom drop shadow
     - Link input field with copy icon (Figtree font)
-    - Social share buttons: Email, WhatsApp, Twitter, Facebook
+    - Copy functionality with visual feedback
   - **Friends Referred** (background: #D3F6F7):
+    - Section title in Madimi One font
     - Dynamic list of referred users
     - Each item in white rectangle with bottom drop shadow
     - Shows email, date, and status (completed/pending)
