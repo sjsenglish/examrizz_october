@@ -293,106 +293,83 @@ The entire site is now responsive across desktop, tablet, and mobile devices wit
 
 **Navigation Flow**: Home (Learn icon) → Competition → Subject Selection → Maths Demo → Spec Topic
 
-## Progress Dashboard (Updated Nov 2024)
+## Progress Dashboard (Redesigned Nov 2024)
 - **Location**: Accessible via blue folder icon in top-right corner of `/maths-demo` page
 - **Component**: `/components/ProgressDashboard.tsx` with styles in `/components/ProgressDashboard.css`
-- **Purpose**: Comprehensive progress tracking dashboard displaying user's learning journey across all chapters
-- **Design**: Modern card-based layout with light cyan background (#F3FDFD) and black borders matching site aesthetic
+- **Purpose**: Comprehensive student performance dashboard showing grades, streaks, and progress metrics
+- **Design**: Modern metrics-focused layout with light cyan background (#F3FDFD) and rounded corners
 
 ### Dashboard Layout Structure
-1. **Top Stats Row** (3 horizontal cards):
-   - **Lessons Completed**: Shows completed lessons / total lessons with percentage
-   - **Hours Watched**: Shows hours watched / total hours (92.83) with percentage
-   - **Questions Correct**: Shows correct answers / total questions with accuracy percentage
-   - Each card features an icon, label, main value, and percentage
-   - Cards have hover effect with lift animation
+**Top Row (4 metric boxes):**
+1. **Working Grade**: Current grade displayed in cyan (#00CED1) with progress bar
+   - Shows: A* grade
+   - Progress bar shows completion percentage
 
-2. **Bottom Section** (2 columns):
-   - **Left Column**:
-     - **Overall Progress Card**: Circular progress indicator (SVG) showing overall course completion
-       - Displays percentage in center of circle
-       - Shows breakdown: Lessons, Hours, and Accuracy stats below circle
-       - Uses cyan (#B3F0F2) for progress fill
-     - **Recent Activity Card**: Lists last 5 completed lessons
-       - Shows spec point completed with time ago (e.g., "2 hours ago", "1 day ago")
-       - Empty state message if no activity yet
-       - Each item has cyan dot indicator
+2. **Predicted Grade**: Future grade prediction
+   - Shows: A** grade
 
-   - **Right Column**:
-     - **Chapter Progress Card**: Displays all 9 chapters with individual progress bars
-       - Chapter numbering: 1, 2, 3, 4, 5, 6, 7, 8, 10 (matches curriculum)
-       - Color-coded by chapter: Purple (#7C3AED) for odd chapters, Blue (#3B82F6) for even chapters
-       - Each chapter shows: "Ch X: [Title]" with percentage
-       - Progress bars animate on load
-       - Scrollable list (max-height: 500px) with custom scrollbar styling
+3. **Learning Streak**: Days logged in consecutively
+   - Shows flame icon from Firebase Storage
+   - Displays: 7 days logged in
 
-### Data Fetching and Calculations
-- **Authentication**: Requires logged-in user, shows loading state otherwise
-- **Database Queries**:
-  - Fetches all lessons from `learn_lessons` table with duration and spec point codes
-  - Fetches user progress from `learn_user_progress` (filtered by `video_watched = true`)
-  - Fetches all question parts from `learn_question_parts` for total count
-  - Fetches correct answers from `learn_user_answers` (filtered by `is_correct = true`)
-- **Progress Calculations**:
-  - **Lessons Completed**: Count of progress records with `video_watched = true`
-  - **Hours Watched**: Sum of `duration_minutes` for completed lessons, converted to hours
-  - **Questions Correct**: Count of unique `question_part_id` with correct answers
-  - **Chapter Progress**: Calculated per chapter by:
-    - Filtering lessons by spec point codes for that chapter
-    - Counting completed lessons vs total lessons in chapter
-    - Percentage rounded to whole number
-- **Recent Activity**: Last 5 completed lessons ordered by `created_at` descending
-  - Displays spec point code and time ago using custom `getTimeAgo()` function
+4. **Exam Readiness**: Topic coverage tracking
+   - Shows: 12 / 30 topics completed
+   - Progress bar with cyan fill
 
-### Spec Points by Chapter Mapping
-```javascript
-{
-  1: ['1.1'],
-  2: ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7', '2.9'],
-  3: ['3.1', '3.2'],
-  4: ['4.1'],
-  5: ['5.1', '5.3', '5.5', '5.7'],
-  6: ['6.1', '6.2', '6.3', '6.4', '6.5', '6.6', '6.7'],
-  7: ['7.1', '7.2', '7.3'],
-  8: ['8.1', '8.2', '8.3'],
-  10: ['10.1-10.5']
-}
-```
+**Bottom Row (3 boxes - 2 left + 1 tall right):**
+5. **This Week** (bottom left):
+   - Questions Answered: 42
+   - Accuracy: 85%
+   - Study Time: 3.5h
+   - Each stat in mini container with drop shadow on bottom edge
 
-### Styling and Responsiveness
-- **Colors**:
-  - Background: #F3FDFD (light cyan)
-  - Cards: #FFFFFF with 2px solid #000000 borders
-  - Accent: #00CED1 (cyan) for percentages and dots
-  - Progress bars: #B3F0F2 (light cyan fill), chapter-specific colors
-- **Typography**: Figtree for headings/values, Inter for labels
+6. **Grade Trajectory** (bottom left):
+   - Line graph showing grade progression over 5 weeks (W1-W5)
+   - Cyan line (#00CED1) with data points
+   - Grid lines for reference
+
+7. **Grade Split by Topic** (tall box spanning both rows on right):
+   - Pie chart showing topic grade distribution
+   - Colors: A** (#6CE5E8), A* (white), A (#C8F4F6), B (#E7E6FF), C (#0AB2B4)
+   - Legend with counts: A** (6), A* (8), A (9), B (5), C (2)
+
+### Styling Details
+- **Typography**:
+  - Labels/text: Figtree font family
+  - Numbers/grades: Madimi One font family
+- **Containers**:
+  - All boxes: White background with 1px black borders, 12px border radius
+  - Mini stat boxes: 8px border radius with `box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1)`
+- **Progress Bars**:
+  - Height: 8px
+  - Border: 1px solid black
+  - Fill color: #00CED1 (cyan)
+  - Background: #E5E7EB (light gray)
 - **Modal**:
-  - Fixed position centered on screen
-  - Max-width: 1200px, max-height: 90vh
-  - Rounded corners (20px) with black border
-  - Custom cyan scrollbar styling
-- **Responsive Breakpoints**:
-  - **1024px**: Bottom section collapses to single column, progress circle stacks vertically
-  - **768px**: Top stats become single column, reduced padding and font sizes
-  - **480px**: Further size reductions for mobile, compact chapter list (max-height: 300px)
-- **Animations**:
-  - Fade in overlay (0.2s)
-  - Slide in modal (0.3s)
-  - Card hover effects with lift
-  - Smooth progress bar fills (0.5s transition)
+  - Max-width: 1100px
+  - Background: #F3FDFD
+  - Border-radius: 16px
+  - Padding: 32px
 
-### User Experience Features
-- **Loading State**: Shows "Loading your progress..." message while fetching data
-- **Empty States**: "No recent activity yet..." message when no completed lessons
-- **Close Options**: Click X button or click overlay to close dashboard
-- **Real-time Data**: Dashboard refetches progress data every time it's opened
-- **Accurate Tracking**: Only counts unique correct answers (handles multiple attempts)
-- **Time Formatting**: Human-readable relative times (minutes, hours, days, weeks ago)
+### Data Source
+- **Current State**: Using default placeholder data
+- **Future Implementation**: Will fetch real user data from database tables:
+  - Working/Predicted grades from user performance metrics
+  - Learning streak from login history
+  - Exam readiness from topic completion tracking
+  - Weekly stats from question attempt records
+  - Grade trajectory from historical performance data
+  - Topic grades from lesson completion scores
 
-### Files Modified/Created
-- Updated: `/components/ProgressDashboard.tsx` - Complete rewrite with functional data fetching
-- Updated: `/components/ProgressDashboard.css` - New layout styles matching design
-- No changes to: `/app/maths-demo/page.tsx` - Dashboard icon already implemented
+### Responsive Design
+- **1024px**: Top row becomes 2 columns, bottom section stacks vertically
+- **768px**: Top row becomes single column, trajectory chart adjusts
+- **480px**: Compact spacing, smaller fonts, mobile-optimized layout
+
+### Files
+- Component: `/components/ProgressDashboard.tsx`
+- Styles: `/components/ProgressDashboard.css`
+- Trigger: Blue folder icon in `/app/maths-demo/page.tsx`
 
 ## AskBo Page Layout Fix (Nov 2024)
 - **Issue**: Page experienced layout shift on initial load - loading screen had different structure than actual content
