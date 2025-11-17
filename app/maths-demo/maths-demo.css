@@ -186,7 +186,7 @@
   background-image: url('https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fbackground-grey-updated.svg?alt=media&token=063dfd70-6c1a-4563-b521-28740384991b');
   background-repeat: repeat-x;
   background-position: center bottom;
-  background-size: auto calc(100% + 150px);
+  background-size: auto calc(90% + 200px);
   background-attachment: local;
 }
 
