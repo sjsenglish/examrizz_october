@@ -343,29 +343,31 @@
 
 .maths-demo-page .signpost-text {
   position: absolute;
-  top: 18%;
+  top: 12%;
   left: 50%;
   transform: translateX(-50%);
-  width: 80%;
+  width: 90%;
   text-align: center;
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .maths-demo-page .signpost-chapter {
   font-family: 'Figtree', sans-serif;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 700;
   color: #000000;
-  margin-bottom: 2px;
 }
 
 .maths-demo-page .signpost-title {
   font-family: 'Figtree', sans-serif;
-  font-size: 10px;
+  font-size: 18px;
   font-weight: 700;
   color: #000000;
-  line-height: 1.2;
-  word-wrap: break-word;
+  white-space: nowrap;
 }
 
 
@@ -447,15 +449,16 @@
   }
 
   .maths-demo-page .signpost-text {
-    top: 18%;
+    top: 12%;
+    gap: 5px;
   }
 
   .maths-demo-page .signpost-chapter {
-    font-size: 20px;
+    font-size: 16px;
   }
 
   .maths-demo-page .signpost-title {
-    font-size: 9px;
+    font-size: 16px;
   }
 }
 
@@ -532,14 +535,15 @@
   }
 
   .maths-demo-page .signpost-text {
-    top: 18%;
+    top: 12%;
+    gap: 4px;
   }
 
   .maths-demo-page .signpost-chapter {
-    font-size: 18px;
+    font-size: 15px;
   }
 
   .maths-demo-page .signpost-title {
-    font-size: 8px;
+    font-size: 15px;
   }
 }
