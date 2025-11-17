@@ -16,52 +16,79 @@ const MathInput: React.FC<MathInputProps> = ({ value, onChange, placeholder = 'E
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    // Dynamically import MathQuill only on client side
-    const initMathQuill = async () => {
+    // Dynamically load MathQuill only on client side
+    const initMathQuill = () => {
       if (typeof window === 'undefined') return;
 
       try {
-        // Import MathQuill CSS
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = 'https://cdn.jsdelivr.net/npm/@edtr-io/mathquill@0.10.1-4/build/mathquill.css';
-        document.head.appendChild(link);
+        // Check if MathQuill is already loaded
+        if ((window as any).MathQuill && mathFieldRef.current && !mathFieldInstance.current) {
+          initializeMathField();
+          return;
+        }
 
-        // Import MathQuill library
-        const MQ = await import('@edtr-io/mathquill');
-        const MathQuill = MQ.default || MQ;
+        // Load MathQuill CSS
+        if (!document.querySelector('link[href*="mathquill.css"]')) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = 'https://cdn.jsdelivr.net/npm/@edtr-io/mathquill@0.11.0/build/mathquill.css';
+          document.head.appendChild(link);
+        }
 
-        // Expose MathQuill to window for global access
-        (window as any).MathQuill = MathQuill;
-
-        if (mathFieldRef.current && !mathFieldInstance.current) {
-          const mathField = MathQuill.getInterface(2).MathField(mathFieldRef.current, {
-            spaceBehavesLikeTab: true,
-            leftRightIntoCmdGoes: 'up',
-            restrictMismatchedBrackets: true,
-            sumStartsWithNEquals: true,
-            supSubsRequireOperand: true,
-            charsThatBreakOutOfSupSub: '+-=<>',
-            autoSubscriptNumerals: true,
-            handlers: {
-              edit: function() {
-                const latex = mathField.latex();
-                onChange(latex);
+        // Load MathQuill JS
+        if (!document.querySelector('script[src*="mathquill.js"]')) {
+          const script = document.createElement('script');
+          script.src = 'https://cdn.jsdelivr.net/npm/@edtr-io/mathquill@0.11.0/build/mathquill.min.js';
+          script.async = true;
+          script.onload = () => {
+            // Wait a bit for MathQuill to be available
+            setTimeout(() => {
+              if (mathFieldRef.current && !mathFieldInstance.current) {
+                initializeMathField();
               }
-            }
-          });
-
-          mathFieldInstance.current = mathField;
-
-          // Set initial value if provided
-          if (value) {
-            mathField.latex(value);
-          }
-
-          setIsReady(true);
+            }, 100);
+          };
+          script.onerror = () => {
+            console.error('Failed to load MathQuill script');
+          };
+          document.head.appendChild(script);
         }
       } catch (error) {
         console.error('Error initializing MathQuill:', error);
+      }
+    };
+
+    const initializeMathField = () => {
+      try {
+        const MathQuill = (window as any).MathQuill;
+        if (!MathQuill || !mathFieldRef.current) return;
+
+        const mathField = MathQuill.getInterface(2).MathField(mathFieldRef.current, {
+          spaceBehavesLikeTab: true,
+          leftRightIntoCmdGoes: 'up',
+          restrictMismatchedBrackets: true,
+          sumStartsWithNEquals: true,
+          supSubsRequireOperand: true,
+          charsThatBreakOutOfSupSub: '+-=<>',
+          autoSubscriptNumerals: true,
+          handlers: {
+            edit: function() {
+              const latex = mathField.latex();
+              onChange(latex);
+            }
+          }
+        });
+
+        mathFieldInstance.current = mathField;
+
+        // Set initial value if provided
+        if (value) {
+          mathField.latex(value);
+        }
+
+        setIsReady(true);
+      } catch (error) {
+        console.error('Error creating MathField:', error);
       }
     };
 

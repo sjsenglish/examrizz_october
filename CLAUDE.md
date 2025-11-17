@@ -588,14 +588,16 @@
 - **Usage**: Designed for math question input in spec point session pages
 - **Implementation Notes** (Updated Nov 2024):
   - Uses `@ts-nocheck` to avoid TypeScript conflicts with MathQuill
-  - MathQuill CSS loaded from CDN (jsdelivr)
-  - **MathQuill exposed to window object** for global access across components
+  - **MathQuill loaded from CDN** (jsdelivr v0.11.0) as script instead of npm module
+  - **Script loading approach**: Dynamically injects script and CSS into document head
+  - **Global MathQuill object** accessed from window after script loads
   - **Click handler** added to ensure field focuses when clicked anywhere in the input area
   - **Enhanced MathQuill configuration**: leftRightIntoCmdGoes, restrictMismatchedBrackets, autoSubscriptNumerals
   - **CSS pointer-events** properly configured to ensure field is clickable and interactive
   - **Textarea properly hidden** but accessible for keyboard input while maintaining field clickability
   - Focus management after button clicks
   - **Preview section removed** for cleaner, more focused input experience
+  - **Deduplication**: Checks for existing script/CSS before loading to prevent duplicates
 
 ## Search Page - Interview Resources Index (Nov 2024)
 - **New Index Added**: `v2_interview_resources` added to `/search` page
