@@ -163,6 +163,7 @@
       - Positioning calculation: Grass top is at 118px from viewport bottom; wrapper bottom extends 80px below viewport; positive bottom value keeps signposts visible in grass area
     - **Background** (Updated Nov 2024): Full background SVG image
       - Image URL: Firebase storage `background-grey-updated.svg`
+      - Background applied to `.stones-track` element (scrolls with stepping stones)
       - Background repeats horizontally (repeat-x) so users see more as they scroll
       - Background positioned at bottom, auto height scaling to 100%
       - Replaces previous grass pattern and divider line
