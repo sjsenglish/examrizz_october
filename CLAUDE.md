@@ -61,6 +61,37 @@
   - Rewards: `database/referral_rewards_system.sql`
   - Documentation: `REFERRAL_REWARDS_GUIDE.md`
 
+## Profile Page (Added Nov 2024)
+- **Page**: `/profile` - Accessible via hamburger menu in navbar
+- **Purpose**: User profile management with Discord username editing
+- **Design**: Clean white background with purple ghost icon, matching site aesthetic
+- **Key Features**:
+  - **Personal Information Section**: Edit full name, username, school, rank in school
+  - **Discord Information Section** (Highlighted):
+    - **Critical for Referral Rewards**: Adding Discord username triggers referral reward processing
+    - Discord username input field (required for rewards)
+    - Discord ID input field (optional, 18-digit number)
+    - Clear instructions and hints for users
+    - Special styling with #DEF9F9 background and "Required for Referral Rewards" badge
+  - **Account Information Section** (Read-Only): Email address and member since date
+  - **Tier Badge**: Displays user's subscription tier (Free/Plus/Max) with colored badge
+  - **Real-Time Saving**: Save button with loading state and success/error messages
+  - **Profile Context Integration**: Uses ProfileContext for data and refreshes after save
+- **Trigger for Referral Rewards**:
+  - When user updates Discord username, database trigger `check_referral_completion()` fires
+  - Automatically processes pending referrals and grants 1 month Plus tier to both users
+  - Critical component of referral rewards flow
+- **Styling**:
+  - Purple ghost icon floats with animation at top
+  - Form sections with rounded corners and subtle backgrounds
+  - Discord section highlighted with cyan background (#DEF9F9)
+  - Responsive design for mobile/tablet/desktop
+  - Consistent with site's Figtree and Madimi One fonts
+- **Files**:
+  - Page: `app/profile/page.tsx`
+  - Styles: `app/profile/profile.css`
+  - Navbar updated with Profile link in hamburger menu
+
 ## Planning Mode
 - Always ask clarifying questions when in planning mode
 - Gather all necessary information before starting implementation
