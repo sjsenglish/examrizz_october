@@ -109,7 +109,7 @@ export default function ReferralsPage() {
         {/* Header SVG */}
         <div className="referrals-header-svg">
           <img
-            src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202795.svg?alt=media&token=ed23d7cb-8609-4a46-bf91-57d85e1d4a1f"
+            src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202797.svg?alt=media&token=6fd95839-6bd1-4474-859f-2be4fea27fbd"
             alt="Referral Header"
             className="svg-image-unified"
           />
