@@ -146,6 +146,19 @@ The entire site is now responsive across desktop, tablet, and mobile devices wit
 - **Exam Preparation**: Focuses on time management, showing working, and exam technique
 - **Escalation**: Knows limits and directs to Discord community when needed
 - **Implementation**: Located in `/app/api/chat/learn/route.ts` as `JOE_SYSTEM_PROMPT` constant
+- **Lesson Content Awareness** (Added Nov 2024):
+  - Joe receives comprehensive lesson content context in every message
+  - **Context includes**:
+    - All questions loaded in the lesson with full details (code, difficulty, parts, marks, LaTeX)
+    - Which specific question the student is currently viewing
+    - Video URL availability status
+    - PDF URL availability status
+    - Student progress data (questions correct, video watched, PDF viewed)
+  - Joe can reference specific questions by code or number
+  - Joe can provide targeted help based on exact question student is working on
+  - Joe knows student's progress and can adjust difficulty/suggestions accordingly
+  - Context passed from `/app/spec-point-session/page.tsx` via `lessonContent` parameter
+  - Context formatted in `/app/api/chat/learn/route.ts` for clarity and easy reference
 
 ## Critical Auth Flow Information (Updated Nov 2024)
 - **DO NOT** add validation in login/signup pages that signs out users during OAuth callbacks

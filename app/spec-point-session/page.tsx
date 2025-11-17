@@ -381,6 +381,16 @@ function SpecPointSessionContent() {
     setIsLoading(true);
 
     try {
+      // Build comprehensive lesson content context for Joe
+      const lessonContent = {
+        videoUrl: videoUrl,
+        pdfUrl: pdfUrl,
+        questions: questions,
+        currentQuestionIndex: currentContent === 'questions' ? currentQuestionIndex : null,
+        totalQuestions: questions.length,
+        progressData: progressData
+      };
+
       const response = await fetch('/api/chat/learn', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -389,7 +399,8 @@ function SpecPointSessionContent() {
           conversationId,
           userId,
           currentContent,
-          specPoint: `${specPoint} ${specName} - Lesson ${lessonNumber}`
+          specPoint: `${specPoint} ${specName} - Lesson ${lessonNumber}`,
+          lessonContent: lessonContent
         })
       });
 
