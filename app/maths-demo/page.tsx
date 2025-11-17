@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
+import { supabase } from '@/lib/supabase-client';
 import ProgressDashboard from '@/components/ProgressDashboard';
 import './maths-demo.css';
 
@@ -16,6 +17,19 @@ type SpecPoint = {
   type: 'normal' | 'blended';
   chapter: number;
   transitionTo?: number; // For blended blocks transitioning from even to odd chapters
+};
+
+// Chapter titles mapping
+const chapterTitles: { [key: number]: string } = {
+  1: 'Proof',
+  2: 'Algebra and Functions',
+  3: 'Coordinate Geometry',
+  4: 'Binomial Expansion',
+  5: 'Trigonometry',
+  6: 'Exponentials and Logarithms',
+  7: 'Differentiation',
+  8: 'Integration',
+  10: 'Vectors'
 };
 
 // Spec point data structure - includes blended block as special type
@@ -73,19 +87,18 @@ const getStoneHeightOffset = (index: number): number => {
 const getChapterSignpost = (chapter: number, isFirstInChapter: boolean) => {
   if (!isFirstInChapter) return null;
 
-  const signs = [
-    { chapter: 1, url: 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fpurplesign.svg?alt=media&token=3fad5483-edcd-469e-bb6c-c19f22a7345b' },
-    { chapter: 2, url: 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fbluesign.svg?alt=media&token=b415f33b-dc02-427a-a507-c17e0a45a00d' },
-    { chapter: 3, url: 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fpurplesign.svg?alt=media&token=3fad5483-edcd-469e-bb6c-c19f22a7345b' },
-    { chapter: 4, url: 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fbluesign.svg?alt=media&token=b415f33b-dc02-427a-a507-c17e0a45a00d' },
-    { chapter: 5, url: 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fpurplesign.svg?alt=media&token=3fad5483-edcd-469e-bb6c-c19f22a7345b' },
-    { chapter: 6, url: 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fbluesign.svg?alt=media&token=b415f33b-dc02-427a-a507-c17e0a45a00d' },
-    { chapter: 7, url: 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fpurplesign.svg?alt=media&token=3fad5483-edcd-469e-bb6c-c19f22a7345b' },
-    { chapter: 8, url: 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fbluesign.svg?alt=media&token=b415f33b-dc02-427a-a507-c17e0a45a00d' },
-    { chapter: 10, url: 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fpurplesign.svg?alt=media&token=3fad5483-edcd-469e-bb6c-c19f22a7345b' },
-  ];
+  // Determine if chapter is odd or even (chapter 10 is considered even)
+  const isOddChapter = chapter % 2 === 1;
 
-  return signs.find(s => s.chapter === chapter);
+  const url = isOddChapter
+    ? 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fflagpost-purple-empty.svg?alt=media&token=27b64194-9cec-458f-a2bc-aba75eb0c155'
+    : 'https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fflagpost-blue-empty.svg?alt=media&token=635d87c5-3811-4cf1-88c3-e3581daa2eb7';
+
+  return {
+    chapter,
+    url,
+    title: chapterTitles[chapter] || `Chapter ${chapter}`
+  };
 };
 
 export default function MathsDemoPage() {
@@ -95,6 +108,8 @@ export default function MathsDemoPage() {
   const [isDragging, setIsDragging] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
+  const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
+  const [isLoadingProgress, setIsLoadingProgress] = useState(true);
   const [showDashboard, setShowDashboard] = useState(false);
 
   // Filter spec points based on search query (exclude blended blocks)
@@ -263,6 +278,77 @@ export default function MathsDemoPage() {
     return () => container.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Fetch user progress data for lesson completion
+  useEffect(() => {
+    const fetchUserProgress = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+          setIsLoadingProgress(false);
+          return;
+        }
+
+        // Fetch all lessons to get mapping between spec points and lesson IDs
+        const { data: lessonsData, error: lessonsError } = await supabase
+          .from('learn_lessons')
+          .select(`
+            id,
+            lesson_number,
+            learn_spec_points!inner(code)
+          `);
+
+        if (lessonsError) {
+          console.error('Error fetching lessons:', lessonsError);
+          setIsLoadingProgress(false);
+          return;
+        }
+
+        // Fetch all progress records for this user
+        const { data: progressData, error } = await supabase
+          .from('learn_user_progress')
+          .select('lesson_id, video_watched')
+          .eq('user_id', user.id);
+
+        if (error) {
+          console.error('Error fetching progress:', error);
+          setIsLoadingProgress(false);
+          return;
+        }
+
+        // Create a mapping of lesson IDs to completion status
+        const progressMap = new Map<string, boolean>();
+        if (progressData) {
+          progressData.forEach((progress) => {
+            progressMap.set(progress.lesson_id, progress.video_watched);
+          });
+        }
+
+        // Create a set of completed lesson keys (spec_id-lesson_number)
+        const completed = new Set<string>();
+        if (lessonsData) {
+          lessonsData.forEach((lesson: any) => {
+            const lessonId = lesson.id;
+            const specCode = lesson.learn_spec_points?.code;
+            const lessonNumber = lesson.lesson_number;
+
+            if (specCode && lessonNumber && progressMap.get(lessonId)) {
+              completed.add(`${specCode}-${lessonNumber}`);
+            }
+          });
+        }
+
+        setCompletedLessons(completed);
+        setIsLoadingProgress(false);
+      } catch (error) {
+        console.error('Error in fetchUserProgress:', error);
+        setIsLoadingProgress(false);
+      }
+    };
+
+    fetchUserProgress();
+  }, []);
+
   return (
     <div className="maths-demo-page">
       <div className="page-background">
@@ -407,20 +493,36 @@ export default function MathsDemoPage() {
                     {/* Toast icons (one per lesson) - only for normal spec points */}
                     {spec.type === 'normal' && (
                       <div className="toasts-group">
-                        {Array.from({ length: spec.lessons }).map((_, lessonIndex) => (
-                          <Link
-                            key={lessonIndex}
-                            href={`/spec-point-session?spec=${spec.id}&lesson=${lessonIndex + 1}&name=${encodeURIComponent(spec.name)}`}
-                            className="toast-item"
-                          >
-                            <Image
-                              src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202376.svg?alt=media&token=96940cfc-fd51-4c0c-a40b-eca32f113b46"
-                              alt={`Lesson ${lessonIndex + 1}`}
-                              width={38}
-                              height={38}
-                            />
-                          </Link>
-                        ))}
+                        {Array.from({ length: spec.lessons }).map((_, lessonIndex) => {
+                          const lessonNumber = lessonIndex + 1;
+                          const lessonKey = `${spec.id}-${lessonNumber}`;
+                          const isCompleted = completedLessons.has(lessonKey);
+                          const isOddChapter = spec.chapter % 2 === 1;
+
+                          // Determine which icon to use
+                          let iconSrc = "https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202376.svg?alt=media&token=96940cfc-fd51-4c0c-a40b-eca32f113b46";
+
+                          if (isCompleted) {
+                            iconSrc = isOddChapter
+                              ? "https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Ftoast-purple.svg?alt=media&token=c39230b9-80b9-4689-9ae0-c76d4d253d2a"
+                              : "https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Ftoast-blue.svg?alt=media&token=9da68ee7-14a8-454e-ab69-ef62732fa922";
+                          }
+
+                          return (
+                            <Link
+                              key={lessonIndex}
+                              href={`/spec-point-session?spec=${spec.id}&lesson=${lessonNumber}&name=${encodeURIComponent(spec.name)}`}
+                              className="toast-item"
+                            >
+                              <Image
+                                src={iconSrc}
+                                alt={`Lesson ${lessonNumber}`}
+                                width={38}
+                                height={38}
+                              />
+                            </Link>
+                          );
+                        })}
                       </div>
                     )}
 
@@ -469,10 +571,14 @@ export default function MathsDemoPage() {
                     <div className="chapter-signpost">
                       <Image
                         src={signpost.url}
-                        alt={`Chapter ${spec.chapter}`}
+                        alt={`Chapter ${signpost.chapter}`}
                         width={120}
                         height={150}
                       />
+                      <div className="signpost-text">
+                        <div className="signpost-chapter">{signpost.chapter}</div>
+                        <div className="signpost-title">{signpost.title}</div>
+                      </div>
                     </div>
                   )}
                 </div>
