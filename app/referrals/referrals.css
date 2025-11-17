@@ -1,12 +1,17 @@
-/* Referrals Page Styles */
+/* Referrals Page Styles - Page-specific, won't affect other pages */
+
+/* Page Wrapper - Ensures white background covers entire viewport */
+.referrals-page-wrapper {
+  min-height: 100vh;
+  background: #ffffff;
+  width: 100%;
+}
 
 .referrals-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 120px 40px 40px; /* Moved down by 10% (80px -> 120px) */
   font-family: 'Figtree', sans-serif;
-  background: #ffffff;
-  min-height: 100vh;
 }
 
 .referrals-loading {
@@ -14,10 +19,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: calc(100vh - 60px); /* Account for navbar */
   gap: 20px;
   font-family: 'Figtree', sans-serif;
-  background: #ffffff;
 }
 
 .spinner {

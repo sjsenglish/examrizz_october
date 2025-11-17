@@ -89,18 +89,18 @@ export default function ReferralsPage() {
 
   if (loading) {
     return (
-      <>
+      <div className="referrals-page-wrapper">
         <Navbar />
         <div className="referrals-loading">
           <div className="spinner"></div>
           <p>Loading your referrals...</p>
         </div>
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="referrals-page-wrapper">
       <Navbar />
       <div className="referrals-container">
         {/* Header SVG */}
@@ -179,6 +179,6 @@ export default function ReferralsPage() {
           />
         </div>
       </div>
-    </>
+    </div>
   );
 }
