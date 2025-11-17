@@ -4,6 +4,34 @@
 - **IMPORTANT**: Always update this CLAUDE.md file before every git commit
 - Include any new project conventions, patterns, or important decisions made during development
 
+## Referrals System (Added Nov 2024)
+- **Page**: `/referrals` - Accessible via hamburger menu in navbar
+- **Design Approach**: Uses exact SVG images from Firebase Storage with functional overlays
+- **SVG Images Used**:
+  - Header: `Group 2795.svg` - Title and introduction section
+  - Referral Link Section: `Group 2794.svg` - Background for link input and share buttons
+  - Friends List: `Group 2793.svg` - Background for referrals list
+  - Details Section 1: `Group 2792.svg` - Information/stats section
+  - Details Section 2: `Group 2791.svg` - Terms and additional details
+- **Functional Overlays**:
+  - Referral link input field with copy-to-clipboard button
+  - Social share buttons (Email, WhatsApp, Twitter, Facebook)
+  - Dynamic referrals list showing email, date, and status
+  - All overlays positioned absolutely on top of SVG backgrounds
+- **Database Tables**:
+  - `referral_codes`: Stores unique 8-character codes for each user (auto-generated on signup)
+  - `referrals`: Tracks all referrals with status (pending/completed)
+- **Integration**:
+  - Signup page extracts `?ref=CODE` from URL and passes to auth metadata
+  - Works with all signup methods (Email, Google, Discord)
+  - Database triggers automatically track referrals and update status
+- **API Endpoint**: `/api/referrals` - Returns user's referral code, stats, and referrals list
+- **Files**:
+  - Page: `app/referrals/page.tsx`
+  - Styles: `app/referrals/referrals.css`
+  - API: `app/api/referrals/route.ts`
+  - Schema: `database/referrals_schema.sql`
+
 ## Planning Mode
 - Always ask clarifying questions when in planning mode
 - Gather all necessary information before starting implementation
