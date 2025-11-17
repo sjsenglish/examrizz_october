@@ -31,9 +31,19 @@ const MathInput: React.FC<MathInputProps> = ({ value, onChange, placeholder = 'E
         const MQ = await import('@edtr-io/mathquill');
         const MathQuill = MQ.default || MQ;
 
+        // Expose MathQuill to window for global access
+        (window as any).MathQuill = MathQuill;
+
         if (mathFieldRef.current && !mathFieldInstance.current) {
           const mathField = MathQuill.getInterface(2).MathField(mathFieldRef.current, {
             spaceBehavesLikeTab: true,
+            substituteTextarea: function() {
+              // Create a proper textarea for MathQuill
+              const textarea = document.createElement('textarea');
+              textarea.style.position = 'absolute';
+              textarea.style.clip = 'rect(0, 0, 0, 0)';
+              return textarea;
+            },
             handlers: {
               edit: function() {
                 const latex = mathField.latex();
@@ -116,30 +126,6 @@ const MathInput: React.FC<MathInputProps> = ({ value, onChange, placeholder = 'E
 
   return (
     <div className="math-input-container">
-      {/* LaTeX Preview */}
-      <div className="math-preview">
-        <div className="math-preview-label">Preview:</div>
-        <div className="math-preview-content">
-          {value ? (
-            <div ref={(el) => {
-              if (el && isReady) {
-                el.textContent = '';
-                try {
-                  const MQ = (window as any).MathQuill;
-                  if (MQ) {
-                    MQ.getInterface(2).StaticMath(el).latex(value);
-                  }
-                } catch (e) {
-                  el.textContent = value;
-                }
-              }
-            }} />
-          ) : (
-            <span className="math-preview-placeholder">Math preview will appear here</span>
-          )}
-        </div>
-      </div>
-
       {/* MathQuill Input Field */}
       <div className="math-input-wrapper">
         <div
