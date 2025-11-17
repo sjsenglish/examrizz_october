@@ -14,6 +14,7 @@
   justify-content: center;
   min-height: 100vh;
   gap: 20px;
+  font-family: 'Figtree', sans-serif;
 }
 
 .spinner {
@@ -30,199 +31,253 @@
   100% { transform: rotate(360deg); }
 }
 
-/* SVG Images */
-.svg-image {
-  width: 100%;
+/* SVG Images - Made Smaller */
+.svg-image-header {
+  width: 80%;
+  max-width: 800px;
   height: auto;
   display: block;
+  margin: 0 auto;
+}
+
+.svg-image-progress {
+  width: 70%;
+  max-width: 700px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.svg-image-details {
+  width: 90%;
+  max-width: 900px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 /* Header Section */
 .referrals-header-svg {
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
-/* Referral Link Section with Overlay */
-.referral-link-section-wrapper {
-  position: relative;
-  margin-bottom: 30px;
+/* Progress Circles Section */
+.progress-circles-svg {
+  margin-bottom: 40px;
 }
 
-.functional-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+/* Section Title */
+.section-title {
+  font-family: 'Figtree', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+/* Your Referral Link Section */
+.referral-link-section {
+  background: #DEF9F9;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.link-input-wrapper {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px;
-  pointer-events: none;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
-.link-input-container {
-  width: 80%;
-  max-width: 600px;
-  display: flex;
-  gap: 10px;
-  pointer-events: auto;
-  margin-top: 180px;
-}
-
-.link-input-overlay {
+.link-input {
   flex: 1;
   padding: 14px 18px;
   font-size: 16px;
+  font-family: 'Figtree', sans-serif;
   border: 2px solid #000;
   border-radius: 8px;
-  font-family: 'Figtree', sans-serif;
   background: #fff;
   outline: none;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
 }
 
-.copy-button-overlay {
-  padding: 14px 24px;
+.copy-button {
+  padding: 14px 20px;
   background: #B3F0F2;
   border: 2px solid #000;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
-  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.2s ease;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
 }
 
-.copy-button-overlay:hover {
+.copy-button:hover {
   background: #9DE8EA;
   transform: translateY(-2px);
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.15);
 }
 
-.share-buttons-overlay {
-  width: 80%;
-  max-width: 600px;
+.copy-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+}
+
+/* Share Buttons */
+.share-buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
-  pointer-events: auto;
-  margin-top: 20px;
 }
 
-.share-btn-overlay {
+.share-button {
   padding: 12px 20px;
   border: 2px solid #000;
   border-radius: 8px;
+  font-family: 'Figtree', sans-serif;
   font-weight: 600;
   font-size: 15px;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-family: 'Figtree', sans-serif;
-  background: #B3F0F2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
 }
 
-.share-btn-overlay:hover {
-  background: #9DE8EA;
+.share-button:hover {
   transform: translateY(-2px);
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.15);
 }
 
-.share-btn-overlay:nth-child(2) {
+.share-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+}
+
+.share-button.email {
+  background: #B3F0F2;
+  color: #000;
+}
+
+.share-button.email:hover {
+  background: #9DE8EA;
+}
+
+.share-button.whatsapp {
   background: #25D366;
   color: #fff;
 }
 
-.share-btn-overlay:nth-child(2):hover {
+.share-button.whatsapp:hover {
   background: #1EBE57;
 }
 
-.share-btn-overlay:nth-child(3) {
+.share-button.twitter {
   background: #1DA1F2;
   color: #fff;
 }
 
-.share-btn-overlay:nth-child(3):hover {
+.share-button.twitter:hover {
   background: #0D8BD9;
 }
 
-.share-btn-overlay:nth-child(4) {
+.share-button.facebook {
   background: #4267B2;
   color: #fff;
 }
 
-.share-btn-overlay:nth-child(4):hover {
+.share-button.facebook:hover {
   background: #365899;
 }
 
-/* Friends List Section with Overlay */
-.friends-list-section-wrapper {
-  position: relative;
-  margin-bottom: 30px;
+/* Friends Referred Section */
+.friends-referred-section {
+  background: #D3F6F7;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.friends-list-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  padding: 20px;
+.friends-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.empty-state-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.empty-state {
   text-align: center;
-  padding: 20px;
+  padding: 40px 20px;
+  font-family: 'Figtree', sans-serif;
   color: #666;
   font-size: 16px;
 }
 
-.friend-item-overlay {
-  position: absolute;
-  left: 20px;
-  right: 20px;
+.friend-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 20px;
-  background: rgba(255, 255, 255, 0.9);
+  padding: 16px 20px;
+  background: #fff;
   border: 2px solid #000;
   border-radius: 8px;
+  font-family: 'Figtree', sans-serif;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+}
+
+.friend-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.15);
+}
+
+.friend-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
 }
 
 .friend-email {
   font-weight: 600;
   font-size: 16px;
   color: #000;
-  flex: 1;
 }
 
 .friend-date {
   font-size: 14px;
   color: #666;
-  margin: 0 20px;
 }
 
 .friend-status {
-  font-size: 20px;
-  min-width: 30px;
-  text-align: center;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
 }
 
 .friend-status.completed {
+  background: #ECFDF5;
   color: #059669;
+  border: 1px solid #059669;
 }
 
 .friend-status.pending {
+  background: #FEF3C7;
   color: #D97706;
+  border: 1px solid #D97706;
 }
 
 /* Details Sections */
 .details-section-1,
 .details-section-2 {
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
 /* Responsive Design */
@@ -231,9 +286,24 @@
     padding: 70px 30px 30px;
   }
 
-  .link-input-container,
-  .share-buttons-overlay {
+  .svg-image-header {
     width: 85%;
+  }
+
+  .svg-image-progress {
+    width: 75%;
+  }
+
+  .svg-image-details {
+    width: 95%;
+  }
+
+  .section-title {
+    font-size: 22px;
+  }
+
+  .share-buttons {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -242,26 +312,48 @@
     padding: 60px 20px 20px;
   }
 
-  .link-input-container {
+  .svg-image-header {
+    width: 90%;
+  }
+
+  .svg-image-progress {
+    width: 85%;
+  }
+
+  .svg-image-details {
+    width: 100%;
+  }
+
+  .referral-link-section,
+  .friends-referred-section {
+    padding: 20px;
+  }
+
+  .section-title {
+    font-size: 20px;
+  }
+
+  .link-input-wrapper {
     flex-direction: column;
-    width: 90%;
-    margin-top: 150px;
   }
 
-  .share-buttons-overlay {
-    grid-template-columns: repeat(2, 1fr);
-    width: 90%;
+  .copy-button {
+    width: 100%;
+    padding: 12px;
   }
 
-  .friend-item-overlay {
+  .share-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .friend-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
-    padding: 10px 15px;
+    gap: 12px;
   }
 
-  .friend-date {
-    margin: 0;
+  .friend-status {
+    align-self: flex-start;
   }
 }
 
@@ -270,27 +362,29 @@
     padding: 50px 15px 15px;
   }
 
-  .link-input-container {
-    width: 95%;
-    margin-top: 120px;
-  }
-
-  .share-buttons-overlay {
-    grid-template-columns: 1fr;
+  .svg-image-header {
     width: 95%;
   }
 
-  .link-input-overlay {
+  .svg-image-progress {
+    width: 90%;
+  }
+
+  .referral-link-section,
+  .friends-referred-section {
+    padding: 15px;
+  }
+
+  .section-title {
+    font-size: 18px;
+  }
+
+  .link-input {
     font-size: 14px;
     padding: 12px 14px;
   }
 
-  .copy-button-overlay {
-    padding: 12px 20px;
-    font-size: 18px;
-  }
-
-  .share-btn-overlay {
+  .share-button {
     padding: 10px 16px;
     font-size: 14px;
   }
@@ -301,5 +395,10 @@
 
   .friend-date {
     font-size: 12px;
+  }
+
+  .friend-status {
+    font-size: 12px;
+    padding: 4px 12px;
   }
 }

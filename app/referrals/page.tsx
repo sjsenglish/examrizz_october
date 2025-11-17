@@ -128,72 +128,77 @@ export default function ReferralsPage() {
           <img
             src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202795.svg?alt=media&token=ed23d7cb-8609-4a46-bf91-57d85e1d4a1f"
             alt="Referral Header"
-            className="svg-image"
+            className="svg-image-header"
           />
         </div>
 
-        {/* Referral Link Section with Functional Overlay */}
-        <div className="referral-link-section-wrapper">
-          {/* Background SVG */}
+        {/* Progress Circles SVG - New */}
+        <div className="progress-circles-svg">
           <img
-            src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202794.svg?alt=media&token=76968eac-056c-49e2-a144-34db7b28f5bf"
-            alt="Referral Link Section"
-            className="svg-image"
+            src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202796.svg?alt=media&token=94274a83-88a2-4fcc-aaef-e96a232db2fa"
+            alt="Progress Steps"
+            className="svg-image-progress"
           />
+        </div>
 
-          {/* Functional Overlay */}
-          <div className="functional-overlay">
-            <div className="link-input-container">
-              <input
-                type="text"
-                value={referralLink}
-                readOnly
-                className="link-input-overlay"
-              />
-              <button onClick={copyToClipboard} className="copy-button-overlay">
-                {copySuccess ? '✓' : '📋'}
-              </button>
-            </div>
+        {/* Your Referral Link - Custom Built */}
+        <div className="referral-link-section">
+          <h2 className="section-title">Your Referral Link</h2>
+          <div className="link-input-wrapper">
+            <input
+              type="text"
+              value={referralLink}
+              readOnly
+              className="link-input"
+            />
+            <button onClick={copyToClipboard} className="copy-button">
+              {copySuccess ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" strokeWidth="2"/>
+                  <path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5" stroke="currentColor" strokeWidth="2"/>
+                </svg>
+              )}
+            </button>
+          </div>
 
-            <div className="share-buttons-overlay">
-              <button onClick={shareViaEmail} className="share-btn-overlay">
-                Email
-              </button>
-              <button onClick={shareViaWhatsApp} className="share-btn-overlay">
-                WhatsApp
-              </button>
-              <button onClick={shareViaTwitter} className="share-btn-overlay">
-                Twitter
-              </button>
-              <button onClick={shareViaFacebook} className="share-btn-overlay">
-                Facebook
-              </button>
-            </div>
+          {/* Share Buttons */}
+          <div className="share-buttons">
+            <button onClick={shareViaEmail} className="share-button email">
+              <span>📧</span> Email
+            </button>
+            <button onClick={shareViaWhatsApp} className="share-button whatsapp">
+              <span>💬</span> WhatsApp
+            </button>
+            <button onClick={shareViaTwitter} className="share-button twitter">
+              <span>🐦</span> Twitter
+            </button>
+            <button onClick={shareViaFacebook} className="share-button facebook">
+              <span>📘</span> Facebook
+            </button>
           </div>
         </div>
 
-        {/* Friends List Section with Functional Overlay */}
-        <div className="friends-list-section-wrapper">
-          {/* Background SVG */}
-          <img
-            src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202793.svg?alt=media&token=97207204-7f2f-419e-ac35-9a546ff76f3b"
-            alt="Friends List"
-            className="svg-image"
-          />
-
-          {/* Functional Friends List Overlay */}
-          <div className="friends-list-overlay">
+        {/* Friends Referred - Custom Built */}
+        <div className="friends-referred-section">
+          <h2 className="section-title">Friends Referred ({stats.total})</h2>
+          <div className="friends-list">
             {referrals.length === 0 ? (
-              <div className="empty-state-overlay">
+              <div className="empty-state">
                 <p>No referrals yet. Share your link to get started!</p>
               </div>
             ) : (
-              referrals.map((referral, index) => (
-                <div key={referral.id} className="friend-item-overlay" style={{ top: `${60 + (index * 45)}px` }}>
-                  <span className="friend-email">{referral.referred_email}</span>
-                  <span className="friend-date">{formatDate(referral.created_at)}</span>
+              referrals.map((referral) => (
+                <div key={referral.id} className="friend-item">
+                  <div className="friend-info">
+                    <span className="friend-email">{referral.referred_email}</span>
+                    <span className="friend-date">{formatDate(referral.created_at)}</span>
+                  </div>
                   <span className={`friend-status ${referral.status}`}>
-                    {referral.status === 'completed' ? '✓' : '⏳'}
+                    {referral.status === 'completed' ? '✓ Completed' : '⏳ Pending'}
                   </span>
                 </div>
               ))
@@ -206,7 +211,7 @@ export default function ReferralsPage() {
           <img
             src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202792.svg?alt=media&token=7735cfc3-bdb7-453e-af10-c832ccc2bdde"
             alt="Details Section 1"
-            className="svg-image"
+            className="svg-image-details"
           />
         </div>
 
@@ -215,7 +220,7 @@ export default function ReferralsPage() {
           <img
             src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202791.svg?alt=media&token=dceeb64f-e8c4-4390-b809-f95d18d284a3"
             alt="Details Section 2"
-            className="svg-image"
+            className="svg-image-details"
           />
         </div>
       </div>
