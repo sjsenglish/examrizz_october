@@ -121,6 +121,13 @@ export default function Navbar() {
           {showDropdown && (
             <div className="navbar-dropdown-menu">
               <Link
+                href="/referrals"
+                className="navbar-dropdown-item"
+                onClick={() => setShowDropdown(false)}
+              >
+                Referrals
+              </Link>
+              <Link
                 href="/payment"
                 className="navbar-dropdown-item"
                 onClick={() => setShowDropdown(false)}
