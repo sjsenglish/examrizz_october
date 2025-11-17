@@ -168,6 +168,7 @@
       - Background positioned at bottom, auto height scaling to 100% of viewport
       - Scrolls with stepping stones content while maintaining viewport-relative sizing
       - Replaces previous grass pattern and divider line
+      - **Image rendering optimization** (Updated Nov 2024): Added `image-rendering: -webkit-optimize-contrast` and `image-rendering: crisp-edges` to improve SVG sharpness and reduce blurriness
     - Progress bar: 80% width, centered, with responsive sizing for mobile
     - Back button in top-left corner linking to `/subject-selection`
     - **Icon sizes** (optimized for 5 topics in view - Nov 2024):

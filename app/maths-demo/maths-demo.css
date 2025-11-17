@@ -188,6 +188,8 @@
   background-position: center center;
   background-size: auto 400px;
   background-attachment: local;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 /* Hide scrollbar but keep functionality */
