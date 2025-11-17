@@ -355,16 +355,6 @@ export default function MathsDemoPage() {
           ref={scrollContainerRef}
         >
           <div className="stones-track">
-            {/* Grass pattern at bottom */}
-            <div className="grass-pattern">
-              <Image
-                src="/icons/grass-pattern.svg"
-                alt="Grass"
-                fill
-                className="grass-image"
-              />
-            </div>
-
             {/* Render stepping stones */}
             {specPoints.map((spec, index) => {
               // Check if this is the first spec of a new chapter
