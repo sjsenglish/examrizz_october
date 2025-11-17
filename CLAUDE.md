@@ -680,14 +680,30 @@
   - Only applies to Interview questions (not Interview Resources or other question types)
 
 ## Usage Tracking and Limits (Updated Nov 2024)
+
+### Free Tier - Message-Based Limits
+- **Free users have separate message limits per service** (defined in `lib/usage-tracking.ts`):
+  - **AskBo Chat**: 5 messages per month
+  - **Interview Chat**: 5 messages per month
+  - **Total**: 10 messages sent + 10 responses received per month
+
+### Plus/Max Tiers - Cost-Based Limits
 - **Monthly Cost Limits** (defined in `lib/usage-tracking.ts`):
-  - Free tier: **$1.00** per month (reduced from $2.00)
   - Plus tier: $6.00 per month
   - Max tier: $12.00 per month
-
 - **Important**: Limits are **COMBINED** for ALL services (AskBo, Interview prep, etc.) per user per month
   - Not separate limits per service
-  - All AI interactions count toward the single monthly limit
+  - All AI interactions count toward the single monthly cost limit
+
+### Implementation Details
+- **Free users**:
+  - Use `canSendMessage(userId, service)` to check message limits before request
+  - Use `recordMessageUsage(userId, service)` to track message after response
+  - No cost tracking for free users
+- **Plus/Max users**:
+  - Use `canMakeRequest(userId, estimatedInputTokens, estimatedOutputTokens)` for cost checks
+  - Use `recordUsage(userId, service, inputTokens, outputTokens)` for cost tracking
+  - Unlimited messages as long as cost limit not exceeded
 
 - **Bug Fixes Applied** (Nov 2024):
   1. **Comparison operator consistency**: Changed from `>` to `>=` in `canMakeRequest()` to match `hasExceededLimit()`
@@ -697,10 +713,13 @@
      - Logs warning when overage is detected with exact overage amount
 
 - **Key Functions**:
-  - `canMakeRequest()`: Pre-flight check before allowing AI requests
-  - `recordUsage()`: Records actual token usage after completion
+  - `canSendMessage(userId, service)`: Check message limits for free users
+  - `recordMessageUsage(userId, service)`: Record message usage for free users
+  - `canMakeRequest()`: Pre-flight check before allowing AI requests (Plus/Max)
+  - `recordUsage()`: Records actual token usage after completion (Plus/Max)
   - `verifyUsageWithinLimit()`: Post-recording verification to catch race conditions
   - `getMonthlyUsage()`: Gets current month's total usage for a user
+  - `getMonthlyMessageCount(userId, service)`: Gets message count for free users
 
 ## Discord Ticket Enhancement (Updated Nov 2024)
 - **Discord ID and Username in Tickets**: All Discord tickets now **require** user's Discord username
