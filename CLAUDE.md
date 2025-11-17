@@ -9,6 +9,76 @@
 - Gather all necessary information before starting implementation
 - Ensure full understanding of requirements before proceeding with code changes
 
+## Responsive Design Standards (Added Nov 2024)
+### Overview
+The entire site is now responsive across desktop, tablet, and mobile devices with consistent breakpoints and design patterns.
+
+### Standard Breakpoints
+- **Desktop**: Default styles (> 1024px)
+- **Tablet**: `@media (max-width: 1024px)` - Adjusted layouts, reduced spacing
+- **Mobile**: `@media (max-width: 768px)` - Stacked layouts, full-width elements, hidden decorations
+- **Small Mobile**: `@media (max-width: 480px)` - Compact spacing, smaller fonts, essential elements only
+- **Very Small Mobile**: `@media (max-width: 375px)` - Minimal UI, critical features only
+
+### Responsive Pages Implemented
+1. **Landing/Home Page** (`app/page.tsx`, `app/home.css`):
+   - Island platform and icons scale proportionally on smaller screens
+   - Icons repositioned and resized for mobile layouts
+   - Cloud decorations fade out progressively on smaller devices
+   - Fully responsive from 375px to desktop widths
+
+2. **Navbar Component** (`components/Navbar.tsx`, `components/Navbar.css`):
+   - Fixed height navbar (60px desktop, 55px tablet, 50px small mobile)
+   - Buttons adapt: full text → abbreviated → icons only
+   - User email hidden on mobile devices
+   - Dropdown menu adjusts positioning for small screens
+
+3. **Practice Page** (`app/practice/practice.css`):
+   - Tabs stack vertically on mobile
+   - Pack rectangles become full-width and reduce height
+   - Floating buttons reposition to corners
+   - Cloud decorations hidden on mobile
+
+4. **AskBo Page** (`app/askbo/study-book.css`):
+   - Sidebar becomes slide-out drawer on mobile
+   - Chat input and materials layout adapt to single column
+   - Category grid collapses from 3 columns → 2 → 1
+   - Floating draft button scales down proportionally
+
+5. **Existing Pages Enhanced**:
+   - Competition page: Already had responsive design at 1024px, 768px, 480px
+   - Subject Selection page: Already had responsive design at 1024px, 768px, 480px
+   - Maths Demo page: Already had responsive design at 768px, 480px
+   - Spec Point Session page: Already had responsive design at 1200px, 768px
+
+### Responsive Design Patterns
+- **Typography Scaling**: Font sizes reduce by ~10-20% at each breakpoint
+- **Spacing Reduction**: Padding/margins reduce proportionally (40px → 30px → 20px → 15px → 12px)
+- **Layout Changes**: Grid/flex layouts collapse to single column on mobile
+- **Element Hiding**: Decorative elements (clouds, icons) hidden on smaller screens
+- **Touch Targets**: Minimum 44px touch targets for mobile buttons
+- **Full Width**: Content containers become 100% width on mobile (no fixed max-widths)
+
+### CSS Organization
+- Responsive styles added at bottom of each page's CSS file
+- Media queries ordered from largest to smallest breakpoint
+- Mobile-first approach considered for new components
+- Use of CSS custom properties (variables) for consistent spacing
+
+### Files Modified
+- `/app/home.css` - New responsive styles for landing page
+- `/components/Navbar.css` - New file with responsive navbar styles
+- `/components/landing/LandingHub.tsx` - Converted to CSS classes
+- `/app/practice/practice.css` - Added comprehensive responsive sections
+- `/app/askbo/study-book.css` - Enhanced existing responsive styles
+
+### Testing Recommendations
+- Test at standard breakpoints: 375px, 480px, 768px, 1024px, 1440px
+- Check both portrait and landscape orientations on mobile
+- Verify touch targets are adequately sized (minimum 44x44px)
+- Ensure no horizontal scrolling on any screen size
+- Test with browser dev tools responsive mode
+
 ## Learn Joe Prompt (Updated Nov 2024)
 - **Teaching Style**: Joe is a no-nonsense, direct A-level maths tutor
 - **Core Approach**: Clear explanation and worked examples - efficiency over encouragement
