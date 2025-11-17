@@ -13,17 +13,6 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.math-input-label {
-  display: block;
-  font-family: 'Figtree', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: #000;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
 .math-input-field {
   width: 100%;
   min-height: 70px;

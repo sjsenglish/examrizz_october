@@ -667,13 +667,12 @@ The entire site is now responsive across desktop, tablet, and mobile devices wit
   - **Direct Input**: Users can type directly into the input field or click keyboard buttons
 - **Styling** (Updated Nov 2024):
   - **Input Container Wrapper**: Light gray background (#fafafa) with 2px solid black border and box-shadow for clear visual separation
-  - **"Your Answer:" Label**: Bold uppercase label above input field to clearly indicate where to type
   - **Input Field**:
     - White background (#ffffff) with 3px solid black border
     - Min-height: 70px, padding: 14px, font-size: 18px for prominence
     - Inset shadow to show it's an input area
     - Focus state: Cyan border (#B3F0F2) with glowing ring effect (box-shadow: 0 0 0 4px rgba(179, 240, 242, 0.3))
-  - **Enhanced visual hierarchy**: Multiple layers (wrapper → label → input field) make it impossible to miss where to type
+  - **Enhanced visual hierarchy**: Prominent wrapper container with bold bordered input field makes it clear where to type
 - **Math Keyboard Buttons** (grid layout, 3-4 per row):
   - **Powers/Indices**: x², x³, xⁿ
   - **Roots**: √, ∛, ⁿ√
