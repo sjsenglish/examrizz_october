@@ -343,7 +343,7 @@
 
 .maths-demo-page .signpost-text {
   position: absolute;
-  top: 25%;
+  top: 18%;
   left: 50%;
   transform: translateX(-50%);
   width: 80%;
@@ -352,20 +352,18 @@
 }
 
 .maths-demo-page .signpost-chapter {
-  font-family: 'Madimi One', cursive;
-  font-size: 28px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 24px;
   font-weight: 700;
-  color: #FFFFFF;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  margin-bottom: 4px;
+  color: #000000;
+  margin-bottom: 2px;
 }
 
 .maths-demo-page .signpost-title {
   font-family: 'Figtree', sans-serif;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  color: #FFFFFF;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  color: #000000;
   line-height: 1.2;
   word-wrap: break-word;
 }
@@ -448,12 +446,16 @@
     height: 135px !important;
   }
 
+  .maths-demo-page .signpost-text {
+    top: 18%;
+  }
+
   .maths-demo-page .signpost-chapter {
-    font-size: 24px;
+    font-size: 20px;
   }
 
   .maths-demo-page .signpost-title {
-    font-size: 10px;
+    font-size: 9px;
   }
 }
 
@@ -529,11 +531,15 @@
     height: 120px !important;
   }
 
+  .maths-demo-page .signpost-text {
+    top: 18%;
+  }
+
   .maths-demo-page .signpost-chapter {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .maths-demo-page .signpost-title {
-    font-size: 9px;
+    font-size: 8px;
   }
 }

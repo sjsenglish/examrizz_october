@@ -187,9 +187,10 @@
       - **Signpost Text Overlay** (Added Nov 2024):
         - Chapter number and title displayed as text overlay on signpost images
         - Chapter titles mapping: 1=Proof, 2=Algebra and Functions, 3=Coordinate Geometry, 4=Binomial Expansion, 5=Trigonometry, 6=Exponentials and Logarithms, 7=Differentiation, 8=Integration, 10=Vectors
-        - Chapter number: Madimi One font, 28px (desktop), 24px (tablet), 20px (mobile), white with text shadow
-        - Chapter title: Figtree font, 11px (desktop), 10px (tablet), 9px (mobile), white with text shadow, word-wrapped
-        - Text positioned at 25% from top of signpost, centered horizontally
+        - **Styling matches spec point titles**: Figtree font, black color (#000000), no text shadow
+        - Chapter number: 24px (desktop), 20px (tablet), 18px (mobile)
+        - Chapter title: 10px (desktop), 9px (tablet), 8px (mobile), word-wrapped
+        - Text positioned at 18% from top of signpost (moved up), centered horizontally
     - **Background** (Updated Nov 2024): Full background SVG image
       - Image URL: Firebase storage `background-grey-updated.svg`
       - Background applied to `.stepping-stones-container` with `background-attachment: local`
