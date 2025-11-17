@@ -111,7 +111,7 @@ export default function ProgressDashboard({ isOpen, onClose }: DashboardProps) {
               <div className="progress-metric-card-v2">
                 <div className="progress-card-title-v2">Grade Trajectory</div>
                 <div className="progress-trajectory-chart-v2">
-                  <svg width="100%" height="120" viewBox="0 0 300 120" preserveAspectRatio="none">
+                  <svg width="100%" height="100" viewBox="0 0 300 120" preserveAspectRatio="none">
                     {/* Grid lines */}
                     <line x1="0" y1="20" x2="300" y2="20" stroke="#E5E7EB" strokeWidth="1" />
                     <line x1="0" y1="40" x2="300" y2="40" stroke="#E5E7EB" strokeWidth="1" />
@@ -152,7 +152,7 @@ export default function ProgressDashboard({ isOpen, onClose }: DashboardProps) {
               <div className="progress-metric-card-v2" style={{ height: '100%' }}>
                 <div className="progress-card-title-v2">Grade Split by Topic</div>
                 <div className="progress-pie-container-v2">
-                  <svg width="160" height="160" viewBox="0 0 160 160">
+                  <svg width="140" height="140" viewBox="0 0 160 160">
                     {/* A** (6CE5E8) - 20% */}
                     <path
                       d="M 80 80 L 80 20 A 60 60 0 0 1 122.4 41.6 Z"
