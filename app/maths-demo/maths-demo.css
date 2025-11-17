@@ -11,6 +11,10 @@
 }
 
 .maths-demo-page .page-background {
+  background-image: url('https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fbackground-grey-updated.svg?alt=media&token=063dfd70-6c1a-4563-b521-28740384991b');
+  background-repeat: repeat-x;
+  background-position: bottom;
+  background-size: auto 100%;
   background-color: #FFFFFF;
   min-height: 100vh;
   padding-top: 60px;
@@ -328,22 +332,6 @@
   max-width: none !important;
 }
 
-/* Grass pattern at bottom */
-.maths-demo-page .grass-pattern {
-  position: fixed;
-  bottom: 64px;
-  left: 0;
-  right: 0;
-  height: 54px;
-  z-index: 5;
-  border-top: 2px solid #000000;
-  pointer-events: none;
-}
-
-.maths-demo-page .grass-image {
-  object-fit: cover;
-  object-position: bottom;
-}
 
 /* Responsive design */
 @media (max-width: 768px) {

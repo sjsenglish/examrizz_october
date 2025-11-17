@@ -161,7 +161,11 @@
       - Mobile: bottom: 148px (adjusted for 120px signpost height)
       - **DO NOT use negative values** - they push signposts below viewport making them invisible
       - Positioning calculation: Grass top is at 118px from viewport bottom; wrapper bottom extends 80px below viewport; positive bottom value keeps signposts visible in grass area
-    - Grass pattern at bottom: 54px height with 2px black border on top, positioned 64px from bottom (fixed position, moved up 118% of height - Nov 2024)
+    - **Background** (Updated Nov 2024): Full background SVG image
+      - Image URL: Firebase storage `background-grey-updated.svg`
+      - Background repeats horizontally (repeat-x) so users see more as they scroll
+      - Background positioned at bottom, auto height scaling to 100%
+      - Replaces previous grass pattern and divider line
     - Progress bar: 80% width, centered, with responsive sizing for mobile
     - Back button in top-left corner linking to `/subject-selection`
     - **Icon sizes** (optimized for 5 topics in view - Nov 2024):
