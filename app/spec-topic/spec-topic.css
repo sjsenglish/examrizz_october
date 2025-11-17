@@ -12,3 +12,95 @@
 body {
   font-family: 'Inter', sans-serif;
 }
+
+/* =============================================================================
+   NAVBAR OVERRIDE - Restore navbar styling after page reset
+   ============================================================================= */
+
+.navbar-main {
+  padding: 0 40px !important;
+}
+
+.navbar-actions {
+  gap: 16px !important;
+}
+
+.nav-btn {
+  padding: 8px 16px !important;
+}
+
+.nav-user-email {
+  margin-right: 8px !important;
+}
+
+.navbar-menu-button {
+  padding: 8px !important;
+}
+
+.navbar-dropdown-item {
+  padding: 12px 20px !important;
+}
+
+@media (max-width: 1024px) {
+  .navbar-main {
+    padding: 0 30px !important;
+  }
+
+  .navbar-actions {
+    gap: 12px !important;
+  }
+
+  .nav-btn {
+    padding: 7px 14px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-main {
+    padding: 0 20px !important;
+  }
+
+  .navbar-actions {
+    gap: 10px !important;
+  }
+
+  .nav-btn {
+    padding: 6px 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-main {
+    padding: 0 15px !important;
+  }
+
+  .navbar-actions {
+    gap: 8px !important;
+  }
+
+  .nav-btn {
+    padding: 5px 10px !important;
+  }
+
+  .navbar-menu-button {
+    padding: 6px !important;
+  }
+
+  .navbar-dropdown-item {
+    padding: 10px 16px !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .navbar-main {
+    padding: 0 12px !important;
+  }
+
+  .navbar-actions {
+    gap: 6px !important;
+  }
+
+  .nav-btn {
+    padding: 4px 8px !important;
+  }
+}
