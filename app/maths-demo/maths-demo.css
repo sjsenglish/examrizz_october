@@ -18,6 +18,27 @@
   overflow: hidden;
 }
 
+/* Dashboard Icon Button - Top Right */
+.maths-demo-page .dashboard-icon-button {
+  position: fixed;
+  top: 90px;
+  right: 45px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 20;
+  transition: all 0.3s ease;
+}
+
+.maths-demo-page .dashboard-icon-button:hover {
+  transform: scale(1.1);
+}
+
+.maths-demo-page .dashboard-icon-button:active {
+  transform: scale(0.95);
+}
+
 /* Search Bar */
 .maths-demo-page .search-bar-wrapper {
   position: fixed;
