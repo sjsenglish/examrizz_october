@@ -37,13 +37,12 @@ const MathInput: React.FC<MathInputProps> = ({ value, onChange, placeholder = 'E
         if (mathFieldRef.current && !mathFieldInstance.current) {
           const mathField = MathQuill.getInterface(2).MathField(mathFieldRef.current, {
             spaceBehavesLikeTab: true,
-            substituteTextarea: function() {
-              // Create a proper textarea for MathQuill
-              const textarea = document.createElement('textarea');
-              textarea.style.position = 'absolute';
-              textarea.style.clip = 'rect(0, 0, 0, 0)';
-              return textarea;
-            },
+            leftRightIntoCmdGoes: 'up',
+            restrictMismatchedBrackets: true,
+            sumStartsWithNEquals: true,
+            supSubsRequireOperand: true,
+            charsThatBreakOutOfSupSub: '+-=<>',
+            autoSubscriptNumerals: true,
             handlers: {
               edit: function() {
                 const latex = mathField.latex();
@@ -124,6 +123,12 @@ const MathInput: React.FC<MathInputProps> = ({ value, onChange, placeholder = 'E
     { label: '{ }', latex: '\\{\\}', type: 'write' },
   ];
 
+  const handleFieldClick = () => {
+    if (mathFieldInstance.current) {
+      mathFieldInstance.current.focus();
+    }
+  };
+
   return (
     <div className="math-input-container">
       {/* MathQuill Input Field */}
@@ -132,6 +137,7 @@ const MathInput: React.FC<MathInputProps> = ({ value, onChange, placeholder = 'E
           ref={mathFieldRef}
           className="math-input-field"
           data-placeholder={placeholder}
+          onClick={handleFieldClick}
         />
       </div>
 

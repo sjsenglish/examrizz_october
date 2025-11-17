@@ -590,7 +590,10 @@
   - Uses `@ts-nocheck` to avoid TypeScript conflicts with MathQuill
   - MathQuill CSS loaded from CDN (jsdelivr)
   - **MathQuill exposed to window object** for global access across components
-  - **Custom textarea substitution** using `substituteTextarea` function for proper input handling
+  - **Click handler** added to ensure field focuses when clicked anywhere in the input area
+  - **Enhanced MathQuill configuration**: leftRightIntoCmdGoes, restrictMismatchedBrackets, autoSubscriptNumerals
+  - **CSS pointer-events** properly configured to ensure field is clickable and interactive
+  - **Textarea properly hidden** but accessible for keyboard input while maintaining field clickability
   - Focus management after button clicks
   - **Preview section removed** for cleaner, more focused input experience
 
