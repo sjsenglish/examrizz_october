@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
-import { createClient } from '@/utils/supabase/client';
+import { supabase } from '@/lib/supabase-client';
 import './maths-demo.css';
 
 // Spec point type definition
@@ -280,7 +280,6 @@ export default function MathsDemoPage() {
   useEffect(() => {
     const fetchUserProgress = async () => {
       try {
-        const supabase = createClient();
         const { data: { user } } = await supabase.auth.getUser();
 
         if (!user) {
