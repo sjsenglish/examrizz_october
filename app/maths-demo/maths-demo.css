@@ -572,3 +572,96 @@
     font-size: 11px;
   }
 }
+
+/* =============================================================================
+   NAVBAR OVERRIDE - Restore navbar styling after page reset
+   ============================================================================= */
+
+.maths-demo-page .navbar-main {
+  padding: 0 40px !important;
+  gap: 16px;
+}
+
+.maths-demo-page .navbar-actions {
+  gap: 16px !important;
+}
+
+.maths-demo-page .nav-btn {
+  padding: 8px 16px !important;
+}
+
+.maths-demo-page .nav-user-email {
+  margin-right: 8px !important;
+}
+
+.maths-demo-page .navbar-menu-button {
+  padding: 8px !important;
+}
+
+.maths-demo-page .navbar-dropdown-item {
+  padding: 12px 20px !important;
+}
+
+@media (max-width: 1024px) {
+  .maths-demo-page .navbar-main {
+    padding: 0 30px !important;
+  }
+
+  .maths-demo-page .navbar-actions {
+    gap: 12px !important;
+  }
+
+  .maths-demo-page .nav-btn {
+    padding: 7px 14px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .maths-demo-page .navbar-main {
+    padding: 0 20px !important;
+  }
+
+  .maths-demo-page .navbar-actions {
+    gap: 10px !important;
+  }
+
+  .maths-demo-page .nav-btn {
+    padding: 6px 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .maths-demo-page .navbar-main {
+    padding: 0 15px !important;
+  }
+
+  .maths-demo-page .navbar-actions {
+    gap: 8px !important;
+  }
+
+  .maths-demo-page .nav-btn {
+    padding: 5px 10px !important;
+  }
+
+  .maths-demo-page .navbar-menu-button {
+    padding: 6px !important;
+  }
+
+  .maths-demo-page .navbar-dropdown-item {
+    padding: 10px 16px !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .maths-demo-page .navbar-main {
+    padding: 0 12px !important;
+  }
+
+  .maths-demo-page .navbar-actions {
+    gap: 6px !important;
+  }
+
+  .maths-demo-page .nav-btn {
+    padding: 4px 8px !important;
+  }
+}

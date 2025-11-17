@@ -9,6 +9,22 @@
 - Gather all necessary information before starting implementation
 - Ensure full understanding of requirements before proceeding with code changes
 
+## Navbar CSS Reset Override Pattern (Added Nov 2024)
+- **Issue**: Pages with universal CSS resets (`* { margin: 0; padding: 0; }`) override navbar's intentional padding/spacing
+- **Solution**: Add navbar-specific override rules at the end of page CSS files using `!important`
+- **Pattern to add** (at end of each affected page's CSS file):
+  ```css
+  /* NAVBAR OVERRIDE - Restore navbar styling after page reset */
+  .page-wrapper .navbar-main { padding: 0 40px !important; }
+  .page-wrapper .navbar-actions { gap: 16px !important; }
+  .page-wrapper .nav-btn { padding: 8px 16px !important; }
+  .page-wrapper .nav-user-email { margin-right: 8px !important; }
+  /* Include all responsive breakpoints */
+  ```
+- **Affected pages fixed**: competition, subject-selection, maths-demo, spec-point-session, spec-topic
+- **Why this approach**: Using `!important` overrides preserves navbar styling without affecting other page elements
+- **DO NOT** exclude navbar from page resets - this can break other page element layouts
+
 ## Responsive Design Standards (Added Nov 2024)
 ### Overview
 The entire site is now responsive across desktop, tablet, and mobile devices with consistent breakpoints and design patterns.

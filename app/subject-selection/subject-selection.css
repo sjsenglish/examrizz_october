@@ -171,3 +171,95 @@
     height: 100px;
   }
 }
+
+/* =============================================================================
+   NAVBAR OVERRIDE - Restore navbar styling after page reset
+   ============================================================================= */
+
+.subject-selection-page .navbar-main {
+  padding: 0 40px !important;
+}
+
+.subject-selection-page .navbar-actions {
+  gap: 16px !important;
+}
+
+.subject-selection-page .nav-btn {
+  padding: 8px 16px !important;
+}
+
+.subject-selection-page .nav-user-email {
+  margin-right: 8px !important;
+}
+
+.subject-selection-page .navbar-menu-button {
+  padding: 8px !important;
+}
+
+.subject-selection-page .navbar-dropdown-item {
+  padding: 12px 20px !important;
+}
+
+@media (max-width: 1024px) {
+  .subject-selection-page .navbar-main {
+    padding: 0 30px !important;
+  }
+
+  .subject-selection-page .navbar-actions {
+    gap: 12px !important;
+  }
+
+  .subject-selection-page .nav-btn {
+    padding: 7px 14px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .subject-selection-page .navbar-main {
+    padding: 0 20px !important;
+  }
+
+  .subject-selection-page .navbar-actions {
+    gap: 10px !important;
+  }
+
+  .subject-selection-page .nav-btn {
+    padding: 6px 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .subject-selection-page .navbar-main {
+    padding: 0 15px !important;
+  }
+
+  .subject-selection-page .navbar-actions {
+    gap: 8px !important;
+  }
+
+  .subject-selection-page .nav-btn {
+    padding: 5px 10px !important;
+  }
+
+  .subject-selection-page .navbar-menu-button {
+    padding: 6px !important;
+  }
+
+  .subject-selection-page .navbar-dropdown-item {
+    padding: 10px 16px !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .subject-selection-page .navbar-main {
+    padding: 0 12px !important;
+  }
+
+  .subject-selection-page .navbar-actions {
+    gap: 6px !important;
+  }
+
+  .subject-selection-page .nav-btn {
+    padding: 4px 8px !important;
+  }
+}
