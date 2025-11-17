@@ -4,7 +4,7 @@
 - **IMPORTANT**: Always update this CLAUDE.md file before every git commit
 - Include any new project conventions, patterns, or important decisions made during development
 
-## Referrals System (Added Nov 2024)
+## Referrals System (Added Nov 2024, Rewards Added Nov 2024)
 - **Page**: `/referrals` - Accessible via hamburger menu in navbar
 - **Design Approach**: Mix of SVG images and custom-built functional sections on white background
 - **Page Layout**: All elements positioned 10% lower (120px top padding) with unified 70% width
@@ -22,21 +22,74 @@
     - Section title in Madimi One font
     - Dynamic list of referred users
     - Each item in white rectangle with bottom drop shadow
-    - Shows email, date, and status (completed/pending)
+    - Shows email, date, status (completed/pending), and reward status
+    - **Reward badges**: "🎁 +1 Month Plus" shown when rewards are applied
+    - **Pending indicator**: "Waiting for Discord" shown for incomplete referrals
     - Figtree font throughout
+- **Automatic Reward System** (Updated Nov 2024):
+  - **Reward**: Both referrer and referred user get **1 month of Plus tier**
+  - **Trigger**: Rewards automatically applied when referred user adds Discord username
+  - **Status Flow**:
+    1. User signs up with referral link → referral status = `pending`
+    2. User adds Discord username → triggers `check_referral_completion()`
+    3. System grants Plus tier to both users → status = `completed`
+  - **Smart Handling**:
+    - Free tier users: Get Plus for 1 month
+    - Active Plus users: Extended by 1 month
+    - Max tier users: Keep Max (no downgrade)
+  - **Prevents Double-Rewarding**: Tracks `referrer_rewarded_at` and `referred_rewarded_at` timestamps
 - **Database Tables**:
   - `referral_codes`: Stores unique 8-character codes for each user (auto-generated on signup)
-  - `referrals`: Tracks all referrals with status (pending/completed)
+  - `referrals`: Tracks all referrals with status (pending/completed), reward status, and reward timestamps
+    - New fields: `reward_status`, `referrer_rewarded_at`, `referred_rewarded_at`
+- **Database Functions** (Added Nov 2024):
+  - `grant_referral_reward(user_id)`: Grants 1 month Plus tier to specific user
+  - `process_referral_rewards(referral_id)`: Processes rewards for both users
+  - `check_referral_completion()`: Trigger that auto-applies rewards when Discord username added
+  - `admin_process_pending_referrals()`: Admin function to manually process stuck referrals
 - **Integration**:
   - Signup page extracts `?ref=CODE` from URL and passes to auth metadata
   - Works with all signup methods (Email, Google, Discord)
   - Database triggers automatically track referrals and update status
-- **API Endpoint**: `/api/referrals` - Returns user's referral code, stats, and referrals list
+  - Profile update triggers check for Discord username and apply rewards
+- **API Endpoint**: `/api/referrals` - Returns user's referral code, stats, referrals list, and reward status
 - **Files**:
   - Page: `app/referrals/page.tsx`
   - Styles: `app/referrals/referrals.css`
   - API: `app/api/referrals/route.ts`
   - Schema: `database/referrals_schema.sql`
+  - Rewards: `database/referral_rewards_system.sql`
+  - Documentation: `REFERRAL_REWARDS_GUIDE.md`
+
+## Profile Page (Added Nov 2024)
+- **Page**: `/profile` - Accessible via hamburger menu in navbar
+- **Purpose**: User profile management with Discord username editing
+- **Design**: Clean white background with purple ghost icon, matching site aesthetic
+- **Key Features**:
+  - **Personal Information Section**: Edit full name, username, school, rank in school
+  - **Discord Information Section** (Highlighted):
+    - **Critical for Referral Rewards**: Adding Discord username triggers referral reward processing
+    - Discord username input field (only field required for rewards)
+    - Clear instructions and hints for users
+    - Special styling with #DEF9F9 background and "Required for Referral Rewards" badge
+  - **Account Information Section** (Read-Only): Email address and member since date
+  - **Tier Badge**: Displays user's subscription tier (Free/Plus/Max) with colored badge
+  - **Real-Time Saving**: Save button with loading state and success/error messages
+  - **Profile Context Integration**: Uses ProfileContext for data and refreshes after save
+- **Trigger for Referral Rewards**:
+  - When user updates Discord username, database trigger `check_referral_completion()` fires
+  - Automatically processes pending referrals and grants 1 month Plus tier to both users
+  - Critical component of referral rewards flow
+- **Styling**:
+  - Purple ghost icon floats with animation at top
+  - Form sections with rounded corners and subtle backgrounds
+  - Discord section highlighted with cyan background (#DEF9F9)
+  - Responsive design for mobile/tablet/desktop
+  - Consistent with site's Figtree and Madimi One fonts
+- **Files**:
+  - Page: `app/profile/page.tsx`
+  - Styles: `app/profile/profile.css`
+  - Navbar updated with Profile link in hamburger menu
 
 ## Planning Mode
 - Always ask clarifying questions when in planning mode

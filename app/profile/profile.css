@@ -1,0 +1,381 @@
+/* Profile Page Styles */
+
+/* Page Wrapper - White background covering entire viewport */
+.profile-page-wrapper {
+  min-height: 100vh;
+  background: #ffffff;
+  width: 100%;
+}
+
+.profile-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 100px 40px 60px;
+  font-family: 'Figtree', sans-serif;
+}
+
+/* Loading State */
+.profile-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 60px);
+  gap: 20px;
+  font-family: 'Figtree', sans-serif;
+  color: #666;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #B3F0F2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Header Section */
+.profile-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.profile-icon {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 20px;
+  display: block;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.profile-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  color: #000;
+  margin: 0 0 16px 0;
+}
+
+.profile-tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: 24px;
+  font-weight: 600;
+  font-size: 16px;
+  border: 2px solid currentColor;
+}
+
+.tier-icon {
+  font-size: 18px;
+}
+
+/* Messages */
+.message {
+  padding: 16px 24px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  font-weight: 500;
+  font-size: 15px;
+  text-align: center;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-success {
+  background: #ECFDF5;
+  color: #059669;
+  border: 2px solid #059669;
+}
+
+.message-error {
+  background: #FEF2F2;
+  color: #DC2626;
+  border: 2px solid #DC2626;
+}
+
+/* Form Sections */
+.profile-form-section {
+  background: #F9FAFB;
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 30px;
+  border: 2px solid #E5E7EB;
+}
+
+.discord-section {
+  background: #DEF9F9;
+  border: 2px solid #B3F0F2;
+}
+
+.section-title {
+  font-family: 'Madimi One', sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: #000;
+  margin: 0 0 20px 0;
+}
+
+.discord-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.discord-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  background: #F0F9FF;
+  color: #0369A1;
+  border: 1px solid #0369A1;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.discord-description {
+  color: #374151;
+  font-size: 15px;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+/* Form Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #111827;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.required {
+  color: #DC2626;
+  font-size: 16px;
+}
+
+.form-input {
+  padding: 12px 16px;
+  font-size: 15px;
+  font-family: 'Figtree', sans-serif;
+  border: 2px solid #D1D5DB;
+  border-radius: 8px;
+  background: #FFFFFF;
+  color: #111827;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.form-input:focus {
+  border-color: #B3F0F2;
+  box-shadow: 0 0 0 3px rgba(179, 240, 242, 0.2);
+}
+
+.discord-input {
+  border-color: #B3F0F2;
+}
+
+.discord-input:focus {
+  border-color: #0EA5E9;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+}
+
+.form-input.readonly {
+  background: #F3F4F6;
+  color: #6B7280;
+  cursor: not-allowed;
+}
+
+.input-hint {
+  font-size: 12px;
+  color: #6B7280;
+  margin-top: 6px;
+  font-style: italic;
+}
+
+/* Action Buttons */
+.profile-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.save-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 40px;
+  background: #B3F0F2;
+  color: #000;
+  border: 2px solid #000;
+  border-radius: 10px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
+}
+
+.save-button:hover:not(:disabled) {
+  background: #9DE8EA;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.15);
+}
+
+.save-button:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+}
+
+.save-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.save-button.saving {
+  background: #9CA3AF;
+  border-color: #6B7280;
+}
+
+.save-icon {
+  font-size: 18px;
+}
+
+.button-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .profile-container {
+    padding: 90px 30px 50px;
+  }
+
+  .profile-title {
+    font-size: 32px;
+  }
+
+  .form-grid {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 80px 20px 40px;
+  }
+
+  .profile-icon {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-title {
+    font-size: 28px;
+  }
+
+  .profile-tier-badge {
+    font-size: 14px;
+    padding: 6px 16px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .profile-form-section {
+    padding: 24px;
+  }
+
+  .section-title {
+    font-size: 20px;
+  }
+
+  .discord-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .save-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 70px 15px 30px;
+  }
+
+  .profile-icon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .profile-title {
+    font-size: 24px;
+  }
+
+  .profile-form-section {
+    padding: 20px;
+  }
+
+  .section-title {
+    font-size: 18px;
+  }
+
+  .form-input {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  .save-button {
+    padding: 12px 32px;
+    font-size: 15px;
+  }
+}

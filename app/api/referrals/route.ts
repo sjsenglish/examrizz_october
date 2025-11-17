@@ -34,7 +34,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Failed to fetch referral code' }, { status: 500 });
     }
 
-    // Get list of referrals with user details
+    // Get list of referrals with user details and reward status
     const { data: referralsData, error: referralsError } = await supabase
       .from('referrals')
       .select(`
@@ -42,7 +42,10 @@ export async function GET(request: Request) {
         referred_email,
         status,
         created_at,
-        completed_at
+        completed_at,
+        reward_status,
+        referrer_rewarded_at,
+        referred_rewarded_at
       `)
       .eq('referrer_id', userId)
       .order('created_at', { ascending: false });
