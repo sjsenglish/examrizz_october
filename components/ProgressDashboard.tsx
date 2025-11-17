@@ -10,229 +10,15 @@ interface DashboardProps {
   onClose: () => void;
 }
 
-// Chapter titles mapping (same as maths-demo page)
-const chapterTitles: { [key: number]: string } = {
-  1: 'Proof',
-  2: 'Algebra and Functions',
-  3: 'Coordinate Geometry',
-  4: 'Binomial Expansion',
-  5: 'Trigonometry',
-  6: 'Exponentials and Logarithms',
-  7: 'Differentiation',
-  8: 'Integration',
-  10: 'Vectors'
-};
-
-// Spec points by chapter for progress calculation
-const specPointsByChapter: { [key: number]: string[] } = {
-  1: ['1.1'],
-  2: ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7', '2.9'],
-  3: ['3.1', '3.2'],
-  4: ['4.1'],
-  5: ['5.1', '5.3', '5.5', '5.7'],
-  6: ['6.1', '6.2', '6.3', '6.4', '6.5', '6.6', '6.7'],
-  7: ['7.1', '7.2', '7.3'],
-  8: ['8.1', '8.2', '8.3'],
-  10: ['10.1-10.5']
-};
-
-interface ProgressStats {
-  lessonsCompleted: number;
-  totalLessons: number;
-  hoursWatched: number;
-  totalHours: number;
-  questionsCorrect: number;
-  totalQuestions: number;
-  chapterProgress: { [key: number]: number };
-  recentActivity: Array<{
-    type: 'lesson' | 'question';
-    title: string;
-    time: string;
-  }>;
-}
-
 export default function ProgressDashboard({ isOpen, onClose }: DashboardProps) {
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState<ProgressStats>({
-    lessonsCompleted: 0,
-    totalLessons: 89,
-    hoursWatched: 0,
-    totalHours: 92.83,
-    questionsCorrect: 0,
-    totalQuestions: 0,
-    chapterProgress: {},
-    recentActivity: []
-  });
 
   useEffect(() => {
     if (isOpen) {
-      fetchProgressData();
-    }
-  }, [isOpen]);
-
-  const fetchProgressData = async () => {
-    setLoading(true);
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-
-      if (!user) {
-        setLoading(false);
-        return;
-      }
-
-      // Fetch all lessons to get total count and lesson durations
-      const { data: allLessons, error: lessonsError } = await supabase
-        .from('learn_lessons')
-        .select(`
-          id,
-          duration_minutes,
-          learn_spec_points!inner(code)
-        `);
-
-      if (lessonsError) {
-        console.error('Error fetching lessons:', lessonsError);
-        setLoading(false);
-        return;
-      }
-
-      const totalLessons = allLessons?.length || 89;
-
-      // Fetch user progress (video watched)
-      const { data: progressData, error: progressError } = await supabase
-        .from('learn_user_progress')
-        .select('lesson_id, video_watched, created_at')
-        .eq('user_id', user.id)
-        .eq('video_watched', true)
-        .order('created_at', { ascending: false });
-
-      if (progressError) {
-        console.error('Error fetching progress:', progressError);
-      }
-
-      const lessonsCompleted = progressData?.length || 0;
-
-      // Calculate hours watched based on lesson durations
-      let hoursWatched = 0;
-      if (progressData && allLessons) {
-        const completedLessonIds = new Set(progressData.map(p => p.lesson_id));
-        hoursWatched = allLessons
-          .filter(lesson => completedLessonIds.has(lesson.id))
-          .reduce((sum, lesson) => sum + (lesson.duration_minutes || 0), 0) / 60;
-      }
-
-      // Fetch all question parts to get total count
-      const { data: allQuestionParts, error: partsError } = await supabase
-        .from('learn_question_parts')
-        .select('id');
-
-      if (partsError) {
-        console.error('Error fetching question parts:', partsError);
-      }
-
-      const totalQuestions = allQuestionParts?.length || 0;
-
-      // Fetch correct answers count
-      const { data: correctAnswers, error: answersError } = await supabase
-        .from('learn_user_answers')
-        .select('question_part_id')
-        .eq('user_id', user.id)
-        .eq('is_correct', true);
-
-      if (answersError) {
-        console.error('Error fetching answers:', answersError);
-      }
-
-      // Count unique correct question parts
-      const uniqueCorrect = new Set(correctAnswers?.map(a => a.question_part_id) || []);
-      const questionsCorrect = uniqueCorrect.size;
-
-      // Calculate chapter progress
-      const chapterProgress: { [key: number]: number } = {};
-
-      for (const [chapterNum, specCodes] of Object.entries(specPointsByChapter)) {
-        const chapterNumber = parseInt(chapterNum);
-
-        // Get all lessons for this chapter's spec points
-        const chapterLessons = allLessons?.filter(lesson => {
-          const specPoint = lesson.learn_spec_points as any;
-          const code = Array.isArray(specPoint) ? specPoint[0]?.code : specPoint?.code;
-          return specCodes.includes(code || '');
-        }) || [];
-
-        const totalChapterLessons = chapterLessons.length;
-
-        if (totalChapterLessons === 0) {
-          chapterProgress[chapterNumber] = 0;
-          continue;
-        }
-
-        // Count completed lessons for this chapter
-        const completedChapterLessons = chapterLessons.filter(lesson =>
-          progressData?.some(p => p.lesson_id === lesson.id)
-        ).length;
-
-        chapterProgress[chapterNumber] = Math.round((completedChapterLessons / totalChapterLessons) * 100);
-      }
-
-      // Get recent activity (last 5 completed lessons)
-      const recentActivity: Array<{
-        type: 'lesson' | 'question';
-        title: string;
-        time: string;
-      }> = [];
-
-      if (progressData && progressData.length > 0) {
-        const recentLessons = progressData.slice(0, 5);
-
-        for (const progress of recentLessons) {
-          const lesson = allLessons?.find(l => l.id === progress.lesson_id);
-          if (lesson) {
-            const specPoint = lesson.learn_spec_points as any;
-            const specCode = Array.isArray(specPoint) ? specPoint[0]?.code : specPoint?.code;
-            const timeAgo = getTimeAgo(new Date(progress.created_at));
-            recentActivity.push({
-              type: 'lesson',
-              title: `Completed ${specCode || 'Unknown'} lesson`,
-              time: timeAgo
-            });
-          }
-        }
-      }
-
-      setStats({
-        lessonsCompleted,
-        totalLessons,
-        hoursWatched: Math.round(hoursWatched * 10) / 10,
-        totalHours: 92.83,
-        questionsCorrect,
-        totalQuestions,
-        chapterProgress,
-        recentActivity
-      });
-    } catch (error) {
-      console.error('Error in fetchProgressData:', error);
-    } finally {
+      // For now, just set loading to false since we're using default data
       setLoading(false);
     }
-  };
-
-  const getTimeAgo = (date: Date): string => {
-    const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
-
-    if (seconds < 60) return 'just now';
-    if (seconds < 3600) return `${Math.floor(seconds / 60)} minutes ago`;
-    if (seconds < 86400) return `${Math.floor(seconds / 3600)} hours ago`;
-    if (seconds < 604800) return `${Math.floor(seconds / 86400)} days ago`;
-    return `${Math.floor(seconds / 604800)} weeks ago`;
-  };
-
-  const overallProgress = stats.totalLessons > 0
-    ? Math.round((stats.lessonsCompleted / stats.totalLessons) * 100)
-    : 0;
-
-  const accuracy = stats.totalQuestions > 0
-    ? Math.round((stats.questionsCorrect / stats.totalQuestions) * 100)
-    : 0;
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -242,207 +28,196 @@ export default function ProgressDashboard({ isOpen, onClose }: DashboardProps) {
       <div className="dashboard-overlay" onClick={onClose} />
 
       {/* Dashboard Modal */}
-      <div className="dashboard-modal">
+      <div className="dashboard-modal-new">
         {/* Close button */}
-        <button className="dashboard-close" onClick={onClose}>
+        <button className="dashboard-close-new" onClick={onClose}>
           ×
         </button>
 
-        {/* Dashboard Header */}
-        <div className="dashboard-header">
-          <h2 className="dashboard-title">Your Progress Dashboard</h2>
-          <p className="dashboard-subtitle">Track your learning journey across all chapters</p>
-        </div>
-
         {/* Dashboard Content */}
-        <div className="dashboard-content">
+        <div className="dashboard-content-new">
           {loading ? (
-            <div style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              minHeight: '400px',
-              fontSize: '16px',
-              color: '#666'
-            }}>
+            <div className="loading-state">
               Loading your progress...
             </div>
           ) : (
-            <>
-              {/* Top Stats Row - 3 cards */}
-              <div className="top-stats-row">
-                {/* Lessons Completed */}
-                <div className="top-stat-card">
-                  <div className="top-stat-header">
-                    <div className="top-stat-icon">
-                      <Image
-                        src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202376.svg?alt=media&token=96940cfc-fd51-4c0c-a40b-eca32f113b46"
-                        alt="Lessons"
-                        width={32}
-                        height={32}
+            <div className="dashboard-grid">
+              {/* Top Row - 4 boxes */}
+              <div className="top-row">
+                {/* Working Grade */}
+                <div className="metric-box">
+                  <div className="metric-title">Working Grade</div>
+                  <div className="metric-grade-value">A*</div>
+                  <div className="progress-bar-container-new">
+                    <div className="progress-bar-fill-new" style={{ width: '85%' }} />
+                  </div>
+                </div>
+
+                {/* Predicted Grade */}
+                <div className="metric-box">
+                  <div className="metric-title">Predicted Grade</div>
+                  <div className="metric-grade-value">A**</div>
+                </div>
+
+                {/* Learning Streak */}
+                <div className="metric-box">
+                  <div className="metric-title">Learning Streak</div>
+                  <div className="streak-content">
+                    <Image
+                      src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fflame-streak.svg?alt=media&token=20cbf1c7-06f6-4ea4-b960-94172c49bff3"
+                      alt="Streak"
+                      width={40}
+                      height={40}
+                      className="streak-icon"
+                    />
+                    <div className="metric-number-value">7</div>
+                  </div>
+                  <div className="metric-subtitle">days logged in</div>
+                </div>
+
+                {/* Exam Readiness */}
+                <div className="metric-box">
+                  <div className="metric-title">Exam Readiness</div>
+                  <div className="readiness-text">
+                    <span className="metric-number-value">12</span>
+                    <span className="metric-subtitle"> / 30 topics</span>
+                  </div>
+                  <div className="progress-bar-container-new">
+                    <div className="progress-bar-fill-new" style={{ width: '40%' }} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Row - 2 boxes left + 1 tall box right */}
+              <div className="bottom-row">
+                <div className="bottom-left-section">
+                  {/* This Week */}
+                  <div className="metric-box this-week-box">
+                    <div className="metric-title">This Week</div>
+                    <div className="this-week-stats">
+                      <div className="stat-mini-box">
+                        <div className="stat-mini-label">Questions Answered</div>
+                        <div className="metric-number-value">42</div>
+                      </div>
+                      <div className="stat-mini-box">
+                        <div className="stat-mini-label">Accuracy</div>
+                        <div className="metric-number-value">85%</div>
+                      </div>
+                      <div className="stat-mini-box">
+                        <div className="stat-mini-label">Study Time</div>
+                        <div className="metric-number-value">3.5h</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Grade Trajectory */}
+                  <div className="metric-box trajectory-box">
+                    <div className="metric-title">Grade Trajectory</div>
+                    <div className="trajectory-chart">
+                      <svg width="100%" height="120" viewBox="0 0 300 120" preserveAspectRatio="none">
+                        {/* Grid lines */}
+                        <line x1="0" y1="20" x2="300" y2="20" stroke="#E5E7EB" strokeWidth="1" />
+                        <line x1="0" y1="40" x2="300" y2="40" stroke="#E5E7EB" strokeWidth="1" />
+                        <line x1="0" y1="60" x2="300" y2="60" stroke="#E5E7EB" strokeWidth="1" />
+                        <line x1="0" y1="80" x2="300" y2="80" stroke="#E5E7EB" strokeWidth="1" />
+                        <line x1="0" y1="100" x2="300" y2="100" stroke="#E5E7EB" strokeWidth="1" />
+
+                        {/* Line graph - simulating grade improvement from C to A* */}
+                        <polyline
+                          points="30,90 90,70 150,50 210,35 270,25"
+                          fill="none"
+                          stroke="#00CED1"
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+
+                        {/* Data points */}
+                        <circle cx="30" cy="90" r="4" fill="#00CED1" />
+                        <circle cx="90" cy="70" r="4" fill="#00CED1" />
+                        <circle cx="150" cy="50" r="4" fill="#00CED1" />
+                        <circle cx="210" cy="35" r="4" fill="#00CED1" />
+                        <circle cx="270" cy="25" r="4" fill="#00CED1" />
+                      </svg>
+                      <div className="trajectory-labels">
+                        <span>W1</span>
+                        <span>W2</span>
+                        <span>W3</span>
+                        <span>W4</span>
+                        <span>W5</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Grade Split by Topic - Tall box on right */}
+                <div className="metric-box grade-split-box">
+                  <div className="metric-title">Grade Split by Topic</div>
+                  <div className="pie-chart-container">
+                    <svg width="160" height="160" viewBox="0 0 160 160">
+                      {/* Pie chart with 5 segments */}
+                      {/* A** (6CE5E8) - 20% - 0 to 72 degrees */}
+                      <path
+                        d="M 80 80 L 80 20 A 60 60 0 0 1 122.4 41.6 Z"
+                        fill="#6CE5E8"
+                        stroke="#000"
+                        strokeWidth="1"
                       />
-                    </div>
-                    <div className="top-stat-label">Lessons Completed</div>
-                  </div>
-                  <div className="top-stat-value">{stats.lessonsCompleted} / {stats.totalLessons}</div>
-                  <div className="top-stat-percent">{overallProgress}%</div>
-                </div>
-
-                {/* Hours Watched */}
-                <div className="top-stat-card">
-                  <div className="top-stat-header">
-                    <div className="top-stat-icon">
-                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="10" stroke="#3B82F6" strokeWidth="2"/>
-                        <path d="M12 6V12L16 14" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round"/>
-                      </svg>
-                    </div>
-                    <div className="top-stat-label">Hours Watched</div>
-                  </div>
-                  <div className="top-stat-value">{stats.hoursWatched} / {stats.totalHours}</div>
-                  <div className="top-stat-percent">
-                    {Math.round((stats.hoursWatched / stats.totalHours) * 100)}%
-                  </div>
-                </div>
-
-                {/* Questions Correct */}
-                <div className="top-stat-card">
-                  <div className="top-stat-header">
-                    <div className="top-stat-icon">
-                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                        <path d="M9 11L12 14L22 4" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M21 12V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V5C3 3.9 3.9 3 5 3H16" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </div>
-                    <div className="top-stat-label">Questions Correct</div>
-                  </div>
-                  <div className="top-stat-value">{stats.questionsCorrect} / {stats.totalQuestions}</div>
-                  <div className="top-stat-percent">{accuracy}%</div>
-                </div>
-              </div>
-
-              {/* Bottom Section - 2 columns */}
-              <div className="bottom-section">
-                {/* Left Column - Overall Progress + Recent Activity */}
-                <div className="bottom-left-column">
-                  {/* Overall Progress Card */}
-                  <div className="overall-progress-card">
-                    <h3 className="card-title">Overall Course Progress</h3>
-                    <div className="overall-progress-content">
-                      <div className="overall-progress-circle">
-                        <svg width="140" height="140" viewBox="0 0 140 140">
-                          {/* Background circle */}
-                          <circle
-                            cx="70"
-                            cy="70"
-                            r="60"
-                            fill="none"
-                            stroke="#E5E7EB"
-                            strokeWidth="12"
-                          />
-                          {/* Progress circle */}
-                          <circle
-                            cx="70"
-                            cy="70"
-                            r="60"
-                            fill="none"
-                            stroke="#B3F0F2"
-                            strokeWidth="12"
-                            strokeLinecap="round"
-                            strokeDasharray={`${(overallProgress / 100) * 377} 377`}
-                            transform="rotate(-90 70 70)"
-                          />
-                          {/* Center text */}
-                          <text
-                            x="70"
-                            y="70"
-                            textAnchor="middle"
-                            dominantBaseline="middle"
-                            fontSize="32"
-                            fontWeight="700"
-                            fill="#000000"
-                            fontFamily="Figtree, sans-serif"
-                          >
-                            {overallProgress}%
-                          </text>
-                        </svg>
+                      {/* A* (white) - 25% - 72 to 162 degrees */}
+                      <path
+                        d="M 80 80 L 122.4 41.6 A 60 60 0 0 1 122.4 118.4 Z"
+                        fill="#FFFFFF"
+                        stroke="#000"
+                        strokeWidth="1"
+                      />
+                      {/* A (C8F4F6) - 30% - 162 to 270 degrees */}
+                      <path
+                        d="M 80 80 L 122.4 118.4 A 60 60 0 0 1 20 80 Z"
+                        fill="#C8F4F6"
+                        stroke="#000"
+                        strokeWidth="1"
+                      />
+                      {/* B (E7E6FF) - 15% - 270 to 324 degrees */}
+                      <path
+                        d="M 80 80 L 20 80 A 60 60 0 0 1 54.6 30.4 Z"
+                        fill="#E7E6FF"
+                        stroke="#000"
+                        strokeWidth="1"
+                      />
+                      {/* C (0AB2B4) - 10% - 324 to 360 degrees */}
+                      <path
+                        d="M 80 80 L 54.6 30.4 A 60 60 0 0 1 80 20 Z"
+                        fill="#0AB2B4"
+                        stroke="#000"
+                        strokeWidth="1"
+                      />
+                    </svg>
+                    <div className="pie-legend">
+                      <div className="legend-item">
+                        <div className="legend-color" style={{ backgroundColor: '#6CE5E8' }} />
+                        <span className="legend-text">A** (6)</span>
                       </div>
-                      <div className="overall-progress-stats">
-                        <div className="overall-stat-item">
-                          <span className="overall-stat-label">Lessons:</span>
-                          <span className="overall-stat-value">{stats.lessonsCompleted}/{stats.totalLessons}</span>
-                        </div>
-                        <div className="overall-stat-item">
-                          <span className="overall-stat-label">Hours:</span>
-                          <span className="overall-stat-value">{stats.hoursWatched}/{stats.totalHours}</span>
-                        </div>
-                        <div className="overall-stat-item">
-                          <span className="overall-stat-label">Accuracy:</span>
-                          <span className="overall-stat-value">{accuracy}%</span>
-                        </div>
+                      <div className="legend-item">
+                        <div className="legend-color" style={{ backgroundColor: '#FFFFFF', border: '1px solid #000' }} />
+                        <span className="legend-text">A* (8)</span>
                       </div>
-                    </div>
-                  </div>
-
-                  {/* Recent Activity Card */}
-                  <div className="recent-activity-card">
-                    <h3 className="card-title">Recent Activity</h3>
-                    {stats.recentActivity.length === 0 ? (
-                      <div className="no-activity">
-                        <p>No recent activity yet. Start learning to see your progress here!</p>
+                      <div className="legend-item">
+                        <div className="legend-color" style={{ backgroundColor: '#C8F4F6' }} />
+                        <span className="legend-text">A (9)</span>
                       </div>
-                    ) : (
-                      <div className="activity-list-compact">
-                        {stats.recentActivity.map((activity, index) => (
-                          <div key={index} className="activity-item-compact">
-                            <div className="activity-dot-compact" />
-                            <div className="activity-details-compact">
-                              <div className="activity-title-compact">{activity.title}</div>
-                              <div className="activity-time-compact">{activity.time}</div>
-                            </div>
-                          </div>
-                        ))}
+                      <div className="legend-item">
+                        <div className="legend-color" style={{ backgroundColor: '#E7E6FF' }} />
+                        <span className="legend-text">B (5)</span>
                       </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Right Column - Chapter Progress */}
-                <div className="bottom-right-column">
-                  <div className="chapter-progress-card">
-                    <h3 className="card-title">Progress by Chapter</h3>
-                    <div className="chapter-list-new">
-                      {Object.entries(chapterTitles).map(([chapterNum, title]) => {
-                        const chapter = parseInt(chapterNum);
-                        const progress = stats.chapterProgress[chapter] || 0;
-                        const isOddChapter = chapter % 2 === 1;
-                        const color = isOddChapter ? '#7C3AED' : '#3B82F6';
-
-                        return (
-                          <div key={chapter} className="chapter-item-new">
-                            <div className="chapter-header-new">
-                              <span className="chapter-name-new">
-                                Ch {chapter}: {title}
-                              </span>
-                              <span className="chapter-percent-new">{progress}%</span>
-                            </div>
-                            <div className="chapter-bar-new">
-                              <div
-                                className="chapter-fill-new"
-                                style={{
-                                  width: `${progress}%`,
-                                  backgroundColor: color
-                                }}
-                              />
-                            </div>
-                          </div>
-                        );
-                      })}
+                      <div className="legend-item">
+                        <div className="legend-color" style={{ backgroundColor: '#0AB2B4' }} />
+                        <span className="legend-text">C (2)</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>
