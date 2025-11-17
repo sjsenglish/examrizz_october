@@ -588,16 +588,20 @@
 - **Usage**: Designed for math question input in spec point session pages
 - **Implementation Notes** (Updated Nov 2024):
   - Uses `@ts-nocheck` to avoid TypeScript conflicts with MathQuill
+  - **jQuery dependency**: Loads jQuery 3.6.0 from CDN before MathQuill (MathQuill requires jQuery 1.5.2+)
   - **MathQuill loaded from CDN** (jsdelivr v0.11.0) as script instead of npm module
-  - **Script loading approach**: Dynamically injects script and CSS into document head
-  - **Global MathQuill object** accessed from window after script loads
+  - **Script loading order**: jQuery → MathQuill → MathField initialization
+  - **Synchronous loading**: Scripts load with `async: false` to ensure proper dependency order
+  - **Polling mechanism**: Uses setInterval to check when libraries are available before proceeding
+  - **Global objects**: Accesses jQuery and MathQuill from window object
   - **Click handler** added to ensure field focuses when clicked anywhere in the input area
-  - **Enhanced MathQuill configuration**: leftRightIntoCmdGoes, restrictMismatchedBrackets, autoSubscriptNumerals
+  - **Simplified MathQuill config**: Basic handlers for edit events, auto-focus on initialization
   - **CSS pointer-events** properly configured to ensure field is clickable and interactive
   - **Textarea properly hidden** but accessible for keyboard input while maintaining field clickability
   - Focus management after button clicks
   - **Preview section removed** for cleaner, more focused input experience
   - **Deduplication**: Checks for existing script/CSS before loading to prevent duplicates
+  - **Console logging**: Added logging for debugging load sequence
 
 ## Search Page - Interview Resources Index (Nov 2024)
 - **New Index Added**: `v2_interview_resources` added to `/search` page

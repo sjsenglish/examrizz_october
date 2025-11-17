@@ -16,64 +16,119 @@ const MathInput: React.FC<MathInputProps> = ({ value, onChange, placeholder = 'E
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    // Dynamically load MathQuill only on client side
+    // Dynamically load jQuery and MathQuill
     const initMathQuill = () => {
       if (typeof window === 'undefined') return;
 
-      try {
-        // Check if MathQuill is already loaded
-        if ((window as any).MathQuill && mathFieldRef.current && !mathFieldInstance.current) {
-          initializeMathField();
-          return;
-        }
+      // Check if already initialized
+      if ((window as any).MathQuill && mathFieldRef.current && !mathFieldInstance.current) {
+        initializeMathField();
+        return;
+      }
 
-        // Load MathQuill CSS
-        if (!document.querySelector('link[href*="mathquill.css"]')) {
-          const link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = 'https://cdn.jsdelivr.net/npm/@edtr-io/mathquill@0.11.0/build/mathquill.css';
-          document.head.appendChild(link);
-        }
+      // Load CSS first
+      if (!document.querySelector('link[href*="mathquill.css"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdn.jsdelivr.net/npm/@edtr-io/mathquill@0.11.0/build/mathquill.css';
+        document.head.appendChild(link);
+      }
 
-        // Load MathQuill JS
-        if (!document.querySelector('script[src*="mathquill.js"]')) {
-          const script = document.createElement('script');
-          script.src = 'https://cdn.jsdelivr.net/npm/@edtr-io/mathquill@0.11.0/build/mathquill.min.js';
-          script.async = true;
-          script.onload = () => {
-            // Wait a bit for MathQuill to be available
+      // Load jQuery first (MathQuill depends on it)
+      if (!(window as any).jQuery) {
+        if (!document.querySelector('script[src*="jquery"]')) {
+          const jqueryScript = document.createElement('script');
+          jqueryScript.src = 'https://code.jquery.com/jquery-3.6.0.min.js';
+          jqueryScript.async = false; // Load synchronously to ensure order
+          jqueryScript.onload = () => {
+            console.log('jQuery loaded, version:', (window as any).jQuery.fn.jquery);
+            // Wait a bit to ensure jQuery is fully available
             setTimeout(() => {
-              if (mathFieldRef.current && !mathFieldInstance.current) {
-                initializeMathField();
-              }
-            }, 100);
+              loadMathQuill();
+            }, 50);
           };
-          script.onerror = () => {
-            console.error('Failed to load MathQuill script');
+          jqueryScript.onerror = () => {
+            console.error('Failed to load jQuery');
           };
-          document.head.appendChild(script);
+          document.head.appendChild(jqueryScript);
+        } else {
+          // jQuery script tag exists, wait for it to load
+          const checkJQuery = setInterval(() => {
+            if ((window as any).jQuery) {
+              clearInterval(checkJQuery);
+              console.log('jQuery already loaded, version:', (window as any).jQuery.fn.jquery);
+              loadMathQuill();
+            }
+          }, 100);
         }
-      } catch (error) {
-        console.error('Error initializing MathQuill:', error);
+      } else {
+        console.log('jQuery already available, version:', (window as any).jQuery.fn.jquery);
+        loadMathQuill();
+      }
+    };
+
+    const loadMathQuill = () => {
+      // Verify jQuery is loaded
+      if (!(window as any).jQuery) {
+        console.error('Cannot load MathQuill: jQuery not loaded');
+        return;
+      }
+
+      if ((window as any).MathQuill) {
+        console.log('MathQuill already available');
+        initializeMathField();
+        return;
+      }
+
+      if (!document.querySelector('script[src*="mathquill"]')) {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/@edtr-io/mathquill@0.11.0/build/mathquill.min.js';
+        script.async = false; // Load synchronously to ensure it has access to jQuery
+        script.onload = () => {
+          console.log('MathQuill script loaded');
+          // Wait for MathQuill to be available
+          const checkMQ = setInterval(() => {
+            if ((window as any).MathQuill) {
+              clearInterval(checkMQ);
+              console.log('MathQuill is now available');
+              initializeMathField();
+            }
+          }, 50);
+        };
+        script.onerror = () => {
+          console.error('Failed to load MathQuill');
+        };
+        document.head.appendChild(script);
+      } else {
+        // MathQuill script exists, wait for it to load
+        const checkMQ = setInterval(() => {
+          if ((window as any).MathQuill) {
+            clearInterval(checkMQ);
+            console.log('MathQuill became available');
+            initializeMathField();
+          }
+        }, 50);
       }
     };
 
     const initializeMathField = () => {
-      try {
-        const MathQuill = (window as any).MathQuill;
-        if (!MathQuill || !mathFieldRef.current) return;
+      if (!mathFieldRef.current || mathFieldInstance.current) return;
 
-        const mathField = MathQuill.getInterface(2).MathField(mathFieldRef.current, {
+      const MathQuill = (window as any).MathQuill;
+      if (!MathQuill) {
+        console.error('MathQuill not available');
+        return;
+      }
+
+      try {
+        console.log('Initializing MathField');
+        const MQ = MathQuill.getInterface(2);
+        const mathField = MQ.MathField(mathFieldRef.current, {
           spaceBehavesLikeTab: true,
-          leftRightIntoCmdGoes: 'up',
-          restrictMismatchedBrackets: true,
-          sumStartsWithNEquals: true,
-          supSubsRequireOperand: true,
-          charsThatBreakOutOfSupSub: '+-=<>',
-          autoSubscriptNumerals: true,
           handlers: {
             edit: function() {
               const latex = mathField.latex();
+              console.log('LaTeX changed:', latex);
               onChange(latex);
             }
           }
@@ -86,7 +141,11 @@ const MathInput: React.FC<MathInputProps> = ({ value, onChange, placeholder = 'E
           mathField.latex(value);
         }
 
+        // Focus the field to make it ready for input
+        mathField.focus();
+
         setIsReady(true);
+        console.log('MathField initialized successfully');
       } catch (error) {
         console.error('Error creating MathField:', error);
       }
