@@ -666,13 +666,14 @@ The entire site is now responsive across desktop, tablet, and mobile devices wit
   - **Client-Side Only**: Dynamically imports MathQuill to avoid SSR issues
   - **Direct Input**: Users can type directly into the input field or click keyboard buttons
 - **Styling** (Updated Nov 2024):
-  - Figtree font for UI elements
-  - White background for input field
-  - 2px solid border: #999 (medium gray) normally for better visibility, #000 when focused
-  - Subtle box-shadow: 0 2px 4px rgba(0,0,0,0.08) default, 0 2px 6px rgba(0,0,0,0.15) when focused
-  - Border radius: 8px
-  - Padding: 12px
-  - Enhanced visual prominence to make input area clearer for users
+  - **Input Container Wrapper**: Light gray background (#fafafa) with 2px solid black border and box-shadow for clear visual separation
+  - **"Your Answer:" Label**: Bold uppercase label above input field to clearly indicate where to type
+  - **Input Field**:
+    - White background (#ffffff) with 3px solid black border
+    - Min-height: 70px, padding: 14px, font-size: 18px for prominence
+    - Inset shadow to show it's an input area
+    - Focus state: Cyan border (#B3F0F2) with glowing ring effect (box-shadow: 0 0 0 4px rgba(179, 240, 242, 0.3))
+  - **Enhanced visual hierarchy**: Multiple layers (wrapper → label → input field) make it impossible to miss where to type
 - **Math Keyboard Buttons** (grid layout, 3-4 per row):
   - **Powers/Indices**: x², x³, xⁿ
   - **Roots**: √, ∛, ⁿ√

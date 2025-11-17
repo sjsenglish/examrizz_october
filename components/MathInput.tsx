@@ -219,6 +219,7 @@ const MathInput: React.FC<MathInputProps> = ({ value, onChange, placeholder = 'E
     <div className="math-input-container">
       {/* MathQuill Input Field */}
       <div className="math-input-wrapper">
+        <label className="math-input-label">Your Answer:</label>
         <div
           ref={mathFieldRef}
           className="math-input-field"
