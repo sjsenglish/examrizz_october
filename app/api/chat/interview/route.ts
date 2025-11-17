@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
-import { canMakeRequest, recordUsage, getMonthlyUsage } from '../../../../lib/usage-tracking';
+import { canMakeRequest, recordUsage, getMonthlyUsage, canSendMessage, recordMessageUsage, getUserSubscriptionTier } from '../../../../lib/usage-tracking';
 import { rateLimitApiRequest } from '../../../../lib/redis-rate-limit';
 
 const supabase = createClient(
@@ -458,17 +458,36 @@ export async function POST(request: NextRequest) {
     }
 
     // Check usage limits before processing request
-    const estimatedInputTokens = Math.ceil(message.length / 4); // Rough estimate: 4 chars per token
-    const estimatedOutputTokens = 500; // Conservative estimate for Gabe's response
-    
-    const usageCheck = await canMakeRequest(userId, estimatedInputTokens, estimatedOutputTokens);
-    
-    if (!usageCheck.allowed) {
-      return NextResponse.json({ 
-        error: 'usage_limit_exceeded',
-        message: usageCheck.reason,
-        usage: usageCheck.usage
-      }, { status: 402 }); // 402 Payment Required
+    // Free users: message-based limits (5 messages/month for interview)
+    // Plus/Max users: cost-based limits
+    const userTier = await getUserSubscriptionTier(userId);
+
+    if (userTier === 'free') {
+      // Free users: check message limits
+      const messageCheck = await canSendMessage(userId, 'interview');
+
+      if (!messageCheck.allowed) {
+        return NextResponse.json({
+          error: 'message_limit_exceeded',
+          message: messageCheck.reason,
+          remaining: messageCheck.remaining,
+          limit: messageCheck.limit
+        }, { status: 402 }); // 402 Payment Required
+      }
+    } else {
+      // Plus/Max users: check cost-based limits
+      const estimatedInputTokens = Math.ceil(message.length / 4); // Rough estimate: 4 chars per token
+      const estimatedOutputTokens = 500; // Conservative estimate for Gabe's response
+
+      const usageCheck = await canMakeRequest(userId, estimatedInputTokens, estimatedOutputTokens);
+
+      if (!usageCheck.allowed) {
+        return NextResponse.json({
+          error: 'usage_limit_exceeded',
+          message: usageCheck.reason,
+          usage: usageCheck.usage
+        }, { status: 402 }); // 402 Payment Required
+      }
     }
 
     let currentConversationId = conversationId;
@@ -675,9 +694,15 @@ export async function POST(request: NextRequest) {
 
           // Record usage for billing/limits
           try {
-            const actualInputTokens = Math.ceil(message.length / 4);
-            const actualOutputTokens = Math.ceil(fullResponse.length / 4);
-            await recordUsage(userId, 'other', actualInputTokens, actualOutputTokens);
+            if (userTier === 'free') {
+              // Free users: record message usage
+              await recordMessageUsage(userId, 'interview');
+            } else {
+              // Plus/Max users: record cost-based usage
+              const actualInputTokens = Math.ceil(message.length / 4);
+              const actualOutputTokens = Math.ceil(fullResponse.length / 4);
+              await recordUsage(userId, 'other', actualInputTokens, actualOutputTokens);
+            }
           } catch (usageError) {
             console.error('Error recording usage:', usageError);
             // Don't fail the request if usage tracking fails

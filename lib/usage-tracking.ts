@@ -6,11 +6,27 @@ const supabase = createClient(
 )
 
 // Usage limits per tier (in USD)
-// NOTE: Limits are combined for ALL services (askbo, interview, etc.) per user per month
+// NOTE: For Plus and Max tiers, limits are combined for ALL services (askbo, interview, etc.) per user per month
+// NOTE: For Free tier, message-based limits apply instead (see MESSAGE_LIMITS below)
 export const USAGE_LIMITS = {
-  free: 1.00,
+  free: 1.00, // Not used for free tier - see MESSAGE_LIMITS instead
   plus: 6.00,
   max: 12.00
+} as const
+
+// Message limits per tier per service (Free tier only)
+// NOTE: Free users have separate message limits for each service
+export const MESSAGE_LIMITS = {
+  askbo: {
+    free: 5,    // 5 messages per month
+    plus: -1,   // unlimited (cost-based limits apply)
+    max: -1     // unlimited (cost-based limits apply)
+  },
+  interview: {
+    free: 5,    // 5 messages per month
+    plus: -1,   // unlimited (cost-based limits apply)
+    max: -1     // unlimited (cost-based limits apply)
+  }
 } as const
 
 // Feature usage limits per tier
@@ -39,6 +55,14 @@ export interface UsageRecord {
   service: 'askbo' | 'other'
   tokens_used: number
   cost_usd: number
+  created_at: string
+  month_year: string // Format: 'YYYY-MM'
+}
+
+export interface MessageUsageRecord {
+  id: string
+  user_id: string
+  service: 'askbo' | 'interview'
   created_at: string
   month_year: string // Format: 'YYYY-MM'
 }
@@ -469,4 +493,95 @@ export function clearFeatureUsageCacheForUser(userId: string) {
 export function clearUsageTrackingTierCache(userId: string) {
   tierCache.delete(userId);
   console.log('Cleared usage tracking tier cache for user:', userId);
+}
+
+/**
+ * Get user's monthly message count for a specific service
+ */
+export async function getMonthlyMessageCount(
+  userId: string,
+  service: 'askbo' | 'interview'
+): Promise<number> {
+  const now = new Date()
+  const monthYear = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+
+  const { data, error } = await supabase
+    .from('message_usage_tracking')
+    .select('id')
+    .eq('user_id', userId)
+    .eq('service', service)
+    .eq('month_year', monthYear)
+
+  if (error) {
+    console.error('Error getting monthly message count:', error)
+    // On error, assume limit reached (conservative approach)
+    return 999999
+  }
+
+  return data?.length || 0
+}
+
+/**
+ * Check if user can send a message for a specific service
+ * Free users: message-based limits per service
+ * Plus/Max users: cost-based limits (checked separately)
+ */
+export async function canSendMessage(
+  userId: string,
+  service: 'askbo' | 'interview'
+): Promise<{ allowed: boolean; reason?: string; remaining: number; limit: number }> {
+  const tier = await getUserSubscriptionTier(userId)
+
+  // Plus and Max users use cost-based limits, not message limits
+  if (tier !== 'free') {
+    return {
+      allowed: true,
+      remaining: -1, // unlimited messages (cost-based limits apply separately)
+      limit: -1
+    }
+  }
+
+  // Free users: check message limits
+  const limit = MESSAGE_LIMITS[service].free
+  const currentCount = await getMonthlyMessageCount(userId, service)
+  const remaining = Math.max(0, limit - currentCount)
+
+  if (currentCount >= limit) {
+    return {
+      allowed: false,
+      reason: `You've reached your monthly limit of ${limit} messages for ${service === 'askbo' ? 'Bo Chat' : 'Interview Chat'}. Upgrade to Plus for unlimited messages.`,
+      remaining: 0,
+      limit
+    }
+  }
+
+  return {
+    allowed: true,
+    remaining,
+    limit
+  }
+}
+
+/**
+ * Record a message usage for a specific service
+ */
+export async function recordMessageUsage(
+  userId: string,
+  service: 'askbo' | 'interview'
+): Promise<void> {
+  const now = new Date()
+  const monthYear = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+
+  const { error } = await supabase
+    .from('message_usage_tracking')
+    .insert({
+      user_id: userId,
+      service,
+      month_year: monthYear
+    })
+
+  if (error) {
+    console.error('Error recording message usage:', error)
+    throw new Error('Failed to record message usage')
+  }
 }
