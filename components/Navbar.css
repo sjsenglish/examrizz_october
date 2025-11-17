@@ -1,0 +1,309 @@
+/* Navbar Responsive Styles */
+
+/* =============================================================================
+   DESKTOP NAVBAR (Default)
+   ============================================================================= */
+
+.navbar-main {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #F8F8F5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-logo-link {
+  text-decoration: none;
+}
+
+.navbar-logo {
+  font-family: 'Madimi One', 'Comic Sans MS', cursive, system-ui, sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #000000;
+  margin: 0;
+  cursor: pointer;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Navigation Buttons */
+.nav-btn {
+  background: #DBFCFF;
+  border: 1px solid #00CED1;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #000000;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.nav-btn-text {
+  display: inline;
+}
+
+.nav-btn-about {
+  background: #DBFCFF;
+}
+
+.nav-btn-about:hover {
+  background: #B3F0F2;
+}
+
+.nav-btn-help {
+  background: #E0FDFF;
+}
+
+.nav-btn-help:hover {
+  background: #B3F0F2;
+}
+
+.nav-btn-logout {
+  background: #E7E6FF;
+  border-color: #4338CA;
+  color: #4338CA;
+}
+
+.nav-btn-logout:hover {
+  background: #DDD6FE;
+}
+
+.nav-btn-login {
+  background: #E7E6FF;
+  border-color: #D8C6FF;
+  color: #000000;
+}
+
+.nav-btn-login:hover {
+  background: #DDD6FE;
+}
+
+/* User Email */
+.nav-user-email {
+  font-family: 'Figtree', sans-serif;
+  font-size: 13px;
+  color: #666;
+  margin-right: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+/* Dropdown Menu */
+.navbar-dropdown-wrapper {
+  position: relative;
+}
+
+.navbar-menu-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.navbar-menu-button:hover {
+  transform: scale(1.1);
+}
+
+.navbar-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 180px;
+  z-index: 1001;
+}
+
+.navbar-dropdown-item {
+  display: block;
+  padding: 12px 20px;
+  color: #000000;
+  text-decoration: none;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  transition: background-color 0.2s ease;
+}
+
+.navbar-dropdown-item:hover {
+  background-color: #F8F8F5;
+}
+
+/* =============================================================================
+   TABLET RESPONSIVE (768px - 1024px)
+   ============================================================================= */
+
+@media (max-width: 1024px) {
+  .navbar-main {
+    padding: 0 30px;
+  }
+
+  .navbar-logo {
+    font-size: 22px;
+  }
+
+  .navbar-actions {
+    gap: 12px;
+  }
+
+  .nav-btn {
+    padding: 7px 14px;
+    font-size: 12px;
+  }
+
+  .nav-user-email {
+    max-width: 150px;
+    font-size: 12px;
+  }
+}
+
+/* =============================================================================
+   MOBILE RESPONSIVE (max 768px)
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  .navbar-main {
+    padding: 0 20px;
+    height: 55px;
+  }
+
+  .navbar-logo {
+    font-size: 20px;
+  }
+
+  .navbar-actions {
+    gap: 10px;
+  }
+
+  .nav-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+
+  /* Hide user email on mobile */
+  .nav-user-email {
+    display: none;
+  }
+
+  /* Hide button text, show abbreviated version */
+  .nav-btn-about .nav-btn-text::before {
+    content: 'About';
+  }
+
+  .nav-btn-about .nav-btn-text {
+    font-size: 0;
+  }
+
+  .nav-btn-help .nav-btn-text::before {
+    content: 'Help';
+  }
+
+  .nav-btn-help .nav-btn-text {
+    font-size: 0;
+  }
+}
+
+/* =============================================================================
+   SMALL MOBILE RESPONSIVE (max 480px)
+   ============================================================================= */
+
+@media (max-width: 480px) {
+  .navbar-main {
+    padding: 0 15px;
+    height: 50px;
+  }
+
+  .navbar-logo {
+    font-size: 18px;
+  }
+
+  .navbar-actions {
+    gap: 8px;
+  }
+
+  .nav-btn {
+    padding: 5px 10px;
+    font-size: 10px;
+  }
+
+  /* Hide About and Help buttons on very small screens */
+  .nav-btn-about,
+  .nav-btn-help {
+    display: none;
+  }
+
+  /* Make menu button more prominent */
+  .navbar-menu-button {
+    padding: 6px;
+  }
+
+  .navbar-menu-button svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Adjust dropdown menu for small screens */
+  .navbar-dropdown-menu {
+    min-width: 150px;
+    right: -10px;
+  }
+
+  .navbar-dropdown-item {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+}
+
+/* =============================================================================
+   VERY SMALL MOBILE (max 375px)
+   ============================================================================= */
+
+@media (max-width: 375px) {
+  .navbar-main {
+    padding: 0 12px;
+  }
+
+  .navbar-logo {
+    font-size: 16px;
+  }
+
+  .navbar-actions {
+    gap: 6px;
+  }
+
+  .nav-btn {
+    padding: 4px 8px;
+    font-size: 9px;
+  }
+
+  .navbar-menu-button svg {
+    width: 18px;
+    height: 18px;
+  }
+}

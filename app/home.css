@@ -1,17 +1,418 @@
-/* Home Page Styles */
+/* Home Page / Landing Hub Responsive Styles */
 
-/* Add any home page specific styles here */
+/* =============================================================================
+   LANDING HUB LAYOUT
+   ============================================================================= */
 
-/* Example structure for future customization:
-.home-container {
-  
+.landing-hub-container {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  width: 150vw;
+  height: 150vh;
+  left: -25vw;
+  top: -25vh;
 }
 
-.home-header {
-  
+/* Island Platform */
+.island-platform {
+  position: absolute;
+  left: 50%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+  width: 1200px;
+  height: 600px;
+  z-index: 1;
 }
 
-.home-hub {
-  
+/* Icons Container */
+.icons-container {
+  position: absolute;
+  left: 50%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+  width: 1080px;
+  height: 540px;
+  z-index: 15;
 }
-*/
+
+/* Individual Icon Positions - Desktop */
+.icon-arena {
+  position: absolute;
+  left: 32%;
+  top: 18%;
+  transform: translate(-50%, -50%);
+}
+
+.icon-video {
+  position: absolute;
+  left: 65%;
+  top: 15%;
+  transform: translate(-50%, -50%);
+}
+
+.icon-practice {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.icon-teacher {
+  position: absolute;
+  left: 25%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+}
+
+.icon-askbo {
+  position: absolute;
+  left: 18%;
+  top: 25%;
+  transform: translate(-50%, -50%);
+}
+
+.icon-learn {
+  position: absolute;
+  left: 70%;
+  top: 45%;
+  transform: translate(-50%, -50%);
+}
+
+.icon-search {
+  position: absolute;
+  left: 82%;
+  top: 30%;
+  transform: translate(-50%, -50%);
+}
+
+/* Cloud Decorations */
+.cloud-big-left {
+  position: absolute;
+  left: 20%;
+  top: 30%;
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.cloud-big-right {
+  position: absolute;
+  right: 20%;
+  top: 45%;
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.cloud-medium-left {
+  position: absolute;
+  left: 38%;
+  top: 25%;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.cloud-medium-right {
+  position: absolute;
+  right: 38%;
+  top: 27%;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* =============================================================================
+   TABLET RESPONSIVE (768px - 1024px)
+   ============================================================================= */
+
+@media (max-width: 1024px) {
+  .landing-hub-container {
+    width: 170vw;
+    height: 170vh;
+    left: -35vw;
+    top: -35vh;
+  }
+
+  /* Scale down island platform */
+  .island-platform {
+    width: 900px;
+    height: 450px;
+  }
+
+  /* Scale down icons container */
+  .icons-container {
+    width: 810px;
+    height: 405px;
+  }
+
+  /* Adjust icon sizes using CSS transform */
+  .icon-arena img,
+  .icon-video img,
+  .icon-practice img,
+  .icon-teacher img,
+  .icon-askbo img,
+  .icon-learn img,
+  .icon-search img {
+    transform: scale(0.85);
+  }
+
+  /* Adjust cloud sizes */
+  .cloud-big-left img,
+  .cloud-big-right img {
+    transform: scale(0.85);
+  }
+
+  .cloud-medium-left img,
+  .cloud-medium-right img {
+    transform: scale(0.85);
+  }
+}
+
+/* =============================================================================
+   MOBILE RESPONSIVE (max 768px)
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  .landing-hub-container {
+    width: 200vw;
+    height: 200vh;
+    left: -50vw;
+    top: -50vh;
+  }
+
+  /* Scale down island platform significantly */
+  .island-platform {
+    width: 700px;
+    height: 350px;
+    top: 58%;
+  }
+
+  /* Scale down icons container */
+  .icons-container {
+    width: 630px;
+    height: 315px;
+    top: 58%;
+  }
+
+  /* Adjust icon sizes - smaller for mobile */
+  .icon-arena img,
+  .icon-video img {
+    transform: scale(0.6);
+  }
+
+  .icon-practice img {
+    transform: scale(0.7);
+  }
+
+  .icon-teacher img,
+  .icon-askbo img,
+  .icon-learn img,
+  .icon-search img {
+    transform: scale(0.65);
+  }
+
+  /* Reposition icons for better mobile layout */
+  .icon-arena {
+    left: 30%;
+    top: 16%;
+  }
+
+  .icon-video {
+    left: 68%;
+    top: 14%;
+  }
+
+  .icon-practice {
+    left: 50%;
+    top: 48%;
+  }
+
+  .icon-teacher {
+    left: 22%;
+    top: 58%;
+  }
+
+  .icon-askbo {
+    left: 15%;
+    top: 24%;
+  }
+
+  .icon-learn {
+    left: 72%;
+    top: 46%;
+  }
+
+  .icon-search {
+    left: 85%;
+    top: 30%;
+  }
+
+  /* Hide some clouds on mobile for cleaner look */
+  .cloud-medium-left,
+  .cloud-medium-right {
+    opacity: 0.4;
+  }
+
+  /* Adjust remaining cloud sizes */
+  .cloud-big-left img,
+  .cloud-big-right img {
+    transform: scale(0.7);
+  }
+
+  .cloud-medium-left img,
+  .cloud-medium-right img {
+    transform: scale(0.7);
+  }
+}
+
+/* =============================================================================
+   SMALL MOBILE RESPONSIVE (max 480px)
+   ============================================================================= */
+
+@media (max-width: 480px) {
+  .landing-hub-container {
+    width: 220vw;
+    height: 220vh;
+    left: -60vw;
+    top: -60vh;
+  }
+
+  /* Further scale down island platform */
+  .island-platform {
+    width: 550px;
+    height: 275px;
+    top: 60%;
+  }
+
+  /* Further scale down icons container */
+  .icons-container {
+    width: 495px;
+    height: 248px;
+    top: 60%;
+  }
+
+  /* Much smaller icons for small mobile */
+  .icon-arena img,
+  .icon-video img {
+    transform: scale(0.45);
+  }
+
+  .icon-practice img {
+    transform: scale(0.55);
+  }
+
+  .icon-teacher img,
+  .icon-askbo img,
+  .icon-learn img,
+  .icon-search img {
+    transform: scale(0.5);
+  }
+
+  /* Tighter icon positioning */
+  .icon-arena {
+    left: 28%;
+    top: 14%;
+  }
+
+  .icon-video {
+    left: 70%;
+    top: 12%;
+  }
+
+  .icon-practice {
+    left: 50%;
+    top: 46%;
+  }
+
+  .icon-teacher {
+    left: 20%;
+    top: 60%;
+  }
+
+  .icon-askbo {
+    left: 12%;
+    top: 22%;
+  }
+
+  .icon-learn {
+    left: 74%;
+    top: 48%;
+  }
+
+  .icon-search {
+    left: 88%;
+    top: 28%;
+  }
+
+  /* Further reduce cloud visibility */
+  .cloud-medium-left,
+  .cloud-medium-right {
+    display: none;
+  }
+
+  .cloud-big-left img,
+  .cloud-big-right img {
+    transform: scale(0.5);
+  }
+
+  .cloud-big-left {
+    left: 15%;
+    top: 25%;
+  }
+
+  .cloud-big-right {
+    right: 15%;
+    top: 48%;
+  }
+}
+
+/* =============================================================================
+   VERY SMALL MOBILE (max 375px)
+   ============================================================================= */
+
+@media (max-width: 375px) {
+  .landing-hub-container {
+    width: 240vw;
+    height: 240vh;
+    left: -70vw;
+    top: -70vh;
+  }
+
+  /* Smallest island platform */
+  .island-platform {
+    width: 480px;
+    height: 240px;
+    top: 62%;
+  }
+
+  /* Smallest icons container */
+  .icons-container {
+    width: 432px;
+    height: 216px;
+    top: 62%;
+  }
+
+  /* Smallest icons */
+  .icon-arena img,
+  .icon-video img,
+  .icon-teacher img,
+  .icon-askbo img,
+  .icon-learn img,
+  .icon-search img {
+    transform: scale(0.4);
+  }
+
+  .icon-practice img {
+    transform: scale(0.5);
+  }
+
+  /* Hide all clouds on very small screens */
+  .cloud-big-left,
+  .cloud-big-right,
+  .cloud-medium-left,
+  .cloud-medium-right {
+    display: none;
+  }
+}
