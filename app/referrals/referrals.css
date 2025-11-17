@@ -3,8 +3,10 @@
 .referrals-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 80px 40px 40px;
+  padding: 120px 40px 40px; /* Moved down by 10% (80px -> 120px) */
   font-family: 'Figtree', sans-serif;
+  background: #ffffff;
+  min-height: 100vh;
 }
 
 .referrals-loading {
@@ -15,6 +17,7 @@
   min-height: 100vh;
   gap: 20px;
   font-family: 'Figtree', sans-serif;
+  background: #ffffff;
 }
 
 .spinner {
@@ -31,28 +34,18 @@
   100% { transform: rotate(360deg); }
 }
 
-/* SVG Images - Made Smaller */
-.svg-image-header {
-  width: 80%;
-  max-width: 800px;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-}
-
-.svg-image-progress {
+/* Unified Width for All Elements */
+.svg-image-unified {
   width: 70%;
-  max-width: 700px;
+  max-width: 850px;
   height: auto;
   display: block;
   margin: 0 auto;
 }
 
-.svg-image-details {
-  width: 90%;
-  max-width: 900px;
-  height: auto;
-  display: block;
+.unified-width {
+  width: 70%;
+  max-width: 850px;
   margin: 0 auto;
 }
 
@@ -61,16 +54,11 @@
   margin-bottom: 40px;
 }
 
-/* Progress Circles Section */
-.progress-circles-svg {
-  margin-bottom: 40px;
-}
-
-/* Section Title */
+/* Section Title - Madimi One Font */
 .section-title {
-  font-family: 'Figtree', sans-serif;
+  font-family: 'Madimi One', sans-serif;
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 400;
   margin-bottom: 20px;
   color: #000;
 }
@@ -87,7 +75,6 @@
 .link-input-wrapper {
   display: flex;
   gap: 12px;
-  margin-bottom: 20px;
 }
 
 .link-input {
@@ -124,75 +111,6 @@
 .copy-button:active {
   transform: translateY(1px);
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-}
-
-/* Share Buttons */
-.share-buttons {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-}
-
-.share-button {
-  padding: 12px 20px;
-  border: 2px solid #000;
-  border-radius: 8px;
-  font-family: 'Figtree', sans-serif;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
-}
-
-.share-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.15);
-}
-
-.share-button:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-}
-
-.share-button.email {
-  background: #B3F0F2;
-  color: #000;
-}
-
-.share-button.email:hover {
-  background: #9DE8EA;
-}
-
-.share-button.whatsapp {
-  background: #25D366;
-  color: #fff;
-}
-
-.share-button.whatsapp:hover {
-  background: #1EBE57;
-}
-
-.share-button.twitter {
-  background: #1DA1F2;
-  color: #fff;
-}
-
-.share-button.twitter:hover {
-  background: #0D8BD9;
-}
-
-.share-button.facebook {
-  background: #4267B2;
-  color: #fff;
-}
-
-.share-button.facebook:hover {
-  background: #365899;
 }
 
 /* Friends Referred Section */
@@ -274,7 +192,7 @@
   border: 1px solid #D97706;
 }
 
-/* Details Sections */
+/* Details Sections - Made Smaller */
 .details-section-1,
 .details-section-2 {
   margin-bottom: 40px;
@@ -283,45 +201,27 @@
 /* Responsive Design */
 @media (max-width: 1024px) {
   .referrals-container {
-    padding: 70px 30px 30px;
+    padding: 110px 30px 30px; /* Adjusted for 10% down */
   }
 
-  .svg-image-header {
-    width: 85%;
-  }
-
-  .svg-image-progress {
-    width: 75%;
-  }
-
-  .svg-image-details {
-    width: 95%;
+  .svg-image-unified,
+  .unified-width {
+    width: 80%;
   }
 
   .section-title {
     font-size: 22px;
   }
-
-  .share-buttons {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 @media (max-width: 768px) {
   .referrals-container {
-    padding: 60px 20px 20px;
+    padding: 100px 20px 20px; /* Adjusted for 10% down */
   }
 
-  .svg-image-header {
+  .svg-image-unified,
+  .unified-width {
     width: 90%;
-  }
-
-  .svg-image-progress {
-    width: 85%;
-  }
-
-  .svg-image-details {
-    width: 100%;
   }
 
   .referral-link-section,
@@ -342,10 +242,6 @@
     padding: 12px;
   }
 
-  .share-buttons {
-    grid-template-columns: 1fr;
-  }
-
   .friend-item {
     flex-direction: column;
     align-items: flex-start;
@@ -359,15 +255,12 @@
 
 @media (max-width: 480px) {
   .referrals-container {
-    padding: 50px 15px 15px;
+    padding: 90px 15px 15px; /* Adjusted for 10% down */
   }
 
-  .svg-image-header {
+  .svg-image-unified,
+  .unified-width {
     width: 95%;
-  }
-
-  .svg-image-progress {
-    width: 90%;
   }
 
   .referral-link-section,
@@ -382,11 +275,6 @@
   .link-input {
     font-size: 14px;
     padding: 12px 14px;
-  }
-
-  .share-button {
-    padding: 10px 16px;
-    font-size: 14px;
   }
 
   .friend-email {

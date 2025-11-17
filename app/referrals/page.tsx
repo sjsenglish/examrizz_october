@@ -78,26 +78,6 @@ export default function ReferralsPage() {
     }
   };
 
-  const shareViaEmail = () => {
-    const subject = encodeURIComponent('Join me on ExamRizz!');
-    const body = encodeURIComponent(`Hey! I've been using ExamRizz for exam prep and thought you might find it useful too. Sign up using my referral link: ${referralLink}`);
-    window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
-  };
-
-  const shareViaWhatsApp = () => {
-    const text = encodeURIComponent(`Hey! Check out ExamRizz - it's great for exam prep! Sign up using my referral link: ${referralLink}`);
-    window.open(`https://wa.me/?text=${text}`, '_blank');
-  };
-
-  const shareViaTwitter = () => {
-    const text = encodeURIComponent(`Join me on ExamRizz for better exam prep! ${referralLink}`);
-    window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
-  };
-
-  const shareViaFacebook = () => {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`, '_blank');
-  };
-
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-GB', {
@@ -128,21 +108,12 @@ export default function ReferralsPage() {
           <img
             src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202795.svg?alt=media&token=ed23d7cb-8609-4a46-bf91-57d85e1d4a1f"
             alt="Referral Header"
-            className="svg-image-header"
-          />
-        </div>
-
-        {/* Progress Circles SVG - New */}
-        <div className="progress-circles-svg">
-          <img
-            src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202796.svg?alt=media&token=94274a83-88a2-4fcc-aaef-e96a232db2fa"
-            alt="Progress Steps"
-            className="svg-image-progress"
+            className="svg-image-unified"
           />
         </div>
 
         {/* Your Referral Link - Custom Built */}
-        <div className="referral-link-section">
+        <div className="referral-link-section unified-width">
           <h2 className="section-title">Your Referral Link</h2>
           <div className="link-input-wrapper">
             <input
@@ -164,26 +135,10 @@ export default function ReferralsPage() {
               )}
             </button>
           </div>
-
-          {/* Share Buttons */}
-          <div className="share-buttons">
-            <button onClick={shareViaEmail} className="share-button email">
-              <span>📧</span> Email
-            </button>
-            <button onClick={shareViaWhatsApp} className="share-button whatsapp">
-              <span>💬</span> WhatsApp
-            </button>
-            <button onClick={shareViaTwitter} className="share-button twitter">
-              <span>🐦</span> Twitter
-            </button>
-            <button onClick={shareViaFacebook} className="share-button facebook">
-              <span>📘</span> Facebook
-            </button>
-          </div>
         </div>
 
         {/* Friends Referred - Custom Built */}
-        <div className="friends-referred-section">
+        <div className="friends-referred-section unified-width">
           <h2 className="section-title">Friends Referred ({stats.total})</h2>
           <div className="friends-list">
             {referrals.length === 0 ? (
@@ -211,7 +166,7 @@ export default function ReferralsPage() {
           <img
             src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202792.svg?alt=media&token=7735cfc3-bdb7-453e-af10-c832ccc2bdde"
             alt="Details Section 1"
-            className="svg-image-details"
+            className="svg-image-unified"
           />
         </div>
 
@@ -220,7 +175,7 @@ export default function ReferralsPage() {
           <img
             src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202791.svg?alt=media&token=dceeb64f-e8c4-4390-b809-f95d18d284a3"
             alt="Details Section 2"
-            className="svg-image-details"
+            className="svg-image-unified"
           />
         </div>
       </div>
