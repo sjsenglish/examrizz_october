@@ -47,27 +47,10 @@ export const PdfModal: React.FC<PdfModalProps> = ({ isOpen, onClose, pdfUrl, que
 
   if (!isMounted || !isOpen) return null;
 
-  // Convert Firebase storage URL if needed
-  const getFirebasePdfUrl = (gsUrl: string): string => {
-    if (!gsUrl) return '';
-    
-    if (gsUrl.startsWith('gs://')) {
-      const urlParts = gsUrl.replace('gs://', '').split('/');
-      const bucketName = urlParts[0];
-      const filePath = urlParts.slice(1).join('/');
-      const encodedPath = encodeURIComponent(filePath);
-      return `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodedPath}?alt=media`;
-    }
-    
-    return gsUrl;
-  };
-
-  const finalPdfUrl = pdfUrl ? getFirebasePdfUrl(pdfUrl) : '';
-
   // Create PDF URL with page parameter and search
-  const pdfUrlWithParams = finalPdfUrl && questionNumber 
-    ? `${finalPdfUrl}#toolbar=1&navpanes=1&scrollbar=1&page=1&search=${encodeURIComponent(`Question ${questionNumber}`)}&view=FitH`
-    : finalPdfUrl;
+  const pdfUrlWithParams = pdfUrl && questionNumber
+    ? `${pdfUrl}#toolbar=1&navpanes=1&scrollbar=1&page=1&search=${encodeURIComponent(`Question ${questionNumber}`)}&view=FitH`
+    : pdfUrl || '';
 
   const modalContent = (
     <div className={styles.modalOverlay} onClick={onClose}>
@@ -80,7 +63,7 @@ export const PdfModal: React.FC<PdfModalProps> = ({ isOpen, onClose, pdfUrl, que
           </button>
         </div>
         
-        {finalPdfUrl ? (
+        {pdfUrl ? (
           <div className={styles.pdfContainer}>
             <iframe
               src={pdfUrlWithParams}
