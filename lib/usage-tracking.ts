@@ -14,17 +14,17 @@ export const USAGE_LIMITS = {
   max: 12.00
 } as const
 
-// Message limits per tier per service (Free tier only)
-// NOTE: Free users have separate message limits for each service
+// Message limits per tier per service
+// NOTE: Free and Plus users have message limits per service, Max users have cost-based limits
 export const MESSAGE_LIMITS = {
   askbo: {
     free: 5,    // 5 messages per month
-    plus: -1,   // unlimited (cost-based limits apply)
+    plus: 30,   // 30 messages per month
     max: -1     // unlimited (cost-based limits apply)
   },
   interview: {
     free: 5,    // 5 messages per month
-    plus: -1,   // unlimited (cost-based limits apply)
+    plus: 30,   // 30 messages per month
     max: -1     // unlimited (cost-based limits apply)
   }
 } as const
@@ -523,8 +523,8 @@ export async function getMonthlyMessageCount(
 
 /**
  * Check if user can send a message for a specific service
- * Free users: message-based limits per service
- * Plus/Max users: cost-based limits (checked separately)
+ * Free and Plus users: message-based limits per service
+ * Max users: cost-based limits (checked separately)
  */
 export async function canSendMessage(
   userId: string,
@@ -532,8 +532,8 @@ export async function canSendMessage(
 ): Promise<{ allowed: boolean; reason?: string; remaining: number; limit: number }> {
   const tier = await getUserSubscriptionTier(userId)
 
-  // Plus and Max users use cost-based limits, not message limits
-  if (tier !== 'free') {
+  // Max users use cost-based limits, not message limits
+  if (tier === 'max') {
     return {
       allowed: true,
       remaining: -1, // unlimited messages (cost-based limits apply separately)
@@ -541,15 +541,19 @@ export async function canSendMessage(
     }
   }
 
-  // Free users: check message limits
-  const limit = MESSAGE_LIMITS[service].free
+  // Free and Plus users: check message limits
+  const limit = MESSAGE_LIMITS[service][tier]
   const currentCount = await getMonthlyMessageCount(userId, service)
   const remaining = Math.max(0, limit - currentCount)
 
   if (currentCount >= limit) {
+    const upgradeMessage = tier === 'free'
+      ? 'Upgrade to Plus for 30 messages per month or Max for unlimited messages.'
+      : 'Upgrade to Max for unlimited messages.'
+
     return {
       allowed: false,
-      reason: `You've reached your monthly limit of ${limit} messages for ${service === 'askbo' ? 'Bo Chat' : 'Interview Chat'}. Upgrade to Plus for unlimited messages.`,
+      reason: `You've reached your monthly limit of ${limit} messages for ${service === 'askbo' ? 'Bo Chat' : 'Interview Chat'}. ${upgradeMessage}`,
       remaining: 0,
       limit
     }
