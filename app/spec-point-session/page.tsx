@@ -447,10 +447,7 @@ function SpecPointSessionContent() {
                 if (data.conversationId && !conversationId) {
                   setConversationId(data.conversationId);
                 }
-                // Check if Joe wants to switch content
-                if (data.switchContent) {
-                  setCurrentContent(data.switchContent);
-                }
+                // Note: Content switching is now handled by clickable buttons in messages
               } else if (data.type === 'error') {
                 setMessages(prev => prev.map(msg => 
                   msg.id === assistantId 
@@ -482,6 +479,51 @@ function SpecPointSessionContent() {
       e.preventDefault();
       sendMessage();
     }
+  };
+
+  // Render message content with clickable content switch buttons
+  const renderMessageContent = (content: string) => {
+    // Split content by switch markers and render buttons
+    const parts = content.split(/(\[SWITCH:(video|questions|pdf)\])/g);
+
+    return parts.map((part, index) => {
+      // Check if this part is a switch marker
+      const switchMatch = part.match(/\[SWITCH:(video|questions|pdf)\]/);
+
+      if (switchMatch) {
+        const contentType = switchMatch[1] as ContentType;
+        const buttonLabels = {
+          video: 'Switch to Video',
+          questions: 'Switch to Questions',
+          pdf: 'Switch to PDF Notes'
+        };
+
+        return (
+          <button
+            key={index}
+            onClick={() => setCurrentContent(contentType)}
+            className="content-switch-button"
+          >
+            {buttonLabels[contentType]}
+          </button>
+        );
+      }
+
+      // Regular text - render with ReactMarkdown
+      if (part && !part.match(/^(video|questions|pdf)$/)) {
+        return (
+          <ReactMarkdown
+            key={index}
+            remarkPlugins={[remarkMath]}
+            rehypePlugins={[rehypeKatex]}
+          >
+            {part}
+          </ReactMarkdown>
+        );
+      }
+
+      return null;
+    });
   };
 
   const handleAnswerChange = (key: string, latex: string) => {
@@ -1185,12 +1227,7 @@ function SpecPointSessionContent() {
                     <div key={message.id} className={`joe-message ${message.role}`}>
                       <div className="joe-message-content">
                         {message.role === 'assistant' ? (
-                          <ReactMarkdown
-                            remarkPlugins={[remarkMath]}
-                            rehypePlugins={[rehypeKatex]}
-                          >
-                            {message.content}
-                          </ReactMarkdown>
+                          renderMessageContent(message.content)
                         ) : (
                           message.content
                         )}

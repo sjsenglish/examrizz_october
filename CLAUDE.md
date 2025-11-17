@@ -194,7 +194,11 @@ The entire site is now responsive across desktop, tablet, and mobile devices wit
   - Fractions: `$\frac{a}{b}$` NOT `a/b`
   - Rendered using KaTeX via ReactMarkdown with `remark-math` and `rehype-katex` plugins
   - Frontend: `/app/spec-point-session/page.tsx` imports `katex/dist/katex.min.css`
-- **Content Switching**: Proactively switches students between video/questions/PDF when appropriate
+- **Content Switching** (Updated Nov 2024): Proactively suggests switching between video/questions/PDF via clickable buttons
+  - Joe uses `[SWITCH_CONTENT:video]`, `[SWITCH_CONTENT:questions]`, `[SWITCH_CONTENT:pdf]` markers
+  - API automatically converts markers to clickable "Switch to [Content]" buttons
+  - Students click buttons to switch tabs (user-controlled, not automatic)
+  - Prevents jarring auto-switches while preserving Joe's guidance capability
 - **Intervention Logic**: Monitors conversation patterns and redirects when stuck or mismatched difficulty
 - **Exam Preparation**: Focuses on time management, showing working, and exam technique
 - **Escalation**: Knows limits and directs to Discord community when needed
