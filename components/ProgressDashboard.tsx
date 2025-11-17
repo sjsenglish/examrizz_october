@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import './ProgressDashboard.css';
+import { supabase } from '@/lib/supabase-client';
+import './ProgressDashboard-v2.css';
 
 interface DashboardProps {
   isOpen: boolean;
@@ -10,161 +11,211 @@ interface DashboardProps {
 }
 
 export default function ProgressDashboard({ isOpen, onClose }: DashboardProps) {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (isOpen) {
+      setLoading(false);
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
     <>
       {/* Overlay */}
-      <div className="dashboard-overlay" onClick={onClose} />
+      <div className="progress-overlay-v2" onClick={onClose} />
 
       {/* Dashboard Modal */}
-      <div className="dashboard-modal">
+      <div className="progress-modal-v2">
         {/* Close button */}
-        <button className="dashboard-close" onClick={onClose}>
+        <button className="progress-close-v2" onClick={onClose}>
           ×
         </button>
 
-        {/* Dashboard Header */}
-        <div className="dashboard-header">
-          <h2 className="dashboard-title">Your Progress</h2>
-          <p className="dashboard-subtitle">Track your learning journey</p>
-        </div>
-
         {/* Dashboard Content */}
-        <div className="dashboard-content">
-          {/* Stats Grid */}
-          <div className="stats-grid">
-            {/* Total Progress */}
-            <div className="stat-card">
-              <div className="stat-icon">
-                <Image
-                  src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202376.svg?alt=media&token=96940cfc-fd51-4c0c-a40b-eca32f113b46"
-                  alt="Progress"
-                  width={40}
-                  height={40}
-                />
+        {loading ? (
+          <div className="progress-loading-v2">
+            Loading your progress...
+          </div>
+        ) : (
+          <div className="progress-main-grid-v2">
+            {/* Top Section - 4 boxes */}
+            <div className="progress-top-section-v2">
+              {/* Working Grade */}
+              <div className="progress-metric-card-v2">
+                <div className="progress-card-title-v2">Working Grade</div>
+                <div className="progress-grade-display-v2">A*</div>
+                <div className="progress-bar-outer-v2">
+                  <div className="progress-bar-inner-v2" style={{ width: '85%' }} />
+                </div>
               </div>
-              <div className="stat-info">
-                <div className="stat-label">Lessons Completed</div>
-                <div className="stat-value">12 / 89</div>
+
+              {/* Predicted Grade */}
+              <div className="progress-metric-card-v2">
+                <div className="progress-card-title-v2">Predicted Grade</div>
+                <div className="progress-grade-display-v2">A**</div>
+              </div>
+
+              {/* Learning Streak */}
+              <div className="progress-metric-card-v2">
+                <div className="progress-card-title-v2">Learning Streak</div>
+                <div className="progress-streak-content-v2">
+                  <Image
+                    src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fflame-streak.svg?alt=media&token=20cbf1c7-06f6-4ea4-b960-94172c49bff3"
+                    alt="Streak"
+                    width={40}
+                    height={40}
+                    className="progress-streak-icon-v2"
+                  />
+                  <div className="progress-number-display-v2">7</div>
+                </div>
+                <div className="progress-subtitle-v2">days logged in</div>
+              </div>
+
+              {/* Exam Readiness */}
+              <div className="progress-metric-card-v2">
+                <div className="progress-card-title-v2">Exam Readiness</div>
+                <div className="progress-readiness-text-v2">
+                  <span className="progress-number-display-v2">12</span>
+                  <span className="progress-subtitle-v2"> / 30 topics</span>
+                </div>
+                <div className="progress-bar-outer-v2">
+                  <div className="progress-bar-inner-v2" style={{ width: '40%' }} />
+                </div>
               </div>
             </div>
 
-            {/* Time Spent */}
-            <div className="stat-card">
-              <div className="stat-icon">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="12" r="10" stroke="#7C3AED" strokeWidth="2"/>
-                  <path d="M12 6V12L16 14" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
+            {/* Bottom Left Section - 2 boxes */}
+            <div className="progress-bottom-left-v2">
+              {/* This Week */}
+              <div className="progress-metric-card-v2">
+                <div className="progress-card-title-v2">This Week</div>
+                <div className="progress-week-stats-v2">
+                  <div className="progress-stat-mini-v2">
+                    <div className="progress-stat-label-v2">Questions Answered</div>
+                    <div className="progress-number-display-v2">42</div>
+                  </div>
+                  <div className="progress-stat-mini-v2">
+                    <div className="progress-stat-label-v2">Accuracy</div>
+                    <div className="progress-number-display-v2">85%</div>
+                  </div>
+                  <div className="progress-stat-mini-v2">
+                    <div className="progress-stat-label-v2">Study Time</div>
+                    <div className="progress-number-display-v2">3.5h</div>
+                  </div>
+                </div>
               </div>
-              <div className="stat-info">
-                <div className="stat-label">Time Spent</div>
-                <div className="stat-value">14.2 hrs</div>
+
+              {/* Grade Trajectory */}
+              <div className="progress-metric-card-v2">
+                <div className="progress-card-title-v2">Grade Trajectory</div>
+                <div className="progress-trajectory-chart-v2">
+                  <svg width="100%" height="100" viewBox="0 0 300 120" preserveAspectRatio="none">
+                    {/* Grid lines */}
+                    <line x1="0" y1="20" x2="300" y2="20" stroke="#E5E7EB" strokeWidth="1" />
+                    <line x1="0" y1="40" x2="300" y2="40" stroke="#E5E7EB" strokeWidth="1" />
+                    <line x1="0" y1="60" x2="300" y2="60" stroke="#E5E7EB" strokeWidth="1" />
+                    <line x1="0" y1="80" x2="300" y2="80" stroke="#E5E7EB" strokeWidth="1" />
+                    <line x1="0" y1="100" x2="300" y2="100" stroke="#E5E7EB" strokeWidth="1" />
+
+                    {/* Line graph */}
+                    <polyline
+                      points="30,90 90,70 150,50 210,35 270,25"
+                      fill="none"
+                      stroke="#00CED1"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+
+                    {/* Data points */}
+                    <circle cx="30" cy="90" r="4" fill="#00CED1" />
+                    <circle cx="90" cy="70" r="4" fill="#00CED1" />
+                    <circle cx="150" cy="50" r="4" fill="#00CED1" />
+                    <circle cx="210" cy="35" r="4" fill="#00CED1" />
+                    <circle cx="270" cy="25" r="4" fill="#00CED1" />
+                  </svg>
+                  <div className="progress-trajectory-labels-v2">
+                    <span>W1</span>
+                    <span>W2</span>
+                    <span>W3</span>
+                    <span>W4</span>
+                    <span>W5</span>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Questions Answered */}
-            <div className="stat-card">
-              <div className="stat-icon">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-                  <path d="M9 11L12 14L22 4" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M21 12V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V5C3 3.9 3.9 3 5 3H16" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
-              <div className="stat-info">
-                <div className="stat-label">Questions Correct</div>
-                <div className="stat-value">87 / 120</div>
-              </div>
-            </div>
-
-            {/* Current Streak */}
-            <div className="stat-card">
-              <div className="stat-icon">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#F59E0B" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
-              <div className="stat-info">
-                <div className="stat-label">Current Streak</div>
-                <div className="stat-value">7 days</div>
+            {/* Right Section - Grade Split by Topic (spans both rows) */}
+            <div className="progress-right-section-v2">
+              <div className="progress-metric-card-v2" style={{ height: '100%' }}>
+                <div className="progress-card-title-v2">Grade Split by Topic</div>
+                <div className="progress-pie-container-v2">
+                  <svg width="140" height="140" viewBox="0 0 160 160">
+                    {/* A** (6CE5E8) - 20% */}
+                    <path
+                      d="M 80 80 L 80 20 A 60 60 0 0 1 122.4 41.6 Z"
+                      fill="#6CE5E8"
+                      stroke="#000"
+                      strokeWidth="1"
+                    />
+                    {/* A* (white) - 25% */}
+                    <path
+                      d="M 80 80 L 122.4 41.6 A 60 60 0 0 1 122.4 118.4 Z"
+                      fill="#FFFFFF"
+                      stroke="#000"
+                      strokeWidth="1"
+                    />
+                    {/* A (C8F4F6) - 30% */}
+                    <path
+                      d="M 80 80 L 122.4 118.4 A 60 60 0 0 1 20 80 Z"
+                      fill="#C8F4F6"
+                      stroke="#000"
+                      strokeWidth="1"
+                    />
+                    {/* B (E7E6FF) - 15% */}
+                    <path
+                      d="M 80 80 L 20 80 A 60 60 0 0 1 54.6 30.4 Z"
+                      fill="#E7E6FF"
+                      stroke="#000"
+                      strokeWidth="1"
+                    />
+                    {/* C (0AB2B4) - 10% */}
+                    <path
+                      d="M 80 80 L 54.6 30.4 A 60 60 0 0 1 80 20 Z"
+                      fill="#0AB2B4"
+                      stroke="#000"
+                      strokeWidth="1"
+                    />
+                  </svg>
+                  <div className="progress-pie-legend-v2">
+                    <div className="progress-legend-item-v2">
+                      <div className="progress-legend-color-v2" style={{ backgroundColor: '#6CE5E8' }} />
+                      <span className="progress-legend-text-v2">A** (6)</span>
+                    </div>
+                    <div className="progress-legend-item-v2">
+                      <div className="progress-legend-color-v2" style={{ backgroundColor: '#FFFFFF', border: '1px solid #000' }} />
+                      <span className="progress-legend-text-v2">A* (8)</span>
+                    </div>
+                    <div className="progress-legend-item-v2">
+                      <div className="progress-legend-color-v2" style={{ backgroundColor: '#C8F4F6' }} />
+                      <span className="progress-legend-text-v2">A (9)</span>
+                    </div>
+                    <div className="progress-legend-item-v2">
+                      <div className="progress-legend-color-v2" style={{ backgroundColor: '#E7E6FF' }} />
+                      <span className="progress-legend-text-v2">B (5)</span>
+                    </div>
+                    <div className="progress-legend-item-v2">
+                      <div className="progress-legend-color-v2" style={{ backgroundColor: '#0AB2B4' }} />
+                      <span className="progress-legend-text-v2">C (2)</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-
-          {/* Progress Bar */}
-          <div className="progress-section">
-            <div className="progress-header">
-              <span className="progress-label">Overall Course Progress</span>
-              <span className="progress-percentage">13%</span>
-            </div>
-            <div className="progress-bar-wrapper">
-              <div className="progress-bar-fill-dashboard" style={{ width: '13%' }} />
-            </div>
-          </div>
-
-          {/* Recent Activity */}
-          <div className="recent-activity">
-            <h3 className="section-title">Recent Activity</h3>
-            <div className="activity-list">
-              <div className="activity-item">
-                <div className="activity-dot" />
-                <div className="activity-details">
-                  <div className="activity-title">Completed 7.2 Differentiating Functions</div>
-                  <div className="activity-time">2 hours ago</div>
-                </div>
-              </div>
-              <div className="activity-item">
-                <div className="activity-dot" />
-                <div className="activity-details">
-                  <div className="activity-title">Answered 8 questions correctly</div>
-                  <div className="activity-time">5 hours ago</div>
-                </div>
-              </div>
-              <div className="activity-item">
-                <div className="activity-dot" />
-                <div className="activity-details">
-                  <div className="activity-title">Watched video: Intro to Differentiation</div>
-                  <div className="activity-time">1 day ago</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Chapter Progress */}
-          <div className="chapter-progress">
-            <h3 className="section-title">Progress by Chapter</h3>
-            <div className="chapter-list">
-              <div className="chapter-item">
-                <div className="chapter-header">
-                  <span className="chapter-name">Chapter 1: Proofs</span>
-                  <span className="chapter-percent">100%</span>
-                </div>
-                <div className="chapter-bar">
-                  <div className="chapter-fill" style={{ width: '100%', backgroundColor: '#7C3AED' }} />
-                </div>
-              </div>
-              <div className="chapter-item">
-                <div className="chapter-header">
-                  <span className="chapter-name">Chapter 2: Algebra</span>
-                  <span className="chapter-percent">45%</span>
-                </div>
-                <div className="chapter-bar">
-                  <div className="chapter-fill" style={{ width: '45%', backgroundColor: '#3B82F6' }} />
-                </div>
-              </div>
-              <div className="chapter-item">
-                <div className="chapter-header">
-                  <span className="chapter-name">Chapter 3: Coordinate Geometry</span>
-                  <span className="chapter-percent">0%</span>
-                </div>
-                <div className="chapter-bar">
-                  <div className="chapter-fill" style={{ width: '0%', backgroundColor: '#7C3AED' }} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </>
   );

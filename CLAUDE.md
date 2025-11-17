@@ -350,6 +350,84 @@ The entire site is now responsive across desktop, tablet, and mobile devices wit
 
 **Navigation Flow**: Home (Learn icon) → Competition → Subject Selection → Maths Demo → Spec Topic
 
+## Progress Dashboard (Redesigned Nov 2024)
+- **Location**: Accessible via blue folder icon in top-right corner of `/maths-demo` page
+- **Component**: `/components/ProgressDashboard.tsx` with styles in `/components/ProgressDashboard.css`
+- **Purpose**: Comprehensive student performance dashboard showing grades, streaks, and progress metrics
+- **Design**: Modern metrics-focused layout with light cyan background (#F3FDFD) and rounded corners
+
+### Dashboard Layout Structure
+**Top Row (4 metric boxes):**
+1. **Working Grade**: Current grade displayed in cyan (#00CED1) with progress bar
+   - Shows: A* grade
+   - Progress bar shows completion percentage
+
+2. **Predicted Grade**: Future grade prediction
+   - Shows: A** grade
+
+3. **Learning Streak**: Days logged in consecutively
+   - Shows flame icon from Firebase Storage
+   - Displays: 7 days logged in
+
+4. **Exam Readiness**: Topic coverage tracking
+   - Shows: 12 / 30 topics completed
+   - Progress bar with cyan fill
+
+**Bottom Row (3 boxes - 2 left + 1 tall right):**
+5. **This Week** (bottom left):
+   - Questions Answered: 42
+   - Accuracy: 85%
+   - Study Time: 3.5h
+   - Each stat in mini container with drop shadow on bottom edge
+
+6. **Grade Trajectory** (bottom left):
+   - Line graph showing grade progression over 5 weeks (W1-W5)
+   - Cyan line (#00CED1) with data points
+   - Grid lines for reference
+
+7. **Grade Split by Topic** (tall box spanning both rows on right):
+   - Pie chart showing topic grade distribution
+   - Colors: A** (#6CE5E8), A* (white), A (#C8F4F6), B (#E7E6FF), C (#0AB2B4)
+   - Legend with counts: A** (6), A* (8), A (9), B (5), C (2)
+
+### Styling Details
+- **Typography**:
+  - Labels/text: Figtree font family
+  - Numbers/grades: Madimi One font family
+- **Containers**:
+  - All boxes: White background with 1px black borders, 12px border radius
+  - Mini stat boxes: 8px border radius with `box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1)`
+- **Progress Bars**:
+  - Height: 8px
+  - Border: 1px solid black
+  - Fill color: #00CED1 (cyan)
+  - Background: #E5E7EB (light gray)
+- **Modal**:
+  - Max-width: 1100px
+  - Background: #F3FDFD
+  - Border-radius: 16px
+  - Padding: 32px
+
+### Data Source
+- **Current State**: Using default placeholder data
+- **Future Implementation**: Will fetch real user data from database tables:
+  - Working/Predicted grades from user performance metrics
+  - Learning streak from login history
+  - Exam readiness from topic completion tracking
+  - Weekly stats from question attempt records
+  - Grade trajectory from historical performance data
+  - Topic grades from lesson completion scores
+
+### Responsive Design
+- **1024px**: Top row becomes 2 columns, bottom section stacks vertically
+- **768px**: Top row becomes single column, trajectory chart adjusts
+- **480px**: Compact spacing, smaller fonts, mobile-optimized layout
+
+### Files
+- Component: `/components/ProgressDashboard.tsx`
+- Styles: `/components/ProgressDashboard.css`
+- Trigger: Blue folder icon in `/app/maths-demo/page.tsx`
+
 ## AskBo Page Layout Fix (Nov 2024)
 - **Issue**: Page experienced layout shift on initial load - loading screen had different structure than actual content
 - **Root cause**: Loading spinner showed full-page centered layout, then jumped to Navbar + sidebar layout when loaded
