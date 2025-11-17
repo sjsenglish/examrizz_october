@@ -297,8 +297,22 @@
   - Content titles: "Video Walkthrough", "Practice Questions", "Study Notes (PDF)"
   - Question navigation centered (no longer left-aligned with title)
 - **Purpose**: Gives primary focus to the learning content with chat assistant on the side
+- **Video Player Fix** (Nov 2024):
+  - VideoPlayer component now detects URL type (YouTube vs. direct video file)
+  - **YouTube URLs**: Rendered using ReactPlayer with iframe
+  - **Direct video URLs** (.mp4, .mov, .webm, etc.): Rendered using native HTML5 `<video>` element
+  - Custom controls work with both video types
+  - onProgress and onEnded callbacks maintained for both implementations
+  - Fixes playback issues with S3-hosted .mov files
+- **Progress Tracking Fix** (Nov 2024):
+  - **Issue**: Supabase queries using `.single()` threw 406 errors when no progress record existed
+  - **Solution**: Removed `.single()` from all progress queries and handle empty arrays gracefully
+  - Affected functions: `fetchProgressData`, `trackPdfViewed`, `handleVideoProgress`, `handleVideoEnded`
+  - Now returns default values when no progress record exists instead of throwing errors
+  - Prevents console error spam and improves user experience
 - **Files**:
   - Page: `app/spec-point-session/page.tsx`
+  - Video component: `components/VideoPlayer.tsx`
   - Styles: `app/spec-point-session/spec-point-session.css`
 - **Questions Integration** (Nov 2024):
   - Questions loaded from database via `/api/lessons/[lessonId]/questions` endpoint

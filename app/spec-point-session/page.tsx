@@ -275,16 +275,18 @@ function SpecPointSessionContent() {
       setProgressLoading(true);
       try {
         // Fetch user progress (video_watched, pdf_viewed)
-        const { data: progress, error: progressError } = await supabase
+        const { data: progressData, error: progressError } = await supabase
           .from('learn_user_progress')
           .select('video_watched, pdf_viewed')
           .eq('user_id', userId)
-          .eq('lesson_id', lessonId)
-          .single();
+          .eq('lesson_id', lessonId);
 
-        if (progressError && progressError.code !== 'PGRST116') {
+        if (progressError) {
           console.error('Error fetching progress:', progressError);
         }
+
+        // Handle empty result (no progress record exists yet)
+        const progress = progressData && progressData.length > 0 ? progressData[0] : null;
 
         // Get all question part IDs from current questions
         const allPartIds = questions.flatMap(q => q.parts.map(p => p.id));
@@ -594,18 +596,19 @@ function SpecPointSessionContent() {
 
     try {
       // Check if progress record exists for this user and lesson
-      const { data: existingProgress, error: fetchError } = await supabase
+      const { data: progressData, error: fetchError } = await supabase
         .from('learn_user_progress')
         .select('id, pdf_viewed')
         .eq('user_id', userId)
-        .eq('lesson_id', lessonId)
-        .single();
+        .eq('lesson_id', lessonId);
 
-      if (fetchError && fetchError.code !== 'PGRST116') {
-        // PGRST116 is "not found" error, which is expected if no progress exists yet
+      if (fetchError) {
         console.error('Error fetching progress:', fetchError);
         return;
       }
+
+      // Handle empty result (no progress record exists yet)
+      const existingProgress = progressData && progressData.length > 0 ? progressData[0] : null;
 
       if (existingProgress && !existingProgress.pdf_viewed) {
         // Update existing progress record
@@ -673,17 +676,19 @@ function SpecPointSessionContent() {
     setLastProgressUpdate(currentSeconds);
 
     try {
-      const { data: existingProgress, error: fetchError } = await supabase
+      const { data: progressData, error: fetchError } = await supabase
         .from('learn_user_progress')
         .select('id, video_progress_seconds')
         .eq('user_id', userId)
-        .eq('lesson_id', lessonId)
-        .single();
+        .eq('lesson_id', lessonId);
 
-      if (fetchError && fetchError.code !== 'PGRST116') {
+      if (fetchError) {
         console.error('Error fetching progress for video tracking:', fetchError);
         return;
       }
+
+      // Handle empty result (no progress record exists yet)
+      const existingProgress = progressData && progressData.length > 0 ? progressData[0] : null;
 
       if (existingProgress) {
         // Update existing progress
@@ -727,17 +732,19 @@ function SpecPointSessionContent() {
     }
 
     try {
-      const { data: existingProgress, error: fetchError } = await supabase
+      const { data: progressData, error: fetchError } = await supabase
         .from('learn_user_progress')
         .select('id')
         .eq('user_id', userId)
-        .eq('lesson_id', lessonId)
-        .single();
+        .eq('lesson_id', lessonId);
 
-      if (fetchError && fetchError.code !== 'PGRST116') {
+      if (fetchError) {
         console.error('Error fetching progress for video completion:', fetchError);
         return;
       }
+
+      // Handle empty result (no progress record exists yet)
+      const existingProgress = progressData && progressData.length > 0 ? progressData[0] : null;
 
       if (existingProgress) {
         // Update existing progress
