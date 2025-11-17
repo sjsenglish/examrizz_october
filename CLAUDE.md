@@ -163,9 +163,10 @@
       - Positioning calculation: Grass top is at 118px from viewport bottom; wrapper bottom extends 80px below viewport; positive bottom value keeps signposts visible in grass area
     - **Background** (Updated Nov 2024): Full background SVG image
       - Image URL: Firebase storage `background-grey-updated.svg`
-      - Background applied to `.stones-track` element (scrolls with stepping stones)
+      - Background applied to `.stepping-stones-container` with `background-attachment: local`
       - Background repeats horizontally (repeat-x) so users see more as they scroll
-      - Background positioned at bottom, auto height scaling to 100%
+      - Background positioned at bottom, auto height scaling to 100% of viewport
+      - Scrolls with stepping stones content while maintaining viewport-relative sizing
       - Replaces previous grass pattern and divider line
     - Progress bar: 80% width, centered, with responsive sizing for mobile
     - Back button in top-left corner linking to `/subject-selection`
