@@ -538,9 +538,9 @@ export async function POST(request: NextRequest) {
               
               // Send chunk to client (but filter out switch commands)
               const filteredText = text
-                .replace(/\[SWITCH_CONTENT:video\]/g, '')
-                .replace(/\[SWITCH_CONTENT:questions\]/g, '')
-                .replace(/\[SWITCH_CONTENT:pdf\]/g, '');
+                .replace(/\\\[SWITCH_CONTENT:video\\\]/g, '')
+                .replace(/\\\[SWITCH_CONTENT:questions\\\]/g, '')
+                .replace(/\\\[SWITCH_CONTENT:pdf\\\]/g, '');
               
               if (filteredText) {
                 controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ 
@@ -554,9 +554,9 @@ export async function POST(request: NextRequest) {
 
           // Clean up the response to remove switch commands
           fullResponse = fullResponse
-            .replace(/\[SWITCH_CONTENT:video\]/g, '')
-            .replace(/\[SWITCH_CONTENT:questions\]/g, '')
-            .replace(/\[SWITCH_CONTENT:pdf\]/g, '');
+            .replace(/\\\[SWITCH_CONTENT:video\\\]/g, '')
+            .replace(/\\\[SWITCH_CONTENT:questions\\\]/g, '')
+            .replace(/\\\[SWITCH_CONTENT:pdf\\\]/g, '');
 
           // Save Joe's response to database
           await supabase
