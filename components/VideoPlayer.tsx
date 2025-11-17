@@ -11,8 +11,21 @@ interface VideoPlayerProps {
   onEnded?: () => void;
 }
 
+// Helper function to detect if URL is YouTube
+const isYouTubeUrl = (url: string): boolean => {
+  return url.includes('youtube.com') || url.includes('youtu.be');
+};
+
+// Helper function to detect if URL is a direct video file
+const isDirectVideoUrl = (url: string): boolean => {
+  const videoExtensions = ['.mp4', '.mov', '.webm', '.ogg', '.avi', '.mkv'];
+  const lowerUrl = url.toLowerCase();
+  return videoExtensions.some(ext => lowerUrl.includes(ext));
+};
+
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded }) => {
   const playerRef = useRef<any>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -25,6 +38,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [controlsTimeout, setControlsTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  // Determine video type
+  const isYouTube = isYouTubeUrl(videoUrl);
+  const isDirectVideo = isDirectVideoUrl(videoUrl);
 
   // Handle fullscreen changes
   useEffect(() => {
@@ -51,6 +68,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
   };
 
   const handlePlayPause = () => {
+    if (isDirectVideo && videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+    }
     setIsPlaying(!isPlaying);
     resetControlsTimeout();
   };
@@ -60,6 +84,34 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
       setPlayed(state.played);
       onProgress?.(state.played);
     }
+  };
+
+  // Handle direct video time updates
+  const handleDirectVideoTimeUpdate = () => {
+    if (videoRef.current && !seeking) {
+      const currentTime = videoRef.current.currentTime;
+      const duration = videoRef.current.duration;
+      if (duration > 0) {
+        const progress = currentTime / duration;
+        setPlayed(progress);
+        onProgress?.(progress);
+      }
+    }
+  };
+
+  // Handle direct video loaded metadata
+  const handleDirectVideoLoadedMetadata = () => {
+    if (videoRef.current) {
+      setDuration(videoRef.current.duration);
+      setIsLoading(false);
+      videoRef.current.volume = volume;
+    }
+  };
+
+  // Handle direct video ended
+  const handleDirectVideoEnded = () => {
+    setIsPlaying(false);
+    onEnded?.();
   };
 
   const handleSeekMouseDown = () => {
@@ -72,17 +124,32 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
 
   const handleSeekMouseUp = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSeeking(false);
-    playerRef.current?.seekTo(parseFloat(e.target.value));
+    const seekTime = parseFloat(e.target.value);
+
+    if (isDirectVideo && videoRef.current) {
+      videoRef.current.currentTime = seekTime * duration;
+    } else if (playerRef.current) {
+      playerRef.current.seekTo(seekTime);
+    }
   };
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVolume = parseFloat(e.target.value);
     setVolume(newVolume);
     setIsMuted(newVolume === 0);
+
+    if (isDirectVideo && videoRef.current) {
+      videoRef.current.volume = newVolume;
+    }
   };
 
   const handleToggleMute = () => {
-    setIsMuted(!isMuted);
+    const newMuted = !isMuted;
+    setIsMuted(newMuted);
+
+    if (isDirectVideo && videoRef.current) {
+      videoRef.current.muted = newMuted;
+    }
   };
 
   const handleFullscreen = async () => {
@@ -182,32 +249,44 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
         </div>
       )}
 
-      {/* React Player */}
-      <ReactPlayer
-        ref={playerRef}
-        url={videoUrl}
-        playing={isPlaying}
-        volume={volume}
-        muted={isMuted}
-        onProgress={handleProgress}
-        onDuration={handleDuration}
-        onReady={handleReady}
-        onEnded={handleEnded}
-        width="100%"
-        height="100%"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-        }}
-        config={{
-          file: {
-            attributes: {
-              controlsList: 'nodownload',
-            },
-          },
-        }}
-      />
+      {/* Video Player - YouTube or Direct Video */}
+      {isYouTube ? (
+        <ReactPlayer
+          ref={playerRef}
+          url={videoUrl}
+          playing={isPlaying}
+          volume={volume}
+          muted={isMuted}
+          onProgress={handleProgress}
+          onDuration={handleDuration}
+          onReady={handleReady}
+          onEnded={handleEnded}
+          width="100%"
+          height="100%"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+          }}
+        />
+      ) : (
+        <video
+          ref={videoRef}
+          src={videoUrl}
+          onTimeUpdate={handleDirectVideoTimeUpdate}
+          onLoadedMetadata={handleDirectVideoLoadedMetadata}
+          onEnded={handleDirectVideoEnded}
+          onCanPlay={() => setIsLoading(false)}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+          }}
+        />
+      )}
 
       {/* Custom Controls */}
       <div
