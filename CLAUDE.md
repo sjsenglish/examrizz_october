@@ -9,6 +9,17 @@
 - Gather all necessary information before starting implementation
 - Ensure full understanding of requirements before proceeding with code changes
 
+## Learn Joe Prompt (Updated Nov 2024)
+- **Teaching Style**: Joe is a no-nonsense, direct A-level maths tutor
+- **Core Approach**: Clear explanation and worked examples - efficiency over encouragement
+- **Voice**: Direct, concise, fact-based. No fluff, minimal praise ("Correct" is sufficient)
+- **Response Style**: Short sentences, step-by-step problem solving, quick understanding checks
+- **Content Switching**: Proactively switches students between video/questions/PDF when appropriate
+- **Intervention Logic**: Monitors conversation patterns and redirects when stuck or mismatched difficulty
+- **Exam Preparation**: Focuses on time management, showing working, and exam technique
+- **Escalation**: Knows limits and directs to Discord community when needed
+- **Implementation**: Located in `/app/api/chat/learn/route.ts` as `JOE_SYSTEM_PROMPT` constant
+
 ## Critical Auth Flow Information (Updated Nov 2024)
 - **DO NOT** add validation in login/signup pages that signs out users during OAuth callbacks
 - OAuth users are automatically created by Supabase - let the process complete
