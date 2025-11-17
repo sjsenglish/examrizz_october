@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
+import ProgressDashboard from '@/components/ProgressDashboard';
 import './maths-demo.css';
 
 // Spec point type definition
@@ -94,6 +95,7 @@ export default function MathsDemoPage() {
   const [isDragging, setIsDragging] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showDashboard, setShowDashboard] = useState(false);
 
   // Filter spec points based on search query (exclude blended blocks)
   const filteredSpecs = specPoints.filter(spec => {
@@ -293,6 +295,23 @@ export default function MathsDemoPage() {
           </svg>
           Back
         </Link>
+
+        {/* Dashboard Folder Icon - Top Right */}
+        <button
+          onClick={() => setShowDashboard(true)}
+          className="dashboard-icon-button"
+          aria-label="Open progress dashboard"
+        >
+          <Image
+            src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Ffolder_blue.svg?alt=media&token=3f5b15d2-6e3c-4679-aa98-3d8bc86e4aff"
+            alt="Dashboard"
+            width={50}
+            height={50}
+          />
+        </button>
+
+        {/* Progress Dashboard Modal */}
+        <ProgressDashboard isOpen={showDashboard} onClose={() => setShowDashboard(false)} />
 
         {/* Search Bar */}
         <div className="search-bar-wrapper">
