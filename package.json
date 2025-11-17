@@ -29,6 +29,7 @@
     "dompurify": "^3.3.0",
     "dotenv": "^17.2.3",
     "framer-motion": "^12.23.22",
+    "katex": "^0.16.25",
     "mammoth": "^1.11.0",
     "mathjs": "^15.1.0",
     "next": "^15.5.4",
@@ -44,6 +45,8 @@
     "react-pdf": "^10.2.0",
     "react-player": "^3.4.0",
     "redis": "^5.9.0",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
     "stripe": "^19.2.0",
     "tailwindcss": "^4.1.13",
     "typescript": "^5.9.3"

@@ -3,6 +3,9 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import 'katex/dist/katex.min.css';
 import { supabase } from '@/lib/supabase-client';
 import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
@@ -980,7 +983,12 @@ function SpecPointSessionContent() {
                       {submissionState.showSolution && part.solutionSteps && (
                         <div className="solution-display">
                           <h4>Solution:</h4>
-                          <ReactMarkdown>{part.solutionSteps}</ReactMarkdown>
+                          <ReactMarkdown
+                            remarkPlugins={[remarkMath]}
+                            rehypePlugins={[rehypeKatex]}
+                          >
+                            {part.solutionSteps}
+                          </ReactMarkdown>
                         </div>
                       )}
                     </div>
@@ -1166,7 +1174,12 @@ function SpecPointSessionContent() {
                     <div key={message.id} className={`joe-message ${message.role}`}>
                       <div className="joe-message-content">
                         {message.role === 'assistant' ? (
-                          <ReactMarkdown>{message.content}</ReactMarkdown>
+                          <ReactMarkdown
+                            remarkPlugins={[remarkMath]}
+                            rehypePlugins={[rehypeKatex]}
+                          >
+                            {message.content}
+                          </ReactMarkdown>
                         ) : (
                           message.content
                         )}
