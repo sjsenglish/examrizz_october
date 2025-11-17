@@ -151,13 +151,13 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
             transform: 'translate(-50%, -50%)'
           }}
         >
-          <Link href="/competition" className="block">
+          <Link href="/competition" className="block pointer-events-none">
             <Image
               src="/icons/learn.svg"
               alt="LEARN"
               width={140} /* 75% of 186 -> 140 */
               height={140} /* 75% of 186 -> 140 */
-              className="drop-shadow-lg"
+              className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
             />
           </Link>
         </div>
