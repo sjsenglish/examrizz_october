@@ -153,9 +153,11 @@ export default function ProgressDashboard({ isOpen, onClose }: DashboardProps) {
         const chapterNumber = parseInt(chapterNum);
 
         // Get all lessons for this chapter's spec points
-        const chapterLessons = allLessons?.filter(lesson =>
-          specCodes.includes(lesson.learn_spec_points?.code || '')
-        ) || [];
+        const chapterLessons = allLessons?.filter(lesson => {
+          const specPoint = lesson.learn_spec_points as any;
+          const code = Array.isArray(specPoint) ? specPoint[0]?.code : specPoint?.code;
+          return specCodes.includes(code || '');
+        }) || [];
 
         const totalChapterLessons = chapterLessons.length;
 
@@ -185,11 +187,12 @@ export default function ProgressDashboard({ isOpen, onClose }: DashboardProps) {
         for (const progress of recentLessons) {
           const lesson = allLessons?.find(l => l.id === progress.lesson_id);
           if (lesson) {
-            const specCode = lesson.learn_spec_points?.code || '';
+            const specPoint = lesson.learn_spec_points as any;
+            const specCode = Array.isArray(specPoint) ? specPoint[0]?.code : specPoint?.code;
             const timeAgo = getTimeAgo(new Date(progress.created_at));
             recentActivity.push({
               type: 'lesson',
-              title: `Completed ${specCode} lesson`,
+              title: `Completed ${specCode || 'Unknown'} lesson`,
               time: timeAgo
             });
           }
