@@ -40,7 +40,7 @@
   max-height: 90vh;
   overflow-y: auto;
   animation: slideInModal 0.3s ease;
-  padding: 90px 80px !important;
+  padding: 70px 60px !important;
 }
 
 @keyframes slideInModal {
@@ -95,7 +95,7 @@
   display: grid;
   grid-template-columns: 3fr 1fr;
   grid-template-rows: auto auto;
-  gap: 28px;
+  gap: 24px;
   width: 100%;
 }
 
@@ -105,7 +105,7 @@
   grid-row: 1 / 2;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 28px;
+  gap: 24px;
 }
 
 /* Bottom left section - spans first column, second row, contains 2 boxes SIDE BY SIDE */
@@ -114,7 +114,7 @@
   grid-row: 2 / 3;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 28px;
+  gap: 24px;
 }
 
 /* Right section - spans second column, both rows */
@@ -128,10 +128,10 @@
   background-color: #FFFFFF;
   border: 1px solid #000000;
   border-radius: 12px;
-  padding: 32px !important;
+  padding: 26px !important;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -217,10 +217,10 @@
   background-color: #FFFFFF;
   border: 1px solid #000000;
   border-radius: 8px;
-  padding: 16px 20px !important;
+  padding: 14px 18px !important;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
   flex: 1;
   min-width: 100px;
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
@@ -335,7 +335,7 @@
   .progress-modal-v2 {
     width: 95%;
     max-height: 95vh;
-    padding: 50px 40px !important;
+    padding: 45px 35px !important;
   }
 
   .progress-top-section-v2 {
@@ -365,20 +365,20 @@
 
 @media (max-width: 480px) {
   .progress-modal-v2 {
-    padding: 40px 30px !important;
+    padding: 35px 25px !important;
   }
 
   .progress-main-grid-v2 {
-    gap: 12px;
+    gap: 16px;
   }
 
   .progress-top-section-v2,
   .progress-bottom-left-v2 {
-    gap: 12px;
+    gap: 16px;
   }
 
   .progress-metric-card-v2 {
-    padding: 24px !important;
+    padding: 20px !important;
   }
 
   .progress-card-title-v2 {
