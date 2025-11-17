@@ -12,6 +12,9 @@ interface Referral {
   status: string;
   created_at: string;
   completed_at: string | null;
+  reward_status: string;
+  referrer_rewarded_at: string | null;
+  referred_rewarded_at: string | null;
 }
 
 interface ReferralStats {
@@ -152,9 +155,21 @@ export default function ReferralsPage() {
                     <span className="friend-email">{referral.referred_email}</span>
                     <span className="friend-date">{formatDate(referral.created_at)}</span>
                   </div>
-                  <span className={`friend-status ${referral.status}`}>
-                    {referral.status === 'completed' ? '✓ Completed' : '⏳ Pending'}
-                  </span>
+                  <div className="friend-status-wrapper">
+                    <span className={`friend-status ${referral.status}`}>
+                      {referral.status === 'completed' ? '✓ Completed' : '⏳ Pending'}
+                    </span>
+                    {referral.reward_status === 'completed' && referral.referrer_rewarded_at && (
+                      <span className="reward-badge">
+                        🎁 +1 Month Plus
+                      </span>
+                    )}
+                    {referral.status === 'pending' && referral.reward_status === 'pending' && (
+                      <span className="reward-pending">
+                        Waiting for Discord
+                      </span>
+                    )}
+                  </div>
                 </div>
               ))
             )}
