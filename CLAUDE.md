@@ -156,6 +156,14 @@
     - Each toast links to its specific lesson session page
     - Hover effect: scale(1.1) on all toast icons
     - Toast arrangement: Flex layout with wrapping, max-width 154px per group (Nov 2024)
+    - **Lesson Completion Icons** (Added Nov 2024):
+      - **Incomplete lessons**: Display default gray toast icon (`Group 2376.svg`)
+      - **Completed lessons** (video watched): Display colored icons based on chapter
+        - Odd chapters (1, 3, 5, 7): Purple completion icon (`toast-purple.svg`)
+        - Even chapters (2, 4, 6, 8, 10): Blue completion icon (`toast-blue.svg`)
+      - Completion status fetched from `learn_user_progress` table
+      - Lessons identified by combining spec point ID and lesson number (e.g., "1.1-1", "7.2-2")
+      - Progress data only fetched for logged-in users
   - **Styling Details**:
     - **Vertical positioning** (Updated Nov 2024): Stepping stones moved down 10% on page for better visual balance
       - Desktop padding-top: 260px (increased from 180px)
@@ -172,6 +180,16 @@
       - Mobile: bottom: 148px (adjusted for 120px signpost height)
       - **DO NOT use negative values** - they push signposts below viewport making them invisible
       - Positioning calculation: Grass top is at 118px from viewport bottom; wrapper bottom extends 80px below viewport; positive bottom value keeps signposts visible in grass area
+      - **Signpost Images** (Updated Nov 2024):
+        - Even chapters (2, 4, 6, 8, 10): Blue empty flagpost (`flagpost-blue-empty.svg`)
+        - Odd chapters (1, 3, 5, 7): Purple empty flagpost (`flagpost-purple-empty.svg`)
+        - Dimensions: 120x150px (desktop), 105x135px (tablet), 90x120px (mobile)
+      - **Signpost Text Overlay** (Added Nov 2024):
+        - Chapter number and title displayed as text overlay on signpost images
+        - Chapter titles mapping: 1=Proof, 2=Algebra and Functions, 3=Coordinate Geometry, 4=Binomial Expansion, 5=Trigonometry, 6=Exponentials and Logarithms, 7=Differentiation, 8=Integration, 10=Vectors
+        - Chapter number: Madimi One font, 28px (desktop), 24px (tablet), 20px (mobile), white with text shadow
+        - Chapter title: Figtree font, 11px (desktop), 10px (tablet), 9px (mobile), white with text shadow, word-wrapped
+        - Text positioned at 25% from top of signpost, centered horizontally
     - **Background** (Updated Nov 2024): Full background SVG image
       - Image URL: Firebase storage `background-grey-updated.svg`
       - Background applied to `.stepping-stones-container` with `background-attachment: local`
