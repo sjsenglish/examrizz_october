@@ -681,26 +681,36 @@
 
 ## Usage Tracking and Limits (Updated Nov 2024)
 
-### Free Tier - Message-Based Limits
-- **Free users have separate message limits per service** (defined in `lib/usage-tracking.ts`):
-  - **AskBo Chat**: 5 messages per month
-  - **Interview Chat**: 5 messages per month
-  - **Total**: 10 messages sent + 10 responses received per month
+### Message-Based Limits Per Tier
+- **All tiers have message limits per service** (defined in `lib/usage-tracking.ts`):
+  - **Free Tier**:
+    - **AskBo Chat**: 5 messages per month
+    - **Interview Chat**: 5 messages per month
+    - **Total**: 10 messages sent + 10 responses received per month
+  - **Plus Tier**:
+    - **AskBo Chat**: 30 messages per month
+    - **Interview Chat**: 30 messages per month
+    - **Total**: 60 messages sent + 60 responses received per month
+  - **Max Tier**:
+    - **Unlimited messages** (cost-based limits apply instead)
 
-### Plus/Max Tiers - Cost-Based Limits
-- **Monthly Cost Limits** (defined in `lib/usage-tracking.ts`):
-  - Plus tier: $6.00 per month
-  - Max tier: $12.00 per month
+### Monthly Resets
+- **Message counts reset at the start of each month** (based on `month_year` field)
+- **Applies to all users** regardless of when they joined (only current month counts)
+- Previous months' usage does not carry over
+
+### Max Tier - Cost-Based Limits
+- **Max tier users only**: $12.00 per month cost limit (defined in `lib/usage-tracking.ts`)
 - **Important**: Limits are **COMBINED** for ALL services (AskBo, Interview prep, etc.) per user per month
   - Not separate limits per service
   - All AI interactions count toward the single monthly cost limit
 
 ### Implementation Details
-- **Free users**:
+- **Free and Plus users**:
   - Use `canSendMessage(userId, service)` to check message limits before request
   - Use `recordMessageUsage(userId, service)` to track message after response
-  - No cost tracking for free users
-- **Plus/Max users**:
+  - No cost tracking for free/plus users
+- **Max users**:
   - Use `canMakeRequest(userId, estimatedInputTokens, estimatedOutputTokens)` for cost checks
   - Use `recordUsage(userId, service, inputTokens, outputTokens)` for cost tracking
   - Unlimited messages as long as cost limit not exceeded
@@ -713,13 +723,13 @@
      - Logs warning when overage is detected with exact overage amount
 
 - **Key Functions**:
-  - `canSendMessage(userId, service)`: Check message limits for free users
-  - `recordMessageUsage(userId, service)`: Record message usage for free users
-  - `canMakeRequest()`: Pre-flight check before allowing AI requests (Plus/Max)
-  - `recordUsage()`: Records actual token usage after completion (Plus/Max)
-  - `verifyUsageWithinLimit()`: Post-recording verification to catch race conditions
-  - `getMonthlyUsage()`: Gets current month's total usage for a user
-  - `getMonthlyMessageCount(userId, service)`: Gets message count for free users
+  - `canSendMessage(userId, service)`: Check message limits for free and plus users
+  - `recordMessageUsage(userId, service)`: Record message usage for free and plus users
+  - `canMakeRequest()`: Pre-flight check before allowing AI requests (Max tier only)
+  - `recordUsage()`: Records actual token usage after completion (Max tier only)
+  - `verifyUsageWithinLimit()`: Post-recording verification to catch race conditions (Max tier only)
+  - `getMonthlyUsage()`: Gets current month's total usage for a user (Max tier only)
+  - `getMonthlyMessageCount(userId, service)`: Gets message count for free and plus users
 
 ## Discord Ticket Enhancement (Updated Nov 2024)
 - **Discord ID and Username in Tickets**: All Discord tickets now **require** user's Discord username
