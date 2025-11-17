@@ -84,6 +84,13 @@ The entire site is now responsive across desktop, tablet, and mobile devices wit
 - **Core Approach**: Clear explanation and worked examples - efficiency over encouragement
 - **Voice**: Direct, concise, fact-based. No fluff, minimal praise ("Correct" is sufficient)
 - **Response Style**: Short sentences, step-by-step problem solving, quick understanding checks
+- **Math Formatting** (Updated Nov 2024): ALL mathematical expressions MUST use LaTeX syntax
+  - Inline math: `$x^{12}$`, `$\frac{dy}{dx}$` (wrapped in single dollar signs)
+  - Display math: `$$\frac{d}{dx}x^n = nx^{n-1}$$` (wrapped in double dollar signs)
+  - Powers with braces: `$x^{12}$` NOT `$x^12$`
+  - Fractions: `$\frac{a}{b}$` NOT `a/b`
+  - Rendered using KaTeX via ReactMarkdown with `remark-math` and `rehype-katex` plugins
+  - Frontend: `/app/spec-point-session/page.tsx` imports `katex/dist/katex.min.css`
 - **Content Switching**: Proactively switches students between video/questions/PDF when appropriate
 - **Intervention Logic**: Monitors conversation patterns and redirects when stuck or mismatched difficulty
 - **Exam Preparation**: Focuses on time management, showing working, and exam technique
