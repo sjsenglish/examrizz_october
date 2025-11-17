@@ -27,6 +27,28 @@
 - **Database Tables**:
   - `referral_codes`: Stores unique 8-character codes for each user (auto-generated on signup)
   - `referrals`: Tracks all referrals with status (pending/completed)
+- **Automatic Rewards System** (Added Nov 2024):
+  - **Reward**: 1 free month of Plus tier for each valid referral
+  - **Discord Verification Required**: Prevents fake accounts - referred user must connect Discord
+  - **Automatic Processing**: Rewards granted automatically when referred user connects Discord
+  - **Subscription Handling**:
+    - Free tier → Plus tier upgrade for 1 month
+    - Existing Plus → Extended by 1 month from current end date
+    - Max tier → No change (preserves Max status)
+  - **Database Functions**:
+    - `check_discord_verification()`: Verifies Discord connection via user_profiles
+    - `grant_plus_tier_reward()`: Grants/extends Plus tier subscription
+    - `process_referral_reward()`: Orchestrates reward granting with all checks
+    - `process_all_pending_referral_rewards()`: Admin function for manual processing
+  - **Triggers**:
+    - Auto-processes rewards when Discord is connected (on user_profiles UPDATE)
+    - Checks for Discord immediately when referral is created (on auth.users INSERT)
+  - **Tracking**: reward_granted, reward_granted_at, reward_type, discord_verified in referrals table
+  - **Stats**: total_successful_referrals, total_rewards_granted, last_reward_granted_at in referral_codes table
+  - **Schema File**: `database/referrals_rewards_system.sql`
+  - **API Endpoints**:
+    - POST `/api/referrals/process-rewards`: Manually trigger reward processing for user's referrals
+    - GET `/api/referrals/process-rewards`: Check pending/granted rewards status
 - **Integration**:
   - Signup page extracts `?ref=CODE` from URL and passes to auth metadata
   - Works with all signup methods (Email, Google, Discord)
@@ -35,8 +57,8 @@
 - **Files**:
   - Page: `app/referrals/page.tsx`
   - Styles: `app/referrals/referrals.css`
-  - API: `app/api/referrals/route.ts`
-  - Schema: `database/referrals_schema.sql`
+  - API: `app/api/referrals/route.ts`, `app/api/referrals/process-rewards/route.ts`
+  - Schema: `database/referrals_schema.sql`, `database/referrals_rewards_system.sql`
 
 ## Planning Mode
 - Always ask clarifying questions when in planning mode
