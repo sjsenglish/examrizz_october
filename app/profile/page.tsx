@@ -67,18 +67,31 @@ export default function ProfilePage() {
     setErrorMessage('');
 
     try {
+      // Build update object - only include username if it's not empty
+      const updateData: any = {
+        full_name: formData.full_name,
+        discord_username: formData.discord_username,
+        school: formData.school,
+        rank_in_school: formData.rank_in_school,
+      };
+
+      // Only update username if user has entered one
+      if (formData.username && formData.username.trim() !== '') {
+        updateData.username = formData.username.trim();
+      }
+
       const { error } = await supabase
         .from('user_profiles')
-        .update({
-          full_name: formData.full_name,
-          username: formData.username,
-          discord_username: formData.discord_username,
-          school: formData.school,
-          rank_in_school: formData.rank_in_school,
-        })
+        .update(updateData)
         .eq('id', profile.id);
 
-      if (error) throw error;
+      if (error) {
+        // Provide more helpful error message for unique constraint violations
+        if (error.code === '23505' || error.message.includes('duplicate') || error.message.includes('unique')) {
+          throw new Error('This username is already taken. Please choose a different one.');
+        }
+        throw error;
+      }
 
       // Refresh profile to get latest data
       await refreshProfile();
