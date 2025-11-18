@@ -17,8 +17,8 @@ export default function SignupPage() {
   const [discordConnected, setDiscordConnected] = useState(false);
   const [existingProfile, setExistingProfile] = useState<any>(null);
 
-  // Referral code from URL
-  const [referralCode, setReferralCode] = useState<string | null>(null);
+  // Referral code from URL or manual input
+  const [referralCode, setReferralCode] = useState<string>('');
 
   // Step 2 form data
   const [fullName, setFullName] = useState('');
@@ -38,7 +38,7 @@ export default function SignupPage() {
     setCurrentStep(2);
   };
 
-  // Extract referral code from URL
+  // Extract referral code from URL on mount
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const refCode = urlParams.get('ref');
@@ -166,15 +166,16 @@ export default function SignupPage() {
         }
       } else {
         // No user logged in - create new Discord account
+        const metadata: any = {};
+        if (referralCode && referralCode.trim() !== '') {
+          metadata.referral_code = referralCode.trim().toUpperCase();
+        }
+
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'discord',
           options: {
             redirectTo: `${window.location.origin}/signup${referralCode ? `?ref=${referralCode}` : ''}`,
-            ...(referralCode && {
-              data: {
-                referral_code: referralCode
-              }
-            })
+            ...(Object.keys(metadata).length > 0 && { data: metadata })
           }
         });
         
@@ -206,15 +207,16 @@ export default function SignupPage() {
       setError('');
       setSuccessMessage('Signing in with Discord...');
       
+      const metadata: any = {};
+      if (referralCode && referralCode.trim() !== '') {
+        metadata.referral_code = referralCode.trim().toUpperCase();
+      }
+
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'discord',
         options: {
           redirectTo: `${window.location.origin}/signup${referralCode ? `?ref=${referralCode}` : ''}`,
-          ...(referralCode && {
-            data: {
-              referral_code: referralCode
-            }
-          })
+          ...(Object.keys(metadata).length > 0 && { data: metadata })
         }
       });
       
@@ -235,15 +237,16 @@ export default function SignupPage() {
 
   const handleGoogleLogin = async () => {
     try {
+      const metadata: any = {};
+      if (referralCode && referralCode.trim() !== '') {
+        metadata.referral_code = referralCode.trim().toUpperCase();
+      }
+
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/signup${referralCode ? `?ref=${referralCode}` : ''}`,
-          ...(referralCode && {
-            data: {
-              referral_code: referralCode
-            }
-          })
+          ...(Object.keys(metadata).length > 0 && { data: metadata })
         }
       });
       
@@ -292,14 +295,20 @@ export default function SignupPage() {
       setSuccessMessage('Creating your account...');
 
       try {
+        // Prepare metadata - only include referral code if provided
+        const metadata: any = {
+          email: email
+        };
+
+        if (referralCode && referralCode.trim() !== '') {
+          metadata.referral_code = referralCode.trim().toUpperCase();
+        }
+
         const { data, error: authError } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            data: {
-              email: email,
-              ...(referralCode && { referral_code: referralCode })
-            }
+            data: metadata
           }
         });
 
@@ -718,6 +727,27 @@ export default function SignupPage() {
                   fontSize: '16px',
                   outline: 'none',
                   boxSizing: 'border-box'
+                }}
+              />
+            </div>
+
+            {/* Referral code input */}
+            <div style={{ marginBottom: '20px' }}>
+              <input
+                type="text"
+                value={referralCode}
+                onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                placeholder="Referral code (optional)"
+                style={{
+                  width: '100%',
+                  padding: '16px',
+                  border: '1px solid #D1D5DB',
+                  borderRadius: '6px',
+                  background: '#FFFFFF',
+                  fontSize: '16px',
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                  textTransform: 'uppercase'
                 }}
               />
             </div>
