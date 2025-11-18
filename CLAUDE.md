@@ -9,7 +9,7 @@
 - **Design Approach**: Mix of SVG images and custom-built functional sections on white background
 - **Page Layout**: All elements positioned 10% lower (120px top padding) with unified 70% width
 - **SVG Images Used** (70% width, centered):
-  - Header: `Group 2795.svg` - Title and introduction section
+  - Header: `Group 2797.svg` - Title and introduction section (Updated Nov 2024)
   - Details Section 1: `Group 2792.svg` - Information section
   - Details Section 2: `Group 2791.svg` - Terms section
 - **Custom-Built Sections** (70% width, centered):
