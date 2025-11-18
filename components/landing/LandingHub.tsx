@@ -89,15 +89,13 @@ export const LandingHub: React.FC<LandingHubProps> = ({ className = '' }) => {
 
         {/* LEARN - bottom-right */}
         <div className="icon-learn">
-          <Link href="/competition" className="block">
-            <Image
-              src="/icons/learn.svg"
-              alt="LEARN"
-              width={140}
-              height={140}
-              className="drop-shadow-lg"
-            />
-          </Link>
+          <Image
+            src="/icons/learn.svg"
+            alt="LEARN"
+            width={140}
+            height={140}
+            className="drop-shadow-lg opacity-40 grayscale cursor-not-allowed"
+          />
         </div>
 
         {/* SEARCH - between video and learn icons on the right edge */}

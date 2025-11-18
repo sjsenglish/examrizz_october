@@ -230,7 +230,7 @@ The entire site is now responsive across desktop, tablet, and mobile devices wit
   - Big clouds: left-[20%] top-[30%], right-[20%] top-[45%]
   - Medium clouds: left-[38%] top-[25%], right-[38%] top-[27%]
 - **Teacher icon**: Greyed out with opacity-40 and grayscale, made non-clickable (Nov 2024)
-- **Learn icon**: Fully active and clickable, links to `/competition` page (restored Nov 2024)
+- **Learn icon**: Greyed out with opacity-40 and grayscale, made non-clickable (disabled Nov 2024)
 - **Video icon**: Greyed out with opacity-40 and grayscale, made non-clickable (Nov 2024)
 - **Arena icon**: Greyed out with opacity-40 and grayscale, made non-clickable (locked Nov 2024)
 
