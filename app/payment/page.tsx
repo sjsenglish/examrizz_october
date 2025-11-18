@@ -289,26 +289,26 @@ function PaymentContent() {
                     onClick={handleManageBilling}
                     style={{
                       padding: '10px 20px',
-                      backgroundColor: '#007bff',
-                      color: 'white',
-                      border: '1px solid #0056b3',
+                      backgroundColor: '#DBF7F9',
+                      color: '#000000',
+                      border: '1px solid #B3F0F2',
                       borderRadius: '6px',
                       cursor: 'pointer',
                       fontFamily: "'Figtree', sans-serif",
                       fontSize: '14px',
                       fontWeight: '500',
                       transition: 'all 0.2s ease',
-                      boxShadow: '0 2px 4px rgba(0, 123, 255, 0.2)'
+                      boxShadow: '0 2px 4px rgba(179, 240, 242, 0.3)'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#0056b3';
+                      e.currentTarget.style.backgroundColor = '#B3F0F2';
                       e.currentTarget.style.transform = 'translateY(-1px)';
-                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 123, 255, 0.3)';
+                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(179, 240, 242, 0.4)';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = '#007bff';
+                      e.currentTarget.style.backgroundColor = '#DBF7F9';
                       e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 123, 255, 0.2)';
+                      e.currentTarget.style.boxShadow = '0 2px 4px rgba(179, 240, 242, 0.3)';
                     }}
                   >
                     💳 Manage Billing
@@ -320,26 +320,26 @@ function PaymentContent() {
                     onClick={handleCancelSubscription}
                     style={{
                       padding: '10px 20px',
-                      backgroundColor: '#dc3545',
-                      color: 'white',
-                      border: '1px solid #c82333',
+                      backgroundColor: '#FADEE8',
+                      color: '#000000',
+                      border: '1px solid #F5C5D6',
                       borderRadius: '6px',
                       cursor: 'pointer',
                       fontFamily: "'Figtree', sans-serif",
                       fontSize: '14px',
                       fontWeight: '500',
                       transition: 'all 0.2s ease',
-                      boxShadow: '0 2px 4px rgba(220, 53, 69, 0.2)'
+                      boxShadow: '0 2px 4px rgba(245, 197, 214, 0.3)'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#c82333';
+                      e.currentTarget.style.backgroundColor = '#F5C5D6';
                       e.currentTarget.style.transform = 'translateY(-1px)';
-                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(220, 53, 69, 0.3)';
+                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(245, 197, 214, 0.4)';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = '#dc3545';
+                      e.currentTarget.style.backgroundColor = '#FADEE8';
                       e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 2px 4px rgba(220, 53, 69, 0.2)';
+                      e.currentTarget.style.boxShadow = '0 2px 4px rgba(245, 197, 214, 0.3)';
                     }}
                   >
                     ❌ Cancel Subscription
