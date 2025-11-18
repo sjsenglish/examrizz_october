@@ -56,13 +56,26 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION create_referral_code_for_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  -- Generate and insert referral code for the new user
-  INSERT INTO referral_codes (user_id, referral_code)
-  VALUES (NEW.id, generate_referral_code());
+  -- Wrap in exception handling to prevent user creation failure
+  BEGIN
+    -- Generate and insert referral code for the new user
+    INSERT INTO referral_codes (user_id, referral_code)
+    VALUES (NEW.id, generate_referral_code());
+
+    RAISE LOG 'Referral code created for user %', NEW.id;
+
+  EXCEPTION
+    WHEN unique_violation THEN
+      -- User already has a referral code (shouldn't happen, but handle it)
+      RAISE WARNING 'Referral code already exists for user %', NEW.id;
+    WHEN OTHERS THEN
+      -- Log error but don't fail user creation
+      RAISE WARNING 'Failed to create referral code for user %: % (SQLSTATE: %)', NEW.id, SQLERRM, SQLSTATE;
+  END;
 
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Trigger to automatically create referral code when user signs up
 DROP TRIGGER IF EXISTS trigger_create_referral_code ON auth.users;
@@ -78,30 +91,54 @@ DECLARE
   referrer_user_id UUID;
   ref_code TEXT;
 BEGIN
-  -- Check if user metadata contains referral code
-  ref_code := NEW.raw_user_meta_data->>'referral_code';
+  -- Wrap everything in exception handling so user creation never fails
+  BEGIN
+    -- Check if user metadata contains referral code
+    ref_code := NEW.raw_user_meta_data->>'referral_code';
 
-  IF ref_code IS NOT NULL THEN
-    -- Find the referrer user ID
-    SELECT user_id INTO referrer_user_id
-    FROM referral_codes
-    WHERE referral_code = ref_code;
+    -- Only proceed if referral code exists
+    IF ref_code IS NOT NULL AND ref_code != '' THEN
+      -- Find the referrer user ID
+      SELECT user_id INTO referrer_user_id
+      FROM referral_codes
+      WHERE referral_code = ref_code;
 
-    IF referrer_user_id IS NOT NULL THEN
-      -- Create referral record
-      INSERT INTO referrals (referrer_id, referred_user_id, referred_email, referral_code, status)
-      VALUES (referrer_user_id, NEW.id, NEW.email, ref_code, 'completed');
+      -- Only create referral record if valid referrer found
+      IF referrer_user_id IS NOT NULL THEN
+        -- Create referral record with PENDING status (not completed)
+        -- Status changes to 'completed' when referred user adds Discord username
+        INSERT INTO referrals (
+          referrer_id,
+          referred_user_id,
+          referred_email,
+          referral_code,
+          status
+        )
+        VALUES (
+          referrer_user_id,
+          NEW.id,
+          NEW.email,
+          ref_code,
+          'pending'
+        );
 
-      -- Update completed_at timestamp
-      UPDATE referrals
-      SET completed_at = NOW()
-      WHERE referred_user_id = NEW.id AND referral_code = ref_code;
+        RAISE LOG 'Referral tracked: user % referred by % using code %', NEW.id, referrer_user_id, ref_code;
+      ELSE
+        -- Invalid referral code - log but don't fail
+        RAISE WARNING 'Invalid referral code % for user %', ref_code, NEW.id;
+      END IF;
     END IF;
-  END IF;
 
+  EXCEPTION
+    WHEN OTHERS THEN
+      -- Log error but NEVER fail user creation
+      RAISE WARNING 'Failed to track referral for user %: % (SQLSTATE: %)', NEW.id, SQLERRM, SQLSTATE;
+  END;
+
+  -- Always return NEW to allow user creation to proceed
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Trigger to track referrals on user signup
 DROP TRIGGER IF EXISTS trigger_track_referral_signup ON auth.users;
