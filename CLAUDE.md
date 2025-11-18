@@ -47,6 +47,12 @@
   - `process_referral_rewards(referral_id)`: Processes rewards for both users
   - `check_referral_completion()`: Trigger that auto-applies rewards when Discord username added
   - `admin_process_pending_referrals()`: Admin function to manually process stuck referrals
+- **Error Handling** (Fixed Nov 2024):
+  - Database triggers use exception handling to prevent referral errors from blocking user signups
+  - Invalid referral codes log warnings but don't fail user creation
+  - Referral tracking failures are logged but user account is still created successfully
+  - Fixed: Referrals now start with `status='pending'` instead of `'completed'`
+  - Fix applied in: `database/FIX_REFERRAL_SIGNUP_ERROR.sql`
 - **Integration**:
   - Signup page extracts `?ref=CODE` from URL and passes to auth metadata
   - Works with all signup methods (Email, Google, Discord)
