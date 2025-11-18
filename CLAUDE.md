@@ -48,11 +48,19 @@
   - `check_referral_completion()`: Trigger that auto-applies rewards when Discord username added
   - `admin_process_pending_referrals()`: Admin function to manually process stuck referrals
 - **Error Handling** (Fixed Nov 2024):
-  - Database triggers use exception handling to prevent referral errors from blocking user signups
+  - **CRITICAL FIX**: All database triggers now have exception handling to prevent user signup failures
+  - Database triggers that could block signups (Fixed Nov 2024):
+    - `handle_new_user()`: Creates user profile - has exception handling
+    - `handle_new_user_subscription()`: Creates subscription - **NOW HAS exception handling** (was blocking signups)
+    - `create_referral_code_for_user()`: Creates referral code - has exception handling
+    - `track_referral_signup()`: Tracks referrals - has exception handling + includes `reward_status` field
   - Invalid referral codes log warnings but don't fail user creation
   - Referral tracking failures are logged but user account is still created successfully
+  - All triggers use `ON CONFLICT DO NOTHING/UPDATE` to handle race conditions gracefully
   - Fixed: Referrals now start with `status='pending'` instead of `'completed'`
-  - Fix applied in: `database/FIX_REFERRAL_SIGNUP_ERROR.sql`
+  - Fixes applied in:
+    - `database/FIX_REFERRAL_SIGNUP_ERROR.sql` (initial fix)
+    - `database/FIX_REFERRAL_SIGNUP_COMPLETE.sql` (comprehensive fix - Nov 2024)
 - **Integration**:
   - Signup page extracts `?ref=CODE` from URL and passes to auth metadata
   - Works with all signup methods (Email, Google, Discord)
