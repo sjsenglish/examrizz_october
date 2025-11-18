@@ -752,29 +752,30 @@ export default function SignupPage() {
               />
             </div>
 
-            {/* Next Step button - replacing create account */}
+            {/* Create Account button - actually creates the account */}
             <button
-              type="button"
-              onClick={handleNextStep}
+              type="submit"
+              disabled={loading}
               style={{
                 width: '100%',
                 padding: '16px',
-                background: '#E7E6FF',
+                background: loading ? '#9CA3AF' : '#E7E6FF',
                 color: '#4338CA',
                 border: '1px solid #4338CA',
                 borderRadius: '6px',
                 fontSize: '16px',
                 fontWeight: '600',
-                cursor: 'pointer',
+                cursor: loading ? 'not-allowed' : 'pointer',
                 marginBottom: '20px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '8px'
+                gap: '8px',
+                opacity: loading ? 0.6 : 1
               }}
             >
-              Next Step
-              <span style={{ fontSize: '18px' }}>→</span>
+              {loading ? 'Creating Account...' : 'Create Account & Continue'}
+              {!loading && <span style={{ fontSize: '18px' }}>→</span>}
             </button>
           </form>
 
