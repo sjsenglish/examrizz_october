@@ -221,12 +221,15 @@ export default function StudyBookPage() {
           .eq('id', user.id)
           .single();
 
+        // Explicitly type profile to help TypeScript
+        let userProfile: any = profile;
+
         // If profile exists, use it
-        if (profile && !profileError) {
-          setUserId(profile.id as string);
-          loadConversationHistory(profile.id as string);
+        if (userProfile && !profileError) {
+          setUserId(userProfile.id);
+          loadConversationHistory(userProfile.id);
           loadUploadedFiles();
-          loadDraftVersions(profile.id as string);
+          loadDraftVersions(userProfile.id);
           loadAllUserDrafts();
           return;
         }
@@ -270,22 +273,22 @@ export default function StudyBookPage() {
             .select('*')
             .eq('id', user.id)
             .single();
-          
+
           if (existingProfile) {
-            profile = existingProfile;
+            userProfile = existingProfile;
           } else {
             // Profile creation failed completely - exit gracefully
             return;
           }
         } else {
-          profile = createdProfile;
+          userProfile = createdProfile;
         }
-        
-        if (profile) {
-          setUserId(profile.id as string);
-          loadConversationHistory(profile.id as string);
+
+        if (userProfile) {
+          setUserId(userProfile.id);
+          loadConversationHistory(userProfile.id);
           loadUploadedFiles();
-          loadDraftVersions(profile.id as string);
+          loadDraftVersions(userProfile.id);
           loadAllUserDrafts();
         }
       } catch (error) {
