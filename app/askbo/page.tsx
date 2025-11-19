@@ -364,7 +364,7 @@ export default function StudyBookPage() {
           .order('created_at', { ascending: true });
 
         if (messageHistory) {
-          const formattedMessages = messageHistory.map(msg => ({
+          const formattedMessages = messageHistory.map((msg: any) => ({
             id: msg.id,
             role: msg.role as 'user' | 'assistant',
             content: msg.content,
