@@ -455,6 +455,7 @@ export default function StudyBookPage() {
         : 1;
 
       // First, insert the new version (not marked as current yet)
+      // @ts-ignore - Supabase type inference issue
       const { data: newDraft, error: insertError } = await supabase
         .from('draft_versions')
         .insert({
@@ -559,6 +560,7 @@ export default function StudyBookPage() {
         : 1;
 
       // First, insert the new version (not marked as current yet)
+      // @ts-ignore - Supabase type inference issue
       const { data: newDraft, error: insertError } = await supabase
         .from('draft_versions')
         .insert({
@@ -1166,6 +1168,7 @@ export default function StudyBookPage() {
       if (!session) return;
 
       // Save new version
+      // @ts-ignore - Supabase type inference issue
       const { data, error } = await supabase
         .from('draft_versions')
         .insert({
@@ -1336,6 +1339,7 @@ export default function StudyBookPage() {
         }
       } else {
         // If no file, save directly to database
+        // @ts-ignore - Supabase type inference issue
         const { error } = await supabase
           .from('user_uploads')
           .insert({
