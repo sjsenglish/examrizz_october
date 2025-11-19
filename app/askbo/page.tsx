@@ -220,13 +220,13 @@ export default function StudyBookPage() {
           .select('*')
           .eq('id', user.id)
           .single();
-        
+
         // If profile exists, use it
         if (profile && !profileError) {
-          setUserId(profile.id);
-          loadConversationHistory(profile.id);
+          setUserId(profile.id as string);
+          loadConversationHistory(profile.id as string);
           loadUploadedFiles();
-          loadDraftVersions(profile.id);
+          loadDraftVersions(profile.id as string);
           loadAllUserDrafts();
           return;
         }
@@ -282,10 +282,10 @@ export default function StudyBookPage() {
         }
         
         if (profile) {
-          setUserId(profile.id);
-          loadConversationHistory(profile.id);
+          setUserId(profile.id as string);
+          loadConversationHistory(profile.id as string);
           loadUploadedFiles();
-          loadDraftVersions(profile.id);
+          loadDraftVersions(profile.id as string);
           loadAllUserDrafts();
         }
       } catch (error) {
