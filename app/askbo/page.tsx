@@ -483,14 +483,14 @@ export default function StudyBookPage() {
         .update({ is_current: false })
         .eq('user_id', user.id)
         .eq('question_number', 1)
-        .neq('id', newDraft.id);
+        .neq('id', (newDraft as any).id);
 
       // Finally, mark the new draft as current
       const { error: updateError } = await supabase
         .from('draft_versions')
         // @ts-ignore - Supabase type inference issue
         .update({ is_current: true })
-        .eq('id', newDraft.id);
+        .eq('id', (newDraft as any).id);
 
       if (updateError) {
         console.error('Error marking draft as current:', updateError);
@@ -590,14 +590,14 @@ export default function StudyBookPage() {
         .update({ is_current: false })
         .eq('user_id', user.id)
         .eq('question_number', 1)
-        .neq('id', newDraft.id);
+        .neq('id', (newDraft as any).id);
 
       // Finally, mark the new draft as current
       const { error: updateError } = await supabase
         .from('draft_versions')
         // @ts-ignore - Supabase type inference issue
         .update({ is_current: true })
-        .eq('id', newDraft.id);
+        .eq('id', (newDraft as any).id);
 
       if (updateError) {
         console.error('Error marking draft as current:', updateError);
