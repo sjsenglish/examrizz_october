@@ -207,7 +207,7 @@ export function subscribeToSubscriptionChanges(
         table: 'user_subscriptions',
         filter: `user_id=eq.${userId}`,
       },
-      (payload) => {
+      (payload: any) => {
         callback(payload.new as UserSubscription || null);
       }
     )

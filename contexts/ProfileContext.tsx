@@ -319,7 +319,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     initializeProfile();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event: any, session: any) => {
       if (!mounted) return;
       
       if (event === 'SIGNED_IN' && session?.user) {
