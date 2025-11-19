@@ -259,6 +259,7 @@ export default function StudyBookPage() {
         // Use upsert to handle race conditions (creates if not exists, ignores if exists)
         const { data: createdProfile, error: createError } = await supabase
           .from('user_profiles')
+          // @ts-ignore - Supabase type inference issue
           .upsert([newProfile], {
             onConflict: 'id',
             ignoreDuplicates: false
