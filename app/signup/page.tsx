@@ -319,9 +319,20 @@ export default function SignupPage() {
         }
 
         if (data.user) {
+          // Create user profile immediately to trigger referral code generation
+          const { error: profileError } = await supabase
+            .from('user_profiles')
+            .insert({
+              id: data.user.id,
+              email: data.user.email
+            });
+
+          if (profileError && profileError.code !== '23505') { // Ignore duplicate key errors
+            console.error('Profile creation error:', profileError);
+          }
+
           setUser(data.user);
           setSuccessMessage('Account created! Now complete your profile...');
-          // Move to Step 2 to complete profile
           setCurrentStep(2);
         }
       } catch (err) {
