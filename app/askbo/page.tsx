@@ -355,12 +355,12 @@ export default function StudyBookPage() {
         .single();
 
       if (conversation) {
-        setConversationId(conversation.id);
+        setConversationId((conversation as any).id);
 
         const { data: messageHistory } = await supabase
           .from('messages')
           .select('id, role, content, created_at')
-          .eq('conversation_id', conversation.id)
+          .eq('conversation_id', (conversation as any).id)
           .order('created_at', { ascending: true });
 
         if (messageHistory) {
