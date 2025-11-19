@@ -450,8 +450,8 @@ export default function StudyBookPage() {
         .order('version_number', { ascending: false })
         .limit(1);
 
-      const nextVersionNumber = existingDrafts && existingDrafts.length > 0 
-        ? existingDrafts[0].version_number + 1 
+      const nextVersionNumber = existingDrafts && existingDrafts.length > 0
+        ? (existingDrafts[0] as any).version_number + 1
         : 1;
 
       // First, insert the new version (not marked as current yet)
@@ -554,8 +554,8 @@ export default function StudyBookPage() {
         .order('version_number', { ascending: false })
         .limit(1);
 
-      const nextVersionNumber = existingDrafts && existingDrafts.length > 0 
-        ? existingDrafts[0].version_number + 1 
+      const nextVersionNumber = existingDrafts && existingDrafts.length > 0
+        ? (existingDrafts[0] as any).version_number + 1
         : 1;
 
       // First, insert the new version (not marked as current yet)
