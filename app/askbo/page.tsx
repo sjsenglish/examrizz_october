@@ -455,9 +455,9 @@ export default function StudyBookPage() {
         : 1;
 
       // First, insert the new version (not marked as current yet)
-      // @ts-ignore - Supabase type inference issue
       const { data: newDraft, error: insertError } = await supabase
         .from('draft_versions')
+        // @ts-ignore - Supabase type inference issue
         .insert({
           user_id: user.id,
           question_number: 1, // Default to question 1 for chat drafts
@@ -477,18 +477,18 @@ export default function StudyBookPage() {
       }
 
       // Then mark all other drafts for this question as not current
-      // @ts-ignore - Supabase type inference issue
       await supabase
         .from('draft_versions')
+        // @ts-ignore - Supabase type inference issue
         .update({ is_current: false })
         .eq('user_id', user.id)
         .eq('question_number', 1)
         .neq('id', newDraft.id);
 
       // Finally, mark the new draft as current
-      // @ts-ignore - Supabase type inference issue
       const { error: updateError } = await supabase
         .from('draft_versions')
+        // @ts-ignore - Supabase type inference issue
         .update({ is_current: true })
         .eq('id', newDraft.id);
 
@@ -562,9 +562,9 @@ export default function StudyBookPage() {
         : 1;
 
       // First, insert the new version (not marked as current yet)
-      // @ts-ignore - Supabase type inference issue
       const { data: newDraft, error: insertError } = await supabase
         .from('draft_versions')
+        // @ts-ignore - Supabase type inference issue
         .insert({
           user_id: user.id,
           question_number: 1,
@@ -584,18 +584,18 @@ export default function StudyBookPage() {
       }
 
       // Then mark all other drafts for this question as not current
-      // @ts-ignore - Supabase type inference issue
       await supabase
         .from('draft_versions')
+        // @ts-ignore - Supabase type inference issue
         .update({ is_current: false })
         .eq('user_id', user.id)
         .eq('question_number', 1)
         .neq('id', newDraft.id);
 
       // Finally, mark the new draft as current
-      // @ts-ignore - Supabase type inference issue
       const { error: updateError } = await supabase
         .from('draft_versions')
+        // @ts-ignore - Supabase type inference issue
         .update({ is_current: true })
         .eq('id', newDraft.id);
 
@@ -1172,9 +1172,9 @@ export default function StudyBookPage() {
       if (!session) return;
 
       // Save new version
-      // @ts-ignore - Supabase type inference issue
       const { data, error } = await supabase
         .from('draft_versions')
+        // @ts-ignore - Supabase type inference issue
         .insert({
           user_id: userId,
           question_number: questionNumber,
@@ -1269,9 +1269,9 @@ export default function StudyBookPage() {
 
       // If editing, update existing material
       if (editingMaterialId) {
-        // @ts-ignore - Supabase type inference issue
         const { error } = await supabase
           .from('user_uploads')
+          // @ts-ignore - Supabase type inference issue
           .update({
             category: materialForm.category,
             title: materialForm.title,
@@ -1344,9 +1344,9 @@ export default function StudyBookPage() {
         }
       } else {
         // If no file, save directly to database
-        // @ts-ignore - Supabase type inference issue
         const { error } = await supabase
           .from('user_uploads')
+          // @ts-ignore - Supabase type inference issue
           .insert({
             user_id: session.user.id,
             category: materialForm.category || null,
