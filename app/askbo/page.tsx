@@ -477,6 +477,7 @@ export default function StudyBookPage() {
       }
 
       // Then mark all other drafts for this question as not current
+      // @ts-ignore - Supabase type inference issue
       await supabase
         .from('draft_versions')
         .update({ is_current: false })
@@ -485,6 +486,7 @@ export default function StudyBookPage() {
         .neq('id', newDraft.id);
 
       // Finally, mark the new draft as current
+      // @ts-ignore - Supabase type inference issue
       const { error: updateError } = await supabase
         .from('draft_versions')
         .update({ is_current: true })
@@ -582,6 +584,7 @@ export default function StudyBookPage() {
       }
 
       // Then mark all other drafts for this question as not current
+      // @ts-ignore - Supabase type inference issue
       await supabase
         .from('draft_versions')
         .update({ is_current: false })
@@ -590,6 +593,7 @@ export default function StudyBookPage() {
         .neq('id', newDraft.id);
 
       // Finally, mark the new draft as current
+      // @ts-ignore - Supabase type inference issue
       const { error: updateError } = await supabase
         .from('draft_versions')
         .update({ is_current: true })
@@ -1265,6 +1269,7 @@ export default function StudyBookPage() {
 
       // If editing, update existing material
       if (editingMaterialId) {
+        // @ts-ignore - Supabase type inference issue
         const { error } = await supabase
           .from('user_uploads')
           .update({
