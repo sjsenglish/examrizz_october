@@ -4,6 +4,17 @@
 - **IMPORTANT**: Always update this CLAUDE.md file before every git commit
 - Include any new project conventions, patterns, or important decisions made during development
 
+## Authentication Configuration (Fixed Nov 2024)
+- **Issue**: Users were being logged out when navigating between pages (profile, referrals, etc.)
+- **Root Cause**: Supabase client configuration was missing PKCE flow and proper singleton pattern
+- **Solution Applied** (`/lib/supabase-client.ts`):
+  - Added `flowType: 'pkce'` for proper OAuth handling
+  - Implemented singleton pattern to ensure only one client instance exists
+  - Explicitly set `storage: localStorage` with custom key `examrizz-auth-token`
+  - Added global headers for consistent application identification
+- **Result**: Sessions now persist properly across all page navigations
+- **IMPORTANT**: All application code should import from `@/lib/supabase-client` for consistency
+
 ## Referrals System (Added Nov 2024, Rewards Added Nov 2024)
 - **Page**: `/referrals` - Accessible via hamburger menu in navbar
 - **Design Approach**: Mix of SVG images and custom-built functional sections on white background
