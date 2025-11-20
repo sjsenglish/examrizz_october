@@ -156,7 +156,7 @@ function SpecPointSessionContent() {
     checkAuth();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       setUser(session?.user || null);
       setUserId(session?.user?.id || null);
     });
@@ -310,12 +310,12 @@ function SpecPointSessionContent() {
             console.error('Error fetching answers:', answersError);
           } else if (answers) {
             // Count unique attempted questions
-            const attemptedPartIds = new Set(answers.map(a => a.question_part_id));
+            const attemptedPartIds = new Set(answers.map((a: any) => a.question_part_id));
             questionsAttempted = attemptedPartIds.size;
 
             // Count correct answers (only count each part once, even if multiple attempts)
             const correctPartIds = new Set(
-              answers.filter(a => a.is_correct).map(a => a.question_part_id)
+              answers.filter((a: any) => a.is_correct).map((a: any) => a.question_part_id)
             );
             questionsCorrect = correctPartIds.size;
           }

@@ -190,7 +190,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ hit }) => {
     loadUserAndUsage();
 
     // Listen for auth state changes - same as Ask Bo
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event: any, session: any) => {
       if (event === 'SIGNED_IN' && session?.user) {
         // User signed in - reload user data
         loadUserAndUsage();

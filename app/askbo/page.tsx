@@ -8,6 +8,7 @@ import ReactMarkdown from 'react-markdown';
 import Navbar from '@/components/Navbar';
 import { useProfile } from '@/contexts/ProfileContext';
 import { useSubscription } from '@/hooks/useSubscription';
+import { UserProfile } from '@/lib/auth-utils';
 import './study-book.css';
 
 interface UsageInfo {
@@ -215,11 +216,13 @@ export default function StudyBookPage() {
       const getCurrentUser = async () => {
       try {
         // First attempt: try to get existing profile
-        let { data: profile, error: profileError } = await supabase
+        const { data: profileData, error: profileError } = await supabase
           .from('user_profiles')
           .select('*')
           .eq('id', user.id)
           .single();
+
+        let profile: UserProfile | null = profileData as UserProfile | null;
         
         // If profile exists, use it
         if (profile && !profileError) {
@@ -254,11 +257,11 @@ export default function StudyBookPage() {
         }
 
         // Use upsert to handle race conditions (creates if not exists, ignores if exists)
-        const { data: createdProfile, error: createError } = await supabase
+        const { data: createdProfile, error: createError } = await (supabase as any)
           .from('user_profiles')
-          .upsert([newProfile], { 
+          .upsert([newProfile], {
             onConflict: 'id',
-            ignoreDuplicates: false 
+            ignoreDuplicates: false
           })
           .select()
           .single();
@@ -270,15 +273,15 @@ export default function StudyBookPage() {
             .select('*')
             .eq('id', user.id)
             .single();
-          
+
           if (existingProfile) {
-            profile = existingProfile;
+            profile = existingProfile as UserProfile;
           } else {
             // Profile creation failed completely - exit gracefully
             return;
           }
         } else {
-          profile = createdProfile;
+          profile = createdProfile as UserProfile | null;
         }
         
         if (profile) {
@@ -351,16 +354,16 @@ export default function StudyBookPage() {
         .single();
 
       if (conversation) {
-        setConversationId(conversation.id);
+        setConversationId((conversation as any).id);
 
         const { data: messageHistory } = await supabase
           .from('messages')
           .select('id, role, content, created_at')
-          .eq('conversation_id', conversation.id)
+          .eq('conversation_id', (conversation as any).id)
           .order('created_at', { ascending: true });
 
         if (messageHistory) {
-          const formattedMessages = messageHistory.map(msg => ({
+          const formattedMessages = (messageHistory as any[]).map(msg => ({
             id: msg.id,
             role: msg.role as 'user' | 'assistant',
             content: msg.content,
@@ -446,8 +449,8 @@ export default function StudyBookPage() {
         .order('version_number', { ascending: false })
         .limit(1);
 
-      const nextVersionNumber = existingDrafts && existingDrafts.length > 0 
-        ? existingDrafts[0].version_number + 1 
+      const nextVersionNumber = existingDrafts && (existingDrafts as any[]).length > 0
+        ? (existingDrafts as any[])[0].version_number + 1
         : 1;
 
       // First, insert the new version (not marked as current yet)
@@ -461,7 +464,7 @@ export default function StudyBookPage() {
           title: title || `Personal Statement v${nextVersionNumber}`,
           word_count: draftToSave.split(' ').length,
           is_current: false // Set to false initially
-        })
+        } as any)
         .select()
         .single();
 
@@ -472,18 +475,18 @@ export default function StudyBookPage() {
       }
 
       // Then mark all other drafts for this question as not current
-      await supabase
+      await (supabase as any)
         .from('draft_versions')
         .update({ is_current: false })
         .eq('user_id', user.id)
         .eq('question_number', 1)
-        .neq('id', newDraft.id);
+        .neq('id', (newDraft as any).id);
 
       // Finally, mark the new draft as current
-      const { error: updateError } = await supabase
+      const { error: updateError } = await (supabase as any)
         .from('draft_versions')
         .update({ is_current: true })
-        .eq('id', newDraft.id);
+        .eq('id', (newDraft as any).id);
 
       if (updateError) {
         console.error('Error marking draft as current:', updateError);
@@ -521,8 +524,8 @@ export default function StudyBookPage() {
         .single();
 
       if (draft) {
-        setCurrentPopupDraft(draft);
-        setPopupDraftContent(draft.content);
+        setCurrentPopupDraft(draft as any);
+        setPopupDraftContent((draft as any).content);
       } else {
         // No existing draft, start with empty content
         setCurrentPopupDraft(null);
@@ -550,8 +553,8 @@ export default function StudyBookPage() {
         .order('version_number', { ascending: false })
         .limit(1);
 
-      const nextVersionNumber = existingDrafts && existingDrafts.length > 0 
-        ? existingDrafts[0].version_number + 1 
+      const nextVersionNumber = existingDrafts && (existingDrafts as any[]).length > 0
+        ? (existingDrafts as any[])[0].version_number + 1
         : 1;
 
       // First, insert the new version (not marked as current yet)
@@ -565,7 +568,7 @@ export default function StudyBookPage() {
           title: currentPopupDraft?.title || `Personal Statement v${nextVersionNumber}`,
           word_count: popupDraftContent.split(' ').length,
           is_current: false // Set to false initially
-        })
+        } as any)
         .select()
         .single();
 
@@ -576,18 +579,18 @@ export default function StudyBookPage() {
       }
 
       // Then mark all other drafts for this question as not current
-      await supabase
+      await (supabase as any)
         .from('draft_versions')
         .update({ is_current: false })
         .eq('user_id', user.id)
         .eq('question_number', 1)
-        .neq('id', newDraft.id);
+        .neq('id', (newDraft as any).id);
 
       // Finally, mark the new draft as current
-      const { error: updateError } = await supabase
+      const { error: updateError } = await (supabase as any)
         .from('draft_versions')
         .update({ is_current: true })
-        .eq('id', newDraft.id);
+        .eq('id', (newDraft as any).id);
 
       if (updateError) {
         console.error('Error marking draft as current:', updateError);
@@ -1162,7 +1165,7 @@ export default function StudyBookPage() {
       if (!session) return;
 
       // Save new version
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('draft_versions')
         .insert({
           user_id: userId,
@@ -1258,7 +1261,7 @@ export default function StudyBookPage() {
 
       // If editing, update existing material
       if (editingMaterialId) {
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('user_uploads')
           .update({
             category: materialForm.category,
@@ -1332,7 +1335,7 @@ export default function StudyBookPage() {
         }
       } else {
         // If no file, save directly to database
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('user_uploads')
           .insert({
             user_id: session.user.id,

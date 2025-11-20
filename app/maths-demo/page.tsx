@@ -319,7 +319,7 @@ export default function MathsDemoPage() {
         // Create a mapping of lesson IDs to completion status
         const progressMap = new Map<string, boolean>();
         if (progressData) {
-          progressData.forEach((progress) => {
+          progressData.forEach((progress: any) => {
             progressMap.set(progress.lesson_id, progress.video_watched);
           });
         }

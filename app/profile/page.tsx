@@ -80,7 +80,7 @@ export default function ProfilePage() {
         updateData.username = formData.username.trim();
       }
 
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('user_profiles')
         .update(updateData)
         .eq('id', profile.id);

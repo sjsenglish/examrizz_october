@@ -126,7 +126,7 @@ export default function SignupPage() {
     checkAuthState();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event: any, session: any) => {
       if (event === 'SIGNED_IN' && session?.user) {
         setUser(session.user);
         // Re-check profile when user signs in
