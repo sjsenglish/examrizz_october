@@ -72,10 +72,12 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionFeatures> 
       yearly: 0
     },
     features: [
-      'Unlimited access to A level and admissions materials, including past paper and original questions',
-      'University interview questions by course',
-      'Entry-level access to personal statement advisor',
-      'Community access and support (discord)'
+      'Unlimited search of A Level and admissions materials',
+      'Limited access to university interview questions and resources by course',
+      'Entry-level access to AI personal statement advisor Ask Bo',
+      'Entry-level access to AI interview advisor Ask Gabe',
+      'One question submission per month',
+      'Community access and support'
     ],
     limits: {
       questionsPerDay: 5,
@@ -100,10 +102,10 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionFeatures> 
       yearly: 0 // No yearly option for now
     },
     features: [
-      'Premium access to personal statement advisor, with additional usage and features each month',
-      'Ask questions with real teachers (limited per month)',
-      'Premium discord features',
-      'Everything in Free'
+      'More usage for Ask Bo and Ask Gabe',
+      'More question submissions per month for real teacher feedback',
+      'Priority access to 1:1 interview support',
+      'Premium community features incl. premium workshops and materials'
     ],
     limits: {
       videoAccess: true,
@@ -127,11 +129,11 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionFeatures> 
       yearly: 0 // No yearly option for now
     },
     features: [
-      'Ultimate personal statement advisor guidance and attention',
-      'University interview guidance and support from real teachers',
-      'Early access to new features',
-      'Priority support',
-      'Everything in Plus'
+      'Unlimited usage for Ask Bo and Ask Gabe',
+      'More question submissions per month for real teacher feedback (fastest response time)',
+      'Submit your PS for real feedback from SJ (via discord)',
+      'Guaranteed 1:1 interview slot',
+      'Premium community features incl. premium workshops and materials'
     ],
     limits: {
       videoAccess: true,

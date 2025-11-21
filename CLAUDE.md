@@ -1054,6 +1054,35 @@ The entire site is now responsive across desktop, tablet, and mobile devices wit
   - `getMonthlyUsage()`: Gets current month's total usage for a user (Max tier only)
   - `getMonthlyMessageCount(userId, service)`: Gets message count for free and plus users
 
+## Subscription Plans & Pricing (Updated Nov 2024)
+- **Configuration**: Defined in `types/subscription.ts` in `SUBSCRIPTION_PLANS` constant
+- **Display**: Shown on `/payment` page with pricing cards for each tier
+- **Current Pricing**:
+  - Free: £0/forever
+  - Plus: £10/month
+  - Max: £20/month (Most Popular)
+
+### Free Tier Features
+- Unlimited search of A Level and admissions materials
+- Limited access to university interview questions and resources by course
+- Entry-level access to AI personal statement advisor Ask Bo
+- Entry-level access to AI interview advisor Ask Gabe
+- One question submission per month
+- Community access and support
+
+### Plus Tier Features
+- More usage for Ask Bo and Ask Gabe (30 messages/month per service)
+- More question submissions per month for real teacher feedback (10/month)
+- Priority access to 1:1 interview support
+- Premium community features incl. premium workshops and materials
+
+### Max Tier Features
+- Unlimited usage for Ask Bo and Ask Gabe (cost-based limit: $12/month)
+- More question submissions per month for real teacher feedback (unlimited, fastest response time)
+- Submit your PS for real feedback from SJ (via discord)
+- Guaranteed 1:1 interview slot
+- Premium community features incl. premium workshops and materials
+
 ## Discord Ticket Enhancement (Updated Nov 2024)
 - **Discord ID and Username in Tickets**: All Discord tickets now **require** user's Discord username
 - **Implementation** (Updated Nov 2024):
