@@ -96,6 +96,35 @@ export default function ProfilePage() {
       // Refresh profile to get latest data
       await refreshProfile();
 
+      // Process referral rewards if Discord username was added/updated
+      if (formData.discord_username && formData.discord_username.trim() !== '') {
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.access_token) {
+            const rewardResponse = await fetch('/api/referrals/process-rewards', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${session.access_token}`
+              }
+            });
+
+            if (rewardResponse.ok) {
+              const rewardData = await rewardResponse.json();
+              if (rewardData.processed) {
+                console.log('Referral rewards processed!', rewardData);
+                setSuccessMessage('Profile updated! Referral rewards unlocked! 🎁');
+                // Clear success message after 5 seconds for reward message
+                setTimeout(() => setSuccessMessage(''), 5000);
+                return;
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Error processing referral rewards:', error);
+          // Don't fail profile save if reward processing fails
+        }
+      }
+
       setSuccessMessage('Profile updated successfully!');
 
       // Clear success message after 3 seconds

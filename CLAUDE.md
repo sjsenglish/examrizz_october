@@ -42,18 +42,26 @@
     - **Reward badges**: "🎁 +1 Month Plus" shown when rewards are applied
     - **Pending indicator**: "Waiting for Discord" shown for incomplete referrals
     - Figtree font throughout
-- **Automatic Reward System** (Updated Nov 2024):
+- **Automatic Reward System** (Updated Nov 2024, Frontend-Triggered Nov 2024):
   - **Reward**: Both referrer and referred user get **1 month of Plus tier**
-  - **Trigger**: Rewards automatically applied when referred user adds Discord username
+  - **New Trigger Mechanism** (Nov 2024 - Frontend-Triggered):
+    - **REPLACED database triggers with frontend API calls** for more reliable processing
+    - Discord username field added to signup form (above referral code)
+    - User provides Discord username during signup (or can add later in profile)
+    - Frontend explicitly calls `/api/referrals/process-rewards` after profile creation
+    - API processes pending referrals and grants rewards to both users
+    - Better error handling and user feedback compared to database triggers
   - **Status Flow**:
     1. User signs up with referral link → referral status = `pending`
-    2. User adds Discord username → triggers `check_referral_completion()`
-    3. System grants Plus tier to both users → status = `completed`
+    2. User provides Discord username during signup (or adds it later)
+    3. Frontend calls reward processing API → grants Plus tier to both users → status = `completed`
+    4. User sees success message: "Referral rewards unlocked! 🎁"
   - **Smart Handling**:
     - Free tier users: Get Plus for 1 month
     - Active Plus users: Extended by 1 month
     - Max tier users: Keep Max (no downgrade)
   - **Prevents Double-Rewarding**: Tracks `referrer_rewarded_at` and `referred_rewarded_at` timestamps
+  - **Why Frontend-Triggered**: Database triggers weren't firing reliably on profile updates; frontend approach provides immediate feedback and better error handling
 - **Database Tables**:
   - `referral_codes`: Stores unique 8-character codes for each user (auto-generated on signup)
   - `referrals`: Tracks all referrals with status (pending/completed), reward status, and reward timestamps
@@ -79,14 +87,30 @@
     - `database/FIX_REFERRAL_SIGNUP_COMPLETE.sql` (comprehensive fix - Nov 2024)
 - **Integration**:
   - Signup page extracts `?ref=CODE` from URL and passes to auth metadata
+  - **NEW** (Nov 2024): Discord username field added to signup form for immediate reward processing
   - Works with all signup methods (Email, Google, Discord)
-  - Database triggers automatically track referrals and update status
-  - Profile update triggers check for Discord username and apply rewards
-- **API Endpoint**: `/api/referrals` - Returns user's referral code, stats, referrals list, and reward status
+  - Database triggers track referrals (but NO LONGER process rewards)
+  - Frontend calls reward processing API after profile creation/update
+- **API Endpoints**:
+  - `/api/referrals` (GET) - Returns user's referral code, stats, referrals list, and reward status
+  - `/api/referrals/process-rewards` (POST) - **NEW Nov 2024** - Processes pending referral rewards
+    - Checks if user has Discord username and pending referrals
+    - Calls `process_referral_rewards()` database function
+    - Returns success/failure with detailed results
+    - Called automatically by signup form when Discord username + referral code provided
+- **Signup Flow Changes** (Nov 2024):
+  - **Discord username field** added to signup form (above referral code field)
+  - Helper text: "💡 Add your Discord username to unlock referral rewards"
+  - Field saves to `user_profiles.discord_username` during account creation
+  - If both Discord username AND referral code provided → API processes rewards immediately
+  - User sees "Referral rewards unlocked! 🎁" message on successful processing
+  - Rewards can also be processed later if user adds Discord username in profile page
 - **Files**:
   - Page: `app/referrals/page.tsx`
   - Styles: `app/referrals/referrals.css`
+  - Signup: `app/signup/page.tsx` (updated with Discord username field)
   - API: `app/api/referrals/route.ts`
+  - Rewards API: `app/api/referrals/process-rewards/route.ts` (NEW Nov 2024)
   - Schema: `database/referrals_schema.sql`
   - Rewards: `database/referral_rewards_system.sql`
   - Documentation: `REFERRAL_REWARDS_GUIDE.md`
@@ -106,10 +130,11 @@
   - **Tier Badge**: Displays user's subscription tier (Free/Plus/Max) with colored badge
   - **Real-Time Saving**: Save button with loading state and success/error messages
   - **Profile Context Integration**: Uses ProfileContext for data and refreshes after save
-- **Trigger for Referral Rewards**:
-  - When user updates Discord username, database trigger `check_referral_completion()` fires
-  - Automatically processes pending referrals and grants 1 month Plus tier to both users
-  - Critical component of referral rewards flow
+- **Trigger for Referral Rewards** (Updated Nov 2024):
+  - **OLD**: Database trigger `check_referral_completion()` (not reliably working)
+  - **NEW**: Frontend calls `/api/referrals/process-rewards` when Discord username saved
+  - User can add Discord username in profile page to trigger rewards if skipped during signup
+  - Alternative to providing Discord username during signup
 - **Styling**:
   - Purple ghost icon floats with animation at top
   - Form sections with rounded corners and subtle backgrounds

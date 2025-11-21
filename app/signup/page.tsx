@@ -20,6 +20,9 @@ export default function SignupPage() {
   // Referral code from URL or manual input
   const [referralCode, setReferralCode] = useState<string>('');
 
+  // Discord username for referral rewards
+  const [discordUsername, setDiscordUsername] = useState<string>('');
+
   // Step 2 form data
   const [fullName, setFullName] = useState('');
   const [username, setUsername] = useState('');
@@ -320,15 +323,47 @@ export default function SignupPage() {
 
         if (data.user) {
           // Create user profile immediately to trigger referral code generation
+          const profileData: any = {
+            id: data.user.id,
+            email: data.user.email
+          };
+
+          // Add Discord username if provided (for referral rewards)
+          if (discordUsername && discordUsername.trim() !== '') {
+            profileData.discord_username = discordUsername.trim();
+          }
+
           const { error: profileError } = await supabase
             .from('user_profiles')
-            .insert({
-              id: data.user.id,
-              email: data.user.email
-            });
+            .insert(profileData);
 
           if (profileError && profileError.code !== '23505') { // Ignore duplicate key errors
             console.error('Profile creation error:', profileError);
+          }
+
+          // Process referral rewards if both Discord username and referral code provided
+          if (discordUsername && discordUsername.trim() !== '' && referralCode && referralCode.trim() !== '') {
+            try {
+              const { data: { session } } = await supabase.auth.getSession();
+              if (session?.access_token) {
+                const rewardResponse = await fetch('/api/referrals/process-rewards', {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': `Bearer ${session.access_token}`
+                  }
+                });
+
+                if (rewardResponse.ok) {
+                  const rewardData = await rewardResponse.json();
+                  if (rewardData.processed) {
+                    console.log('Referral rewards processed successfully!', rewardData);
+                  }
+                }
+              }
+            } catch (error) {
+              console.error('Error processing referral rewards:', error);
+              // Don't fail signup if reward processing fails
+            }
           }
 
           setUser(data.user);
@@ -376,16 +411,23 @@ export default function SignupPage() {
         console.error('Error checking existing profile:', checkError);
       }
 
+      const profileUpdateData: any = {
+        full_name: fullName,
+        username: username,
+        school: school,
+        rank_in_school: rankInSchool
+      };
+
+      // Add Discord username if provided
+      if (discordUsername && discordUsername.trim() !== '') {
+        profileUpdateData.discord_username = discordUsername.trim();
+      }
+
       if (existingProfile) {
         // Update existing profile
         const { error: updateError } = await supabase
           .from('user_profiles')
-          .update({
-            full_name: fullName,
-            username: username,
-            school: school,
-            rank_in_school: rankInSchool
-          })
+          .update(profileUpdateData)
           .eq('id', userId);
 
         if (updateError) {
@@ -401,10 +443,7 @@ export default function SignupPage() {
           .insert({
             id: userId,
             email: user.email,
-            full_name: fullName,
-            username: username,
-            school: school,
-            rank_in_school: rankInSchool
+            ...profileUpdateData
           });
 
         if (profileError) {
@@ -416,7 +455,33 @@ export default function SignupPage() {
       }
 
       await saveGradesForUser(userId);
-      
+
+      // Process referral rewards if Discord username and referral code provided
+      if (discordUsername && discordUsername.trim() !== '' && referralCode && referralCode.trim() !== '') {
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.access_token) {
+            const rewardResponse = await fetch('/api/referrals/process-rewards', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${session.access_token}`
+              }
+            });
+
+            if (rewardResponse.ok) {
+              const rewardData = await rewardResponse.json();
+              if (rewardData.processed) {
+                console.log('Referral rewards processed successfully!', rewardData);
+                setSuccessMessage('Profile completed! Referral rewards unlocked! 🎁');
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Error processing referral rewards:', error);
+          // Don't fail signup if reward processing fails
+        }
+      }
+
       setSuccessMessage('Profile completed successfully! Redirecting...');
       setTimeout(() => router.push('/'), 2000);
     } catch (err) {
@@ -437,15 +502,22 @@ export default function SignupPage() {
     setSuccessMessage('Updating your profile...');
 
     try {
+      const profileUpdateData: any = {
+        full_name: fullName,
+        username: username,
+        school: school,
+        rank_in_school: rankInSchool
+      };
+
+      // Add Discord username if provided
+      if (discordUsername && discordUsername.trim() !== '') {
+        profileUpdateData.discord_username = discordUsername.trim();
+      }
+
       // Update existing profile with form data
       const { error: updateError } = await supabase
         .from('user_profiles')
-        .update({
-          full_name: fullName,
-          username: username,
-          school: school,
-          rank_in_school: rankInSchool
-        })
+        .update(profileUpdateData)
         .eq('id', user.id);
 
       if (updateError) {
@@ -456,7 +528,33 @@ export default function SignupPage() {
       }
 
       await saveGradesForUser(user.id);
-      
+
+      // Process referral rewards if Discord username and referral code provided
+      if (discordUsername && discordUsername.trim() !== '' && referralCode && referralCode.trim() !== '') {
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.access_token) {
+            const rewardResponse = await fetch('/api/referrals/process-rewards', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${session.access_token}`
+              }
+            });
+
+            if (rewardResponse.ok) {
+              const rewardData = await rewardResponse.json();
+              if (rewardData.processed) {
+                console.log('Referral rewards processed successfully!', rewardData);
+                setSuccessMessage('Profile updated! Referral rewards unlocked! 🎁');
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Error processing referral rewards:', error);
+          // Don't fail if reward processing fails
+        }
+      }
+
       setSuccessMessage('Profile updated successfully! Redirecting...');
       setTimeout(() => router.push('/'), 2000);
     } catch (err) {
@@ -740,6 +838,35 @@ export default function SignupPage() {
                   boxSizing: 'border-box'
                 }}
               />
+            </div>
+
+            {/* Discord username input - for referral rewards */}
+            <div style={{ marginBottom: '15px' }}>
+              <input
+                type="text"
+                value={discordUsername}
+                onChange={(e) => setDiscordUsername(e.target.value)}
+                placeholder="Discord Username (e.g., username#1234)"
+                style={{
+                  width: '100%',
+                  padding: '16px',
+                  border: '1px solid #D1D5DB',
+                  borderRadius: '6px',
+                  background: '#FFFFFF',
+                  fontSize: '16px',
+                  outline: 'none',
+                  boxSizing: 'border-box'
+                }}
+              />
+              <div style={{
+                fontSize: '12px',
+                color: '#666666',
+                marginTop: '6px',
+                textAlign: 'left',
+                paddingLeft: '4px'
+              }}>
+                💡 Add your Discord username to unlock referral rewards
+              </div>
             </div>
 
             {/* Referral code input */}
