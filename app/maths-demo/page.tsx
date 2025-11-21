@@ -112,6 +112,13 @@ export default function MathsDemoPage() {
   const [isLoadingProgress, setIsLoadingProgress] = useState(true);
   const [showDashboard, setShowDashboard] = useState(false);
 
+  // Scroll right by a fixed amount
+  const scrollRight = () => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    container.scrollBy({ left: 300, behavior: 'smooth' });
+  };
+
   // Filter spec points based on search query (exclude blended blocks)
   const filteredSpecs = specPoints.filter(spec => {
     if (!searchQuery.trim() || spec.type === 'blended') return false;
@@ -138,15 +145,16 @@ export default function MathsDemoPage() {
     const container = scrollContainerRef.current;
     if (!container) return;
 
-    const stones = container.querySelectorAll('.stepping-stone');
-    if (stones[index]) {
-      const stone = stones[index] as HTMLElement;
+    // Query wrapper elements (direct children of track) for correct offsetLeft
+    const wrappers = container.querySelectorAll('.stepping-stone-wrapper');
+    if (wrappers[index]) {
+      const wrapper = wrappers[index] as HTMLElement;
       const containerWidth = container.offsetWidth;
-      const stoneLeft = stone.offsetLeft;
-      const stoneWidth = stone.offsetWidth;
+      const wrapperLeft = wrapper.offsetLeft;
+      const wrapperWidth = wrapper.offsetWidth;
 
       // Center the stone in the viewport
-      const scrollPosition = stoneLeft - (containerWidth / 2) + (stoneWidth / 2);
+      const scrollPosition = wrapperLeft - (containerWidth / 2) + (wrapperWidth / 2);
 
       container.scrollTo({
         left: scrollPosition,
@@ -254,16 +262,16 @@ export default function MathsDemoPage() {
     if (!container) return;
 
     const handleScroll = () => {
-      const stones = container.querySelectorAll('.stepping-stone');
+      const wrappers = container.querySelectorAll('.stepping-stone-wrapper');
       const containerCenter = container.scrollLeft + (container.offsetWidth / 2);
 
       let closestIndex = 0;
       let closestDistance = Infinity;
 
-      stones.forEach((stone, index) => {
-        const stoneElement = stone as HTMLElement;
-        const stoneCenter = stoneElement.offsetLeft + (stoneElement.offsetWidth / 2);
-        const distance = Math.abs(containerCenter - stoneCenter);
+      wrappers.forEach((wrapper, index) => {
+        const wrapperElement = wrapper as HTMLElement;
+        const wrapperCenter = wrapperElement.offsetLeft + (wrapperElement.offsetWidth / 2);
+        const distance = Math.abs(containerCenter - wrapperCenter);
 
         if (distance < closestDistance) {
           closestDistance = distance;
@@ -586,6 +594,17 @@ export default function MathsDemoPage() {
             })}
           </div>
         </div>
+
+        {/* Scroll Arrow Button - Bottom Right */}
+        <button
+          onClick={scrollRight}
+          className="scroll-arrow-button"
+          aria-label="Scroll right"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
       </div>
     </div>
   );
