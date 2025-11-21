@@ -394,6 +394,38 @@
 }
 
 
+/* Scroll Arrow Button - Bottom Right */
+.maths-demo-page .scroll-arrow-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 44px;
+  height: 44px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #CCCCCC;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 25;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  color: #666666;
+}
+
+.maths-demo-page .scroll-arrow-button:hover {
+  background-color: #FFFFFF;
+  border-color: #B3F0F2;
+  color: #333333;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.maths-demo-page .scroll-arrow-button:active {
+  transform: scale(0.95);
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .maths-demo-page .search-bar-wrapper {
@@ -570,6 +602,18 @@
 
   .maths-demo-page .signpost-title {
     font-size: 11px;
+  }
+
+  .maths-demo-page .scroll-arrow-button {
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .maths-demo-page .scroll-arrow-button svg {
+    width: 18px;
+    height: 18px;
   }
 }
 
