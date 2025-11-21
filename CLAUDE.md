@@ -4,16 +4,21 @@
 - **IMPORTANT**: Always update this CLAUDE.md file before every git commit
 - Include any new project conventions, patterns, or important decisions made during development
 
-## Authentication Configuration (Fixed Nov 2024)
-- **Issue**: Users were being logged out when navigating between pages (profile, referrals, etc.)
-- **Root Cause**: Supabase client configuration was missing PKCE flow and proper singleton pattern
-- **Solution Applied** (`/lib/supabase-client.ts`):
-  - Added `flowType: 'pkce'` for proper OAuth handling
-  - Implemented singleton pattern to ensure only one client instance exists
-  - Explicitly set `storage: localStorage` with custom key `examrizz-auth-token`
-  - Added global headers for consistent application identification
-- **Result**: Sessions now persist properly across all page navigations
-- **IMPORTANT**: All application code should import from `@/lib/supabase-client` for consistency
+## Authentication Configuration (Fixed Nov 2024, Re-fixed Nov 2024)
+- **Issue**: Users were being logged out when navigating between pages (profile, referrals, etc.) or when reloading during OAuth
+- **Root Cause**: Multiple Supabase client instances with different configurations - `supabase-client.ts` had proper config but `supabase.ts` was missing critical storage settings
+- **Solution Applied**:
+  - **`/lib/supabase-client.ts`** (Primary, Nov 2024):
+    - Added `flowType: 'pkce'` for proper OAuth handling
+    - Implemented singleton pattern to ensure only one client instance exists
+    - Explicitly set `storage: localStorage` with custom key `examrizz-auth-token`
+    - Added global headers for consistent application identification
+  - **`/lib/supabase.ts`** (Secondary, Nov 2024 Re-fix):
+    - Updated to match supabase-client.ts configuration exactly
+    - Added missing `storage: localStorage` and `storageKey: 'examrizz-auth-token'`
+    - Ensures consistency across ALL pages, including teacher pages
+- **Result**: Sessions now persist properly across all page navigations, even during OAuth callbacks and page reloads
+- **IMPORTANT**: Both `/lib/supabase.ts` and `/lib/supabase-client.ts` now have identical auth configuration to prevent session conflicts
 
 ## Referrals System (Added Nov 2024, Rewards Added Nov 2024)
 - **Page**: `/referrals` - Accessible via hamburger menu in navbar
