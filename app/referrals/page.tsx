@@ -188,7 +188,7 @@ export default function ReferralsPage() {
         {/* Details Section 2 */}
         <div className="details-section-2">
           <img
-            src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2FGroup%202791.svg?alt=media&token=dceeb64f-e8c4-4390-b809-f95d18d284a3"
+            src="https://firebasestorage.googleapis.com/v0/b/plewcsat1.firebasestorage.app/o/icons%2Fhow-it-works-updated.svg?alt=media&token=79d414fa-c586-43f9-964b-a5d18ee3263a"
             alt="Details Section 2"
             className="svg-image-unified"
           />
