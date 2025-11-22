@@ -122,9 +122,13 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
         console.error('Error loading A Level grades:', aLevelError);
       }
 
+      if (!profileData) {
+        return null;
+      }
+
       // Combine profile with grades
       const fullProfile: UserProfile = {
-        ...profileData,
+        ...(profileData as any),
         gcse_grades: gcseGrades || [],
         a_level_grades: aLevelGrades || []
       };
