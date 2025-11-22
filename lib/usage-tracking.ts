@@ -276,8 +276,8 @@ export async function getMonthlyUsage(userId: string): Promise<MonthlyUsage> {
     }
   }
 
-  const totalCost = data?.reduce((sum, record) => sum + record.cost_usd, 0) || 0
-  const totalTokens = data?.reduce((sum, record) => sum + record.tokens_used, 0) || 0
+  const totalCost = data?.reduce((sum: number, record: any) => sum + record.cost_usd, 0) || 0
+  const totalTokens = data?.reduce((sum: number, record: any) => sum + record.tokens_used, 0) || 0
   const remaining = Math.max(0, limit - totalCost)
   const percentageUsed = (totalCost / limit) * 100
 

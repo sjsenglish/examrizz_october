@@ -309,8 +309,8 @@ export async function getTeacherOngoingAssignments(teacherId: string): Promise<A
       const totalAssigned = assignments.length;
       const totalCompleted = attempts.filter(a => a.completed_at).length;
       const completedAttempts = attempts.filter(a => a.score !== null);
-      const averageScore = completedAttempts.length > 0 
-        ? completedAttempts.reduce((sum, a) => sum + (a.score || 0), 0) / completedAttempts.length
+      const averageScore = completedAttempts.length > 0
+        ? completedAttempts.reduce((sum: number, a: any) => sum + (a.score || 0), 0) / completedAttempts.length
         : 0;
 
       // Find students needing support (low scores or no attempts)
