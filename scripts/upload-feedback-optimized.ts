@@ -34,7 +34,7 @@ async function uploadFeedback() {
 
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const feedbackDir = './feedback-data';
-  const files = fs.readdirSync(feedbackDir).filter(f => f.endsWith('.json'));
+  const files = fs.readdirSync(feedbackDir).filter((f: any) => f.endsWith('.json'));
   
   console.log(`📁 Found ${files.length} files to process\n`);
   

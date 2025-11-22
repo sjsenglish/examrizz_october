@@ -106,13 +106,13 @@ export async function getFilteredQuestionCount(
         // Handle array fields differently
         if (field === 'sub_types') {
           // For array fields, we need to use OR logic
-          const subTypeFilters = values.map(v => `sub_types:"${v}"`).join(' OR ');
+          const subTypeFilters = values.map((v: any) => `sub_types:"${v}"`).join(' OR ');
           if (subTypeFilters) {
             filterStrings.push(`(${subTypeFilters})`);
           }
         } else {
           // For non-array fields, use OR logic
-          const fieldFilters = values.map(v => `${field}:"${v}"`).join(' OR ');
+          const fieldFilters = values.map((v: any) => `${field}:"${v}"`).join(' OR ');
           if (fieldFilters) {
             filterStrings.push(`(${fieldFilters})`);
           }

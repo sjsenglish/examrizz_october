@@ -198,8 +198,8 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
         // Insert new GCSE grades
         if (grades.gcse.length > 0) {
           const gcseGrades = grades.gcse
-            .filter(g => g.subject && g.grade)
-            .map(g => ({
+            .filter((g: any) => g.subject && g.grade)
+            .map((g: any) => ({
               user_id: user.id,
               subject: g.subject,
               grade: g.grade
@@ -223,8 +223,8 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
         // Insert new A Level grades
         if (grades.aLevel.length > 0) {
           const aLevelGrades = grades.aLevel
-            .filter(g => g.subject && g.grade)
-            .map(g => ({
+            .filter((g: any) => g.subject && g.grade)
+            .map((g: any) => ({
               user_id: user.id,
               subject: g.subject,
               grade: g.grade
@@ -356,7 +356,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
         // Clear all profile caches
         try {
           const keys = Object.keys(localStorage);
-          keys.forEach(key => {
+          keys.forEach((key: any) => {
             if (key.startsWith('profile_cache_')) {
               localStorage.removeItem(key);
             }

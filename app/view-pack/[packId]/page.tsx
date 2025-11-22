@@ -440,7 +440,7 @@ export default function ViewPackPage({ params }: { params: Promise<{ packId: str
     });
   };
 
-  const totalMarks = pack?.questions.reduce((sum, q) => sum + (q.marks || 1), 0) || 0;
+  const totalMarks = pack?.questions.reduce(((sum: any), q) => sum + (q.marks || 1), 0) || 0;
 
   if (loading) {
     return (

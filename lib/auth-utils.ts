@@ -211,7 +211,7 @@ export async function performLogout(): Promise<void> {
   try {
     // Clear localStorage cache
     const keys = Object.keys(localStorage);
-    keys.forEach(key => {
+    keys.forEach((key: any) => {
       if (key.startsWith('feature-usage-') || 
           key.includes('user-') || 
           key.includes('auth-') ||
@@ -222,7 +222,7 @@ export async function performLogout(): Promise<void> {
 
     // Clear sessionStorage cache  
     const sessionKeys = Object.keys(sessionStorage);
-    sessionKeys.forEach(key => {
+    sessionKeys.forEach((key: any) => {
       if (key.includes('user-') || 
           key.includes('auth-') ||
           key.includes('supabase-')) {

@@ -70,7 +70,7 @@ export async function getQuestionsByIds(
 
   try {
     // Use search with objectID filters since lite client doesn't support getObjects
-    const objectIdFilters = questionIds.map(id => `objectID:"${id}"`).join(' OR ');
+    const objectIdFilters = questionIds.map((id: any) => `objectID:"${id}"`).join(' OR ');
     
     const results = await searchClient.search([{
       indexName,
@@ -85,7 +85,7 @@ export async function getQuestionsByIds(
     
     // Return questions in the same order as requested IDs
     const questionsMap = new Map(hits.map((q: any) => [q.objectID, q]));
-    return questionIds.map(id => questionsMap.get(id)).filter(Boolean);
+    return questionIds.map((id: any) => questionsMap.get(id)).filter(Boolean);
   } catch (error) {
     console.error(`Error fetching questions by IDs:`, error);
     return [];

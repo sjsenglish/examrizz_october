@@ -49,7 +49,7 @@ async function extractAllConcepts() {
   console.log('📂 Reading feedback files...');
   
   const feedbackDir = './feedback-data';
-  const files = fs.readdirSync(feedbackDir).filter(f => f.endsWith('.json'));
+  const files = fs.readdirSync(feedbackDir).filter((f: any) => f.endsWith('.json'));
   
   console.log(`📊 Found ${files.length} files\n`);
   
@@ -98,7 +98,7 @@ async function clusterConceptsForSubject(
   const sample = feedbackItems
     .sort(() => Math.random() - 0.5)
     .slice(0, sampleSize)
-    .filter(item => item.weak_passage || item.your_feedback); // Only items with content
+    .filter((item: any) => item.weak_passage || item.your_feedback); // Only items with content
   
   console.log(`  📝 Valid samples: ${sample.length}`);
   
@@ -110,7 +110,7 @@ async function clusterConceptsForSubject(
   const prompt = `Analyze these ${subject} personal statement feedback samples and identify ALL distinct academic concepts students claim to understand.
 
 Feedback samples (showing quote from PS, what's weak about it, and feedback given):
-${JSON.stringify(sample.slice(0, 30).map(s => ({
+${JSON.stringify(sample.slice(0, 30).map((s: any) => ({
   ps_quote: s.weak_passage,
   weakness: s.issue_type,
   feedback: s.your_feedback,
@@ -154,7 +154,7 @@ Be comprehensive - extract all concepts, not just common ones.`;
     
     console.log(`  ✅ Found ${clusters.length} concepts for ${subject}`);
     if (clusters.length > 0) {
-      console.log(`  📋 Concepts: ${clusters.map(c => c.concept).join(', ')}\n`);
+      console.log(`  📋 Concepts: ${clusters.map((c: any) => c.concept).join(', ')}\n`);
     }
     
     return clusters;

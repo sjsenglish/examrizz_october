@@ -30,8 +30,8 @@ async function executeSQLFile(filePath: string): Promise<void> {
     // Split SQL into individual statements (basic approach)
     const statements = sqlContent
       .split(';')
-      .map(s => s.trim())
-      .filter(s => s.length > 0 && !s.startsWith('--'));
+      .map((s: any) => s.trim())
+      .filter((s: any) => s.length > 0 && !s.startsWith('--'));
 
     console.log(`Executing ${statements.length} SQL statements from ${filePath}...`);
 
@@ -85,7 +85,7 @@ async function setupDatabase() {
       console.error('Error checking table structure:', columnsError);
     } else {
       console.log('📊 Table structure:');
-      columns?.forEach(col => {
+      columns?.forEach((col: any) => {
         console.log(`  - ${col.column_name}: ${col.data_type} (nullable: ${col.is_nullable})`);
       });
     }

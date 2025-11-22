@@ -1495,7 +1495,7 @@ export default function StudyBookPage() {
                 <h2>Your Materials</h2>
                 <div className="materials-cards">
                   {uploadedFiles.map((file: any) => {
-                    const categoryIcon = categories.find(cat => cat.id === file.category)?.icon || '/icons/essays.svg';
+                    const categoryIcon = categories.find((cat: any) => cat.id === file.category)?.icon || '/icons/essays.svg';
                     return (
                       <div key={file.id} className="material-card">
                         <div className="card-header">
@@ -1522,7 +1522,7 @@ export default function StudyBookPage() {
                           {file.description || 'No description provided'}
                         </p>
                         <div className="file-meta" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: '#888' }}>
-                          <span>{file.category ? categories.find(cat => cat.id === file.category)?.label : 'Uncategorized'}</span>
+                          <span>{file.category ? categories.find((cat: any) => cat.id === file.category)?.label : 'Uncategorized'}</span>
                           <span>📎 {file.file_type.split('/').pop()?.toUpperCase()}</span>
                         </div>
                         {file.completion_date && (
@@ -1908,7 +1908,7 @@ export default function StudyBookPage() {
                       borderRadius: '0'
                     }}
                   >
-                    {materialForm.category ? categories.find(cat => cat.id === materialForm.category)?.label : 'Select category'}
+                    {materialForm.category ? categories.find((cat: any) => cat.id === materialForm.category)?.label : 'Select category'}
                     <svg 
                       width="12" 
                       height="12" 

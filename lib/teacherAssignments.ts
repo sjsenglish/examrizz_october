@@ -307,8 +307,8 @@ export async function getTeacherOngoingAssignments(teacherId: string): Promise<A
     // Calculate analytics for each pack
     const result = Array.from(packMap.values()).map(({ pack, assignments, attempts }) => {
       const totalAssigned = assignments.length;
-      const totalCompleted = attempts.filter(a => a.completed_at).length;
-      const completedAttempts = attempts.filter(a => a.score !== null);
+      const totalCompleted = attempts.filter((a: any) => a.completed_at).length;
+      const completedAttempts = attempts.filter((a: any) => a.score !== null);
       const averageScore = completedAttempts.length > 0
         ? completedAttempts.reduce((sum: number, a: any) => sum + (a.score || 0), 0) / completedAttempts.length
         : 0;
@@ -317,7 +317,7 @@ export async function getTeacherOngoingAssignments(teacherId: string): Promise<A
       const needingSupport: AssignmentAnalytics['needingSupport'] = [];
       
       // Students with low scores
-      completedAttempts.forEach(attempt => {
+      completedAttempts.forEach((attempt: any) => {
         if (attempt.score !== null && attempt.score !== undefined && attempt.score < 60) {
           needingSupport.push({
             student_name: 'Student', // Would need to join with user profiles for real name
@@ -330,7 +330,7 @@ export async function getTeacherOngoingAssignments(teacherId: string): Promise<A
       const topPerformers: AssignmentAnalytics['topPerformers'] = completedAttempts
         .sort((a, b) => (b.score || 0) - (a.score || 0))
         .slice(0, 3)
-        .map(attempt => ({
+        .map((attempt: any) => ({
           student_name: 'Student', // Would need to join with user profiles for real name
           score: `${attempt.score}/${attempt.total_questions}`,
           time: attempt.time_taken_seconds ? `${Math.round(attempt.time_taken_seconds / 60)} mins` : ''

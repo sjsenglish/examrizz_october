@@ -1991,14 +1991,14 @@ export default function StudyBookPage() {
     };
 
     const savePage = (question: string, pageId: number) => {
-      const page = questionPages[question].find(p => p.id === pageId);
+      const page = questionPages[question].find((p: any) => p.id === pageId);
       console.log(`Saving ${question}, Page ${pageId}:`, page);
       // Database save will be implemented later
     };
 
     const renderQuestionBox = (questionNum: number, title: string) => {
       const question = `question${questionNum}`;
-      const currentPage = questionPages[question].find(p => p.id === activePages[question]);
+      const currentPage = questionPages[question].find((p: any) => p.id === activePages[question]);
 
       return (
         <div className="question-box">

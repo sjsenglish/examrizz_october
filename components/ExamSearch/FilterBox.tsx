@@ -42,7 +42,7 @@ const useInterviewSubjectFilter = () => {
     const subjectCounts: Record<string, number> = {};
     
     // Initialize counts
-    subjects.forEach(subject => {
+    subjects.forEach((subject: any) => {
       subjectCounts[subject] = 0;
     });
     
@@ -52,7 +52,7 @@ const useInterviewSubjectFilter = () => {
         const primarySubject = hit.SubjectId1?.toLowerCase();
         const secondarySubject = hit.SubjectId2?.toLowerCase();
         
-        subjects.forEach(subject => {
+        subjects.forEach((subject: any) => {
           if (primarySubject === subject.toLowerCase() || secondarySubject === subject.toLowerCase()) {
             subjectCounts[subject]++;
           }

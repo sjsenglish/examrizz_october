@@ -538,7 +538,7 @@ export default function ReviewPage({ params }: { params: Promise<{ packId: strin
   const correctCount = (userAnswers && pack?.questions) 
     ? Object.keys(userAnswers).filter(
         (questionId) => {
-          const question = pack.questions.find(q => q.objectID === questionId);
+          const question = pack.questions.find((q: any) => q.objectID === questionId);
           return question && userAnswers[questionId] === question.answer_letter;
         }
       ).length

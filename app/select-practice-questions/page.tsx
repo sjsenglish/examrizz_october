@@ -58,7 +58,7 @@ export default function SelectPracticeQuestionsPage() {
   }, [router]);
 
   const handleQuestionToggle = (question: any) => {
-    const isSelected = selectedQuestions.some(q => q.objectID === question.objectID);
+    const isSelected = selectedQuestions.some((q: any) => q.objectID === question.objectID);
     if (isSelected) {
       setSelectedQuestions(selectedQuestions.filter((q: any) => q.objectID !== question.objectID));
     } else {
@@ -302,7 +302,7 @@ export default function SelectPracticeQuestionsPage() {
                       hitComponent={({ hit }) => (
                         <QuestionHit
                           hit={hit}
-                          isSelected={selectedQuestions.some(q => q.objectID === hit.objectID)}
+                          isSelected={selectedQuestions.some((q: any) => q.objectID === hit.objectID)}
                           onToggle={() => handleQuestionToggle(hit)}
                           onViewFull={() => handleViewFullQuestion(hit)}
                           subject={packData?.subject || ''}
@@ -361,7 +361,7 @@ export default function SelectPracticeQuestionsPage() {
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           hit={modalQuestion}
-          isSelected={modalQuestion ? selectedQuestions.some(q => q.objectID === modalQuestion.objectID) : false}
+          isSelected={modalQuestion ? selectedQuestions.some((q: any) => q.objectID === modalQuestion.objectID) : false}
           onToggleSelection={handleModalToggleSelection}
         />
       </div>
