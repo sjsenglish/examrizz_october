@@ -649,7 +649,7 @@ export async function POST(request: NextRequest) {
     const enhancedSystemPrompt = INTERVIEW_SYSTEM_PROMPT + contextString + (contextString ? '\n\nWhen relevant, reference specific details from the student\'s uploaded materials and notes to create personalized interview questions based on their personal statement and academic work.' : '');
 
     // Prepare messages for Anthropic API
-    const messages = (messageHistory || []).slice(-20).map(msg => ({
+    const messages = (messageHistory || []).slice(-20).map((msg: any) => ({
       role: msg.role === 'assistant' ? 'assistant' as const : 'user' as const,
       content: msg.content
     }));

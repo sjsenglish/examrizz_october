@@ -115,8 +115,8 @@ export async function POST(request: Request) {
     }
 
     // Check if any rewards were successfully processed
-    const successCount = results.filter(r => r.success).length;
-    const failureCount = results.filter(r => !r.success).length;
+    const successCount = results.filter((r: any) => r.success).length;
+    const failureCount = results.filter((r: any) => !r.success).length;
 
     return NextResponse.json({
       success: successCount > 0,

@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     const recentMessages = messages.reverse();
 
     // Format conversation for Discord embed
-    const conversationText = recentMessages.map(msg => {
+    const conversationText = recentMessages.map((msg: any) => {
       const timestamp = new Date(msg.created_at).toLocaleString();
       const sender = msg.role === 'user' ? 'Student' : 'Bo (Assistant)';
       const content = msg.content.length > 200 ? msg.content.substring(0, 200) + '...' : msg.content;

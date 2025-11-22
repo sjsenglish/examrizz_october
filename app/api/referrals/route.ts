@@ -57,8 +57,8 @@ export async function GET(request: Request) {
 
     // Calculate stats
     const totalReferrals = referralsData?.length || 0;
-    const completedReferrals = referralsData?.filter(r => r.status === 'completed').length || 0;
-    const pendingReferrals = referralsData?.filter(r => r.status === 'pending').length || 0;
+    const completedReferrals = referralsData?.filter((r: any) => r.status === 'completed').length || 0;
+    const pendingReferrals = referralsData?.filter((r: any) => r.status === 'pending').length || 0;
 
     return NextResponse.json({
       success: true,

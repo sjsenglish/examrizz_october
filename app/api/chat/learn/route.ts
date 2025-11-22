@@ -502,7 +502,7 @@ export async function POST(request: NextRequest) {
     const enhancedSystemPrompt = JOE_SYSTEM_PROMPT + contextString;
 
     // Prepare messages for Anthropic API
-    const messages = (messageHistory || []).slice(-20).map(msg => ({
+    const messages = (messageHistory || []).slice(-20).map((msg: any) => ({
       role: msg.role === 'assistant' ? 'assistant' as const : 'user' as const,
       content: msg.content
     }));

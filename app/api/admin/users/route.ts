@@ -32,7 +32,7 @@ export async function GET() {
     }
 
     // Transform the data to include subscription info at the top level
-    const transformedUsers = users?.map(user => ({
+    const transformedUsers = users?.map((user: any) => ({
       id: user.id,
       email: user.email,
       full_name: user.full_name,

@@ -76,7 +76,7 @@ export async function GET(
     // Count question parts across all questions
     let totalQuestionParts = 0;
     if (questions && questions.length > 0) {
-      const questionIds = questions.map(q => q.id);
+      const questionIds = questions.map((q: any) => q.id);
 
       const { count, error: partsError } = await (supabase as any)
         .from('learn_question_parts')

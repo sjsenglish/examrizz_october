@@ -51,7 +51,7 @@ export async function GET(
     }
 
     // Transform data to match frontend expectations (camelCase format)
-    const transformedQuestions = questions?.map(question => ({
+    const transformedQuestions = questions?.map((question: any) => ({
       code: question.question_code,
       difficulty: question.difficulty_level,
       instructions: question.instructions,
