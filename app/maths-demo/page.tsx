@@ -131,7 +131,7 @@ export default function MathsDemoPage() {
 
   // Calculate cumulative hours for each spec point (exclude blended blocks)
   const getCumulativeHours = (index: number) => {
-    return specPoints.slice(0, index + 1).reduce(((sum: any), spec) => {
+    return specPoints.slice(0, index + 1).reduce((sum: any, spec: any) => {
       return spec.type === 'normal' ? sum + spec.hours : sum;
     }, 0);
   };
