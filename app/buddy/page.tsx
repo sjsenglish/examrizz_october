@@ -87,7 +87,7 @@ export default function BuddyPage() {
         .order('updated_at', { ascending: false });
 
       if (sessionsData) {
-        const formattedSessions: ChatSession[] = sessionsData.map(session => ({
+        const formattedSessions: ChatSession[] = sessionsData.map((session: any) => ({
           id: session.id,
           created_at: session.created_at,
           updated_at: session.updated_at,
@@ -133,7 +133,7 @@ export default function BuddyPage() {
         .order('created_at', { ascending: true });
 
       if (messageHistory) {
-        const formattedMessages = messageHistory.map(msg => ({
+        const formattedMessages = messageHistory.map((msg: any) => ({
           id: msg.id,
           role: msg.role as 'user' | 'assistant',
           content: msg.content,
@@ -226,7 +226,7 @@ export default function BuddyPage() {
               
               if (data.type === 'token') {
                 assistantMessage += data.content;
-                setMessages(prev => prev.map(msg => 
+                setMessages(prev => prev.map((msg: any) => 
                   msg.id === assistantId 
                     ? { ...msg, content: assistantMessage }
                     : msg
@@ -242,7 +242,7 @@ export default function BuddyPage() {
                 // Refresh sessions after message is complete
                 await loadSessions();
               } else if (data.type === 'error') {
-                setMessages(prev => prev.map(msg => 
+                setMessages(prev => prev.map((msg: any) => 
                   msg.id === assistantId 
                     ? { ...msg, content: data.content }
                     : msg
@@ -394,7 +394,7 @@ export default function BuddyPage() {
           </button>
           
           <div className="sessions-list">
-            {sessions.map(session => (
+            {sessions.map((session: any) => (
               <div 
                 key={session.id}
                 className={`session-item ${session.id === currentSessionId ? 'active' : ''}`}
@@ -453,7 +453,7 @@ export default function BuddyPage() {
                   <p>Ask me anything about your personal statement, and I'll guide you through the process step by step.</p>
                 </div>
               ) : (
-                [...messages].reverse().map(message => (
+                [...messages].reverse().map((message: any) => (
                   <div key={message.id} className={`message ${message.role}`}>
                     <div className="message-content">
                       {message.role === 'assistant' ? (

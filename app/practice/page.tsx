@@ -61,7 +61,7 @@ export default function PracticePage() {
         return;
       }
 
-      const savedIds = new Set(savedPacks.map(sp => sp.pack_id));
+      const savedIds = new Set(savedPacks.map((sp: any) => sp.pack_id));
       setSavedPackIds(savedIds);
     } catch (error) {
       console.error('Error loading saved packs:', error);
@@ -152,7 +152,7 @@ export default function PracticePage() {
 
   // Filter packs by category
   const getPacksByCategory = (category: string, subject?: string) => {
-    return questionPacks.filter(pack => {
+    return questionPacks.filter((pack: any) => {
       if (category === 'A Level') {
         return subject ? pack.subject === subject : false;
       } else if (category === 'Admissions') {
@@ -774,7 +774,7 @@ export default function PracticePage() {
               </h3>
             
             {/* Real Question Packs List */}
-            {getPacksByCategory('Admissions').filter(pack => pack.subject === selectedAdmissionSubject).map((pack) => (
+            {getPacksByCategory('Admissions').filter((pack: any) => pack.subject === selectedAdmissionSubject).map((pack) => (
               <div key={pack.id} style={{
                 position: 'relative',
                 marginBottom: '60px'

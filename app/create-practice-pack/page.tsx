@@ -79,10 +79,10 @@ export default function CreatePracticePackPage() {
       for (const [field, values] of Object.entries(activeFilters)) {
         if (values && values.length > 0) {
           if (field === 'sub_types') {
-            const subTypeFilters = values.map(v => `sub_types:"${v}"`).join(' OR ');
+            const subTypeFilters = values.map((v: any) => `sub_types:"${v}"`).join(' OR ');
             if (subTypeFilters) filterStrings.push(`(${subTypeFilters})`);
           } else {
-            const fieldFilters = values.map(v => `${field}:"${v}"`).join(' OR ');
+            const fieldFilters = values.map((v: any) => `${field}:"${v}"`).join(' OR ');
             if (fieldFilters) filterStrings.push(`(${fieldFilters})`);
           }
         }
@@ -90,8 +90,8 @@ export default function CreatePracticePackPage() {
 
       // Fetch facets for filters that need dynamic options
       const facetsToFetch = config.filters
-        .filter(f => f.fetchFromIndex)
-        .map(f => f.field);
+        .filter((f: any) => f.fetchFromIndex)
+        .map((f: any) => f.field);
 
       if (facetsToFetch.length > 0) {
         const facetResults = await getSubjectFacets(
@@ -147,7 +147,7 @@ export default function CreatePracticePackPage() {
   const toggleFilterOption = (field: string, value: string) => {
     const currentValues = activeFilters[field] || [];
     const newValues = currentValues.includes(value)
-      ? currentValues.filter(v => v !== value)
+      ? currentValues.filter((v: any) => v !== value)
       : [...currentValues, value];
     
     setActiveFilters({

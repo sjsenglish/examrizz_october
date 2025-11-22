@@ -60,7 +60,7 @@ const useInterviewSubjectFilter = () => {
       });
     }
     
-    return subjects.map(subject => ({
+    return subjects.map((subject: any) => ({
       value: subject,
       label: subject.charAt(0).toUpperCase() + subject.slice(1),
       count: subjectCounts[subject],
@@ -79,7 +79,7 @@ const useInterviewSubjectFilter = () => {
     
     // Apply filter using setIndexUiState
     if (newSelected.size > 0) {
-      const filters = Array.from(newSelected).map(subj => 
+      const filters = Array.from(newSelected).map((subj: any) => 
         `(SubjectId1:"${subj}" OR SubjectId2:"${subj}")`
       ).join(' OR ');
       

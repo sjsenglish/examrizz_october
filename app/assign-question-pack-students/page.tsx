@@ -82,7 +82,7 @@ export default function AssignQuestionPackStudentsPage() {
   const handleStudentToggle = (index: number) => {
     setSelectedStudents(prev => 
       prev.includes(index) 
-        ? prev.filter(i => i !== index)
+        ? prev.filter((i: any) => i !== index)
         : [...prev, index]
     );
   };
@@ -91,7 +91,7 @@ export default function AssignQuestionPackStudentsPage() {
     setSelectedStudents([]);
   };
 
-  const filteredStudents = students.filter(student => {
+  const filteredStudents = students.filter((student: any) => {
     const matchesSearch = student.full_name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesClass = selectedClass === 'All Classes' || student.class_name === selectedClass;
     return matchesSearch && matchesClass;
@@ -99,7 +99,7 @@ export default function AssignQuestionPackStudentsPage() {
 
   const handleNextStep = () => {
     // Store selected students in sessionStorage for next step
-    const selectedStudentData = selectedStudents.map(index => filteredStudents[index]);
+    const selectedStudentData = selectedStudents.map((index: any) => filteredStudents[index]);
     sessionStorage.setItem('selectedStudents', JSON.stringify(selectedStudentData));
     if (packInfo) {
       sessionStorage.setItem('packInfo', JSON.stringify(packInfo));

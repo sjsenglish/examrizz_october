@@ -120,7 +120,7 @@ export default function MathsDemoPage() {
   };
 
   // Filter spec points based on search query (exclude blended blocks)
-  const filteredSpecs = specPoints.filter(spec => {
+  const filteredSpecs = specPoints.filter((spec: any) => {
     if (!searchQuery.trim() || spec.type === 'blended') return false;
     const query = searchQuery.toLowerCase();
     return (

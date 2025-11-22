@@ -292,7 +292,7 @@ function SpecPointSessionContent() {
         const progress = progressData && progressData.length > 0 ? progressData[0] : null;
 
         // Get all question part IDs from current questions
-        const allPartIds = questions.flatMap(q => q.parts.map(p => p.id));
+        const allPartIds = questions.flatMap(q => q.parts.map((p: any) => p.id));
         const totalQuestions = allPartIds.length;
 
         // Fetch user answers for this lesson's questions
@@ -434,7 +434,7 @@ function SpecPointSessionContent() {
               
               if (data.type === 'token') {
                 assistantMessage += data.content;
-                setMessages(prev => prev.map(msg => 
+                setMessages(prev => prev.map((msg: any) => 
                   msg.id === assistantId 
                     ? { ...msg, content: assistantMessage }
                     : msg
@@ -449,7 +449,7 @@ function SpecPointSessionContent() {
                 }
                 // Note: Content switching is now handled by clickable buttons in messages
               } else if (data.type === 'error') {
-                setMessages(prev => prev.map(msg => 
+                setMessages(prev => prev.map((msg: any) => 
                   msg.id === assistantId 
                     ? { ...msg, content: data.content }
                     : msg
@@ -1223,7 +1223,7 @@ function SpecPointSessionContent() {
                     <p>I'm here to guide you through {specPoint} {specName} - Lesson {lessonNumber}. I can help with the notes, video, or practice questions. Ready to start?</p>
                   </div>
                 ) : (
-                  messages.map(message => (
+                  messages.map((message: any) => (
                     <div key={message.id} className={`joe-message ${message.role}`}>
                       <div className="joe-message-content">
                         {message.role === 'assistant' ? (

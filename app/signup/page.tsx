@@ -572,8 +572,8 @@ export default function SignupPage() {
       // Store GCSE grades if any
       if (gcseSubjects.length > 0) {
         const gcseGrades = gcseSubjects
-          .filter(g => g.subject && g.grade)
-          .map(g => ({
+          .filter((g: any) => g.subject && g.grade)
+          .map((g: any) => ({
             user_id: userId,
             subject: g.subject,
             grade: g.grade
@@ -599,8 +599,8 @@ export default function SignupPage() {
       // Store A Level grades if any
       if (aLevelSubjects.length > 0) {
         const aLevelGrades = aLevelSubjects
-          .filter(g => g.subject && g.grade)
-          .map(g => ({
+          .filter((g: any) => g.subject && g.grade)
+          .map((g: any) => ({
             user_id: userId,
             subject: g.subject,
             grade: g.grade

@@ -59,7 +59,7 @@ export default function AssignQuestionPackStep2StudentsPage() {
 
       // Prepare assignment data
       const assignmentData = {
-        assignedToUserIds: selectedStudents.map(s => s.id),
+        assignedToUserIds: selectedStudents.map((s: any) => s.id),
         dueDate: dueDate && dueTime ? `${dueDate}T${dueTime}:00.000Z` : undefined,
         timeLimitMinutes: timeLimit ? timeLimitValue : undefined,
         randomizeQuestions,

@@ -60,7 +60,7 @@ export default function SelectPracticeQuestionsPage() {
   const handleQuestionToggle = (question: any) => {
     const isSelected = selectedQuestions.some(q => q.objectID === question.objectID);
     if (isSelected) {
-      setSelectedQuestions(selectedQuestions.filter(q => q.objectID !== question.objectID));
+      setSelectedQuestions(selectedQuestions.filter((q: any) => q.objectID !== question.objectID));
     } else {
       setSelectedQuestions([...selectedQuestions, question]);
     }
@@ -90,7 +90,7 @@ export default function SelectPracticeQuestionsPage() {
       const result = await createPracticePack({
         name: packData.packName,
         subject: packData.subject,
-        questionIds: selectedQuestions.map(q => q.objectID),
+        questionIds: selectedQuestions.map((q: any) => q.objectID),
         settings: {
           fontSize: packData.fontSize,
           orderMode: packData.orderMode,
@@ -136,14 +136,14 @@ export default function SelectPracticeQuestionsPage() {
           // Handle array fields differently
           if (filterConfig.field === 'sub_types') {
             // For array fields, we need to use OR logic
-            const subTypeFilters = selectedValues.map(v => `sub_types:"${v}"`).join(' OR ');
+            const subTypeFilters = selectedValues.map((v: any) => `sub_types:"${v}"`).join(' OR ');
             if (subTypeFilters) {
               filterClauses.push(`(${subTypeFilters})`);
             }
           } else {
             // For non-array fields, use OR logic
             const clause = selectedValues
-              .map(value => `${filterConfig.field}:"${value}"`)
+              .map((value: any) => `${filterConfig.field}:"${value}"`)
               .join(' OR ');
             filterClauses.push(`(${clause})`);
           }

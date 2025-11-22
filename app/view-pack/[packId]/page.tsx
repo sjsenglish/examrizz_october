@@ -368,7 +368,7 @@ export default function ViewPackPage({ params }: { params: Promise<{ packId: str
         
         if (questionData && questionData.length > 0) {
           // Fetch actual questions from Algolia
-          const questionIds = questionData.map(q => q.question_id);
+          const questionIds = questionData.map((q: any) => q.question_id);
           console.log('Fetching questions:', questionIds, 'for subject:', packData.subject);
           
           try {

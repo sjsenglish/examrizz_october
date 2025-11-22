@@ -130,7 +130,7 @@ export default function StudyBookPage() {
           .order('created_at', { ascending: true });
 
         if (messageHistory) {
-          const formattedMessages = messageHistory.map(msg => ({
+          const formattedMessages = messageHistory.map((msg: any) => ({
             id: msg.id,
             role: msg.role as 'user' | 'assistant',
             content: msg.content,
@@ -206,7 +206,7 @@ export default function StudyBookPage() {
               
               if (data.type === 'token') {
                 assistantMessage += data.content;
-                setMessages(prev => prev.map(msg => 
+                setMessages(prev => prev.map((msg: any) => 
                   msg.id === assistantId 
                     ? { ...msg, content: assistantMessage }
                     : msg
@@ -220,7 +220,7 @@ export default function StudyBookPage() {
                   setConversationId(data.conversationId);
                 }
               } else if (data.type === 'error') {
-                setMessages(prev => prev.map(msg => 
+                setMessages(prev => prev.map((msg: any) => 
                   msg.id === assistantId 
                     ? { ...msg, content: data.content }
                     : msg
@@ -1372,7 +1372,7 @@ export default function StudyBookPage() {
           }
         });
 
-        setUploadedFiles(prev => prev.filter(f => f.id !== fileId));
+        setUploadedFiles(prev => prev.filter((f: any) => f.id !== fileId));
       } catch (error) {
         console.error('Delete error:', error);
       }
@@ -1428,7 +1428,7 @@ export default function StudyBookPage() {
                 {uploadedFiles.length > 0 && (
                   <div className="uploaded-files-list">
                     <h4>Uploaded Files:</h4>
-                    {uploadedFiles.map(file => (
+                    {uploadedFiles.map((file: any) => (
                       <div key={file.id} className="uploaded-file-item">
                         <span className="file-icon">
                           {file.file_type.includes('pdf') ? '📄' : 
@@ -1973,7 +1973,7 @@ export default function StudyBookPage() {
 
   const renderAskBoTab = () => {
     const addNewPage = (question: string) => {
-      const newPageId = Math.max(...questionPages[question].map(p => p.id)) + 1;
+      const newPageId = Math.max(...questionPages[question].map((p: any) => p.id)) + 1;
       setQuestionPages(prev => ({
         ...prev,
         [question]: [...prev[question], { id: newPageId, content: '', title: `Page ${newPageId}` }]
@@ -1984,7 +1984,7 @@ export default function StudyBookPage() {
     const updatePageContent = (question: string, pageId: number, content: string) => {
       setQuestionPages(prev => ({
         ...prev,
-        [question]: prev[question].map(p => 
+        [question]: prev[question].map((p: any) => 
           p.id === pageId ? { ...p, content } : p
         )
       }));
@@ -2006,7 +2006,7 @@ export default function StudyBookPage() {
             <h3 className="question-title">{title}</h3>
             <div className="page-navigation">
               <div className="page-tabs">
-                {questionPages[question].map(page => (
+                {questionPages[question].map((page: any) => (
                   <button
                     key={page.id}
                     className={`page-tab ${activePages[question] === page.id ? 'active' : ''}`}
@@ -2037,7 +2037,7 @@ export default function StudyBookPage() {
                 Save Page {activePages[question]}
               </button>
               <div className="word-count">
-                {currentPage?.content ? currentPage.content.split(/\s+/).filter(word => word.length > 0).length : 0} words
+                {currentPage?.content ? currentPage.content.split(/\s+/).filter((word: any) => word.length > 0).length : 0} words
               </div>
             </div>
           </div>

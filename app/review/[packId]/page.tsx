@@ -422,7 +422,7 @@ export default function ReviewPage({ params }: { params: Promise<{ packId: strin
       let questions: Question[] = [];
       
       if (questionData && questionData.length > 0) {
-        const questionIds = questionData.map(q => q.question_id);
+        const questionIds = questionData.map((q: any) => q.question_id);
         
         try {
           const algoliaQuestions = await getQuestionsByIds(packData.subject || 'TSA', questionIds);

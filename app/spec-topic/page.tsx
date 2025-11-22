@@ -36,7 +36,7 @@ export default function SpecTopicPage() {
         return;
       }
 
-      const savedIds = new Set(savedPacks.map(sp => sp.pack_id));
+      const savedIds = new Set(savedPacks.map((sp: any) => sp.pack_id));
       setSavedPackIds(savedIds);
     } catch (error) {
       console.error('Error loading saved packs:', error);

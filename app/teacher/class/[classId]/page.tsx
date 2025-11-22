@@ -151,7 +151,7 @@ export default function ClassViewPage({ params }: { params: Promise<{ classId: s
       }
     };
 
-    const filteredStudents = mockStudents.filter(student =>
+    const filteredStudents = mockStudents.filter((student: any) =>
       student.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 

@@ -172,7 +172,7 @@ export default function StudyBookPage() {
 
   // Categories for materials with real counts
   const getCategoryCount = (categoryId: string) => {
-    return uploadedFiles.filter(file => file.category === categoryId).length;
+    return uploadedFiles.filter((file: any) => file.category === categoryId).length;
   };
 
   const categories = [
@@ -363,7 +363,7 @@ export default function StudyBookPage() {
           .order('created_at', { ascending: true });
 
         if (messageHistory) {
-          const formattedMessages = (messageHistory as any[]).map(msg => ({
+          const formattedMessages = (messageHistory as any[]).map((msg: any) => ({
             id: msg.id,
             role: msg.role as 'user' | 'assistant',
             content: msg.content,
@@ -741,7 +741,7 @@ export default function StudyBookPage() {
               
               if (data.type === 'token') {
                 assistantMessage += data.content;
-                setMessages(prev => prev.map(msg => 
+                setMessages(prev => prev.map((msg: any) => 
                   msg.id === assistantId 
                     ? { ...msg, content: assistantMessage }
                     : msg
@@ -757,7 +757,7 @@ export default function StudyBookPage() {
                 // Refresh usage info after successful message
                 fetchUsageInfo();
               } else if (data.type === 'error') {
-                setMessages(prev => prev.map(msg => 
+                setMessages(prev => prev.map((msg: any) => 
                   msg.id === assistantId 
                     ? { ...msg, content: data.content }
                     : msg
@@ -872,7 +872,7 @@ export default function StudyBookPage() {
               
               if (data.type === 'token') {
                 assistantMessage += data.content;
-                setInterviewMessages(prev => prev.map(msg => 
+                setInterviewMessages(prev => prev.map((msg: any) => 
                   msg.id === assistantId 
                     ? { ...msg, content: assistantMessage }
                     : msg
@@ -888,7 +888,7 @@ export default function StudyBookPage() {
                 // Refresh usage info after successful message
                 fetchUsageInfo();
               } else if (data.type === 'error') {
-                setInterviewMessages(prev => prev.map(msg => 
+                setInterviewMessages(prev => prev.map((msg: any) => 
                   msg.id === assistantId 
                     ? { ...msg, content: data.content }
                     : msg
@@ -972,7 +972,7 @@ export default function StudyBookPage() {
 
       // Extract last 5 messages for context
       const recentMessages = messages.slice(-5);
-      const conversationContext = recentMessages.map(msg =>
+      const conversationContext = recentMessages.map((msg: any) =>
         `**${msg.role.toUpperCase()}**: ${msg.content}`
       ).join('\n\n');
 
@@ -1474,7 +1474,7 @@ export default function StudyBookPage() {
               <div className="categories-panel">
                 <h2>Categories</h2>
                 <div className="categories-list">
-                  {categories.map(category => (
+                  {categories.map((category: any) => (
                     <div key={category.id} className="category-item">
                       <img src={category.icon} alt={category.label} />
                       <span>{category.label}</span>
@@ -1494,7 +1494,7 @@ export default function StudyBookPage() {
               <div className="materials-grid">
                 <h2>Your Materials</h2>
                 <div className="materials-cards">
-                  {uploadedFiles.map(file => {
+                  {uploadedFiles.map((file: any) => {
                     const categoryIcon = categories.find(cat => cat.id === file.category)?.icon || '/icons/essays.svg';
                     return (
                       <div key={file.id} className="material-card">
@@ -1556,7 +1556,7 @@ export default function StudyBookPage() {
                     <p>I'm Bo, your personal statement advisor. Ask me anything about your personal statement.</p>
                   </div>
                 ) : (
-                  messages.map(message => (
+                  messages.map((message: any) => (
                     <div key={message.id} className={`message ${message.role}`}>
                       <div className="message-content">
                         {message.role === 'assistant' ? (
@@ -1655,7 +1655,7 @@ export default function StudyBookPage() {
                     <p>I'm Gabe, your Oxford/Cambridge interview coach. I'll test your analytical thinking using your personal statement as the foundation.</p>
                   </div>
                 ) : (
-                  interviewMessages.map(message => (
+                  interviewMessages.map((message: any) => (
                     <div key={message.id} className={`message ${message.role}`}>
                       <div className="message-content">
                         {message.role === 'assistant' ? (
