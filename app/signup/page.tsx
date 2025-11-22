@@ -411,7 +411,7 @@ export default function SignupPage() {
         console.error('Error checking existing profile:', checkError);
       }
 
-      const profileUpdateData: any = {
+      const profileUpdateData: Record<string, any> = {
         full_name: fullName,
         username: username,
         school: school,
@@ -425,7 +425,7 @@ export default function SignupPage() {
 
       if (existingProfile) {
         // Update existing profile
-        const { error: updateError } = await supabase
+        const { error: updateError } = await (supabase as any)
           .from('user_profiles')
           .update(profileUpdateData)
           .eq('id', userId);
@@ -438,7 +438,7 @@ export default function SignupPage() {
         }
       } else {
         // Create new profile
-        const { error: profileError } = await supabase
+        const { error: profileError } = await (supabase as any)
           .from('user_profiles')
           .insert({
             id: userId,
