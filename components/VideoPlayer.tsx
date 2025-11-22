@@ -2,13 +2,20 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import ReactPlayer from 'react-player';
-import { OnProgressProps } from 'react-player/base';
 import './VideoPlayer.css';
 
 interface VideoPlayerProps {
   videoUrl: string;
   onProgress?: (progress: number) => void;
   onEnded?: () => void;
+}
+
+// Local type definition for progress state
+interface ProgressState {
+  played: number;
+  playedSeconds: number;
+  loaded: number;
+  loadedSeconds: number;
 }
 
 // Helper function to detect if URL is YouTube
@@ -89,7 +96,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
     resetControlsTimeout();
   };
 
-  const handleProgress = (state: OnProgressProps) => {
+  const handleProgress = (state: ProgressState) => {
     if (!seeking) {
       setPlayed(state.played);
       onProgress?.(state.played);
