@@ -1,8 +1,8 @@
-// @ts-nocheck
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
 import ReactPlayer from 'react-player';
+import { OnProgressProps } from 'react-player/base';
 import './VideoPlayer.css';
 
 interface VideoPlayerProps {
@@ -13,20 +13,26 @@ interface VideoPlayerProps {
 
 // Helper function to detect if URL is YouTube
 const isYouTubeUrl = (url: string): boolean => {
+  if (!url) return false;
   return url.includes('youtube.com') || url.includes('youtu.be');
 };
 
 // Helper function to detect if URL is a direct video file
 const isDirectVideoUrl = (url: string): boolean => {
+  if (!url) return false;
   const videoExtensions = ['.mp4', '.mov', '.webm', '.ogg', '.avi', '.mkv'];
   const lowerUrl = url.toLowerCase();
-  return videoExtensions.some((ext: any) => lowerUrl.includes(ext));
+  return videoExtensions.some(ext => lowerUrl.includes(ext));
 };
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded }) => {
-  const playerRef = useRef<any>(null);
+  // Fix: Explicitly type the refs
+  const playerRef = useRef<ReactPlayer>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Fix: Add mounted state to prevent Hydration Mismatch errors
+  const [isMounted, setIsMounted] = useState(false);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -39,9 +45,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
   const [showControls, setShowControls] = useState(true);
   const [controlsTimeout, setControlsTimeout] = useState<NodeJS.Timeout | null>(null);
 
+  // Wait for client-side mount
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   // Determine video type
   const isYouTube = isYouTubeUrl(videoUrl);
-  const isDirectVideo = isDirectVideoUrl(videoUrl);
 
   // Handle fullscreen changes
   useEffect(() => {
@@ -53,7 +63,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
-  // Auto-hide controls after 3 seconds of inactivity
+  // Reset controls timeout
   const resetControlsTimeout = () => {
     if (controlsTimeout) {
       clearTimeout(controlsTimeout);
@@ -68,7 +78,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
   };
 
   const handlePlayPause = () => {
-    if (isDirectVideo && videoRef.current) {
+    if (!isYouTube && videoRef.current) {
       if (isPlaying) {
         videoRef.current.pause();
       } else {
@@ -79,7 +89,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
     resetControlsTimeout();
   };
 
-  const handleProgress = (state: { played: number; playedSeconds: number }) => {
+  const handleProgress = (state: OnProgressProps) => {
     if (!seeking) {
       setPlayed(state.played);
       onProgress?.(state.played);
@@ -90,16 +100,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
   const handleDirectVideoTimeUpdate = () => {
     if (videoRef.current && !seeking) {
       const currentTime = videoRef.current.currentTime;
-      const duration = videoRef.current.duration;
-      if (duration > 0) {
-        const progress = currentTime / duration;
+      const currentDuration = videoRef.current.duration;
+      if (currentDuration > 0) {
+        const progress = currentTime / currentDuration;
         setPlayed(progress);
         onProgress?.(progress);
       }
     }
   };
 
-  // Handle direct video loaded metadata
   const handleDirectVideoLoadedMetadata = () => {
     if (videoRef.current) {
       setDuration(videoRef.current.duration);
@@ -108,7 +117,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
     }
   };
 
-  // Handle direct video ended
   const handleDirectVideoEnded = () => {
     setIsPlaying(false);
     onEnded?.();
@@ -126,7 +134,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
     setSeeking(false);
     const seekTime = parseFloat(e.target.value);
 
-    if (isDirectVideo && videoRef.current) {
+    if (!isYouTube && videoRef.current) {
       videoRef.current.currentTime = seekTime * duration;
     } else if (playerRef.current) {
       playerRef.current.seekTo(seekTime);
@@ -138,7 +146,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
     setVolume(newVolume);
     setIsMuted(newVolume === 0);
 
-    if (isDirectVideo && videoRef.current) {
+    if (!isYouTube && videoRef.current) {
       videoRef.current.volume = newVolume;
     }
   };
@@ -147,7 +155,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
     const newMuted = !isMuted;
     setIsMuted(newMuted);
 
-    if (isDirectVideo && videoRef.current) {
+    if (!isYouTube && videoRef.current) {
       videoRef.current.muted = newMuted;
     }
   };
@@ -190,6 +198,18 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Fix: Don't render player until client-side mount is complete
+  if (!isMounted) {
+    return (
+      <div style={{
+        width: '100%',
+        paddingTop: '56.25%',
+        backgroundColor: '#000',
+        borderRadius: '12px'
+      }} />
+    );
+  }
+
   return (
     <div
       ref={containerRef}
@@ -226,26 +246,20 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
             zIndex: 10,
           }}
         >
-          <div
-            style={{
-              width: '50px',
-              height: '50px',
-              border: '4px solid #333',
-              borderTop: '4px solid #B3F0F2',
-              borderRadius: '50%',
-              animation: 'spin 1s linear infinite',
-            }}
-          />
-          <p
-            style={{
-              marginTop: '16px',
-              color: '#fff',
-              fontFamily: "'Madimi One', sans-serif",
-              fontSize: '14px',
-            }}
-          >
-            Loading video...
-          </p>
+          <div className="video-spinner" style={{
+             width: '50px',
+             height: '50px',
+             border: '4px solid #333',
+             borderTop: '4px solid #B3F0F2',
+             borderRadius: '50%',
+             animation: 'spin 1s linear infinite',
+          }} />
+          <style jsx>{`
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}</style>
         </div>
       )}
 
@@ -263,10 +277,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
           onEnded={handleEnded}
           width="100%"
           height="100%"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
+          style={{ position: 'absolute', top: 0, left: 0 }}
+          config={{
+            youtube: {
+              playerVars: { showinfo: 0, controls: 0, modestbranding: 1 }
+            }
           }}
         />
       ) : (
