@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
         .eq('table_schema', 'public');
       
       if (!columnError && columnInfo) {
-        tableStructure = `Found ${columnInfo.length} columns: ${columnInfo.map(c => c.column_name).join(', ')}`;
+        tableStructure = `Found ${columnInfo.length} columns: ${columnInfo.map((c: any) => c.column_name).join(', ')}`;
       }
     } catch (err) {
       tableStructure = 'Unable to fetch table structure';
