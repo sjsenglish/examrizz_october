@@ -55,15 +55,15 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
   
   // Load profile from cache
   const loadFromCache = useCallback((userId: string): UserProfile | null => {
+    if (typeof window === 'undefined') return null;
     try {
       const cached = localStorage.getItem(getCacheKey(userId));
       if (cached) {
         const parsed = JSON.parse(cached);
-        // Check if cache is less than 5 minutes old
+        // Cache valid for 5 minutes
         if (Date.now() - parsed.timestamp < 5 * 60 * 1000) {
           return parsed.profile;
         }
-        // Clear expired cache
         localStorage.removeItem(getCacheKey(userId));
       }
     } catch (error) {
@@ -74,6 +74,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
   
   // Save profile to cache
   const saveToCache = useCallback((userId: string, profileData: UserProfile) => {
+    if (typeof window === 'undefined') return;
     try {
       localStorage.setItem(getCacheKey(userId), JSON.stringify({
         profile: profileData,
@@ -84,58 +85,43 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     }
   }, []);
   
-  // Load profile data from database
+  // Load profile data from database (OPTIMIZED: Parallel fetching)
   const loadProfileFromDatabase = useCallback(async (userId: string): Promise<UserProfile | null> => {
     try {
-      // Load profile data
-      const { data: profileData, error: profileError } = await (supabase as any)
-        .from('user_profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
+      // Run all three queries in parallel to cut loading time by ~66%
+      const [profileResult, gcseResult, aLevelResult] = await Promise.all([
+        (supabase as any).from('user_profiles').select('*').eq('id', userId).single(),
+        (supabase as any).from('user_gcse_grades').select('subject, grade').eq('user_id', userId),
+        (supabase as any).from('user_alevel_grades').select('subject, grade').eq('user_id', userId)
+      ]);
 
-      if (profileError) {
-        if (profileError.code === 'PGRST116') {
-          // Profile doesn't exist yet
+      if (profileResult.error) {
+        // PGRST116 means "No rows found" - valid case for new users
+        if (profileResult.error.code === 'PGRST116') {
           return null;
         }
-        throw profileError;
-      }
-      
-      // Load GCSE grades
-      const { data: gcseGrades, error: gcseError } = await (supabase as any)
-        .from('user_gcse_grades')
-        .select('subject, grade')
-        .eq('user_id', userId);
-      
-      // Load A Level grades
-      const { data: aLevelGrades, error: aLevelError } = await (supabase as any)
-        .from('user_alevel_grades')
-        .select('subject, grade')
-        .eq('user_id', userId);
-
-      if (gcseError) {
-        console.error('Error loading GCSE grades:', gcseError);
-      }
-      
-      if (aLevelError) {
-        console.error('Error loading A Level grades:', aLevelError);
+        throw profileResult.error;
       }
 
-      if (!profileData) {
-        return null;
+      // Log non-critical errors but continue
+      if (gcseResult.error) {
+        console.error('Error loading GCSE grades:', gcseResult.error);
       }
 
-      // Combine profile with grades
+      if (aLevelResult.error) {
+        console.error('Error loading A Level grades:', aLevelResult.error);
+      }
+
+      // Combine results
       const fullProfile: UserProfile = {
-        ...(profileData as any),
-        gcse_grades: gcseGrades || [],
-        a_level_grades: aLevelGrades || []
+        ...profileResult.data,
+        gcse_grades: gcseResult.data || [],
+        a_level_grades: aLevelResult.data || []
       };
-      
-      // Cache the result
+
+      // Update cache
       saveToCache(userId, fullProfile);
-      
+
       return fullProfile;
     } catch (error) {
       console.error('Error loading profile from database:', error);
@@ -143,21 +129,17 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     }
   }, [saveToCache]);
 
-  // Refresh profile data
+  // Refresh profile data (background refresh - doesn't set loading state)
   const refreshProfile = useCallback(async () => {
     if (!user?.id) return;
-    
-    setLoading(true);
-    setError(null);
-    
+
+    // Don't set global loading to true to avoid UI flicker during background refresh
     try {
       const profileData = await loadProfileFromDatabase(user.id);
       setProfile(profileData);
     } catch (err) {
       console.error('Error refreshing profile:', err);
-      setError(err instanceof Error ? err.message : 'Failed to load profile');
-    } finally {
-      setLoading(false);
+      // Don't overwrite error state on background refresh failure
     }
   }, [user?.id, loadProfileFromDatabase]);
 
@@ -262,107 +244,89 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
   // Initialize auth state and profile
   useEffect(() => {
     let mounted = true;
-    
-    const initializeProfile = async () => {
-      try {
-        // Get current session
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        
-        if (sessionError) {
-          console.error('Session error:', sessionError);
-          if (mounted) {
-            setError('Failed to check authentication status');
-            setLoading(false);
-          }
-          return;
-        }
 
-        if (session?.user) {
-          if (mounted) {
+    // Only check session on mount
+    const checkSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (mounted) {
+          if (session?.user) {
             setUser(session.user);
-          }
-          
-          // Try to load from cache first
-          const cachedProfile = loadFromCache(session.user.id);
-          if (cachedProfile && mounted) {
-            setProfile(cachedProfile);
-            setLoading(false);
-            return;
-          }
-          
-          // If no cache, load from database
-          try {
-            const profileData = await loadProfileFromDatabase(session.user.id);
-            if (mounted) {
-              setProfile(profileData);
+            // Try cache first (Instant load)
+            const cached = loadFromCache(session.user.id);
+            if (cached) {
+              setProfile(cached);
+              setLoading(false);
+              // Refresh in background to ensure data is fresh
+              loadProfileFromDatabase(session.user.id).then(data => {
+                if (mounted && data) setProfile(data);
+              }).catch(err => console.error('Background refresh failed:', err));
+            } else {
+              // No cache, wait for DB
+              const data = await loadProfileFromDatabase(session.user.id);
+              if (mounted) {
+                setProfile(data);
+                setLoading(false);
+              }
             }
-          } catch (err) {
-            console.error('Error loading profile:', err);
-            if (mounted) {
-              setError(err instanceof Error ? err.message : 'Failed to load profile');
-            }
-          }
-        } else {
-          if (mounted) {
+          } else {
+            // No session found
             setUser(null);
             setProfile(null);
+            setLoading(false);
           }
         }
-      } catch (error) {
-        console.error('Error initializing profile:', error);
+      } catch (err) {
+        console.error('Auth check failed:', err);
         if (mounted) {
-          setError('Failed to initialize profile');
-        }
-      } finally {
-        if (mounted) {
+          setError(err instanceof Error ? err.message : 'Failed to check authentication');
           setLoading(false);
         }
       }
     };
 
-    initializeProfile();
+    checkSession();
 
-    // Listen for auth changes
+    // Listen for auth changes (Sign In / Sign Out / Token Refresh)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event: any, session: any) => {
       if (!mounted) return;
-      
-      if (event === 'SIGNED_IN' && session?.user) {
+
+      // Debug logging
+      console.log(`Auth state changed: ${event}`);
+
+      if (session?.user) {
         setUser(session.user);
-        setError(null);
-        setLoading(true);
-        
-        // Try cache first, then database
-        const cachedProfile = loadFromCache(session.user.id);
-        if (cachedProfile) {
-          setProfile(cachedProfile);
-          setLoading(false);
-        } else {
-          try {
-            const profileData = await loadProfileFromDatabase(session.user.id);
-            setProfile(profileData);
-          } catch (err) {
-            console.error('Error loading profile on sign in:', err);
-            setError(err instanceof Error ? err.message : 'Failed to load profile');
-          } finally {
-            setLoading(false);
+
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+          // Don't set loading=true if we already have data (prevents flash)
+          const cached = loadFromCache(session.user.id);
+          if (cached && !profile) {
+            setProfile(cached);
           }
+
+          // Fetch fresh data in background
+          loadProfileFromDatabase(session.user.id)
+            .then(data => {
+              if (mounted) setProfile(data);
+            })
+            .catch(err => console.error('Error loading profile:', err))
+            .finally(() => {
+              if (mounted) setLoading(false);
+            });
         }
       } else if (event === 'SIGNED_OUT') {
         setUser(null);
         setProfile(null);
-        setError(null);
         setLoading(false);
-        
-        // Clear all profile caches
-        try {
+        // Clear local storage
+        if (typeof window !== 'undefined') {
           const keys = Object.keys(localStorage);
-          keys.forEach((key: any) => {
+          keys.forEach((key: string) => {
             if (key.startsWith('profile_cache_')) {
               localStorage.removeItem(key);
             }
           });
-        } catch (error) {
-          console.error('Error clearing profile caches:', error);
         }
       }
     });
@@ -371,7 +335,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [loadFromCache, loadProfileFromDatabase]);
+  }, [loadFromCache, loadProfileFromDatabase]); // Stable dependencies
 
   const contextValue: ProfileContextType = {
     profile,
