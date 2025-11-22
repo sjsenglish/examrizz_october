@@ -4,6 +4,20 @@
 - **IMPORTANT**: Always update this CLAUDE.md file before every git commit
 - Include any new project conventions, patterns, or important decisions made during development
 
+## Maintenance Mode (Added Nov 2024)
+- **Purpose**: Site-wide maintenance message that covers entire site with white screen
+- **Location**: `/app/layout.tsx` - Root layout file
+- **Toggle**: Set `MAINTENANCE_MODE` constant to `true` or `false`
+  - `true`: Shows maintenance message, hides all site content
+  - `false`: Normal site operation
+- **Message**: "We're sorting out some issues but will be back up and running very soon. Thank you for your patience."
+- **Design**:
+  - Full-screen white overlay (z-index: 9999)
+  - Centered text with Figtree font
+  - Clean, minimal design
+  - Responsive with padding for mobile devices
+- **Implementation**: Uses conditional rendering in root layout to show maintenance screen instead of children when enabled
+
 ## Authentication Configuration (Fixed Nov 2024, Re-fixed Nov 2024)
 - **Issue**: Users were being logged out when navigating between pages (profile, referrals, etc.) or when reloading during OAuth
 - **Root Cause**: Multiple Supabase client instances with different configurations - `supabase-client.ts` had proper config but `supabase.ts` was missing critical storage settings

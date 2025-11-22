@@ -5,6 +5,9 @@ import { PostHogProvider, PostHogPageView } from '../components/PostHogProvider'
 import { ProfileProvider } from '../contexts/ProfileContext';
 import { Suspense } from 'react';
 
+// Maintenance mode flag - set to true to show maintenance message
+const MAINTENANCE_MODE = true;
+
 // Optimize font loading with proper fallbacks
 const inter = Inter({
   subsets: ['latin'],
@@ -57,7 +60,45 @@ export default function RootLayout({
             <Suspense fallback={null}>
               <PostHogPageView />
             </Suspense>
-            {children}
+            {MAINTENANCE_MODE ? (
+              <div style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                backgroundColor: '#ffffff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 9999,
+                padding: '20px',
+              }}>
+                <div style={{
+                  textAlign: 'center',
+                  maxWidth: '600px',
+                  fontFamily: 'Figtree, system-ui, -apple-system, sans-serif',
+                }}>
+                  <h1 style={{
+                    fontSize: '28px',
+                    fontWeight: '600',
+                    color: '#000000',
+                    marginBottom: '20px',
+                  }}>
+                    Down for Maintenance
+                  </h1>
+                  <p style={{
+                    fontSize: '18px',
+                    color: '#333333',
+                    lineHeight: '1.6',
+                  }}>
+                    We're sorting out some issues but will be back up and running very soon. Thank you for your patience.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              children
+            )}
           </ProfileProvider>
         </PostHogProvider>
       </body>
