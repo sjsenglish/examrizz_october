@@ -88,10 +88,10 @@ function findImports(dir: string, searchString: string): string[] {
 
 const filesUsingOldImport = findImports(appDir, "from '@/lib/supabase'")
   .concat(findImports(componentsDir, "from '@/lib/supabase'"))
-  .filter(f => !f.includes("from '@/lib/supabase-client'"));
+  .filter(f => !f.includes("from '@/lib/supabase'"));
 
-const filesUsingCorrectImport = findImports(appDir, "from '@/lib/supabase-client'")
-  .concat(findImports(componentsDir, "from '@/lib/supabase-client'"));
+const filesUsingCorrectImport = findImports(appDir, "from '@/lib/supabase'")
+  .concat(findImports(componentsDir, "from '@/lib/supabase'"));
 
 console.log(`Files using OLD supabase import (problematic): ${filesUsingOldImport.length}`);
 if (filesUsingOldImport.length > 0) {

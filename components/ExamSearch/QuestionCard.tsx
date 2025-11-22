@@ -6,7 +6,7 @@ import { VideoModal } from '../VideoModal';
 import { PdfModal } from '../PdfModal';
 import styles from './QuestionCard.module.css';
 import DOMPurify from 'dompurify';
-import { supabase } from '@/lib/supabase-client';
+import { supabase } from '@/lib/supabase';
 import { uploadVideoToSupabase, validateVideoFile, formatFileSize } from '@/lib/video-upload';
 import { useProfile } from '@/contexts/ProfileContext';
 

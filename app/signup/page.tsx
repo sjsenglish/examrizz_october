@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import { ensureUserProfile } from '@/lib/auth-utils';
-import { supabase } from '@/lib/supabase-client';
+import { supabase } from '@/lib/supabase';
 
 export default function SignupPage() {
   const router = useRouter();

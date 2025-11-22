@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase-client';
+import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import Navbar from '@/components/Navbar';

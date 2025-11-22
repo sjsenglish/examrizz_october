@@ -6,7 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
-import { supabase } from '@/lib/supabase-client';
+import { supabase } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import './spec-point-session.css';

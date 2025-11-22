@@ -1,22 +1,21 @@
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-// Single Supabase client instance to avoid multiple GoTrueClient warnings
-// Singleton pattern to ensure only one client exists
+// Singleton pattern to ensure only one client exists across the app
 let supabaseInstance: ReturnType<typeof createClient> | null = null;
 
-function getSupabaseInstance() {
+function getSupabaseClient() {
   if (!supabaseInstance) {
-    supabaseInstance = createClient(supabaseUrl, supabaseKey, {
+    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true,
         flowType: 'pkce',
         storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-        storageKey: 'examrizz-auth-token'
+        storageKey: 'examrizz-auth-token' // Ensuring consistent key
       },
       global: {
         headers: {
@@ -33,9 +32,9 @@ function getSupabaseInstance() {
   return supabaseInstance;
 }
 
-export const supabase = getSupabaseInstance();
+export const supabase = getSupabaseClient();
 
-// Types for database schema
+// --- TYPES ---
 export interface School {
   id: string;
   name: string;
@@ -110,7 +109,8 @@ export interface PackAttempt {
   created_at: string;
 }
 
-// Helper function to get current user
+// --- HELPER FUNCTIONS ---
+
 export async function getCurrentUser() {
   const { data: { user }, error } = await supabase.auth.getUser();
   if (error) {
@@ -120,7 +120,6 @@ export async function getCurrentUser() {
   return user;
 }
 
-// Helper function to get user profile
 export async function getUserProfile(userId: string): Promise<UserProfile | null> {
   try {
     const { data, error } = await supabase
@@ -130,15 +129,13 @@ export async function getUserProfile(userId: string): Promise<UserProfile | null
       .single();
 
     if (error) {
-      // If the profile doesn't exist (not an error), return null
+      // PGRST116 is the error code for "no rows returned" (not a critical failure)
       if (error.code === 'PGRST116') {
-        console.log('User profile not found, will create new one');
         return null;
       }
       console.error('Error getting user profile:', error.message || error);
       return null;
     }
-
     return data;
   } catch (error) {
     console.error('Unexpected error getting user profile:', error);
@@ -146,27 +143,25 @@ export async function getUserProfile(userId: string): Promise<UserProfile | null
   }
 }
 
-// Helper function to create or update user profile
 export async function createOrUpdateUserProfile(
-  userId: string, 
-  email: string, 
-  fullName?: string, 
+  userId: string,
+  email: string,
+  fullName?: string,
   role: 'teacher' | 'student' | 'admin' = 'teacher'
 ): Promise<UserProfile | null> {
   try {
     // First try to get existing profile
     const existingProfile = await getUserProfile(userId);
-    
+
     if (existingProfile) {
-      // Update existing profile if needed
       try {
         const updateData: any = {
           email,
           full_name: fullName || existingProfile.full_name,
           role: role
         };
-        
-        const { data, error } = await (supabase as any)
+
+        const { data, error } = await supabase
           .from('user_profiles')
           .update(updateData)
           .eq('id', userId)
@@ -192,10 +187,10 @@ export async function createOrUpdateUserProfile(
         email,
         full_name: fullName || email.split('@')[0],
         role: role,
-        school_id: null // Will be set when user joins a school
+        school_id: null
       };
-      
-      const { data, error } = await (supabase as any)
+
+      const { data, error } = await supabase
         .from('user_profiles')
         .insert(insertData)
         .select()
@@ -203,15 +198,9 @@ export async function createOrUpdateUserProfile(
 
       if (error) {
         console.error('Error creating user profile:', error.message || error);
-        // Check if the table exists by testing a simple query
-        const { error: tableError } = await supabase.from('user_profiles').select('count', { count: 'exact', head: true });
-        if (tableError) {
-          console.error('user_profiles table may not exist:', tableError.message);
-        }
         return null;
       }
 
-      console.log('Successfully created user profile:', data);
       return data;
     } catch (insertError) {
       console.error('Unexpected error creating profile:', insertError);
@@ -223,47 +212,29 @@ export async function createOrUpdateUserProfile(
   }
 }
 
-// Check if database is properly set up
 export async function checkDatabaseConnection(): Promise<{ connected: boolean, tablesExist: boolean, error?: string }> {
   try {
-    // Test basic connection
     const { error: connectionError } = await supabase.from('user_profiles').select('count', { count: 'exact', head: true });
-    
+
     if (connectionError) {
       if (connectionError.message.includes('relation "public.user_profiles" does not exist')) {
         return { connected: true, tablesExist: false, error: 'Tables not created yet' };
       }
       return { connected: false, tablesExist: false, error: connectionError.message };
     }
-    
+
     return { connected: true, tablesExist: true };
   } catch (error) {
     return { connected: false, tablesExist: false, error: error instanceof Error ? error.message : 'Unknown error' };
   }
 }
 
-// Helper function to ensure user has teacher profile
 export async function ensureTeacherProfile(userId: string, email: string): Promise<UserProfile | null> {
   try {
-    // First check if database is set up
     const dbStatus = await checkDatabaseConnection();
-    
-    if (!dbStatus.connected) {
-      console.error('Database connection failed:', dbStatus.error);
-      // Return a mock profile for development
-      return {
-        id: userId,
-        email,
-        full_name: email.split('@')[0],
-        role: 'teacher',
-        school_id: null,
-        created_at: new Date().toISOString()
-      };
-    }
-    
-    if (!dbStatus.tablesExist) {
-      console.warn('Database tables not created yet. Using mock profile for development.');
-      // Return a mock profile for development
+
+    if (!dbStatus.connected || !dbStatus.tablesExist) {
+      console.warn('Database issues detected, using mock profile');
       return {
         id: userId,
         email,
@@ -275,19 +246,16 @@ export async function ensureTeacherProfile(userId: string, email: string): Promi
     }
 
     let profile = await getUserProfile(userId);
-    
+
     if (!profile) {
-      // Create new teacher profile
       profile = await createOrUpdateUserProfile(userId, email, undefined, 'teacher');
     } else if (profile.role !== 'teacher') {
-      // Update role to teacher
       profile = await createOrUpdateUserProfile(userId, email, profile.full_name, 'teacher');
     }
-    
+
     return profile;
   } catch (error) {
     console.error('Error in ensureTeacherProfile:', error);
-    // Return a mock profile as fallback
     return {
       id: userId,
       email,
@@ -298,3 +266,6 @@ export async function ensureTeacherProfile(userId: string, email: string): Promi
     };
   }
 }
+
+// Default export to ensure compatibility with files using "import supabase from..."
+export default supabase;
