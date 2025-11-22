@@ -10,7 +10,9 @@
 - **Toggle**: Set `MAINTENANCE_MODE` constant to `true` or `false`
   - `true`: Shows maintenance message, hides all site content
   - `false`: Normal site operation
-- **Message**: "We're sorting out some issues but will be back up and running very soon. Thank you for your patience."
+- **Message**:
+  - "We're sorting out some issues but will be back up and running very soon. Thank you for your patience."
+  - "If you have any questions you need help with in the meantime, send us a message in discord."
 - **Design**:
   - Full-screen white overlay (z-index: 9999)
   - Centered text with Figtree font

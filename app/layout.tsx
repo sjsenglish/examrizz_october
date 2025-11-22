@@ -91,8 +91,16 @@ export default function RootLayout({
                     fontSize: '18px',
                     color: '#333333',
                     lineHeight: '1.6',
+                    marginBottom: '12px',
                   }}>
                     We're sorting out some issues but will be back up and running very soon. Thank you for your patience.
+                  </p>
+                  <p style={{
+                    fontSize: '18px',
+                    color: '#333333',
+                    lineHeight: '1.6',
+                  }}>
+                    If you have any questions you need help with in the meantime, send us a message in discord.
                   </p>
                 </div>
               </div>
