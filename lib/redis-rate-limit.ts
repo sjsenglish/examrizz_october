@@ -124,7 +124,7 @@ export async function getUserTier(userId: string): Promise<SubscriptionTier> {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
     
-    const { data: subscription } = await supabase
+    const { data: subscription } = await (supabase as any)
       .from('user_subscriptions')
       .select('subscription_tier, subscription_status')
       .eq('user_id', userId)

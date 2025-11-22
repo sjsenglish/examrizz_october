@@ -122,7 +122,7 @@ export async function getCurrentUser() {
 
 export async function getUserProfile(userId: string): Promise<UserProfile | null> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('user_profiles')
       .select('*')
       .eq('id', userId)
@@ -161,7 +161,7 @@ export async function createOrUpdateUserProfile(
           role: role
         };
 
-        const { data, error } = await supabase
+        const { data, error } = await (supabase as any)
           .from('user_profiles')
           .update(updateData)
           .eq('id', userId)
@@ -190,7 +190,7 @@ export async function createOrUpdateUserProfile(
         school_id: null
       };
 
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('user_profiles')
         .insert(insertData)
         .select()

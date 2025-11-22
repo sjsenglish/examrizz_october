@@ -102,7 +102,7 @@ export async function getUserSubscriptionTier(userId: string): Promise<'free' | 
     return cached.tier
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('user_subscriptions')
     .select('subscription_tier, subscription_status')
     .eq('user_id', userId)
@@ -148,7 +148,7 @@ async function getCachedFeatureUsageCount(
     return cached.count
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('feature_usage_tracking')
     .select('id')
     .eq('user_id', userId)
@@ -204,7 +204,7 @@ export async function recordUsage(
   const now = new Date()
   const monthYear = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
 
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('usage_tracking')
     .insert({
       user_id: userId,
@@ -257,7 +257,7 @@ export async function getMonthlyUsage(userId: string): Promise<MonthlyUsage> {
   const limit = USAGE_LIMITS[tier]
 
   // Get total usage for this month
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('usage_tracking')
     .select('cost_usd, tokens_used')
     .eq('user_id', userId)
@@ -337,7 +337,7 @@ export async function getUsageStats(userId: string) {
     months.push(`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`)
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('usage_tracking')
     .select('month_year, cost_usd, tokens_used, service, created_at')
     .eq('user_id', userId)
@@ -365,7 +365,7 @@ export async function recordFeatureUsage(
   const monthYear = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
   const dayDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
 
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('feature_usage_tracking')
     .insert({
       user_id: userId,
@@ -505,7 +505,7 @@ export async function getMonthlyMessageCount(
   const now = new Date()
   const monthYear = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
 
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('message_usage_tracking')
     .select('id')
     .eq('user_id', userId)
@@ -576,7 +576,7 @@ export async function recordMessageUsage(
   const now = new Date()
   const monthYear = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
 
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('message_usage_tracking')
     .insert({
       user_id: userId,

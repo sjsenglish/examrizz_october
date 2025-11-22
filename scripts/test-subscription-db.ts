@@ -25,7 +25,7 @@ async function testDatabase() {
   try {
     // Test 1: Check if table exists
     console.log('Test 1: Checking if table exists...');
-    const { data: tableCheck, error: tableError } = await supabase
+    const { data: tableCheck, error: tableError } = await (supabase as any)
       .from('user_subscriptions')
       .select('count', { count: 'exact', head: true });
 
@@ -40,7 +40,7 @@ async function testDatabase() {
 
     // Test 2: Try to query the table
     console.log('Test 2: Querying table...');
-    const { data: queryData, error: queryError, count } = await supabase
+    const { data: queryData, error: queryError, count } = await (supabase as any)
       .from('user_subscriptions')
       .select('*', { count: 'exact' })
       .limit(5);
@@ -61,7 +61,7 @@ async function testDatabase() {
     console.log('Test 3: Testing user-based query...');
     
     // Get a real user ID from auth.users if available
-    const { data: users, error: usersError } = await supabase
+    const { data: users, error: usersError } = await (supabase as any)
       .from('auth.users')
       .select('id')
       .limit(1);
@@ -73,7 +73,7 @@ async function testDatabase() {
       const testUserId = users[0].id;
       console.log(`Testing with user ID: ${testUserId}`);
 
-      const { data: userSubData, error: userSubError } = await supabase
+      const { data: userSubData, error: userSubError } = await (supabase as any)
         .from('user_subscriptions')
         .select('*')
         .eq('user_id', testUserId)

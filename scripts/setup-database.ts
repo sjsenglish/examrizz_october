@@ -75,7 +75,7 @@ async function setupDatabase() {
 
     // Verify the table structure
     console.log('🔍 Verifying table structure...');
-    const { data: columns, error: columnsError } = await supabase
+    const { data: columns, error: columnsError } = await (supabase as any)
       .from('information_schema.columns')
       .select('column_name, data_type, is_nullable')
       .eq('table_name', 'user_subscriptions')
@@ -94,7 +94,7 @@ async function setupDatabase() {
     console.log('🧪 Testing basic operations...');
     
     // Try to query the table (should work even if empty)
-    const { error: queryError } = await supabase
+    const { error: queryError } = await (supabase as any)
       .from('user_subscriptions')
       .select('count', { count: 'exact', head: true });
 

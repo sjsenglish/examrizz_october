@@ -63,7 +63,7 @@ export const createQuestionPack = async (userId, packData) => {
       updated_at: new Date().toISOString()
     };
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('question_packs')
       .insert(questionPackData)
       .select('id')
@@ -90,7 +90,7 @@ export const getUserQuestionPacks = async (userId) => {
       return { success: false, error: 'User ID is required' };
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('question_packs')
       .select('*')
       .eq('creator_id', userId)
@@ -117,7 +117,7 @@ export const getQuestionPack = async (packId) => {
       return { success: false, error: 'Pack ID is required' };
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('question_packs')
       .select('*')
       .eq('id', packId)
@@ -155,7 +155,7 @@ export const updateQuestionPack = async (packId, updates) => {
       updated_at: new Date().toISOString()
     };
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('question_packs')
       .update(updateData)
       .eq('id', packId)
@@ -183,7 +183,7 @@ export const deleteQuestionPack = async (packId) => {
       return { success: false, error: 'Pack ID is required' };
     }
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('question_packs')
       .delete()
       .eq('id', packId);

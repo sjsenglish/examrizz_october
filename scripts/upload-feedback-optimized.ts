@@ -20,7 +20,7 @@ async function uploadFeedback() {
 
   console.log('🔍 Testing Supabase connection...');
   
-  const { error: testError } = await supabase
+  const { error: testError } = await (supabase as any)
     .from('personal_statement_feedback')
     .select('count')
     .limit(1);
@@ -116,7 +116,7 @@ async function uploadFeedback() {
           };
           
           // Upload to database
-          const { error: insertError } = await supabase
+          const { error: insertError } = await (supabase as any)
             .from('personal_statement_feedback')
             .insert(uploadData)
             .select();

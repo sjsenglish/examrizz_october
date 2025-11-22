@@ -276,7 +276,7 @@ async function generateAllResources() {
           continue;
         }
         
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('interview_resources')
           .insert({
             subject: cluster.subject,

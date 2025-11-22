@@ -3,7 +3,7 @@ import { supabase, School, UserProfile } from './supabase';
 // Get school by school code
 export async function getSchoolByCode(schoolCode: string): Promise<School | null> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('schools')
       .select('*')
       .eq('school_code', schoolCode)
@@ -24,7 +24,7 @@ export async function getSchoolByCode(schoolCode: string): Promise<School | null
 // Get all schools
 export async function getAllSchools(): Promise<School[]> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('schools')
       .select('*')
       .order('name');
@@ -83,7 +83,7 @@ export async function validateSchoolCode(schoolCode: string): Promise<{
 // Get students from a specific school (for teacher adding students)
 export async function getSchoolStudents(schoolId: string): Promise<UserProfile[]> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('user_profiles')
       .select('*')
       .eq('school_id', schoolId)

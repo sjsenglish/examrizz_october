@@ -107,7 +107,7 @@ export async function getTeacherPacksWithAssignments(teacherId: string): Promise
     }
 
     // Get all packs created by the teacher
-    const { data: packs, error: packsError } = await supabase
+    const { data: packs, error: packsError } = await (supabase as any)
       .from('question_packs')
       .select('*')
       .eq('creator_id', teacherId)
@@ -150,7 +150,7 @@ export async function getTeacherPacksWithAssignments(teacherId: string): Promise
 // Get assignment history for a specific pack
 export async function getPackAssignmentHistory(packId: string, teacherId: string): Promise<AssignmentWithDetails[]> {
   try {
-    const { data: assignments, error } = await supabase
+    const { data: assignments, error } = await (supabase as any)
       .from('pack_assignments')
       .select(`
         *,
