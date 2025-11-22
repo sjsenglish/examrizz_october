@@ -51,7 +51,7 @@ export default function PracticePage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data: savedPacks, error } = await supabase
+      const { data: savedPacks, error } = await (supabase as any)
         .from('saved_question_packs')
         .select('pack_id')
         .eq('user_id', user.id);
@@ -83,7 +83,7 @@ export default function PracticePage() {
 
       if (isSaved) {
         // Unsave the pack
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('saved_question_packs')
           .delete()
           .eq('user_id', user.id)
@@ -100,7 +100,7 @@ export default function PracticePage() {
         setSavedPackIds(newSavedIds);
       } else {
         // Save the pack
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('saved_question_packs')
           .insert({
             user_id: user.id,

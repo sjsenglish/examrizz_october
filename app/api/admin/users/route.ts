@@ -9,7 +9,7 @@ const supabase = createClient(
 export async function GET() {
   try {
     // Get users with their profiles and subscription info
-    const { data: users, error } = await supabase
+    const { data: users, error } = await (supabase as any)
       .from('user_profiles')
       .select(`
         id,

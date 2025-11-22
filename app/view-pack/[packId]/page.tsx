@@ -337,7 +337,7 @@ export default function ViewPackPage({ params }: { params: Promise<{ packId: str
         }
 
         // Fetch pack from Supabase
-        const { data: packData, error: packError } = await supabase
+        const { data: packData, error: packError } = await (supabase as any)
           .from('question_packs')
           .select('*')
           .eq('id', packId)
@@ -351,7 +351,7 @@ export default function ViewPackPage({ params }: { params: Promise<{ packId: str
         }
 
         // Fetch questions for this pack
-        const { data: questionData, error: questionsError } = await supabase
+        const { data: questionData, error: questionsError } = await (supabase as any)
           .from('pack_questions')
           .select('question_id, position')
           .eq('pack_id', packId)

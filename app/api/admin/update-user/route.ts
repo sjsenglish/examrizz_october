@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user exists
-    const { data: userProfile, error: userError } = await supabase
+    const { data: userProfile, error: userError } = await (supabase as any)
       .from('user_profiles')
       .select('id, email')
       .eq('id', userId)
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user has existing subscription record
-    const { data: existingSubscription, error: subError } = await supabase
+    const { data: existingSubscription, error: subError } = await (supabase as any)
       .from('user_subscriptions')
       .select('*')
       .eq('user_id', userId)
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     if (tier === 'free') {
       // Remove premium status
       if (existingSubscription) {
-        const { error: deleteError } = await supabase
+        const { error: deleteError } = await (supabase as any)
           .from('user_subscriptions')
           .delete()
           .eq('user_id', userId);
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
 
       if (existingSubscription) {
         // Update existing subscription
-        const { error: updateError } = await supabase
+        const { error: updateError } = await (supabase as any)
           .from('user_subscriptions')
           .update({
             subscription_tier: tier,
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
         }
       } else {
         // Create new subscription
-        const { error: insertError } = await supabase
+        const { error: insertError } = await (supabase as any)
           .from('user_subscriptions')
           .insert([subscriptionData]);
 

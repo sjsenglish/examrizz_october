@@ -72,7 +72,7 @@ export default function StudyBookPage() {
     if (!user) return;
     const getCurrentUser = async () => {
       // Get user profile ID - assuming user_profiles.id matches auth.users.id
-      const { data: profile } = await supabase
+      const { data: profile } = await (supabase as any)
         .from('user_profiles')
         .select('id')
         .eq('id', user.id)
@@ -111,7 +111,7 @@ export default function StudyBookPage() {
   const loadConversationHistory = async (currentUserId: string) => {
     try {
       // Get the most recent conversation
-      const { data: conversation } = await supabase
+      const { data: conversation } = await (supabase as any)
         .from('conversations')
         .select('id')
         .eq('user_id', currentUserId)
@@ -123,7 +123,7 @@ export default function StudyBookPage() {
         setConversationId(conversation.id);
 
         // Load messages for this conversation
-        const { data: messageHistory } = await supabase
+        const { data: messageHistory } = await (supabase as any)
           .from('messages')
           .select('id, role, content, created_at')
           .eq('conversation_id', conversation.id)

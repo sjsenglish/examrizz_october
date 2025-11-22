@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user profile with Discord info
-    const { data: userProfile, error: profileError } = await supabase
+    const { data: userProfile, error: profileError } = await (supabase as any)
       .from('user_profiles')
       .select('discord_id, discord_username, id')
       .eq('id', userId)
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get last 6 messages from the session
-    const { data: messages, error: messagesError } = await supabase
+    const { data: messages, error: messagesError } = await (supabase as any)
       .from('messages')
       .select('role, content, created_at')
       .eq('conversation_id', sessionId)
@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Log the ticket creation for tracking
-    const { error: logError } = await supabase
+    const { error: logError } = await (supabase as any)
       .from('support_tickets')
       .insert({
         user_id: userId,

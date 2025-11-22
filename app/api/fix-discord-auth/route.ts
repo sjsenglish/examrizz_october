@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     console.log('Fixing Discord auth for user:', user.id, user.email);
 
     // Check if user profile exists
-    const { data: existingProfile, error: profileError } = await supabase
+    const { data: existingProfile, error: profileError } = await (supabase as any)
       .from('user_profiles')
       .select('*')
       .eq('id', user.id)
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      const { data: createdProfile, error: createError } = await supabase
+      const { data: createdProfile, error: createError } = await (supabase as any)
         .from('user_profiles')
         .insert([newProfile])
         .select()
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
         updated_at: new Date().toISOString()
       };
 
-      const { data: updatedProfile, error: updateError } = await supabase
+      const { data: updatedProfile, error: updateError } = await (supabase as any)
         .from('user_profiles')
         .update(discordData)
         .eq('id', user.id)

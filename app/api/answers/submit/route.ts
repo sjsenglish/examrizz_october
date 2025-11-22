@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Fetch the question part with acceptable answers
-    const { data: questionPart, error: fetchError } = await supabase
+    const { data: questionPart, error: fetchError } = await (supabase as any)
       .from('learn_question_parts')
       .select('id, acceptable_answers, marks')
       .eq('id', question_part_id)
@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
     const marksAwarded = isCorrect ? (questionPart.marks || 1) : 0;
 
     // Get current attempt number for this user and question part
-    const { data: previousAttempts } = await supabase
+    const { data: previousAttempts } = await (supabase as any)
       .from('learn_user_answers')
       .select('attempt_number')
       .eq('user_id', user_id)
@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
       : 1;
 
     // Save the answer to database
-    const { error: insertError } = await supabase
+    const { error: insertError } = await (supabase as any)
       .from('learn_user_answers')
       .insert({
         user_id,

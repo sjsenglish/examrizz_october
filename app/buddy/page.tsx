@@ -75,7 +75,7 @@ export default function BuddyPage() {
     if (!userId) return;
     
     try {
-      const { data: sessionsData } = await supabase
+      const { data: sessionsData } = await (supabase as any)
         .from('conversations')
         .select(`
           id,
@@ -106,7 +106,7 @@ export default function BuddyPage() {
     
     try {
       // Get the most recent conversation
-      const { data: conversation } = await supabase
+      const { data: conversation } = await (supabase as any)
         .from('conversations')
         .select('id')
         .eq('user_id', userId)
@@ -126,7 +126,7 @@ export default function BuddyPage() {
     try {
       setCurrentSessionId(sessionId);
       
-      const { data: messageHistory } = await supabase
+      const { data: messageHistory } = await (supabase as any)
         .from('messages')
         .select('id, role, content, created_at')
         .eq('conversation_id', sessionId)
@@ -150,7 +150,7 @@ export default function BuddyPage() {
     if (!userId) return;
     
     try {
-      const { data: newConversation } = await supabase
+      const { data: newConversation } = await (supabase as any)
         .from('conversations')
         .insert({
           user_id: userId,
@@ -286,7 +286,7 @@ export default function BuddyPage() {
 
     try {
       // Check if user has Discord ID
-      const { data: profile } = await supabase
+      const { data: profile } = await (supabase as any)
         .from('user_profiles')
         .select('discord_id, discord_username')
         .eq('id', userId)

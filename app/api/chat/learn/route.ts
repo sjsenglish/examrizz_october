@@ -376,7 +376,7 @@ export async function POST(request: NextRequest) {
     // If no conversation ID provided, create new one for Joe (separate from Bo)
     if (!currentConversationId) {
       // Create new conversation for Joe maths buddy
-      const { data: newConversation } = await supabase
+      const { data: newConversation } = await (supabase as any)
         .from('conversations')
         .insert({
           user_id: userId,
@@ -393,7 +393,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Save user message to database
-    const { error: userMessageError } = await supabase
+    const { error: userMessageError } = await (supabase as any)
       .from('messages')
       .insert({
         conversation_id: currentConversationId,
@@ -407,7 +407,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get conversation history for context
-    const { data: messageHistory } = await supabase
+    const { data: messageHistory } = await (supabase as any)
       .from('messages')
       .select('role, content')
       .eq('conversation_id', currentConversationId)
@@ -559,7 +559,7 @@ export async function POST(request: NextRequest) {
             .replace(/\[SWITCH_CONTENT:pdf\]/g, '[SWITCH:pdf]');
 
           // Save Joe's response to database
-          await supabase
+          await (supabase as any)
             .from('messages')
             .insert({
               conversation_id: currentConversationId,

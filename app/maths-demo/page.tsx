@@ -298,7 +298,7 @@ export default function MathsDemoPage() {
         }
 
         // Fetch all lessons to get mapping between spec points and lesson IDs
-        const { data: lessonsData, error: lessonsError } = await supabase
+        const { data: lessonsData, error: lessonsError } = await (supabase as any)
           .from('learn_lessons')
           .select(`
             id,
@@ -313,7 +313,7 @@ export default function MathsDemoPage() {
         }
 
         // Fetch all progress records for this user
-        const { data: progressData, error } = await supabase
+        const { data: progressData, error } = await (supabase as any)
           .from('learn_user_progress')
           .select('lesson_id, video_watched')
           .eq('user_id', user.id);

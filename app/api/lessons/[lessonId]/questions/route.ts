@@ -21,7 +21,7 @@ export async function GET(
     }
 
     // Fetch all questions with their parts using nested query
-    const { data: questions, error } = await supabase
+    const { data: questions, error } = await (supabase as any)
       .from('learn_questions')
       .select(`
         id,

@@ -108,7 +108,7 @@ export default function StudyBookPage() {
   useEffect(() => {
     if (!user) return;
     const getCurrentUser = async () => {
-      const { data: profile } = await supabase
+      const { data: profile } = await (supabase as any)
         .from('user_profiles')
         .select('id')
         .eq('id', user.id)
@@ -129,7 +129,7 @@ export default function StudyBookPage() {
 
   const loadConversationHistory = async (currentUserId: string) => {
     try {
-      const { data: conversation } = await supabase
+      const { data: conversation } = await (supabase as any)
         .from('conversations')
         .select('id')
         .eq('user_id', currentUserId)
@@ -140,7 +140,7 @@ export default function StudyBookPage() {
       if (conversation) {
         setConversationId(conversation.id);
 
-        const { data: messageHistory } = await supabase
+        const { data: messageHistory } = await (supabase as any)
           .from('messages')
           .select('id, role, content, created_at')
           .eq('conversation_id', conversation.id)
@@ -164,7 +164,7 @@ export default function StudyBookPage() {
   const loadDraftVersions = async (currentUserId: string) => {
     try {
       // This would be a new table - we'll handle creation elsewhere
-      const { data: versions } = await supabase
+      const { data: versions } = await (supabase as any)
         .from('draft_versions')
         .select('*')
         .eq('user_id', currentUserId)
@@ -337,7 +337,7 @@ export default function StudyBookPage() {
       if (!session) return;
 
       // Save new version
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('draft_versions')
         .insert({
           user_id: userId,

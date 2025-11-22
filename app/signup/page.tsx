@@ -401,7 +401,7 @@ export default function SignupPage() {
       const userId = user.id;
       
       // Check if profile already exists (might be created by triggers)
-      const { data: existingProfile, error: checkError } = await supabase
+      const { data: existingProfile, error: checkError } = await (supabase as any)
         .from('user_profiles')
         .select('id')
         .eq('id', userId)
@@ -581,7 +581,7 @@ export default function SignupPage() {
 
         if (gcseGrades.length > 0) {
           // Delete existing grades first to avoid conflicts
-          await supabase
+          await (supabase as any)
             .from('user_gcse_grades')
             .delete()
             .eq('user_id', userId);
@@ -608,7 +608,7 @@ export default function SignupPage() {
 
         if (aLevelGrades.length > 0) {
           // Delete existing grades first to avoid conflicts
-          await supabase
+          await (supabase as any)
             .from('user_alevel_grades')
             .delete()
             .eq('user_id', userId);

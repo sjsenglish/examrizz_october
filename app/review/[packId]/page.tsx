@@ -388,7 +388,7 @@ export default function ReviewPage({ params }: { params: Promise<{ packId: strin
       setLoading(true);
 
       // Fetch pack data
-      const { data: packData, error: packError } = await supabase
+      const { data: packData, error: packError } = await (supabase as any)
         .from('question_packs')
         .select('*')
         .eq('id', resolvedParams.packId)
@@ -397,7 +397,7 @@ export default function ReviewPage({ params }: { params: Promise<{ packId: strin
       if (packError) throw packError;
 
       // Fetch latest attempt
-      const { data: attemptData, error: attemptError } = await supabase
+      const { data: attemptData, error: attemptError } = await (supabase as any)
         .from('pack_attempts')
         .select('*')
         .eq('pack_id', resolvedParams.packId)
@@ -408,7 +408,7 @@ export default function ReviewPage({ params }: { params: Promise<{ packId: strin
       if (attemptError) throw attemptError;
 
       // Fetch questions for this pack from pack_questions table
-      const { data: questionData, error: questionsError } = await supabase
+      const { data: questionData, error: questionsError } = await (supabase as any)
         .from('pack_questions')
         .select('question_id, position')
         .eq('pack_id', resolvedParams.packId)

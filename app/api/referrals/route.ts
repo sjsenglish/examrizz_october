@@ -23,7 +23,7 @@ export async function GET(request: Request) {
     const userId = user.id;
 
     // Get user's referral code
-    const { data: referralCodeData, error: codeError } = await supabase
+    const { data: referralCodeData, error: codeError } = await (supabase as any)
       .from('referral_codes')
       .select('referral_code')
       .eq('user_id', userId)
@@ -35,7 +35,7 @@ export async function GET(request: Request) {
     }
 
     // Get list of referrals with user details and reward status
-    const { data: referralsData, error: referralsError } = await supabase
+    const { data: referralsData, error: referralsError } = await (supabase as any)
       .from('referrals')
       .select(`
         id,

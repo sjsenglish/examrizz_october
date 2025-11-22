@@ -407,7 +407,7 @@ Your job: Push students to interview-ready analytical clarity through sharp ques
 // Interview resource search function
 async function searchInterviewResources(params: { concept: string; subject: string }) {
   try {
-    const { data: resources, error } = await supabase
+    const { data: resources, error } = await (supabase as any)
       .from('interview_resources')
       .select('*')
       .or(`subject.ilike.%${params.subject}%,concept.ilike.%${params.concept}%`)
@@ -495,7 +495,7 @@ export async function POST(request: NextRequest) {
     // If no conversation ID provided, check for existing conversation or create new one
     if (!currentConversationId) {
       // Check for existing active conversation for interview
-      const { data: existingConversation } = await supabase
+      const { data: existingConversation } = await (supabase as any)
         .from('interview_conversations')
         .select('id')
         .eq('user_id', userId)
@@ -507,7 +507,7 @@ export async function POST(request: NextRequest) {
         currentConversationId = existingConversation.id;
       } else {
         // Create new conversation for interview
-        const { data: newConversation } = await supabase
+        const { data: newConversation } = await (supabase as any)
           .from('interview_conversations')
           .insert({
             user_id: userId,
@@ -525,7 +525,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Save user message to interview messages table
-    const { error: userMessageError } = await supabase
+    const { error: userMessageError } = await (supabase as any)
       .from('interview_messages')
       .insert({
         conversation_id: currentConversationId,
@@ -539,7 +539,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get conversation history for context
-    const { data: messageHistory } = await supabase
+    const { data: messageHistory } = await (supabase as any)
       .from('interview_messages')
       .select('role, content')
       .eq('conversation_id', currentConversationId)
@@ -564,7 +564,7 @@ export async function POST(request: NextRequest) {
     ]);
 
     // Get user's subject for filtering interview resources
-    const { data: userProfile } = await supabase
+    const { data: userProfile } = await (supabase as any)
       .from('user_profiles')
       .select('subject')
       .eq('id', userId)
@@ -683,7 +683,7 @@ export async function POST(request: NextRequest) {
           }
 
           // Save Gabe's response to database
-          await supabase
+          await (supabase as any)
             .from('interview_messages')
             .insert({
               conversation_id: currentConversationId,

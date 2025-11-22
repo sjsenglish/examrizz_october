@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     let customerId: string;
     
     // Check if user already has a Stripe customer ID
-    const { data: existingSubscription } = await supabase
+    const { data: existingSubscription } = await (supabase as any)
       .from('user_subscriptions')
       .select('stripe_customer_id')
       .eq('user_id', userId)
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
       customerId = customer.id;
 
       // Update user subscription with customer ID
-      await supabase
+      await (supabase as any)
         .from('user_subscriptions')
         .update({ stripe_customer_id: customerId })
         .eq('user_id', userId);

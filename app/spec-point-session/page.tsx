@@ -173,7 +173,7 @@ function SpecPointSessionContent() {
         console.log('🔍 Fetching lesson data for spec point:', specPoint, 'lesson:', lessonNumber);
 
         // First, get the spec point ID from the code (e.g., "7.2")
-        const { data: specPointData, error: specPointError } = await supabase
+        const { data: specPointData, error: specPointError } = await (supabase as any)
           .from('learn_spec_points')
           .select('id')
           .eq('code', specPoint)
@@ -187,7 +187,7 @@ function SpecPointSessionContent() {
         console.log('✅ Found spec point ID:', specPointData.id);
 
         // Now query learn_lessons table using spec_point_id and lesson_number
-        const { data, error } = await supabase
+        const { data, error } = await (supabase as any)
           .from('learn_lessons')
           .select(`
             id,
@@ -278,7 +278,7 @@ function SpecPointSessionContent() {
       setProgressLoading(true);
       try {
         // Fetch user progress (video_watched, pdf_viewed)
-        const { data: progressData, error: progressError } = await supabase
+        const { data: progressData, error: progressError } = await (supabase as any)
           .from('learn_user_progress')
           .select('video_watched, pdf_viewed')
           .eq('user_id', userId)
@@ -300,7 +300,7 @@ function SpecPointSessionContent() {
         let questionsCorrect = 0;
 
         if (allPartIds.length > 0) {
-          const { data: answers, error: answersError } = await supabase
+          const { data: answers, error: answersError } = await (supabase as any)
             .from('learn_user_answers')
             .select('question_part_id, is_correct')
             .eq('user_id', userId)
@@ -652,7 +652,7 @@ function SpecPointSessionContent() {
 
     try {
       // Check if progress record exists for this user and lesson
-      const { data: progressData, error: fetchError } = await supabase
+      const { data: progressData, error: fetchError } = await (supabase as any)
         .from('learn_user_progress')
         .select('id, pdf_viewed')
         .eq('user_id', userId)
@@ -668,7 +668,7 @@ function SpecPointSessionContent() {
 
       if (existingProgress && !existingProgress.pdf_viewed) {
         // Update existing progress record
-        const { error: updateError } = await supabase
+        const { error: updateError } = await (supabase as any)
           .from('learn_user_progress')
           .update({
             pdf_viewed: true,
@@ -684,7 +684,7 @@ function SpecPointSessionContent() {
         }
       } else if (!existingProgress) {
         // Create new progress record
-        const { error: insertError } = await supabase
+        const { error: insertError } = await (supabase as any)
           .from('learn_user_progress')
           .insert({
             user_id: userId,
@@ -732,7 +732,7 @@ function SpecPointSessionContent() {
     setLastProgressUpdate(currentSeconds);
 
     try {
-      const { data: progressData, error: fetchError } = await supabase
+      const { data: progressData, error: fetchError } = await (supabase as any)
         .from('learn_user_progress')
         .select('id, video_progress_seconds')
         .eq('user_id', userId)
@@ -748,7 +748,7 @@ function SpecPointSessionContent() {
 
       if (existingProgress) {
         // Update existing progress
-        const { error: updateError } = await supabase
+        const { error: updateError } = await (supabase as any)
           .from('learn_user_progress')
           .update({
             video_progress_seconds: currentSeconds,
@@ -761,7 +761,7 @@ function SpecPointSessionContent() {
         }
       } else {
         // Create new progress record
-        const { error: insertError } = await supabase
+        const { error: insertError } = await (supabase as any)
           .from('learn_user_progress')
           .insert({
             user_id: userId,
@@ -788,7 +788,7 @@ function SpecPointSessionContent() {
     }
 
     try {
-      const { data: progressData, error: fetchError } = await supabase
+      const { data: progressData, error: fetchError } = await (supabase as any)
         .from('learn_user_progress')
         .select('id')
         .eq('user_id', userId)
@@ -804,7 +804,7 @@ function SpecPointSessionContent() {
 
       if (existingProgress) {
         // Update existing progress
-        const { error: updateError } = await supabase
+        const { error: updateError } = await (supabase as any)
           .from('learn_user_progress')
           .update({
             video_watched: true,
@@ -820,7 +820,7 @@ function SpecPointSessionContent() {
         }
       } else {
         // Create new progress record
-        const { error: insertError } = await supabase
+        const { error: insertError } = await (supabase as any)
           .from('learn_user_progress')
           .insert({
             user_id: userId,
