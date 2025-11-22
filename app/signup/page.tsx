@@ -333,7 +333,7 @@ export default function SignupPage() {
             profileData.discord_username = discordUsername.trim();
           }
 
-          const { error: profileError } = await supabase
+          const { error: profileError } = await (supabase as any)
             .from('user_profiles')
             .insert(profileData);
 
@@ -515,7 +515,7 @@ export default function SignupPage() {
       }
 
       // Update existing profile with form data
-      const { error: updateError } = await supabase
+      const { error: updateError } = await (supabase as any)
         .from('user_profiles')
         .update(profileUpdateData)
         .eq('id', user.id);
@@ -586,7 +586,7 @@ export default function SignupPage() {
             .delete()
             .eq('user_id', userId);
             
-          const { error: gcseError } = await supabase
+          const { error: gcseError } = await (supabase as any)
             .from('user_gcse_grades')
             .insert(gcseGrades);
 
@@ -613,7 +613,7 @@ export default function SignupPage() {
             .delete()
             .eq('user_id', userId);
             
-          const { error: aLevelError } = await supabase
+          const { error: aLevelError } = await (supabase as any)
             .from('user_alevel_grades')
             .insert(aLevelGrades);
 
