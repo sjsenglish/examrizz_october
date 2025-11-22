@@ -384,7 +384,7 @@ export default function PracticeSessionPage({ params }: { params: Promise<{ pack
     setUserAnswers(newAnswers);
     
     // Update answered questions set
-    const newAnsweredQuestions = new Set(answeredQuestions);
+    const newAnsweredQuestions = new Set<number>(answeredQuestions);
     newAnsweredQuestions.add(currentQuestionIndex);
     setAnsweredQuestions(newAnsweredQuestions);
   };

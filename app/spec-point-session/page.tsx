@@ -310,12 +310,12 @@ function SpecPointSessionContent() {
             console.error('Error fetching answers:', answersError);
           } else if (answers) {
             // Count unique attempted questions
-            const attemptedPartIds = new Set(answers.map((a: any) => a.question_part_id));
+            const attemptedPartIds = new Set<string>(answers.map((a: any) => a.question_part_id as string));
             questionsAttempted = attemptedPartIds.size;
 
             // Count correct answers (only count each part once, even if multiple attempts)
-            const correctPartIds = new Set(
-              answers.filter((a: any) => a.is_correct).map((a: any) => a.question_part_id)
+            const correctPartIds = new Set<string>(
+              answers.filter((a: any) => a.is_correct).map((a: any) => a.question_part_id as string)
             );
             questionsCorrect = correctPartIds.size;
           }

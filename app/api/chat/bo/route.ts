@@ -1110,7 +1110,7 @@ export async function POST(request: NextRequest) {
           }
 
           // Combine results - same-subject first, then fill with others (no duplicates)
-          const existingIds = new Set(similarFeedback.map((f: any) => f.id));
+          const existingIds = new Set<string>(similarFeedback.map((f: any) => f.id as string));
           const additionalFeedback = anySubjectFeedback?.filter((f: any) => !existingIds.has(f.id)) || [];
           similarFeedback = [...similarFeedback, ...additionalFeedback].slice(0, 5);
         }

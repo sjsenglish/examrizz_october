@@ -62,7 +62,7 @@ export default function CreatePracticePackPage() {
     fetchTotalQuestions();
     // Reset filters when subject changes
     setActiveFilters({});
-    setExpandedFilters(new Set());
+    setExpandedFilters(new Set<string>());
     setAvailableFilterOptions({});
   }, [selectedSubject]);
 
@@ -131,7 +131,7 @@ export default function CreatePracticePackPage() {
 
   const handleClearFilters = () => {
     setActiveFilters({});
-    setExpandedFilters(new Set());
+    setExpandedFilters(new Set<string>());
   };
 
   const toggleFilter = (field: string) => {
