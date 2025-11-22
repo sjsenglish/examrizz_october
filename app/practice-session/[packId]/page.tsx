@@ -269,7 +269,7 @@ export default function PracticeSessionPage({ params }: { params: Promise<{ pack
         setLoading(true);
         
         // Fetch pack from Supabase
-        const { data: packData, error: packError } = await supabase
+        const { data: packData, error: packError } = await (supabase as any)
           .from('question_packs')
           .select('*')
           .eq('id', packId)
@@ -283,7 +283,7 @@ export default function PracticeSessionPage({ params }: { params: Promise<{ pack
         }
 
         // Fetch questions for this pack
-        const { data: questionData, error: questionsError } = await supabase
+        const { data: questionData, error: questionsError } = await (supabase as any)
           .from('pack_questions')
           .select('question_id, position')
           .eq('pack_id', packId)
@@ -299,7 +299,7 @@ export default function PracticeSessionPage({ params }: { params: Promise<{ pack
         let questions: Question[] = [];
         
         if (questionData && questionData.length > 0) {
-          const questionIds = questionData.map(q => q.question_id);
+          const questionIds = questionData.map((q: any) => q.question_id);
           
           try {
             const algoliaQuestions = await getQuestionsByIds(packData.subject || 'TSA', questionIds);
@@ -384,7 +384,7 @@ export default function PracticeSessionPage({ params }: { params: Promise<{ pack
     setUserAnswers(newAnswers);
     
     // Update answered questions set
-    const newAnsweredQuestions = new Set(answeredQuestions);
+    const newAnsweredQuestions = new Set<number>(answeredQuestions);
     newAnsweredQuestions.add(currentQuestionIndex);
     setAnsweredQuestions(newAnsweredQuestions);
   };
@@ -423,7 +423,7 @@ export default function PracticeSessionPage({ params }: { params: Promise<{ pack
         }
       });
 
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('pack_attempts')
         .insert([
           {

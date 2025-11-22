@@ -337,7 +337,7 @@ export default function ViewPackPage({ params }: { params: Promise<{ packId: str
         }
 
         // Fetch pack from Supabase
-        const { data: packData, error: packError } = await supabase
+        const { data: packData, error: packError } = await (supabase as any)
           .from('question_packs')
           .select('*')
           .eq('id', packId)
@@ -351,7 +351,7 @@ export default function ViewPackPage({ params }: { params: Promise<{ packId: str
         }
 
         // Fetch questions for this pack
-        const { data: questionData, error: questionsError } = await supabase
+        const { data: questionData, error: questionsError } = await (supabase as any)
           .from('pack_questions')
           .select('question_id, position')
           .eq('pack_id', packId)
@@ -368,7 +368,7 @@ export default function ViewPackPage({ params }: { params: Promise<{ packId: str
         
         if (questionData && questionData.length > 0) {
           // Fetch actual questions from Algolia
-          const questionIds = questionData.map(q => q.question_id);
+          const questionIds = questionData.map((q: any) => q.question_id);
           console.log('Fetching questions:', questionIds, 'for subject:', packData.subject);
           
           try {
@@ -440,7 +440,7 @@ export default function ViewPackPage({ params }: { params: Promise<{ packId: str
     });
   };
 
-  const totalMarks = pack?.questions.reduce((sum, q) => sum + (q.marks || 1), 0) || 0;
+  const totalMarks = pack?.questions.reduce((sum: any, q: any) => sum + (q.marks || 1), 0) || 0;
 
   if (loading) {
     return (

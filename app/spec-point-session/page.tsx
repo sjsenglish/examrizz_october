@@ -6,7 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
-import { supabase } from '@/lib/supabase-client';
+import { supabase } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import './spec-point-session.css';
@@ -173,7 +173,7 @@ function SpecPointSessionContent() {
         console.log('🔍 Fetching lesson data for spec point:', specPoint, 'lesson:', lessonNumber);
 
         // First, get the spec point ID from the code (e.g., "7.2")
-        const { data: specPointData, error: specPointError } = await supabase
+        const { data: specPointData, error: specPointError } = await (supabase as any)
           .from('learn_spec_points')
           .select('id')
           .eq('code', specPoint)
@@ -187,7 +187,7 @@ function SpecPointSessionContent() {
         console.log('✅ Found spec point ID:', specPointData.id);
 
         // Now query learn_lessons table using spec_point_id and lesson_number
-        const { data, error } = await supabase
+        const { data, error } = await (supabase as any)
           .from('learn_lessons')
           .select(`
             id,
@@ -278,7 +278,7 @@ function SpecPointSessionContent() {
       setProgressLoading(true);
       try {
         // Fetch user progress (video_watched, pdf_viewed)
-        const { data: progressData, error: progressError } = await supabase
+        const { data: progressData, error: progressError } = await (supabase as any)
           .from('learn_user_progress')
           .select('video_watched, pdf_viewed')
           .eq('user_id', userId)
@@ -292,7 +292,7 @@ function SpecPointSessionContent() {
         const progress = progressData && progressData.length > 0 ? progressData[0] : null;
 
         // Get all question part IDs from current questions
-        const allPartIds = questions.flatMap(q => q.parts.map(p => p.id));
+        const allPartIds = questions.flatMap(q => q.parts.map((p: any) => p.id));
         const totalQuestions = allPartIds.length;
 
         // Fetch user answers for this lesson's questions
@@ -300,7 +300,7 @@ function SpecPointSessionContent() {
         let questionsCorrect = 0;
 
         if (allPartIds.length > 0) {
-          const { data: answers, error: answersError } = await supabase
+          const { data: answers, error: answersError } = await (supabase as any)
             .from('learn_user_answers')
             .select('question_part_id, is_correct')
             .eq('user_id', userId)
@@ -310,12 +310,12 @@ function SpecPointSessionContent() {
             console.error('Error fetching answers:', answersError);
           } else if (answers) {
             // Count unique attempted questions
-            const attemptedPartIds = new Set(answers.map((a: any) => a.question_part_id));
+            const attemptedPartIds = new Set<string>(answers.map((a: any) => a.question_part_id as string));
             questionsAttempted = attemptedPartIds.size;
 
             // Count correct answers (only count each part once, even if multiple attempts)
-            const correctPartIds = new Set(
-              answers.filter((a: any) => a.is_correct).map((a: any) => a.question_part_id)
+            const correctPartIds = new Set<string>(
+              answers.filter((a: any) => a.is_correct).map((a: any) => a.question_part_id as string)
             );
             questionsCorrect = correctPartIds.size;
           }
@@ -434,7 +434,7 @@ function SpecPointSessionContent() {
               
               if (data.type === 'token') {
                 assistantMessage += data.content;
-                setMessages(prev => prev.map(msg => 
+                setMessages(prev => prev.map((msg: any) => 
                   msg.id === assistantId 
                     ? { ...msg, content: assistantMessage }
                     : msg
@@ -449,7 +449,7 @@ function SpecPointSessionContent() {
                 }
                 // Note: Content switching is now handled by clickable buttons in messages
               } else if (data.type === 'error') {
-                setMessages(prev => prev.map(msg => 
+                setMessages(prev => prev.map((msg: any) => 
                   msg.id === assistantId 
                     ? { ...msg, content: data.content }
                     : msg
@@ -652,7 +652,7 @@ function SpecPointSessionContent() {
 
     try {
       // Check if progress record exists for this user and lesson
-      const { data: progressData, error: fetchError } = await supabase
+      const { data: progressData, error: fetchError } = await (supabase as any)
         .from('learn_user_progress')
         .select('id, pdf_viewed')
         .eq('user_id', userId)
@@ -668,7 +668,7 @@ function SpecPointSessionContent() {
 
       if (existingProgress && !existingProgress.pdf_viewed) {
         // Update existing progress record
-        const { error: updateError } = await supabase
+        const { error: updateError } = await (supabase as any)
           .from('learn_user_progress')
           .update({
             pdf_viewed: true,
@@ -684,7 +684,7 @@ function SpecPointSessionContent() {
         }
       } else if (!existingProgress) {
         // Create new progress record
-        const { error: insertError } = await supabase
+        const { error: insertError } = await (supabase as any)
           .from('learn_user_progress')
           .insert({
             user_id: userId,
@@ -732,7 +732,7 @@ function SpecPointSessionContent() {
     setLastProgressUpdate(currentSeconds);
 
     try {
-      const { data: progressData, error: fetchError } = await supabase
+      const { data: progressData, error: fetchError } = await (supabase as any)
         .from('learn_user_progress')
         .select('id, video_progress_seconds')
         .eq('user_id', userId)
@@ -748,7 +748,7 @@ function SpecPointSessionContent() {
 
       if (existingProgress) {
         // Update existing progress
-        const { error: updateError } = await supabase
+        const { error: updateError } = await (supabase as any)
           .from('learn_user_progress')
           .update({
             video_progress_seconds: currentSeconds,
@@ -761,7 +761,7 @@ function SpecPointSessionContent() {
         }
       } else {
         // Create new progress record
-        const { error: insertError } = await supabase
+        const { error: insertError } = await (supabase as any)
           .from('learn_user_progress')
           .insert({
             user_id: userId,
@@ -788,7 +788,7 @@ function SpecPointSessionContent() {
     }
 
     try {
-      const { data: progressData, error: fetchError } = await supabase
+      const { data: progressData, error: fetchError } = await (supabase as any)
         .from('learn_user_progress')
         .select('id')
         .eq('user_id', userId)
@@ -804,7 +804,7 @@ function SpecPointSessionContent() {
 
       if (existingProgress) {
         // Update existing progress
-        const { error: updateError } = await supabase
+        const { error: updateError } = await (supabase as any)
           .from('learn_user_progress')
           .update({
             video_watched: true,
@@ -820,7 +820,7 @@ function SpecPointSessionContent() {
         }
       } else {
         // Create new progress record
-        const { error: insertError } = await supabase
+        const { error: insertError } = await (supabase as any)
           .from('learn_user_progress')
           .insert({
             user_id: userId,
@@ -1223,7 +1223,7 @@ function SpecPointSessionContent() {
                     <p>I'm here to guide you through {specPoint} {specName} - Lesson {lessonNumber}. I can help with the notes, video, or practice questions. Ready to start?</p>
                   </div>
                 ) : (
-                  messages.map(message => (
+                  messages.map((message: any) => (
                     <div key={message.id} className={`joe-message ${message.role}`}>
                       <div className="joe-message-content">
                         {message.role === 'assistant' ? (

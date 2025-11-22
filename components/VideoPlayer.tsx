@@ -20,7 +20,7 @@ const isYouTubeUrl = (url: string): boolean => {
 const isDirectVideoUrl = (url: string): boolean => {
   const videoExtensions = ['.mp4', '.mov', '.webm', '.ogg', '.avi', '.mkv'];
   const lowerUrl = url.toLowerCase();
-  return videoExtensions.some(ext => lowerUrl.includes(ext));
+  return videoExtensions.some((ext: any) => lowerUrl.includes(ext));
 };
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded }) => {

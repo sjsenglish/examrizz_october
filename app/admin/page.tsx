@@ -94,7 +94,7 @@ export default function AdminPage() {
     }
   };
 
-  const filteredUsers = users.filter(user => 
+  const filteredUsers = users.filter((user: any) => 
     user.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.discord_username?.toLowerCase().includes(searchQuery.toLowerCase()) ||

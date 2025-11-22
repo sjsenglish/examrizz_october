@@ -30,8 +30,8 @@ async function executeSQLFile(filePath: string): Promise<void> {
     // Split SQL into individual statements (basic approach)
     const statements = sqlContent
       .split(';')
-      .map(s => s.trim())
-      .filter(s => s.length > 0 && !s.startsWith('--'));
+      .map((s: any) => s.trim())
+      .filter((s: any) => s.length > 0 && !s.startsWith('--'));
 
     console.log(`Executing ${statements.length} SQL statements from ${filePath}...`);
 
@@ -75,7 +75,7 @@ async function setupDatabase() {
 
     // Verify the table structure
     console.log('🔍 Verifying table structure...');
-    const { data: columns, error: columnsError } = await supabase
+    const { data: columns, error: columnsError } = await (supabase as any)
       .from('information_schema.columns')
       .select('column_name, data_type, is_nullable')
       .eq('table_name', 'user_subscriptions')
@@ -85,7 +85,7 @@ async function setupDatabase() {
       console.error('Error checking table structure:', columnsError);
     } else {
       console.log('📊 Table structure:');
-      columns?.forEach(col => {
+      columns?.forEach((col: any) => {
         console.log(`  - ${col.column_name}: ${col.data_type} (nullable: ${col.is_nullable})`);
       });
     }
@@ -94,7 +94,7 @@ async function setupDatabase() {
     console.log('🧪 Testing basic operations...');
     
     // Try to query the table (should work even if empty)
-    const { error: queryError } = await supabase
+    const { error: queryError } = await (supabase as any)
       .from('user_subscriptions')
       .select('count', { count: 'exact', head: true });
 

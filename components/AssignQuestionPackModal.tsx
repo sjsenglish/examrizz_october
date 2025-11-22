@@ -33,7 +33,7 @@ export const AssignQuestionPackModal: React.FC<AssignQuestionPackModalProps> = (
 
   const toggleClass = (index: number) => {
     if (selectedClasses.includes(index)) {
-      setSelectedClasses(selectedClasses.filter(i => i !== index));
+      setSelectedClasses(selectedClasses.filter((i: any) => i !== index));
     } else {
       setSelectedClasses([...selectedClasses, index]);
     }

@@ -88,7 +88,7 @@ export const QuestionFilters: React.FC<QuestionFiltersProps> = ({
     setSelectedValues(prev => {
       const currentValues = prev[filterId] || [];
       const newValues = currentValues.includes(value)
-        ? currentValues.filter(v => v !== value)
+        ? currentValues.filter((v: any) => v !== value)
         : [...currentValues, value];
       
       return { ...prev, [filterId]: newValues };
@@ -140,7 +140,7 @@ export const QuestionFilters: React.FC<QuestionFiltersProps> = ({
       {activeFilter && (
         <div className="sub-filters-container">
           {(() => {
-            const filter = filters.find(f => f.id === activeFilter);
+            const filter = filters.find((f: any) => f.id === activeFilter);
             if (!filter) return null;
             
             const options = getFilterOptions(filter);

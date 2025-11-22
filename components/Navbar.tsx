@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { performLogout } from '@/lib/auth-utils';
-import { supabase } from '@/lib/supabase-client';
+import { supabase } from '@/lib/supabase';
 import { useSubscription } from '@/hooks/useSubscription';
 import './Navbar.css';
 

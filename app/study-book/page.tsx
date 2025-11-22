@@ -108,7 +108,7 @@ export default function StudyBookPage() {
   useEffect(() => {
     if (!user) return;
     const getCurrentUser = async () => {
-      const { data: profile } = await supabase
+      const { data: profile } = await (supabase as any)
         .from('user_profiles')
         .select('id')
         .eq('id', user.id)
@@ -129,7 +129,7 @@ export default function StudyBookPage() {
 
   const loadConversationHistory = async (currentUserId: string) => {
     try {
-      const { data: conversation } = await supabase
+      const { data: conversation } = await (supabase as any)
         .from('conversations')
         .select('id')
         .eq('user_id', currentUserId)
@@ -140,14 +140,14 @@ export default function StudyBookPage() {
       if (conversation) {
         setConversationId(conversation.id);
 
-        const { data: messageHistory } = await supabase
+        const { data: messageHistory } = await (supabase as any)
           .from('messages')
           .select('id, role, content, created_at')
           .eq('conversation_id', conversation.id)
           .order('created_at', { ascending: true });
 
         if (messageHistory) {
-          const formattedMessages = messageHistory.map(msg => ({
+          const formattedMessages = messageHistory.map((msg: any) => ({
             id: msg.id,
             role: msg.role as 'user' | 'assistant',
             content: msg.content,
@@ -164,7 +164,7 @@ export default function StudyBookPage() {
   const loadDraftVersions = async (currentUserId: string) => {
     try {
       // This would be a new table - we'll handle creation elsewhere
-      const { data: versions } = await supabase
+      const { data: versions } = await (supabase as any)
         .from('draft_versions')
         .select('*')
         .eq('user_id', currentUserId)
@@ -251,7 +251,7 @@ export default function StudyBookPage() {
               
               if (data.type === 'token') {
                 assistantMessage += data.content;
-                setMessages(prev => prev.map(msg => 
+                setMessages(prev => prev.map((msg: any) => 
                   msg.id === assistantId 
                     ? { ...msg, content: assistantMessage }
                     : msg
@@ -265,7 +265,7 @@ export default function StudyBookPage() {
                   setConversationId(data.conversationId);
                 }
               } else if (data.type === 'error') {
-                setMessages(prev => prev.map(msg => 
+                setMessages(prev => prev.map((msg: any) => 
                   msg.id === assistantId 
                     ? { ...msg, content: data.content }
                     : msg
@@ -337,7 +337,7 @@ export default function StudyBookPage() {
       if (!session) return;
 
       // Save new version
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('draft_versions')
         .insert({
           user_id: userId,
@@ -678,7 +678,7 @@ export default function StudyBookPage() {
               <div className="categories-panel">
                 <h2>Categories</h2>
                 <div className="categories-list">
-                  {categories.map(category => (
+                  {categories.map((category: any) => (
                     <div key={category.id} className="category-item">
                       <img src={category.icon} alt={category.label} />
                       <span>{category.label}</span>
@@ -698,7 +698,7 @@ export default function StudyBookPage() {
               <div className="materials-grid">
                 <h2>Your Materials</h2>
                 <div className="materials-cards">
-                  {uploadedFiles.map(file => (
+                  {uploadedFiles.map((file: any) => (
                     <div key={file.id} className="material-card">
                       <div className="card-header">
                         <img src="/icons/essays.svg" alt="File" />
@@ -737,7 +737,7 @@ export default function StudyBookPage() {
                     <p>I'm Bo, your personal statement advisor. Ask me anything about your personal statement.</p>
                   </div>
                 ) : (
-                  messages.map(message => (
+                  messages.map((message: any) => (
                     <div key={message.id} className={`message ${message.role}`}>
                       <div className="message-content">
                         {message.role === 'assistant' ? (
@@ -827,7 +827,7 @@ export default function StudyBookPage() {
                   onChange={(e) => setMaterialForm(prev => ({ ...prev, category: e.target.value }))}
                 >
                   <option value="">Select category</option>
-                  {categories.map(cat => (
+                  {categories.map((cat: any) => (
                     <option key={cat.id} value={cat.id}>{cat.label}</option>
                   ))}
                 </select>

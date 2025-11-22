@@ -88,19 +88,19 @@ function findImports(dir: string, searchString: string): string[] {
 
 const filesUsingOldImport = findImports(appDir, "from '@/lib/supabase'")
   .concat(findImports(componentsDir, "from '@/lib/supabase'"))
-  .filter(f => !f.includes("from '@/lib/supabase-client'"));
+  .filter((f: any) => !f.includes("from '@/lib/supabase'"));
 
-const filesUsingCorrectImport = findImports(appDir, "from '@/lib/supabase-client'")
-  .concat(findImports(componentsDir, "from '@/lib/supabase-client'"));
+const filesUsingCorrectImport = findImports(appDir, "from '@/lib/supabase'")
+  .concat(findImports(componentsDir, "from '@/lib/supabase'"));
 
 console.log(`Files using OLD supabase import (problematic): ${filesUsingOldImport.length}`);
 if (filesUsingOldImport.length > 0) {
-  filesUsingOldImport.forEach(f => console.log(`  ✗ ${f}`));
+  filesUsingOldImport.forEach((f: any) => console.log(`  ✗ ${f}`));
 }
 
 console.log(`\nFiles using CORRECT supabase-client import: ${filesUsingCorrectImport.length}`);
 if (filesUsingCorrectImport.length > 0 && filesUsingCorrectImport.length <= 10) {
-  filesUsingCorrectImport.forEach(f => console.log(`  ✓ ${f}`));
+  filesUsingCorrectImport.forEach((f: any) => console.log(`  ✓ ${f}`));
 }
 
 // Check 3: Look for multiple client instantiations

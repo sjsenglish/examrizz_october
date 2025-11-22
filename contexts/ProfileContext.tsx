@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { supabase } from '@/lib/supabase-client';
+import { supabase } from '@/lib/supabase';
 
 export interface UserProfile {
   id: string;
@@ -88,7 +88,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
   const loadProfileFromDatabase = useCallback(async (userId: string): Promise<UserProfile | null> => {
     try {
       // Load profile data
-      const { data: profileData, error: profileError } = await supabase
+      const { data: profileData, error: profileError } = await (supabase as any)
         .from('user_profiles')
         .select('*')
         .eq('id', userId)
@@ -103,13 +103,13 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
       }
       
       // Load GCSE grades
-      const { data: gcseGrades, error: gcseError } = await supabase
+      const { data: gcseGrades, error: gcseError } = await (supabase as any)
         .from('user_gcse_grades')
         .select('subject, grade')
         .eq('user_id', userId);
       
       // Load A Level grades
-      const { data: aLevelGrades, error: aLevelError } = await supabase
+      const { data: aLevelGrades, error: aLevelError } = await (supabase as any)
         .from('user_alevel_grades')
         .select('subject, grade')
         .eq('user_id', userId);
@@ -122,9 +122,13 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
         console.error('Error loading A Level grades:', aLevelError);
       }
 
+      if (!profileData) {
+        return null;
+      }
+
       // Combine profile with grades
       const fullProfile: UserProfile = {
-        ...profileData,
+        ...(profileData as any),
         gcse_grades: gcseGrades || [],
         a_level_grades: aLevelGrades || []
       };
@@ -172,7 +176,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
 
     try {
       // Update user profile (excluding grades)
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('user_profiles')
         .update(profileUpdates)
         .eq('id', user.id)
@@ -186,7 +190,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
       // Save grades if provided
       if (grades?.gcse !== undefined) {
         // Delete existing GCSE grades
-        await supabase
+        await (supabase as any)
           .from('user_gcse_grades')
           .delete()
           .eq('user_id', user.id);
@@ -194,15 +198,15 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
         // Insert new GCSE grades
         if (grades.gcse.length > 0) {
           const gcseGrades = grades.gcse
-            .filter(g => g.subject && g.grade)
-            .map(g => ({
+            .filter((g: any) => g.subject && g.grade)
+            .map((g: any) => ({
               user_id: user.id,
               subject: g.subject,
               grade: g.grade
             }));
 
           if (gcseGrades.length > 0) {
-            await supabase
+            await (supabase as any)
               .from('user_gcse_grades')
               .insert(gcseGrades);
           }
@@ -211,7 +215,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
 
       if (grades?.aLevel !== undefined) {
         // Delete existing A Level grades
-        await supabase
+        await (supabase as any)
           .from('user_alevel_grades')
           .delete()
           .eq('user_id', user.id);
@@ -219,15 +223,15 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
         // Insert new A Level grades
         if (grades.aLevel.length > 0) {
           const aLevelGrades = grades.aLevel
-            .filter(g => g.subject && g.grade)
-            .map(g => ({
+            .filter((g: any) => g.subject && g.grade)
+            .map((g: any) => ({
               user_id: user.id,
               subject: g.subject,
               grade: g.grade
             }));
 
           if (aLevelGrades.length > 0) {
-            await supabase
+            await (supabase as any)
               .from('user_alevel_grades')
               .insert(aLevelGrades);
           }
@@ -352,7 +356,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
         // Clear all profile caches
         try {
           const keys = Object.keys(localStorage);
-          keys.forEach(key => {
+          keys.forEach((key: any) => {
             if (key.startsWith('profile_cache_')) {
               localStorage.removeItem(key);
             }

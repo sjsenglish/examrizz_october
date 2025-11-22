@@ -23,7 +23,7 @@ export async function GET(request: Request) {
     const userId = user.id;
 
     // Get user's referral code
-    const { data: referralCodeData, error: codeError } = await supabase
+    const { data: referralCodeData, error: codeError } = await (supabase as any)
       .from('referral_codes')
       .select('referral_code')
       .eq('user_id', userId)
@@ -35,7 +35,7 @@ export async function GET(request: Request) {
     }
 
     // Get list of referrals with user details and reward status
-    const { data: referralsData, error: referralsError } = await supabase
+    const { data: referralsData, error: referralsError } = await (supabase as any)
       .from('referrals')
       .select(`
         id,
@@ -57,8 +57,8 @@ export async function GET(request: Request) {
 
     // Calculate stats
     const totalReferrals = referralsData?.length || 0;
-    const completedReferrals = referralsData?.filter(r => r.status === 'completed').length || 0;
-    const pendingReferrals = referralsData?.filter(r => r.status === 'pending').length || 0;
+    const completedReferrals = referralsData?.filter((r: any) => r.status === 'completed').length || 0;
+    const pendingReferrals = referralsData?.filter((r: any) => r.status === 'pending').length || 0;
 
     return NextResponse.json({
       success: true,

@@ -20,7 +20,7 @@ async function uploadFeedback() {
 
   console.log('🔍 Testing Supabase connection...');
   
-  const { error: testError } = await supabase
+  const { error: testError } = await (supabase as any)
     .from('personal_statement_feedback')
     .select('count')
     .limit(1);
@@ -34,7 +34,7 @@ async function uploadFeedback() {
 
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const feedbackDir = './feedback-data';
-  const files = fs.readdirSync(feedbackDir).filter(f => f.endsWith('.json'));
+  const files = fs.readdirSync(feedbackDir).filter((f: any) => f.endsWith('.json'));
   
   console.log(`📁 Found ${files.length} files to process\n`);
   
@@ -116,7 +116,7 @@ async function uploadFeedback() {
           };
           
           // Upload to database
-          const { error: insertError } = await supabase
+          const { error: insertError } = await (supabase as any)
             .from('personal_statement_feedback')
             .insert(uploadData)
             .select();

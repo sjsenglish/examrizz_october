@@ -439,7 +439,7 @@ export default function QuestionPacksPage() {
               </h3>
             
             {/* Question Packs List */}
-            {questionPacks.filter(pack => pack.subject === selectedSubject).map((pack) => (
+            {questionPacks.filter((pack: any) => pack.subject === selectedSubject).map((pack) => (
               <div key={pack.id} style={{
                 position: 'relative',
                 marginBottom: '60px'

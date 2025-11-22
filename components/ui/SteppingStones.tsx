@@ -206,7 +206,7 @@ export const SteppingStones: React.FC<SteppingStonesProps> = ({
         style={{ width: '100%', height: '100%' }}
       >
         <motion.path
-          d={`M ${stones[0]?.position.desktop.x}% ${stones[0]?.position.desktop.y}% ${stones.map(stone => `L ${stone.position.desktop.x}% ${stone.position.desktop.y}%`).join(' ')}`}
+          d={`M ${stones[0]?.position.desktop.x}% ${stones[0]?.position.desktop.y}% ${stones.map((stone: any) => `L ${stone.position.desktop.x}% ${stone.position.desktop.y}%`).join(' ')}`}
           stroke="#00CED1"
           strokeWidth="3"
           fill="none"

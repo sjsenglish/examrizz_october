@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { data: subscription, error } = await supabase
+    const { data: subscription, error } = await (supabase as any)
       .from('user_subscriptions')
       .select('*')
       .eq('user_id', userId)
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user's subscription
-    const { data: subscription, error: subError } = await supabase
+    const { data: subscription, error: subError } = await (supabase as any)
       .from('user_subscriptions')
       .select('*')
       .eq('user_id', userId)
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
         );
 
         // Update local database
-        await supabase
+        await (supabase as any)
           .from('user_subscriptions')
           .update({
             cancel_at_period_end: true,
@@ -130,7 +130,7 @@ export async function POST(request: NextRequest) {
         );
 
         // Update local database
-        await supabase
+        await (supabase as any)
           .from('user_subscriptions')
           .update({
             cancel_at_period_end: false,

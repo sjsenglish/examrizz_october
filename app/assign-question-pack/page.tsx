@@ -19,7 +19,7 @@ export default function AssignQuestionPackPage() {
   const handleClassToggle = (index: number) => {
     setSelectedClasses(prev => 
       prev.includes(index) 
-        ? prev.filter(i => i !== index)
+        ? prev.filter((i: any) => i !== index)
         : [...prev, index]
     );
   };

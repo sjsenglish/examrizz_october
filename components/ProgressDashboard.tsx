@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { supabase } from '@/lib/supabase-client';
+import { supabase } from '@/lib/supabase';
 import './ProgressDashboard-v2.css';
 
 interface DashboardProps {

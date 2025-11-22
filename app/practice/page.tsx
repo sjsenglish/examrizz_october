@@ -51,7 +51,7 @@ export default function PracticePage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data: savedPacks, error } = await supabase
+      const { data: savedPacks, error } = await (supabase as any)
         .from('saved_question_packs')
         .select('pack_id')
         .eq('user_id', user.id);
@@ -61,7 +61,7 @@ export default function PracticePage() {
         return;
       }
 
-      const savedIds = new Set(savedPacks.map(sp => sp.pack_id));
+      const savedIds = new Set<string>(savedPacks.map((sp: any) => sp.pack_id as string));
       setSavedPackIds(savedIds);
     } catch (error) {
       console.error('Error loading saved packs:', error);
@@ -83,7 +83,7 @@ export default function PracticePage() {
 
       if (isSaved) {
         // Unsave the pack
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('saved_question_packs')
           .delete()
           .eq('user_id', user.id)
@@ -95,12 +95,12 @@ export default function PracticePage() {
           return;
         }
 
-        const newSavedIds = new Set(savedPackIds);
+        const newSavedIds = new Set<string>(savedPackIds);
         newSavedIds.delete(packId);
         setSavedPackIds(newSavedIds);
       } else {
         // Save the pack
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('saved_question_packs')
           .insert({
             user_id: user.id,
@@ -113,7 +113,7 @@ export default function PracticePage() {
           return;
         }
 
-        const newSavedIds = new Set(savedPackIds);
+        const newSavedIds = new Set<string>(savedPackIds);
         newSavedIds.add(packId);
         setSavedPackIds(newSavedIds);
       }
@@ -152,7 +152,7 @@ export default function PracticePage() {
 
   // Filter packs by category
   const getPacksByCategory = (category: string, subject?: string) => {
-    return questionPacks.filter(pack => {
+    return questionPacks.filter((pack: any) => {
       if (category === 'A Level') {
         return subject ? pack.subject === subject : false;
       } else if (category === 'Admissions') {
@@ -774,7 +774,7 @@ export default function PracticePage() {
               </h3>
             
             {/* Real Question Packs List */}
-            {getPacksByCategory('Admissions').filter(pack => pack.subject === selectedAdmissionSubject).map((pack) => (
+            {getPacksByCategory('Admissions').filter((pack: any) => pack.subject === selectedAdmissionSubject).map((pack) => (
               <div key={pack.id} style={{
                 position: 'relative',
                 marginBottom: '60px'

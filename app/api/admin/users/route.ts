@@ -9,7 +9,7 @@ const supabase = createClient(
 export async function GET() {
   try {
     // Get users with their profiles and subscription info
-    const { data: users, error } = await supabase
+    const { data: users, error } = await (supabase as any)
       .from('user_profiles')
       .select(`
         id,
@@ -32,7 +32,7 @@ export async function GET() {
     }
 
     // Transform the data to include subscription info at the top level
-    const transformedUsers = users?.map(user => ({
+    const transformedUsers = users?.map((user: any) => ({
       id: user.id,
       email: user.email,
       full_name: user.full_name,

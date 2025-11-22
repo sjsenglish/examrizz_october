@@ -991,7 +991,7 @@ export async function POST(request: NextRequest) {
     // If no conversation ID provided, check for existing conversation or create new one
     if (!currentConversationId) {
       // Check for existing active conversation
-      const { data: existingConversation } = await supabase
+      const { data: existingConversation } = await (supabase as any)
         .from('conversations')
         .select('id')
         .eq('user_id', userId)
@@ -1003,7 +1003,7 @@ export async function POST(request: NextRequest) {
         currentConversationId = existingConversation.id;
       } else {
         // Create new conversation
-        const { data: newConversation } = await supabase
+        const { data: newConversation } = await (supabase as any)
           .from('conversations')
           .insert({
             user_id: userId,
@@ -1021,7 +1021,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Save user message to database
-    const { error: userMessageError } = await supabase
+    const { error: userMessageError } = await (supabase as any)
       .from('messages')
       .insert({
         conversation_id: currentConversationId,
@@ -1035,7 +1035,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get conversation history for context
-    const { data: messageHistory } = await supabase
+    const { data: messageHistory } = await (supabase as any)
       .from('messages')
       .select('role, content')
       .eq('conversation_id', currentConversationId)
@@ -1060,7 +1060,7 @@ export async function POST(request: NextRequest) {
     ]);
 
     // ⭐ NEW: Get user's subject for filtering feedback
-    const { data: userProfile } = await supabase
+    const { data: userProfile } = await (supabase as any)
       .from('user_profiles')
       .select('subject')
       .eq('id', userId)
@@ -1110,7 +1110,7 @@ export async function POST(request: NextRequest) {
           }
 
           // Combine results - same-subject first, then fill with others (no duplicates)
-          const existingIds = new Set(similarFeedback.map((f: any) => f.id));
+          const existingIds = new Set<string>(similarFeedback.map((f: any) => f.id as string));
           const additionalFeedback = anySubjectFeedback?.filter((f: any) => !existingIds.has(f.id)) || [];
           similarFeedback = [...similarFeedback, ...additionalFeedback].slice(0, 5);
         }
@@ -1218,7 +1218,7 @@ export async function POST(request: NextRequest) {
     const enhancedSystemPrompt = BO_SYSTEM_PROMPT + contextString + (contextString ? '\n\nWhen relevant, reference specific details from the student\'s uploaded materials and notes to provide personalized advice. Help them connect their experiences to their personal statement.' : '');
 
     // Prepare messages for Anthropic API
-    const messages = (messageHistory || []).slice(-20).map(msg => ({
+    const messages = (messageHistory || []).slice(-20).map((msg: any) => ({
       role: msg.role === 'assistant' ? 'assistant' as const : 'user' as const,
       content: msg.content
     }));
@@ -1252,7 +1252,7 @@ export async function POST(request: NextRequest) {
           }
 
           // Save Bo's response to database
-          await supabase
+          await (supabase as any)
             .from('messages')
             .insert({
               conversation_id: currentConversationId,

@@ -21,7 +21,7 @@ export async function GET(
     }
 
     // Query the learn_lessons table for lesson data
-    const { data: lesson, error: lessonError } = await supabase
+    const { data: lesson, error: lessonError } = await (supabase as any)
       .from('learn_lessons')
       .select(`
         id,
@@ -63,7 +63,7 @@ export async function GET(
 
     // Count total questions for this lesson
     // First get all questions for this lesson
-    const { data: questions, error: questionsError } = await supabase
+    const { data: questions, error: questionsError } = await (supabase as any)
       .from('learn_questions')
       .select('id')
       .eq('lesson_id', lessonId);
@@ -76,9 +76,9 @@ export async function GET(
     // Count question parts across all questions
     let totalQuestionParts = 0;
     if (questions && questions.length > 0) {
-      const questionIds = questions.map(q => q.id);
+      const questionIds = questions.map((q: any) => q.id);
 
-      const { count, error: partsError } = await supabase
+      const { count, error: partsError } = await (supabase as any)
         .from('learn_question_parts')
         .select('id', { count: 'exact', head: true })
         .in('question_id', questionIds);

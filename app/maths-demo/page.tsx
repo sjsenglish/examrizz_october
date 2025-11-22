@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
-import { supabase } from '@/lib/supabase-client';
+import { supabase } from '@/lib/supabase';
 import ProgressDashboard from '@/components/ProgressDashboard';
 import './maths-demo.css';
 
@@ -120,7 +120,7 @@ export default function MathsDemoPage() {
   };
 
   // Filter spec points based on search query (exclude blended blocks)
-  const filteredSpecs = specPoints.filter(spec => {
+  const filteredSpecs = specPoints.filter((spec: any) => {
     if (!searchQuery.trim() || spec.type === 'blended') return false;
     const query = searchQuery.toLowerCase();
     return (
@@ -131,7 +131,7 @@ export default function MathsDemoPage() {
 
   // Calculate cumulative hours for each spec point (exclude blended blocks)
   const getCumulativeHours = (index: number) => {
-    return specPoints.slice(0, index + 1).reduce((sum, spec) => {
+    return specPoints.slice(0, index + 1).reduce((sum: any, spec: any) => {
       return spec.type === 'normal' ? sum + spec.hours : sum;
     }, 0);
   };
@@ -298,7 +298,7 @@ export default function MathsDemoPage() {
         }
 
         // Fetch all lessons to get mapping between spec points and lesson IDs
-        const { data: lessonsData, error: lessonsError } = await supabase
+        const { data: lessonsData, error: lessonsError } = await (supabase as any)
           .from('learn_lessons')
           .select(`
             id,
@@ -313,7 +313,7 @@ export default function MathsDemoPage() {
         }
 
         // Fetch all progress records for this user
-        const { data: progressData, error } = await supabase
+        const { data: progressData, error } = await (supabase as any)
           .from('learn_user_progress')
           .select('lesson_id, video_watched')
           .eq('user_id', user.id);

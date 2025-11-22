@@ -42,7 +42,7 @@ const useInterviewSubjectFilter = () => {
     const subjectCounts: Record<string, number> = {};
     
     // Initialize counts
-    subjects.forEach(subject => {
+    subjects.forEach((subject: any) => {
       subjectCounts[subject] = 0;
     });
     
@@ -52,7 +52,7 @@ const useInterviewSubjectFilter = () => {
         const primarySubject = hit.SubjectId1?.toLowerCase();
         const secondarySubject = hit.SubjectId2?.toLowerCase();
         
-        subjects.forEach(subject => {
+        subjects.forEach((subject: any) => {
           if (primarySubject === subject.toLowerCase() || secondarySubject === subject.toLowerCase()) {
             subjectCounts[subject]++;
           }
@@ -60,7 +60,7 @@ const useInterviewSubjectFilter = () => {
       });
     }
     
-    return subjects.map(subject => ({
+    return subjects.map((subject: any) => ({
       value: subject,
       label: subject.charAt(0).toUpperCase() + subject.slice(1),
       count: subjectCounts[subject],
@@ -79,7 +79,7 @@ const useInterviewSubjectFilter = () => {
     
     // Apply filter using setIndexUiState
     if (newSelected.size > 0) {
-      const filters = Array.from(newSelected).map(subj => 
+      const filters = Array.from(newSelected).map((subj: any) => 
         `(SubjectId1:"${subj}" OR SubjectId2:"${subj}")`
       ).join(' OR ');
       

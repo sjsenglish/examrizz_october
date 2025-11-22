@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     console.log('🔍 Checking user_subscriptions table...');
 
     // Check if table exists by trying to query it
-    const { error: checkError } = await supabase
+    const { error: checkError } = await (supabase as any)
       .from('user_subscriptions')
       .select('count', { count: 'exact', head: true });
 
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     console.log('✅ user_subscriptions table exists');
 
     // Test if we can query it with a real user
-    const { data: testQuery, error: testError } = await supabase
+    const { data: testQuery, error: testError } = await (supabase as any)
       .from('user_subscriptions')
       .select('*')
       .limit(1);
@@ -69,14 +69,14 @@ export async function POST(request: NextRequest) {
     let tableStructure = 'Table structure check not implemented';
     try {
       // Try to get column information from information_schema
-      const { data: columnInfo, error: columnError } = await supabase
+      const { data: columnInfo, error: columnError } = await (supabase as any)
         .from('information_schema.columns')
         .select('column_name, data_type')
         .eq('table_name', 'user_subscriptions')
         .eq('table_schema', 'public');
       
       if (!columnError && columnInfo) {
-        tableStructure = `Found ${columnInfo.length} columns: ${columnInfo.map(c => c.column_name).join(', ')}`;
+        tableStructure = `Found ${columnInfo.length} columns: ${columnInfo.map((c: any) => c.column_name).join(', ')}`;
       }
     } catch (err) {
       tableStructure = 'Unable to fetch table structure';

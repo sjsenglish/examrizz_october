@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
         const sessionId = crypto.randomUUID();
 
         // Insert into support_tickets table
-        const { error: dbError } = await supabase
+        const { error: dbError } = await (supabase as any)
           .from('support_tickets')
           .insert({
             user_id: userId,

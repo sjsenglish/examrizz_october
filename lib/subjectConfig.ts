@@ -257,11 +257,11 @@ export function getSubjectConfig(subjectName: string): SubjectConfig | undefined
 // Helper function to get available subjects
 export function getAvailableSubjects(): string[] {
   return SUBJECT_CONFIGS
-    .filter(config => config.available)
-    .map(config => config.name);
+    .filter((config: any) => config.available)
+    .map((config: any) => config.name);
 }
 
 // Helper function to get all subjects (including unavailable ones)
 export function getAllSubjects(): string[] {
-  return SUBJECT_CONFIGS.map(config => config.name);
+  return SUBJECT_CONFIGS.map((config: any) => config.name);
 }

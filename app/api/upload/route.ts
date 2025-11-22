@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString()
     };
 
-    const { data: dbData, error: dbError } = await supabase
+    const { data: dbData, error: dbError } = await (supabase as any)
       .from('user_uploads')
       .insert(fileRecord)
       .select()

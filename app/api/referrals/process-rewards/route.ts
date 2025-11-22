@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     const userId = user.id;
 
     // Step 1: Check if user has Discord username
-    const { data: profile, error: profileError } = await supabase
+    const { data: profile, error: profileError } = await (supabase as any)
       .from('user_profiles')
       .select('discord_username')
       .eq('id', userId)
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
     }
 
     // Step 2: Find pending referrals where this user is the referred user
-    const { data: referrals, error: referralsError } = await supabase
+    const { data: referrals, error: referralsError } = await (supabase as any)
       .from('referrals')
       .select('id, referrer_id, referred_user_id, status, reward_status')
       .eq('referred_user_id', userId)
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
     for (const referral of referrals) {
       try {
         // Call the database function to process rewards
-        const { data: rewardResult, error: rewardError } = await supabase
+        const { data: rewardResult, error: rewardError } = await (supabase as any)
           .rpc('process_referral_rewards', { p_referral_id: referral.id });
 
         if (rewardError) {
@@ -115,8 +115,8 @@ export async function POST(request: Request) {
     }
 
     // Check if any rewards were successfully processed
-    const successCount = results.filter(r => r.success).length;
-    const failureCount = results.filter(r => !r.success).length;
+    const successCount = results.filter((r: any) => r.success).length;
+    const failureCount = results.filter((r: any) => !r.success).length;
 
     return NextResponse.json({
       success: successCount > 0,

@@ -21,7 +21,7 @@ export async function GET(
     }
 
     // Fetch all questions with their parts using nested query
-    const { data: questions, error } = await supabase
+    const { data: questions, error } = await (supabase as any)
       .from('learn_questions')
       .select(`
         id,
@@ -51,7 +51,7 @@ export async function GET(
     }
 
     // Transform data to match frontend expectations (camelCase format)
-    const transformedQuestions = questions?.map(question => ({
+    const transformedQuestions = questions?.map((question: any) => ({
       code: question.question_code,
       difficulty: question.difficulty_level,
       instructions: question.instructions,

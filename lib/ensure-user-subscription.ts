@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase-client';
+import { supabase } from '@/lib/supabase';
 import { UserSubscription } from '@/types/subscription';
 
 /**
@@ -7,7 +7,7 @@ import { UserSubscription } from '@/types/subscription';
 export async function ensureUserSubscription(userId: string): Promise<UserSubscription | null> {
   try {
     // First try to get existing subscription
-    const { data: existingSubscription, error: fetchError } = await supabase
+    const { data: existingSubscription, error: fetchError } = await (supabase as any)
       .from('user_subscriptions')
       .select('*')
       .eq('user_id', userId)
@@ -34,7 +34,7 @@ export async function ensureUserSubscription(userId: string): Promise<UserSubscr
       cancel_at_period_end: false,
     };
 
-    const { data: newSubscription, error: createError } = await supabase
+    const { data: newSubscription, error: createError } = await (supabase as any)
       .from('user_subscriptions')
       .insert(defaultSubscription)
       .select()

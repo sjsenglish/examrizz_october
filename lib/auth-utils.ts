@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase-client';
+import { supabase } from '@/lib/supabase';
 
 export interface UserProfile {
   id: string;
@@ -37,7 +37,7 @@ export async function ensureUserProfile(): Promise<{ user: any; profile: UserPro
     let profileError = null;
     
     for (let attempt = 0; attempt < 3; attempt++) {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('user_profiles')
         .select('*')
         .eq('id', user.id)
@@ -80,7 +80,7 @@ export async function ensureUserProfile(): Promise<{ user: any; profile: UserPro
             updated_at: new Date().toISOString()
           };
 
-          const { data: updatedProfile, error: updateError } = await supabase
+          const { data: updatedProfile, error: updateError } = await (supabase as any)
             .from('user_profiles')
             .update(discordData)
             .eq('id', user.id)
@@ -118,7 +118,7 @@ export async function ensureUserProfile(): Promise<{ user: any; profile: UserPro
     }
 
     // Use upsert to handle conflicts gracefully
-    const { data: createdProfile, error: createError } = await supabase
+    const { data: createdProfile, error: createError } = await (supabase as any)
       .from('user_profiles')
       .upsert([newProfile], { 
         onConflict: 'id',
@@ -130,7 +130,7 @@ export async function ensureUserProfile(): Promise<{ user: any; profile: UserPro
     if (createError) {
       // Silently handle expected conflicts and try to fetch existing profile
       if (createError.code === '23505' || createError.message?.includes('duplicate key')) {
-        const { data: retryProfile } = await supabase
+        const { data: retryProfile } = await (supabase as any)
           .from('user_profiles')
           .select('*')
           .eq('id', user.id)
@@ -174,7 +174,7 @@ export async function updateDiscordProfile(userId: string): Promise<boolean> {
       updated_at: new Date().toISOString()
     };
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('user_profiles')
       .update(discordData)
       .eq('id', userId);
@@ -211,7 +211,7 @@ export async function performLogout(): Promise<void> {
   try {
     // Clear localStorage cache
     const keys = Object.keys(localStorage);
-    keys.forEach(key => {
+    keys.forEach((key: any) => {
       if (key.startsWith('feature-usage-') || 
           key.includes('user-') || 
           key.includes('auth-') ||
@@ -222,7 +222,7 @@ export async function performLogout(): Promise<void> {
 
     // Clear sessionStorage cache  
     const sessionKeys = Object.keys(sessionStorage);
-    sessionKeys.forEach(key => {
+    sessionKeys.forEach((key: any) => {
       if (key.includes('user-') || 
           key.includes('auth-') ||
           key.includes('supabase-')) {

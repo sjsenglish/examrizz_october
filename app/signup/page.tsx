@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import { ensureUserProfile } from '@/lib/auth-utils';
-import { supabase } from '@/lib/supabase-client';
+import { supabase } from '@/lib/supabase';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -333,7 +333,7 @@ export default function SignupPage() {
             profileData.discord_username = discordUsername.trim();
           }
 
-          const { error: profileError } = await supabase
+          const { error: profileError } = await (supabase as any)
             .from('user_profiles')
             .insert(profileData);
 
@@ -401,7 +401,7 @@ export default function SignupPage() {
       const userId = user.id;
       
       // Check if profile already exists (might be created by triggers)
-      const { data: existingProfile, error: checkError } = await supabase
+      const { data: existingProfile, error: checkError } = await (supabase as any)
         .from('user_profiles')
         .select('id')
         .eq('id', userId)
@@ -411,7 +411,7 @@ export default function SignupPage() {
         console.error('Error checking existing profile:', checkError);
       }
 
-      const profileUpdateData: any = {
+      const profileUpdateData: Record<string, any> = {
         full_name: fullName,
         username: username,
         school: school,
@@ -425,7 +425,7 @@ export default function SignupPage() {
 
       if (existingProfile) {
         // Update existing profile
-        const { error: updateError } = await supabase
+        const { error: updateError } = await (supabase as any)
           .from('user_profiles')
           .update(profileUpdateData)
           .eq('id', userId);
@@ -438,7 +438,7 @@ export default function SignupPage() {
         }
       } else {
         // Create new profile
-        const { error: profileError } = await supabase
+        const { error: profileError } = await (supabase as any)
           .from('user_profiles')
           .insert({
             id: userId,
@@ -515,7 +515,7 @@ export default function SignupPage() {
       }
 
       // Update existing profile with form data
-      const { error: updateError } = await supabase
+      const { error: updateError } = await (supabase as any)
         .from('user_profiles')
         .update(profileUpdateData)
         .eq('id', user.id);
@@ -572,8 +572,8 @@ export default function SignupPage() {
       // Store GCSE grades if any
       if (gcseSubjects.length > 0) {
         const gcseGrades = gcseSubjects
-          .filter(g => g.subject && g.grade)
-          .map(g => ({
+          .filter((g: any) => g.subject && g.grade)
+          .map((g: any) => ({
             user_id: userId,
             subject: g.subject,
             grade: g.grade
@@ -581,12 +581,12 @@ export default function SignupPage() {
 
         if (gcseGrades.length > 0) {
           // Delete existing grades first to avoid conflicts
-          await supabase
+          await (supabase as any)
             .from('user_gcse_grades')
             .delete()
             .eq('user_id', userId);
             
-          const { error: gcseError } = await supabase
+          const { error: gcseError } = await (supabase as any)
             .from('user_gcse_grades')
             .insert(gcseGrades);
 
@@ -599,8 +599,8 @@ export default function SignupPage() {
       // Store A Level grades if any
       if (aLevelSubjects.length > 0) {
         const aLevelGrades = aLevelSubjects
-          .filter(g => g.subject && g.grade)
-          .map(g => ({
+          .filter((g: any) => g.subject && g.grade)
+          .map((g: any) => ({
             user_id: userId,
             subject: g.subject,
             grade: g.grade
@@ -608,12 +608,12 @@ export default function SignupPage() {
 
         if (aLevelGrades.length > 0) {
           // Delete existing grades first to avoid conflicts
-          await supabase
+          await (supabase as any)
             .from('user_alevel_grades')
             .delete()
             .eq('user_id', userId);
             
-          const { error: aLevelError } = await supabase
+          const { error: aLevelError } = await (supabase as any)
             .from('user_alevel_grades')
             .insert(aLevelGrades);
 

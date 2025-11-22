@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('user_uploads')
       .select('id, file_name, file_type, file_path, category, title, description, created_at')
       .eq('user_id', user.id)
@@ -52,7 +52,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { data: fileRecord, error: fetchError } = await supabase
+    const { data: fileRecord, error: fetchError } = await (supabase as any)
       .from('user_uploads')
       .select('file_path')
       .eq('id', id)
@@ -63,7 +63,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'File not found' }, { status: 404 });
     }
 
-    const { error: deleteDbError } = await supabase
+    const { error: deleteDbError } = await (supabase as any)
       .from('user_uploads')
       .delete()
       .eq('id', id)

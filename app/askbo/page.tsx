@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase-client';
+import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import Navbar from '@/components/Navbar';
@@ -172,7 +172,7 @@ export default function StudyBookPage() {
 
   // Categories for materials with real counts
   const getCategoryCount = (categoryId: string) => {
-    return uploadedFiles.filter(file => file.category === categoryId).length;
+    return uploadedFiles.filter((file: any) => file.category === categoryId).length;
   };
 
   const categories = [
@@ -216,7 +216,7 @@ export default function StudyBookPage() {
       const getCurrentUser = async () => {
       try {
         // First attempt: try to get existing profile
-        const { data: profileData, error: profileError } = await supabase
+        const { data: profileData, error: profileError } = await (supabase as any)
           .from('user_profiles')
           .select('*')
           .eq('id', user.id)
@@ -268,7 +268,7 @@ export default function StudyBookPage() {
 
         if (createError) {
           // If upsert failed, try one more time to fetch existing profile (silently)
-          const { data: existingProfile } = await supabase
+          const { data: existingProfile } = await (supabase as any)
             .from('user_profiles')
             .select('*')
             .eq('id', user.id)
@@ -345,7 +345,7 @@ export default function StudyBookPage() {
 
   const loadConversationHistory = async (currentUserId: string) => {
     try {
-      const { data: conversation } = await supabase
+      const { data: conversation } = await (supabase as any)
         .from('conversations')
         .select('id')
         .eq('user_id', currentUserId)
@@ -356,14 +356,14 @@ export default function StudyBookPage() {
       if (conversation) {
         setConversationId((conversation as any).id);
 
-        const { data: messageHistory } = await supabase
+        const { data: messageHistory } = await (supabase as any)
           .from('messages')
           .select('id, role, content, created_at')
           .eq('conversation_id', (conversation as any).id)
           .order('created_at', { ascending: true });
 
         if (messageHistory) {
-          const formattedMessages = (messageHistory as any[]).map(msg => ({
+          const formattedMessages = (messageHistory as any[]).map((msg: any) => ({
             id: msg.id,
             role: msg.role as 'user' | 'assistant',
             content: msg.content,
@@ -380,7 +380,7 @@ export default function StudyBookPage() {
   const loadDraftVersions = async (currentUserId: string) => {
     try {
       // This would be a new table - we'll handle creation elsewhere
-      const { data: versions } = await supabase
+      const { data: versions } = await (supabase as any)
         .from('draft_versions')
         .select('*')
         .eq('user_id', currentUserId)
@@ -418,7 +418,7 @@ export default function StudyBookPage() {
       if (!user) return;
 
       // Load ALL drafts for the drafts page (all versions)
-      const { data: drafts, error } = await supabase
+      const { data: drafts, error } = await (supabase as any)
         .from('draft_versions')
         .select('*')
         .eq('user_id', user.id)
@@ -441,7 +441,7 @@ export default function StudyBookPage() {
       if (!user || !draftToSave.trim()) return;
 
       // Get the next version number for new drafts
-      const { data: existingDrafts } = await supabase
+      const { data: existingDrafts } = await (supabase as any)
         .from('draft_versions')
         .select('version_number')
         .eq('user_id', user.id)
@@ -454,7 +454,7 @@ export default function StudyBookPage() {
         : 1;
 
       // First, insert the new version (not marked as current yet)
-      const { data: newDraft, error: insertError } = await supabase
+      const { data: newDraft, error: insertError } = await (supabase as any)
         .from('draft_versions')
         .insert({
           user_id: user.id,
@@ -514,7 +514,7 @@ export default function StudyBookPage() {
       if (!user) return;
 
       // Load the most recent draft for the popup
-      const { data: draft, error } = await supabase
+      const { data: draft, error } = await (supabase as any)
         .from('draft_versions')
         .select('*')
         .eq('user_id', user.id)
@@ -545,7 +545,7 @@ export default function StudyBookPage() {
 
       // Always create a new version instead of updating existing ones
       // Get the next version number for this specific question
-      const { data: existingDrafts } = await supabase
+      const { data: existingDrafts } = await (supabase as any)
         .from('draft_versions')
         .select('version_number')
         .eq('user_id', user.id)
@@ -558,7 +558,7 @@ export default function StudyBookPage() {
         : 1;
 
       // First, insert the new version (not marked as current yet)
-      const { data: newDraft, error: insertError } = await supabase
+      const { data: newDraft, error: insertError } = await (supabase as any)
         .from('draft_versions')
         .insert({
           user_id: user.id,
@@ -615,7 +615,7 @@ export default function StudyBookPage() {
     }
 
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('draft_versions')
         .delete()
         .eq('id', draftId);
@@ -741,7 +741,7 @@ export default function StudyBookPage() {
               
               if (data.type === 'token') {
                 assistantMessage += data.content;
-                setMessages(prev => prev.map(msg => 
+                setMessages(prev => prev.map((msg: any) => 
                   msg.id === assistantId 
                     ? { ...msg, content: assistantMessage }
                     : msg
@@ -757,7 +757,7 @@ export default function StudyBookPage() {
                 // Refresh usage info after successful message
                 fetchUsageInfo();
               } else if (data.type === 'error') {
-                setMessages(prev => prev.map(msg => 
+                setMessages(prev => prev.map((msg: any) => 
                   msg.id === assistantId 
                     ? { ...msg, content: data.content }
                     : msg
@@ -872,7 +872,7 @@ export default function StudyBookPage() {
               
               if (data.type === 'token') {
                 assistantMessage += data.content;
-                setInterviewMessages(prev => prev.map(msg => 
+                setInterviewMessages(prev => prev.map((msg: any) => 
                   msg.id === assistantId 
                     ? { ...msg, content: assistantMessage }
                     : msg
@@ -888,7 +888,7 @@ export default function StudyBookPage() {
                 // Refresh usage info after successful message
                 fetchUsageInfo();
               } else if (data.type === 'error') {
-                setInterviewMessages(prev => prev.map(msg => 
+                setInterviewMessages(prev => prev.map((msg: any) => 
                   msg.id === assistantId 
                     ? { ...msg, content: data.content }
                     : msg
@@ -972,7 +972,7 @@ export default function StudyBookPage() {
 
       // Extract last 5 messages for context
       const recentMessages = messages.slice(-5);
-      const conversationContext = recentMessages.map(msg =>
+      const conversationContext = recentMessages.map((msg: any) =>
         `**${msg.role.toUpperCase()}**: ${msg.content}`
       ).join('\n\n');
 
@@ -1133,7 +1133,7 @@ export default function StudyBookPage() {
       if (!user) return;
 
       // Load files directly from Supabase with all metadata
-      const { data: files, error } = await supabase
+      const { data: files, error } = await (supabase as any)
         .from('user_uploads')
         .select('*')
         .eq('user_id', user.id)
@@ -1211,7 +1211,7 @@ export default function StudyBookPage() {
       if (!session) return;
 
       // Delete from database
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('user_uploads')
         .delete()
         .eq('id', materialId);
@@ -1474,7 +1474,7 @@ export default function StudyBookPage() {
               <div className="categories-panel">
                 <h2>Categories</h2>
                 <div className="categories-list">
-                  {categories.map(category => (
+                  {categories.map((category: any) => (
                     <div key={category.id} className="category-item">
                       <img src={category.icon} alt={category.label} />
                       <span>{category.label}</span>
@@ -1494,8 +1494,8 @@ export default function StudyBookPage() {
               <div className="materials-grid">
                 <h2>Your Materials</h2>
                 <div className="materials-cards">
-                  {uploadedFiles.map(file => {
-                    const categoryIcon = categories.find(cat => cat.id === file.category)?.icon || '/icons/essays.svg';
+                  {uploadedFiles.map((file: any) => {
+                    const categoryIcon = categories.find((cat: any) => cat.id === file.category)?.icon || '/icons/essays.svg';
                     return (
                       <div key={file.id} className="material-card">
                         <div className="card-header">
@@ -1522,7 +1522,7 @@ export default function StudyBookPage() {
                           {file.description || 'No description provided'}
                         </p>
                         <div className="file-meta" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: '#888' }}>
-                          <span>{file.category ? categories.find(cat => cat.id === file.category)?.label : 'Uncategorized'}</span>
+                          <span>{file.category ? categories.find((cat: any) => cat.id === file.category)?.label : 'Uncategorized'}</span>
                           <span>📎 {file.file_type.split('/').pop()?.toUpperCase()}</span>
                         </div>
                         {file.completion_date && (
@@ -1556,7 +1556,7 @@ export default function StudyBookPage() {
                     <p>I'm Bo, your personal statement advisor. Ask me anything about your personal statement.</p>
                   </div>
                 ) : (
-                  messages.map(message => (
+                  messages.map((message: any) => (
                     <div key={message.id} className={`message ${message.role}`}>
                       <div className="message-content">
                         {message.role === 'assistant' ? (
@@ -1655,7 +1655,7 @@ export default function StudyBookPage() {
                     <p>I'm Gabe, your Oxford/Cambridge interview coach. I'll test your analytical thinking using your personal statement as the foundation.</p>
                   </div>
                 ) : (
-                  interviewMessages.map(message => (
+                  interviewMessages.map((message: any) => (
                     <div key={message.id} className={`message ${message.role}`}>
                       <div className="message-content">
                         {message.role === 'assistant' ? (
@@ -1908,7 +1908,7 @@ export default function StudyBookPage() {
                       borderRadius: '0'
                     }}
                   >
-                    {materialForm.category ? categories.find(cat => cat.id === materialForm.category)?.label : 'Select category'}
+                    {materialForm.category ? categories.find((cat: any) => cat.id === materialForm.category)?.label : 'Select category'}
                     <svg 
                       width="12" 
                       height="12" 

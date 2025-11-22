@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       updated_at: new Date().toISOString()
     };
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('question_drafts')
       .insert(noteData)
       .select()
@@ -112,7 +112,7 @@ export async function PUT(request: NextRequest) {
     if (section_type) updateData.section_type = section_type;
     if (title) updateData.title = title;
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('question_drafts')
       .update(updateData)
       .eq('id', id)
@@ -150,7 +150,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('question_drafts')
       .delete()
       .eq('id', id)

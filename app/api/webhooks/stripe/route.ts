@@ -80,7 +80,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     };
 
     // Find user by Stripe customer ID
-    const { data: existingSubscription, error: findError } = await supabase
+    const { data: existingSubscription, error: findError } = await (supabase as any)
       .from('user_subscriptions')
       .select('user_id, id')
       .eq('stripe_customer_id', subscriptionData.customer_id)
@@ -93,7 +93,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
 
     if (existingSubscription) {
       // Update existing subscription
-      const { error: updateError } = await supabase
+      const { error: updateError } = await (supabase as any)
         .from('user_subscriptions')
         .update({
           subscription_tier: subscriptionTier,
@@ -139,14 +139,14 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   
   try {
     // Get user ID before updating (since we need it for cache clearing)
-    const { data: userSubscription } = await supabase
+    const { data: userSubscription } = await (supabase as any)
       .from('user_subscriptions')
       .select('user_id')
       .eq('stripe_subscription_id', subscription.id)
       .single();
 
     // Update subscription to canceled status and downgrade to free tier
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('user_subscriptions')
       .update({
         subscription_tier: 'free',
@@ -194,7 +194,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     }
 
     // Update the user's subscription with Stripe IDs
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('user_subscriptions')
       .update({
         stripe_customer_id: customerId,

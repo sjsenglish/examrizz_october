@@ -105,7 +105,7 @@ export default function AddStudentsPage() {
 
   const handleStudentSelect = (studentId: string) => {
     setStudents(prevStudents =>
-      prevStudents.map(student =>
+      prevStudents.map((student: any) =>
         student.id === studentId
           ? { ...student, selected: !student.selected }
           : student
@@ -113,7 +113,7 @@ export default function AddStudentsPage() {
     );
   };
 
-  const filteredStudents = students.filter(student =>
+  const filteredStudents = students.filter((student: any) =>
     student.surname.toLowerCase().includes(searchQuery.toLowerCase()) ||
     student.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     student.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
