@@ -277,11 +277,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
           width="100%"
           height="100%"
           style={{ position: 'absolute', top: 0, left: 0 }}
-          config={{
-            youtube: {
-              playerVars: { showinfo: 0, controls: 0, modestbranding: 1 }
-            }
-          }}
         />
       ) : (
         <video
