@@ -1230,3 +1230,37 @@ The entire site is now responsive across desktop, tablet, and mobile devices wit
     - Receives and includes Discord info in all ticket embeds
     - Stores ticket in support_tickets table as backup
 - **Purpose**: Ensures teachers can always identify and contact students in Discord support channels, with database backup for tracking and analytics
+
+## Supabase Performance Optimization (Nov 2024)
+- **Issue**: Database was spending 92.9% of time processing Realtime subscription queries
+- **Root Cause**: `useSubscription` hook created separate Realtime channel for every component that used it
+  - Used in: Navbar, Profile page, AskBo page, Payment page
+  - Each user session = 4+ active Realtime channels polling database continuously
+  - Result: 4.4 million Realtime queries per monitoring period
+- **Solution Applied** (Nov 2024):
+  - **Removed Realtime subscriptions** from `hooks/useSubscription.ts`
+  - Changed from real-time updates to fetch-once-on-mount pattern
+  - Subscription data still cached for 2 minutes (existing cache in `lib/subscription.ts`)
+  - Removed `subscribeToSubscriptionChanges()` function from `lib/subscription.ts`
+  - Removed `supabase` import from `hooks/useSubscription.ts` (no longer needed)
+- **Performance Impact**:
+  - **Expected**: 92% reduction in database load
+  - **Trade-off**: Users won't see tier changes instantly (only after page refresh or manual `refresh()` call)
+  - **Justification**: Subscription tier changes are rare events (only during upgrades/downgrades)
+- **Why This Works**:
+  - Subscription tier rarely changes (only when user upgrades/cancels)
+  - 2-minute cache already prevents excessive database queries
+  - Manual refresh function (`refresh()`) available if immediate update needed
+  - Page refreshes naturally update subscription state
+- **Alternative Considered**: Global context with single Realtime subscription
+  - Rejected: Still creates unnecessary database load for rare events
+  - Simpler solution: Remove Realtime entirely
+- **Files Modified**:
+  - `hooks/useSubscription.ts`: Removed Realtime setup, simplified to fetch-once
+  - `lib/subscription.ts`: Removed `subscribeToSubscriptionChanges()` function
+- **Documentation**: See `SUPABASE_OPTIMIZATION_GUIDE.md` for full optimization roadmap
+- **Next Steps**: Additional optimizations available:
+  - Switch vector search from IVFFlat to HNSW index (60% faster queries)
+  - Add React Query for intelligent caching (40% fewer duplicate queries)
+  - Optimize RLS policies and add missing indexes
+  - Enable connection pooling for better concurrency
