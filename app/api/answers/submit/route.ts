@@ -2,11 +2,21 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { create, all } from 'mathjs';
 
+// Initialize mathjs once at module load for better performance
 const math = create(all);
 
-const supabase = createClient(
+// Create Admin Supabase client once at module load
+// Disable auth persistence since this is a server-side API endpoint
+const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false
+    }
+  }
 );
 
 // Normalize LaTeX string for comparison
@@ -83,22 +93,35 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Fetch the question part with acceptable answers
-    const { data: questionPart, error: fetchError } = await (supabase as any)
-      .from('learn_question_parts')
-      .select('id, acceptable_answers, marks')
-      .eq('id', question_part_id)
-      .single();
+    // PERFORMANCE OPTIMIZATION: Run database lookups in parallel
+    // Fetch question details AND previous attempt count simultaneously
+    const [questionRes, attemptRes] = await Promise.all([
+      supabaseAdmin
+        .from('learn_question_parts')
+        .select('id, acceptable_answers, marks')
+        .eq('id', question_part_id)
+        .maybeSingle(),
 
-    if (fetchError || !questionPart) {
-      console.error('Error fetching question part:', fetchError);
+      supabaseAdmin
+        .from('learn_user_answers')
+        .select('attempt_number')
+        .eq('user_id', user_id)
+        .eq('question_part_id', question_part_id)
+        .order('attempt_number', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+    ]);
+
+    // Handle question fetch error
+    if (questionRes.error || !questionRes.data) {
+      console.error('Error fetching question part:', questionRes.error);
       return NextResponse.json(
         { error: 'Question part not found' },
         { status: 404 }
       );
     }
 
-    // Get acceptable answers array
+    const questionPart = questionRes.data;
     const acceptableAnswers: string[] = questionPart.acceptable_answers || [];
 
     if (acceptableAnswers.length === 0) {
@@ -120,21 +143,11 @@ export async function POST(request: NextRequest) {
     // Calculate marks awarded
     const marksAwarded = isCorrect ? (questionPart.marks || 1) : 0;
 
-    // Get current attempt number for this user and question part
-    const { data: previousAttempts } = await (supabase as any)
-      .from('learn_user_answers')
-      .select('attempt_number')
-      .eq('user_id', user_id)
-      .eq('question_part_id', question_part_id)
-      .order('attempt_number', { ascending: false })
-      .limit(1);
-
-    const attemptNumber = previousAttempts && previousAttempts.length > 0
-      ? previousAttempts[0].attempt_number + 1
-      : 1;
+    // Determine attempt number (if no previous attempt found, start at 1)
+    const attemptNumber = attemptRes.data ? attemptRes.data.attempt_number + 1 : 1;
 
     // Save the answer to database
-    const { error: insertError } = await (supabase as any)
+    const { error: insertError } = await supabaseAdmin
       .from('learn_user_answers')
       .insert({
         user_id,
