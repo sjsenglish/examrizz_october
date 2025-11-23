@@ -2,17 +2,15 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
-import { 
-  UserSubscription, 
-  SubscriptionTier, 
+import {
+  UserSubscription,
+  SubscriptionTier,
   FeatureAccess,
   hasFeatureAccess,
   isSubscriptionActive
 } from '@/types/subscription';
-import { 
+import {
   getCurrentUserSubscription,
-  subscribeToSubscriptionChanges,
   createCheckoutSession,
   cancelSubscription,
   reactivateSubscription,
@@ -62,30 +60,10 @@ export function useSubscription(): UseSubscriptionReturn {
     }
   }, []);
 
-  // Initialize and set up real-time subscription
+  // Initialize subscription data (Realtime removed for performance)
   useEffect(() => {
-    let unsubscribe: (() => void) | null = null;
-
-    const initialize = async () => {
-      await fetchSubscription();
-      
-      // Set up real-time subscription updates
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        unsubscribe = subscribeToSubscriptionChanges(user.id, (newSubscription) => {
-          setSubscription(newSubscription);
-        });
-      }
-    };
-
-    initialize();
-
-    return () => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    };
-  }, []); // Remove fetchSubscription from dependencies to prevent infinite loops
+    fetchSubscription();
+  }, []); // Fetch once on mount, uses 2-minute cache for subsequent calls
 
   // Computed values
   const isActive = subscription ? isSubscriptionActive(subscription.subscription_status) : false;

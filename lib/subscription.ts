@@ -191,34 +191,6 @@ export async function reactivateSubscription() {
 }
 
 /**
- * Subscribe to subscription changes for real-time updates
- */
-export function subscribeToSubscriptionChanges(
-  userId: string,
-  callback: (subscription: UserSubscription | null) => void
-) {
-  const subscription = supabase
-    .channel(`subscription_changes_${userId}`)
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'user_subscriptions',
-        filter: `user_id=eq.${userId}`,
-      },
-      (payload: any) => {
-        callback(payload.new as UserSubscription || null);
-      }
-    )
-    .subscribe();
-
-  return () => {
-    subscription.unsubscribe();
-  };
-}
-
-/**
  * Clear subscription cache for a specific user
  */
 export function clearSubscriptionCache(userId: string) {
