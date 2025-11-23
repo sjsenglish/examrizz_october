@@ -10,14 +10,6 @@ interface VideoPlayerProps {
   onEnded?: () => void;
 }
 
-// Local type definition for progress state
-interface ProgressState {
-  played: number;
-  playedSeconds: number;
-  loaded: number;
-  loadedSeconds: number;
-}
-
 // Helper function to detect if URL is YouTube
 const isYouTubeUrl = (url: string): boolean => {
   if (!url) return false;
@@ -96,8 +88,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onProgress, onEnded
     resetControlsTimeout();
   };
 
-  const handleProgress = (state: ProgressState) => {
-    if (!seeking) {
+  const handleProgress = (state: any) => {
+    if (!seeking && state.played !== undefined) {
       setPlayed(state.played);
       onProgress?.(state.played);
     }
