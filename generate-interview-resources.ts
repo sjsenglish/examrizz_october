@@ -14,6 +14,20 @@ const supabase = createClient(
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+// Helper function to generate embeddings for semantic search
+async function generateEmbedding(text: string): Promise<number[]> {
+  try {
+    const response = await openai.embeddings.create({
+      model: 'text-embedding-3-small',
+      input: text.replace(/\n/g, ' '),
+    });
+    return response.data[0].embedding;
+  } catch (error) {
+    console.error('  ⚠️  Embedding generation failed:', error);
+    return []; // Return empty array on failure so insert doesn't completely fail
+  }
+}
+
 interface FeedbackItem {
   section?: string;
   weak_passage?: string;
@@ -270,30 +284,51 @@ async function generateAllResources() {
       // Insert each difficulty level as separate row
       for (const difficulty of ['baseline', 'leveled_down', 'advanced']) {
         const resource = resources[difficulty];
-        
+
         if (!resource) {
           console.log(`  ⚠️  Missing ${difficulty} level`);
           continue;
         }
-        
+
+        // Generate embedding for semantic search
+        const embeddingContext = `
+          Subject: ${cluster.subject}
+          Concept: ${cluster.concept}
+          Difficulty: ${difficulty}
+          Context: ${cluster.typical_ps_phrases.join(', ')}
+          Questions: ${Object.values(resource.questions).join(' ')}
+          Strong Answer: ${resource.strong_answer_example}
+        `.trim();
+
+        console.log(`  🧠 Generating embedding for ${difficulty}...`);
+        const embedding = await generateEmbedding(embeddingContext);
+
+        // Only include embedding if it was successfully generated
+        const insertData: any = {
+          subject: cluster.subject,
+          concept: cluster.concept,
+          difficulty: difficulty,
+          frequency: cluster.frequency,
+          ps_triggers: resource.ps_triggers,
+          questions: resource.questions,
+          strong_answer_criteria: resource.strong_answer_criteria,
+          strong_answer_example: resource.strong_answer_example,
+          weak_answer_patterns: resource.weak_answer_patterns,
+          pushback_phrases: resource.pushback_phrases,
+          scaffolding: resource.scaffolding,
+          refer_to_discord_after: resource.refer_to_discord_after,
+          common_errors: resource.common_errors
+        };
+
+        // Only add embedding if it was successfully generated
+        if (embedding.length > 0) {
+          insertData.embedding = embedding;
+        }
+
         const { error } = await (supabase as any)
           .from('interview_resources')
-          .insert({
-            subject: cluster.subject,
-            concept: cluster.concept,
-            difficulty: difficulty,
-            frequency: cluster.frequency,
-            ps_triggers: resource.ps_triggers,
-            questions: resource.questions,
-            strong_answer_criteria: resource.strong_answer_criteria,
-            strong_answer_example: resource.strong_answer_example,
-            weak_answer_patterns: resource.weak_answer_patterns,
-            pushback_phrases: resource.pushback_phrases,
-            scaffolding: resource.scaffolding,
-            refer_to_discord_after: resource.refer_to_discord_after,
-            common_errors: resource.common_errors
-          });
-        
+          .insert(insertData);
+
         if (error) {
           console.error(`  ❌ Error inserting ${difficulty}:`, error.message);
           totalFailed++;

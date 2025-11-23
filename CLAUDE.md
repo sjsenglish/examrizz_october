@@ -1052,6 +1052,44 @@ The entire site is now responsive across desktop, tablet, and mobile devices wit
   - Blur styling applied via inline styles (filter: blur(8px))
   - Premium badge always shown for isPremium resources
 
+## Interview Resources Vector Embeddings (Added Nov 2024)
+- **Purpose**: Enable semantic/AI-powered search for interview resources by meaning, not just keywords
+- **Technology**: pgvector extension with OpenAI text-embedding-3-small model (1536 dimensions)
+- **Database Schema**:
+  - New column: `embedding vector(1536)` added to `interview_resources` table
+  - Vector index: `ivfflat` index with cosine distance for fast similarity search
+  - Database function: `match_interview_resources()` for semantic search queries
+- **Generation Process** (`generate-interview-resources.ts`):
+  - Generates embeddings during resource creation using OpenAI Embeddings API
+  - Embedding context includes: subject, concept, difficulty, typical PS phrases, questions, strong answer example
+  - Helper function: `generateEmbedding(text)` creates vector representation of resource
+  - Graceful degradation: If embedding generation fails, resource is still inserted without embedding
+  - Rate limiting: 1 second delay between clusters to avoid API throttling
+- **Performance Impact**:
+  - **Writes become slower**: Extra OpenAI API call adds ~200-500ms per resource
+  - **Searches become smarter**: Can find conceptually similar resources, not just keyword matches
+  - **Does NOT affect Algolia**: This is separate from the `/search` page which uses Algolia index
+- **Use Cases**:
+  - Automatically suggest relevant interview prep based on student's PS weaknesses
+  - Find resources that match student questions semantically
+  - Match similar concepts across different subjects
+- **Implementation Files**:
+  - Migration: `/database/add_embeddings_to_interview_resources.sql`
+  - Generation script: `/generate-interview-resources.ts`
+  - OpenAI model: `text-embedding-3-small`
+- **Search Function** (available in database):
+  - Function name: `match_interview_resources(query_embedding, match_threshold, match_count)`
+  - Parameters:
+    - `query_embedding`: Vector representation of search query
+    - `match_threshold`: Minimum similarity score (default 0.7)
+    - `match_count`: Number of results to return (default 10)
+  - Returns: Resources ordered by similarity with similarity scores
+- **Important Notes**:
+  - Must run database migration BEFORE running generation script
+  - Requires pgvector extension enabled in Supabase
+  - Embeddings are optional - resources can exist without them
+  - All authenticated users can read interview resources (RLS policy)
+
 ## Interview Questions Access Control (Nov 2024)
 - **Login Required**: ALL interview questions in the Interview index now require user login to view
 - **Logged Out User Experience**:
